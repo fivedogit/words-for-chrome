@@ -1,0 +1,314 @@
+div#words_div {
+    background-color:white; 
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    font-family: arial, helvetica;
+    font-size: 11px;
+}
+
+div#words_div span {
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+div#words_div div {
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+div#words_div form {
+    padding: 0px;
+    margin: 0px;
+}
+
+div#words_div table {
+    padding: 0px;
+    margin: 0px;
+    border-spacing: 0px;
+    width:100%;
+}
+
+div#words_div td {
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+   /* border: 1px solid black*/
+}
+
+div#words_div input {
+    padding: 0px;
+    margin: 0px;
+}
+
+div#words_div .userpic48 {
+	width:48px;
+	height:48px;
+}
+
+div#words_div .userpic32 {
+	width:32px;
+	height:32px;
+}
+
+/* TOP ROW */
+
+div#words_div #logo_logstat_tabs_table {
+	width:100%;
+	background-image:url('/images/outlets2X.png');
+	padding:5px;
+	color:white;
+	
+}
+
+#logo_logstat_tabs_table a:link {color:white;}      /* unvisited link */
+#logo_logstat_tabs_table a:visited {color:white;}  /* visited link */
+#logo_logstat_tabs_table a:hover {color:white;}  /* mouse over link */
+#logo_logstat_tabs_table a:active {color:white;}  /* selected link */
+	
+div#words_div #small_words_logo_td {
+	text-align:left;
+	padding-left:5px;
+	padding-top:5px;
+}
+
+div#words_div #logstat_centering_table {
+	margin-right:auto;
+	margin-left:auto;
+}
+
+div#words_div #logstat_logo_td {
+	text-align:right;
+	padding-right:2px;
+}
+
+div#words_div #logstat_screenname_td {
+	text-align:left;
+	padding-left:2px;
+}
+
+div#words_div #tabs_td {
+	text-align:right;
+}
+
+div#words_div #tabs_table {
+	width:96px;
+	border-collapse:collapse;
+	border-spacing:0px;
+	padding:0px;
+	margin-left:auto;
+	margin-right:0px;
+}
+
+/* UTILITY ROW */
+
+
+div#words_div .utility-div {
+	width:100%;
+	background-image: url('/images/outlets2X_light.png');
+	/*background-color:#e8f8ff;*/
+	text-align: center;
+	padding-top:10px;
+	padding-bottom:10px;
+	border-top: 1px solid #ddd;
+}
+
+div#words_div #header_div_top {
+	font-size:14px;
+	font-weight:bold;
+}
+
+div#words_div .comment-submission-form-div {
+	margin-right:auto;
+	margin-left:auto;
+	width:80%;
+}
+
+div#words_div .composition-textarea
+{
+	width:98%;
+ 	height:22px;
+  	margin-bottom:2px;
+  	color:#aaa;
+  	border: 1px solid #7c7c7c;
+    border-radius: 4px;
+    padding: 2px;
+} 
+
+div#words_div .char-count-and-submit-button-div {
+	width:100px;
+	height:16px;
+	margin-left:auto;
+	margin-right:0px;
+	vertical-align:middle;
+	display:none;
+}
+
+/* COMMENTS */
+
+div#words_div div.comment-outer-container-div {
+	background-color:white;
+}
+
+div#words_div div.complete-horiz-line-div {
+	height:1px;
+	border-top: 1px solid #ddd;
+}
+
+div#words_div div.after-comment-div {
+	display:none;
+}
+
+div#words_div div.comment-div {
+    padding: 5px;
+    background-color:white;
+}
+
+div#words_div td.comment-avatar-rating-td { /* the left-hand side of a comment div */
+    vertical-align:top;
+    width:48px;
+}
+
+div#words_div td.comment-details-td { /* the right-hand side of a comment div */
+	vertical-align:top;
+}
+
+div#words_div td.comment-screenname-state-country-td {
+    padding-left: 6px;
+    padding-top: 2px;
+    vertical-align:top;
+    text-align:left;
+    width:95%
+}
+
+div#words_div a.comment-screenname-link {
+    /*font-weight:bold;*/
+    font-size:11px;
+}
+
+div#words_div td.comment-likes-count-td {
+	font-weight:bold;
+	color: green;
+	text-align:right;
+	padding-right:3px;
+}
+
+div#words_div td.comment-dislikes-count-td {
+	font-weight:bold;
+	color: red;
+	text-align:left;
+	padding-left:3px;
+}
+
+div#words_div td.comment-like-image-td {
+	text-align:right;
+	width:19px;
+}
+
+div#words_div td.comment-dislike-image-td {
+	text-align:left;
+	width:19px;
+}
+
+div#words_div td.comment-delete-td {
+	width:10px;
+	padding-left:3px;
+}
+
+div#words_div td.comment-text-td {
+    text-align:left;
+    padding: 4px;
+    padding-left:6px;
+}
+
+div#words_div td.comment-reply-link-td {
+    padding: 6px;
+    text-align:left;
+}
+
+div#words_div span.comment-submission-progress-span {
+	display:none;
+	padding-right:3px;
+}
+
+div#words_div td.comment-hidden-td {
+	padding-top:8px;
+	padding-left:5px;
+	padding-bottom:8px;
+	text-align:left;
+	vertical-align:middle;
+}
+
+div#words_div div.end-of-comments-div {
+	padding-top:8px;
+	padding-bottom:8px;
+	background-image:url('/images/outlets2X.png');
+	color:white;
+}
+
+div#words_div .reply-td {
+	display:none;
+}
+
+div#words_div .message-div {
+	padding:5px;
+	font-size:12px;
+}
+
+div#words_div .no-comments-div {
+ 	padding:25px;
+ 	font-size:12px;
+ 	background-color:white;
+}
+
+div#words_div .non-website-no-comments-div {
+ 	padding-top:25px;
+ 	padding-bottom:25px;
+ 	background-color:white;
+}
+
+div#words_div table.user-rating-table {
+	width:48px;
+	height:5px;
+	border: 1px solid #7c7c7c;
+    border-radius: 2px;
+}
+
+div#words_div .rotate {
+    -webkit-transform: rotate(-90deg);
+    -webkit-transform-origin: 50% 50%;
+}
+
+div#words_div .rotated-who-wrote {
+	width:34px;
+	text-align:right;
+	-webkit-transform: rotate(-90deg);
+    -webkit-transform-origin: 50% 50%;
+}
+
+div#words_div .notification-comment-td {
+	padding:3px;
+}
+
+div#words_div .notification-header-td {
+	text-align:left;
+	width:95%
+}
+
+div#words_div .footer_div {
+	width:100%;
+	background-image: url('/images/outlets2X.png');
+	text-align: center;
+	height:25px;
+}
+
+div#words_div img.rounded {
+    /*border: 1px solid #7c7c7c;*/
+    border-radius: 4px;
+}
+
+*:focus {
+    outline: none;
+}
