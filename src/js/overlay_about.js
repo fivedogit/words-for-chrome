@@ -35,8 +35,8 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "</ol>";
 	aboutmessage = aboutmessage + "<p>Words DOES NOT TRACK and is OPEN SOURCE for verification. The code is available here:</p>";
 
-	aboutmessage = aboutmessage + "<p>github.com/schtinky/words<br>";
-	aboutmessage = aboutmessage + "github.com/schtinky/words_for_chrome</p>";
+	aboutmessage = aboutmessage + "<p>github.com/fivedogit/words-backend<br>";
+	aboutmessage = aboutmessage + "github.com/fivedogit/words-for-chrome</p>";
 
 	aboutmessage = aboutmessage + "<p>Enjoy! Feedback welcome <a href=\"#\" id=\"at_twitter_link\">@fivedogit</a></p>";
 	

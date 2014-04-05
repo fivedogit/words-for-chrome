@@ -8,7 +8,17 @@ var top="???";
 var bottom="???";
 var msfe_according_to_backend = (new Date).getTime(); // set to local machine time to start... will be reset to backend time by first thread call.
 
-(function() {getUser()})();
+// to be run automatically on install, update or browser open. 
+(function() {
+	getUser();
+	chrome.tabs.getSelected(null, function(tab) {
+		currentURL = tab.url;
+		currentTitle = tab.title;
+		currentId = tab.id;
+		drawTTUButton("\\\\\\", "///"); // clear out anything that's there now
+		doButtonGen();
+	});
+})();
 
 // GENERIC FUNCTIONS
 

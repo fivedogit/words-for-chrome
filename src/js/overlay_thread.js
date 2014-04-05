@@ -32,11 +32,10 @@ function doThreadTab()
 			var url_at_function_call = currentURL;
 			// this is the only "unwanted" reference to bg in the js underneath overlay.js/inj.js
 			// It is necessary for overlay.js in case someone clicks the button before the thread has completely loaded.
-			// For the embedded part, this line is ok as the injection signal will never be sent to the content script (inj.js) until 
-			// bg dot t_jo has loaded and thread_jo is not undefined or null (i.e. this line will never be executed)
 		    // If this line IS ever executed (in the overlay sense only), then overlay.js has gotten bg for us already
 			// no need to get it again.
 			bg.gotThread_wedge_for_ntj(url_at_function_call);
+			// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
 		}
 		else // this will always be true in the content script (inj.js) sense
 		{
