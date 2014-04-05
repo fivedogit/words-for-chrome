@@ -7,6 +7,19 @@ var threadstatus = 0;
 var top="???";
 var bottom="???";
 var msfe_according_to_backend = (new Date).getTime(); // set to local machine time to start... will be reset to backend time by first thread call.
+WebFontConfig = {
+		  custom: { families: ['Silkscreen'],
+		    urls: [ 'slkscr.css' ] }
+		};
+
+(function() {
+    var wf = document.createElement('script');
+    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+})();
 
 // to be run automatically on install, update or browser open. 
 (function() {
@@ -15,7 +28,6 @@ var msfe_according_to_backend = (new Date).getTime(); // set to local machine ti
 		currentURL = tab.url;
 		currentTitle = tab.title;
 		currentId = tab.id;
-		drawTTUButton("\\\\\\", "///"); // clear out anything that's there now
 		doButtonGen();
 	});
 })();
@@ -38,20 +50,6 @@ function getColorHexStringFromRGB(r, g, b)
 		b_hex = "0" + b_hex;
 	return "#" + r_hex + g_hex + b_hex;
 }
-
-WebFontConfig = {
-		  custom: { families: ['Silkscreen'],
-		    urls: [ 'slkscr.css' ] }
-		};
-
-(function() {
-	        var wf = document.createElement('script');
-	        wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-	        wf.type = 'text/javascript';
-	        wf.async = 'true';
-	        var s = document.getElementsByTagName('script')[0];
-	        s.parentNode.insertBefore(wf, s);
-})();
 
 //REAL FUNCTIONS, IN EXECUTION ORDER TOP2BOTTOM (sort of) 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {

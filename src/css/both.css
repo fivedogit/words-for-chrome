@@ -301,9 +301,15 @@ div#words_div .footer_div {
 	width:100%;
 	background-image: url('/images/outlets2X.png');
 	text-align: center;
-	height:25px;
+	padding:10px;
+	color:white;
+	
 }
-
+.footer_div a:link {color:white;}      /* unvisited link */
+.footer_div a:visited {color:white;}  /* visited link */
+.footer_div a:hover {color:white;}  /* mouse over link */
+.footer_div a:active {color:white;}  /* selected link */
+	
 div#words_div img.rounded {
     /*border: 1px solid #7c7c7c;*/
     border-radius: 4px;

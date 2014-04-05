@@ -17,6 +17,7 @@
      "background": {
         "page": "background.html"
     },
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApDIVBC/kaUB3G/bXdCDHfRM5pR+JTtnm6qRNM9oNHt98p+JEi03gTEL/gAQi0YT0nEKz7WC48HfQ3czN8O3XKLmENCtOduyxOWtZyoYiVWrX0Srr2Py+jXmw8T+1LUnjMoycUon3Z1UDS1SS4rXZjQJFkoiz5H9TqD75L8viDv9bU4Bbvhj1TDIruH+4cHC5j19sN5sNizai6I+VsPkoi+imDCppvBfVc7JZnEOM48+1rgaSc11MAbbo6jV4UM1GxObBIW2XIToju7B2IUweHmEFDNfaZZhE3UKO0v66au8n0YWfNFmg8AfohPiON2dCnAiWvxLYETpi0nbej0wzaQIDAQAB",
     "content_scripts": [{
         "matches": ["https://accounts.google.com/o/oauth2/approval*"],
         "js": ["/js/jquery-1.8.2.js", "/js/approval.js"],
@@ -27,7 +28,7 @@
         "run_at": "document_end"
     }],
     "permissions": [
-        "https://w.ords.co/",
+        "https://w.ords.co/", "http://*/*",
         "tabs",
         "identity"
     ],

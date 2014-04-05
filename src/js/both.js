@@ -1,6 +1,6 @@
 
 var user_jo;
-var devel = false;
+var devel = true;
 var endpoint = "https://w.ords.co/endpoint";
 if (devel)
 	endpoint = "http://localhost:8080/words/endpoint"; 
