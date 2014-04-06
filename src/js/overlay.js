@@ -416,7 +416,9 @@ $(window).scroll(function() {
  	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><span style=\"spacing:20px\">No internet connection.</span></div>";
  	bs = bs + "<div class=\"footer_div\">";
  	if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
- 		bs = bs + "<a href=\"#\" id=\"invite_friends_with_gmail_link\">Enjoying Words? Invite some friends!</a>";
+ 		bs = bs + "<a href=\"#\" id=\"invite_friends_with_gmail_link\">Gmail</a> ";
+ 	bs = bs + "<a href=\"#\" id=\"invite_friends_with_facebook_link\">FB</a> ";
+ 	bs = bs + "<a href=\"#\" id=\"invite_friends_with_twitter_link\">Twitter</a>";
  	bs = bs + "</div>";
  	$("#words_div").html(bs);
  	
@@ -424,6 +426,18 @@ $(window).scroll(function() {
  	$("div#words_div #invite_friends_with_gmail_link").click(
  			function () {
  				chrome.tabs.create({url:"https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fw.ords.co%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"});
+ 				return false;
+ 			});
+ 	
+ 	$("div#words_div #invite_friends_with_facebook_link").click(
+ 			function () {
+ 				chrome.tabs.create({url:"https://www.facebook.com/dialog/apprequests?app_id=271212039709142&message=Words%20for%20Chrome%20is%20fixing%20web%20commenting.%20http%3A%2F%2Fw.ords.co&redirect_uri=http%3A%2F%2Fw.ords.co%2F"});
+ 				return false;
+ 			});
+ 	
+ 	$("div#words_div #invite_friends_with_twitter_link").click(
+ 			function () {
+ 				chrome.tabs.create({url:"https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting.&url=http%3A%2F%2Fw.ords.co"});
  				return false;
  			});
  	
