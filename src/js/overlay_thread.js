@@ -30,14 +30,14 @@ function doThreadTab()
 		if(typeof thread_jo === "undefined" || thread_jo === null)
 		{
 			var url_at_function_call = currentURL;
-			// this is the only "unwanted" reference to bg in the js underneath overlay.js/inj.js
+			// this is the only "unwanted" reference to bg
 			// It is necessary for overlay.js in case someone clicks the button before the thread has completely loaded.
 		    // If this line IS ever executed (in the overlay sense only), then overlay.js has gotten bg for us already
 			// no need to get it again.
 			bg.gotThread_wedge_for_ntj(url_at_function_call);
 			// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
 		}
-		else // this will always be true in the content script (inj.js) sense
+		else 
 		{
 			gotThread();
 		}
@@ -230,6 +230,63 @@ function gotThread()
 	}
 }
 
+function noteThreadView(was_empty, showed_alternatives) //booleans or strings
+{
+	// function is called in 3 instances after user has clicked button:
+	// 1. There were no normal results and getTrending for the hostname returned nothing
+	// 2. There were no normal results and getTrending for the hostname returned alternatives
+	// 3. There were normal results for this page
+	// Each of these three calls can be found below in prepareGetAndPopulateThreadPortion
+	
+	// NOTE: if you follow this AJAX call through Endpoint and ThreadviewItem on the backend,
+	// you'll see that the user info is used to increment the user's threadview count only and the URL is not saved in the database. 
+	// Only 5 items are recorded: 1. Was the thread empty? 2. Was the user logged in at the time of threadview? 
+	// 3. Was the hostname combined or separated? 4. Did the hostname/path have an significant QSPs (like youtube) 5. Were we able to show link alternatives?
+	// This information will help us make Words better, cus it sucks to, for instance, show empty threads when someone clicks the button.
+	// We want to know how often that's happening.
+	
+	if(typeof was_empty === "boolean" && was_empty === true)
+		was_empty = "true";
+	else if(typeof was_empty === "boolean" && was_empty === false)
+		was_empty = "false";
+	else if(typeof was_empty === "string" && was_empty === "true")
+		{ }// do nothing
+	else if(typeof was_empty === "string" && was_empty === "false")
+		{ }// do nothing
+	else
+		return; // this is bad, unexpected input. do not note threadview
+		
+	$.ajax({
+		type: 'GET',
+		url: endpoint,
+		data: {
+			method: "noteThreadView",
+			email: docCookies.getItem("email"),
+			this_access_token: docCookies.getItem("this_access_token"),
+			url: currentURL,
+			was_empty: was_empty,
+			showed_alternatives: showed_alternatives
+		},
+		dataType: 'json',
+		async: true,
+		success: function (data, status) {
+			if(data.response_status === "error")
+			{
+				// fail silently
+			}
+			else if(data.response_status === "success")
+			{
+				// succeed silently
+			}	
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			//alert("loginWithGoogle ajax failure");
+			console.log(textStatus, errorThrown);
+			displayMessage("Could not log you in. Network connection?<br><br>Please try again through the Words extension. (AJAX)", "red");
+		} 
+	}); 
+}
+
 // this function says "Is the thread empty? If so, show empty message. If not, prepare comment divs and then call doThreadItem for each to populate them"
 function prepareGetAndPopulateThreadPortion()
 {
@@ -275,7 +332,7 @@ function prepareGetAndPopulateThreadPortion()
 					{
 						if(typeof data.trending_jas == "undefined" || data.trending_jas == null)
 						{
-							
+							noteThreadView(true, false); // (was_empty, showed_alternatives)
 						}
 						else
 						{
@@ -284,21 +341,24 @@ function prepareGetAndPopulateThreadPortion()
 							var cutoff_in_hours = 48;
 							var choices = [48];
 							drawTrendingChart(cutoff_in_hours, choices, data, "other_pages_on_this_site_div");
+							noteThreadView(true, true); // (was_empty, showed_alternatives)
 						}
 					}
 					else if (data.response_status === "error") 
 					{
-						displayMessage(data.message, "red", "message_div_top");
+						alert("getTrending error");
+						displayMessage(data.message, "red", "message_div_" + currentURLhash);
 						return;
 					}
 					else
 					{
 						//alert("nonajax error");
+						alert("getTrending invalid response");
 						return;
 					}
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					displayMessage("AJAX error getting trending info.", "red", "message_div_top");
+					displayMessage("AJAX error getting trending info.", "red", "message_div_" + currentURLhash);
 					console.log(textStatus, errorThrown);
 					return;
 				} 
@@ -307,8 +367,9 @@ function prepareGetAndPopulateThreadPortion()
 			
 			return;
 		}
-		else if (threadstatus === 0) // the last thread has come in, now populate
+		else if (threadstatus === 0) // the last thread has come in (with children), now populate
 		{
+			alert("Thread had children");
 			var thread_div_string = "";
 			var tempcomments = thread_jo.children;
 			tempcomments.sort(function(a,b){
@@ -319,11 +380,11 @@ function prepareGetAndPopulateThreadPortion()
 			
 			thread_jo.children = tempcomments;
 			
-			// loop the comment id list and doThreadItem2 for each one
+			// loop the comment id list and doThreadItem for each one
 			//alert("showing beginindex=" + beginindex + " through " + endindex);
 			for(var x=beginindex; x < endindex && x < thread_jo.children.length; x++) 
 			{
-				doThreadItem2(thread_jo.children[x], currentURLhash, "initialpop");
+				doThreadItem(thread_jo.children[x], currentURLhash, "initialpop");
 			}
 			
 			// if we've reached the end, show "end of comments" message
@@ -349,6 +410,8 @@ function prepareGetAndPopulateThreadPortion()
 					 chrome.tabs.create({url:h});
 				 }
 			});*/
+			
+			noteThreadView(false, false); // (was_empty, showed_alternatives)
 		}
 		
 	}
@@ -358,7 +421,7 @@ function prepareGetAndPopulateThreadPortion()
 	}
 }
 
-function doThreadItem2(comment_id, parent, commenttype) // type = "initialpop", "newcomment", "reply"
+function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "newcomment", "reply"
 {
 	//alert("doing threaditem2 for comment_id=" + comment_id + " and parent=" + parent);
 	var comment_div_string = "";
@@ -452,7 +515,7 @@ function doThreadItem2(comment_id, parent, commenttype) // type = "initialpop", 
 					for(var y=0; y < data.children.length; y++) 
 		    		{  
 						//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
-						doThreadItem2(data.children[y], comment_id, "reply");
+						doThreadItem(data.children[y], comment_id, "reply");
 		    		}
         		}
         	}
@@ -759,9 +822,9 @@ function submitComment(parent) // submits comment and updates thread
 	        	displayMessage("Comment posted.", "black", "message_div_" + parent);
 				
 	        	if(parent.length !== 11) // toplevel
-					doThreadItem2(data.comment.id, parent, "newcomment");
+					doThreadItem(data.comment.id, parent, "newcomment");
 				else
-					doThreadItem2(data.comment.id, data.comment.parent, "reply");
+					doThreadItem(data.comment.id, data.comment.parent, "reply");
 	        }
 	    },
 	    error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -797,7 +860,7 @@ function hideComment(inc_id) // submits comment and updates thread
 	        else if (data.response_status === "success")
 	        {
 	        	displayMessage("Comment hidden.", "black", "message_div_" + inc_id);
-				doThreadItem2(data.comment.id, data.comment.parent, "reply");
+				doThreadItem(data.comment.id, data.comment.parent, "reply");
 	        }
 	        else
 	        {
@@ -842,7 +905,7 @@ function likeOrDislikeComment(id, like_or_dislike)
 						displayMessage("Like recorded.", "black", "message_div_" + id);
 					else
 						displayMessage("Dislike recorded.", "black", "message_div_" + id);
-					doThreadItem2(data.parent.id, data.parent.parent, "reply"); // reload the comment this like is attached to and attach it to the parent's parent
+					doThreadItem(data.parent.id, data.parent.parent, "reply"); // reload the comment this like is attached to and attach it to the parent's parent
 				}
 				else
 				{
