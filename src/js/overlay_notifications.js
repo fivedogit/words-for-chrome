@@ -84,7 +84,7 @@ function getNotifications()
 	            {
 	            	user_jo.notification_count = 0;
 	            	updateNotificationTabLinkImage();
-	            	//bg dot doButtonGen(); // to avoid the reference to bg, we can just let this update on the next tab view
+	            	bg.doButtonGen(); // to avoid the reference to bg, we can just let this update on the next tab view
 	            }
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {

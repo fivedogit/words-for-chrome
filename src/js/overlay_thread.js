@@ -369,7 +369,7 @@ function prepareGetAndPopulateThreadPortion()
 		}
 		else if (threadstatus === 0) // the last thread has come in (with children), now populate
 		{
-			alert("Thread had children");
+			//alert("Thread had children");
 			var thread_div_string = "";
 			var tempcomments = thread_jo.children;
 			tempcomments.sort(function(a,b){
