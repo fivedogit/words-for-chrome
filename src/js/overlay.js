@@ -416,20 +416,20 @@ $(window).scroll(function() {
  	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><span style=\"spacing:20px\">No internet connection.</span></div>";
  	bs = bs + "<div class=\"footer_div\">";
  	var randomint = Math.floor(Math.random() * 8) + 1
- 	if(randomint === 1) // show this 1/8 threadviews
+ 	if(typeof user_jo !== undefined && user_jo !== null && randomint === 1) // if user is logged in, show this 1/8 threadviews
  	{	
- 		bs = bs + "Spread the Words: ";
- 	 	bs = bs + "<a href=\"#\" id=\"share_to_facebook_link\">Facebook</a> ";
- 	 	bs = bs + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> ";
- 	 	bs = bs + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> ";
- 	 	bs = bs + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a> ";
+ 		bs = bs + "SPREAD THE WORDS! ";
+ 	 	bs = bs + "<a style=\"margin-left:5px\" href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
+ 	 	bs = bs + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";
+ 	 	bs = bs + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
+ 	 	bs = bs + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
  	 	if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
- 	 		bs = bs + "<a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
+ 	 		bs = bs + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
  	}
  	bs = bs + "</div>";
  	$("#words_div").html(bs);
  	
- 	if(randomint === 1) // show this 1/8 threadviews
+ 	if(typeof user_jo !== undefined && user_jo !== null && randomint === 1) // show this 1/8 threadviews
  	{
  		$("div#words_div #share_to_facebook_link").click(
  	 			function () {
@@ -437,6 +437,7 @@ $(window).scroll(function() {
  	 					//"https://www.facebook.com/dialog/apprequests?app_id=271212039709142&message=Words%20for%20Chrome%20is%20fixing%20web%20commenting.%20http%3A%2F%2Fw.ords.co&redirect_uri=http%3A%2F%2Fw.ords.co"
  	 					"https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fw.ords.co"
  	 					});
+ 	 				noteUserPromo("facebook", "footer");
  	 				return false;
  	 			});
  	 	
@@ -445,6 +446,7 @@ $(window).scroll(function() {
  	 				chrome.tabs.create({url:
  	 					"https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fw.ords.co"
  	 					});
+ 	 				noteUserPromo("twitter", "footer");
  	 				return false;
  	 			});
  	 	
@@ -453,6 +455,7 @@ $(window).scroll(function() {
  	 				chrome.tabs.create({url:
  	 					"https://plus.google.com/share?url=http%3A%2F%2Fw.ords.co"
  	 					});
+ 	 				noteUserPromo("googleplus", "footer");
  	 				return false;
  	 			});
  	 	
@@ -461,14 +464,7 @@ $(window).scroll(function() {
  	 				chrome.tabs.create({url:
  	 					"http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fw.ords.co&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting"
  	 					});
- 	 				return false;
- 	 			});
- 	 	
- 	 	$("div#words_div #share_to_linkedin_link").click(
- 	 			function () {
- 	 				chrome.tabs.create({url:
- 	 					"http://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fw.ords.co&title=Words%20for%20Chrome%20is%20fixing%20web%20commenting&summary=summaray%20here&source=http%3A%2F%2Fw.ords.co"
- 	 					});
+ 	 				noteUserPromo("tumblr", "footer");
  	 				return false;
  	 			});
  	 	
@@ -477,6 +473,7 @@ $(window).scroll(function() {
  	 				chrome.tabs.create({url:
  	 					"https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fw.ords.co%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"
  	 					});
+ 	 				noteUserPromo("gmail", "footer");
  	 				return false;
  	 			});
  	}
@@ -708,7 +705,39 @@ $(window).scroll(function() {
 	 });
  }
  
-
+ function noteUserPromo(platform, source) //booleans or strings
+ {
+ 	$.ajax({
+ 		type: 'GET',
+ 		url: endpoint,
+ 		data: {
+ 			method: "noteUserPromo",
+ 			email: docCookies.getItem("email"),
+ 			this_access_token: docCookies.getItem("this_access_token"),
+ 			platform: platform,
+ 			source: source
+ 		},
+ 		dataType: 'json',
+ 		async: true,
+ 		success: function (data, status) {
+ 			if(data.response_status === "error")
+ 			{
+ 				// fail silently
+ 			}
+ 			else if(data.response_status === "success")
+ 			{
+ 				// succeed silently
+ 			}	
+ 		},
+ 		error: function (XMLHttpRequest, textStatus, errorThrown) {
+ 			//alert("loginWithGoogle ajax failure");
+ 			console.log(textStatus, errorThrown);
+ 			displayMessage("AJAX error noting user promo", "red");
+ 		} 
+ 	}); 
+ }
+ 
+ 
 /***
  *     _____ _____  _____ _____  _      _____    ___   _   _   ___   _   __   _______ _____ _____  _____ 
  *    |  __ \  _  ||  _  |  __ \| |    |  ___|  / _ \ | \ | | / _ \ | |  \ \ / /_   _|_   _/  __ \/  ___|

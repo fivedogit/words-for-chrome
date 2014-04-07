@@ -189,14 +189,14 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
         			// Why? $("div#words_div #header_div_" + activity_jo.id).css("text-align", "left");
 	        		if(activity_jo.id.endsWith("L"))
 	        		{
-	        			$("div#words_div #header_td_" + activity_jo.id).html("<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> liked your comment - <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.url_when_created + "\">" + url_to_use + "</a>");
+	        			$("div#words_div #header_td_" + activity_jo.id).html("<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> liked your words: <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.url_when_created + "\">" + url_to_use + "</a>");
 	        			$("div#words_div #screenname_link_" + activity_jo.id).click(function() {
 	        		 		viewProfile(activity_jo.author_screenname);
 	        		 	});
 	        		}
 	        		else if(activity_jo.id.endsWith("D"))
 	        		{
-	        			$("div#words_div #header_td_" + activity_jo.id).html("Someone disliked your comment - <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\"  style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + activity_jo.url_when_created + "\">" + url_to_use + "</a>");
+	        			$("div#words_div #header_td_" + activity_jo.id).html("Someone disliked your words: <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\"  style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + activity_jo.url_when_created + "\">" + url_to_use + "</a>");
 	        		}	
 	        		else
 	        		{
