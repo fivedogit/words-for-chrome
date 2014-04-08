@@ -90,121 +90,22 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 }); 
 
 
-// draws the button. if bottom=="NOTIFICATION", then top is displayed larger (and bottom is not displayed)
-function drawTTUButton(top, bottom) {
-	
-    // Get the canvas element.
-    var canvas = document.getElementById("button_canvas");
-
-    // Specify a 2d drawing context.
-    var context = canvas.getContext("2d");
-    
-    var top_color = "29abe2";
-    
-    var top_bg_r = "0x" + top_color.substring(0,2);
-    var top_bg_g = "0x" + top_color.substring(2,4);
-    var top_bg_b = "0x" + top_color.substring(4,6);
-    if (devel === true) 
-    {
-    	top_bg_r = 0x55;
-        top_bg_g = 0x55;
-        top_bg_b = 0x55;
-    }
-              
-    var bottom_bg_r = "0x00"; 
-    var bottom_bg_g = "0x00";
-    var bottom_bg_b = "0x00"; 
-   
-    context.fillStyle = getColorHexStringFromRGB(top_bg_r, top_bg_g, top_bg_b);
-    context.fillRect (0, 0, 19, 8); 
-    context.fillStyle = getColorHexStringFromRGB(bottom_bg_r, bottom_bg_g, bottom_bg_b);
-    context.fillRect (0, 8, 19, 19); 
-    var imageData = context.getImageData(0, 0, 19, 19);
-    var pix = imageData.data;
-    var r = 0; var g = 0; var b = 0; var a = 255;
-    for (var i = 0, n = pix.length; i < n; i += 4) 
-    {
-    	r = 0; g = 0; b = 0; a = 255;
-    	if (i === 0 || i === 72 || i === 1140 || i === 1212 // four corner roundings
-    			|| (i >= 1216 && i <= 1224) || (i >= 1240 && i <= 1288) // first row below bubble
-    			|| (i >= 1292 && i <= 1304) || (i >= 1316 && i <= 1364) // second row below bubble
-    			|| (i >= 1368 && i <= 1384) || (i >= 1392))
-    	{ 
-    		r	= 255; g = 255; b = 255; a = 0; 
-    		pix[i  ] = r; // red
-    		pix[i+1] = g; // green
-    		pix[i+2] = b; // blue
-    		pix[i+3] = a; // i+3 is alpha (the fourth element)
-    	}
-    }
-
-    context.putImageData(imageData, 0, 0);
-
-    if (bottom === "NOTIFICATION")
-    {
-    	context.fillStyle = "#ffffff";
-        context.font = "16px Silkscreen";
-        if (top === "1" || top === 1)
-        	context.fillText(top,5,13);
-        else
-        	context.fillText(top,4,13);
-    }
-    else
-    {
-    	context.fillStyle = "#ffffff";
-        context.font = "8px Silkscreen";
-        if (top.length === 1)
-        	context.fillText(top,7,6);
-        else if (top.length === 2)
-        	context.fillText(top,4,6);
-        else if (top.length === 3)
-        	context.fillText(top,1,6);
-        
-        context.fillStyle = "#ffffff";
-        context.font = "8px Silkscreen";
-        if (bottom.length === 1)
-        	context.fillText(bottom,7,14);
-        else if (bottom.length === 2)
-        	context.fillText(bottom,4,14);
-        else if (bottom.length === 3)
-        {
-        	context.fillText(bottom,1,14);
-        }
-    }
-    
-    imageData = context.getImageData(0, 0, 19, 19);
-    chrome.browserAction.setIcon({
-      imageData: imageData
-    });
-}
-
-function getHost(loc_url)
-{
-	var parser = document.createElement('a');
-	parser.href = loc_url;
-	return parser.host;
-}
-
 function doButtonGen()
 {
-	//alert("drawing button.");
 	var url_at_function_call = currentURL;	   // need to save the currentURL bc if it has changed by the time threads come back, they are irrelevant at that point
 	t_jo = null;
 	// priority order: 
-	// 1. display notifications count, if applicable
-	// 2. display a url error, if applicable
-	// 3. otherwise, display thread count (even if 0)
-	var host = getHost(url_at_function_call);
-	if ((currentURL.substring(0, 4) != "http"))
-		//|| (host.indexOf(":") != -1) || (host.indexOf(".") == -1)) // this looks like an invalid url...
+	// 1. display a url error, if applicable
+	// 2. go get thread
+	// 		if notification, draw big number in button
+	//      if not, draw thread info in button
+	if (!isValidURLFormation(currentURL))
 	{
-		//alert("doButtonGen(): Not a real website. Showing ?/URL");
 		drawTTUButton("?", "URL");
 		return;
 	}	
 	else 
 	{
-		//alert("doButtonGen(): Seems like a real website." + currentURL + "  Getting thread.");
 		getUser();
 		url_at_function_call = currentURL;
 		getThread(url_at_function_call, true); // updatebutton = true
@@ -632,54 +533,93 @@ function getTopAndBottom(inc_stripped)
 	}
 }
 
-//this ugly function happens when a user has clicked the activation button before
-//the thread has been downloaded from the backend.
-//it waits for up to 7 seconds, letting the OTHER wedge animate all along. 
-//and then populates the appropriate areas when finished (so long as the URL is still correct)
-function gotThread_wedge_for_ntj(url_at_function_call)
-{
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{if(url_at_function_call===currentURL){gotThread();}return;}
-	setTimeout(function(){if(typeof t_jo!=="undefined"&&t_jo!==null)
-	{displayMessage("Thread retrieval error.", "red", "message_div_top");return;}},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);
+
+//draws the button. if bottom=="NOTIFICATION", then top is displayed larger (and bottom is not displayed)
+function drawTTUButton(top, bottom) {
+	
+ // Get the canvas element.
+ var canvas = document.getElementById("button_canvas");
+
+ // Specify a 2d drawing context.
+ var context = canvas.getContext("2d");
+ 
+ var top_color = "29abe2";
+ 
+ var top_bg_r = "0x" + top_color.substring(0,2);
+ var top_bg_g = "0x" + top_color.substring(2,4);
+ var top_bg_b = "0x" + top_color.substring(4,6);
+ if (devel === true) 
+ {
+ 	top_bg_r = 0x55;
+     top_bg_g = 0x55;
+     top_bg_b = 0x55;
+ }
+           
+ var bottom_bg_r = "0x00"; 
+ var bottom_bg_g = "0x00";
+ var bottom_bg_b = "0x00"; 
+
+ context.fillStyle = getColorHexStringFromRGB(top_bg_r, top_bg_g, top_bg_b);
+ context.fillRect (0, 0, 19, 8); 
+ context.fillStyle = getColorHexStringFromRGB(bottom_bg_r, bottom_bg_g, bottom_bg_b);
+ context.fillRect (0, 8, 19, 19); 
+ var imageData = context.getImageData(0, 0, 19, 19);
+ var pix = imageData.data;
+ var r = 0; var g = 0; var b = 0; var a = 255;
+ for (var i = 0, n = pix.length; i < n; i += 4) 
+ {
+ 	r = 0; g = 0; b = 0; a = 255;
+ 	if (i === 0 || i === 72 || i === 1140 || i === 1212 // four corner roundings
+ 			|| (i >= 1216 && i <= 1224) || (i >= 1240 && i <= 1288) // first row below bubble
+ 			|| (i >= 1292 && i <= 1304) || (i >= 1316 && i <= 1364) // second row below bubble
+ 			|| (i >= 1368 && i <= 1384) || (i >= 1392))
+ 	{ 
+ 		r	= 255; g = 255; b = 255; a = 0; 
+ 		pix[i  ] = r; // red
+ 		pix[i+1] = g; // green
+ 		pix[i+2] = b; // blue
+ 		pix[i+3] = a; // i+3 is alpha (the fourth element)
+ 	}
+ }
+
+ context.putImageData(imageData, 0, 0);
+
+ if (bottom === "NOTIFICATION")
+ {
+ 	context.fillStyle = "#ffffff";
+     context.font = "16px Silkscreen";
+     if (top === "1" || top === 1)
+     	context.fillText(top,5,13);
+     else
+     	context.fillText(top,4,13);
+ }
+ else
+ {
+ 	context.fillStyle = "#ffffff";
+     context.font = "8px Silkscreen";
+     if (top.length === 1)
+     	context.fillText(top,7,6);
+     else if (top.length === 2)
+     	context.fillText(top,4,6);
+     else if (top.length === 3)
+     	context.fillText(top,1,6);
+     
+     context.fillStyle = "#ffffff";
+     context.font = "8px Silkscreen";
+     if (bottom.length === 1)
+     	context.fillText(bottom,7,14);
+     else if (bottom.length === 2)
+     	context.fillText(bottom,4,14);
+     else if (bottom.length === 3)
+     {
+     	context.fillText(bottom,1,14);
+     }
+ }
+ 
+ imageData = context.getImageData(0, 0, 19, 19);
+ chrome.browserAction.setIcon({
+   imageData: imageData
+ });
 }
 
 /***

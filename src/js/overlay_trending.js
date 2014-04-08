@@ -46,7 +46,7 @@ function getTrending(cutoff_in_hours, choices)
 			}
 			else if (data.response_status === "error") 
 			{
-				displayMessage(data.message, "red", "message_div_top");
+				displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				return;
 			}
 			else
@@ -56,7 +56,7 @@ function getTrending(cutoff_in_hours, choices)
 			}
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown) {
-			displayMessage("AJAX error getting trending info.", "red", "message_div_top");
+			displayMessage("AJAX error getting trending info.", "red", "message_div_" + currentURLhash);
 			console.log(textStatus, errorThrown);
 			return;
 		} 

@@ -415,7 +415,7 @@ $(window).scroll(function() {
  	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><span style=\"spacing:20px\">No internet connection.</span></div>";
  	bs = bs + "<div class=\"footer_div\">";
  	var randomint = Math.floor(Math.random() * 3) + 1
- 	if(typeof thread_jo !== undefined && thread_jo !== null && thread_jo.children > 5 && 
+ 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && thread_jo.children > 5 && 
  			typeof user_jo !== undefined && user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
  	{	
  		bs = bs + "SPREAD THE WORDS! ";
@@ -429,7 +429,7 @@ $(window).scroll(function() {
  	bs = bs + "</div>";
  	$("#words_div").html(bs);
  	
- 	if(typeof thread_jo !== undefined && thread_jo !== null && thread_jo.children > 5 && 
+ 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && thread_jo.children > 5 && 
  			typeof user_jo !== undefined && user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
  	{
  		$("div#words_div #share_to_facebook_link").click(

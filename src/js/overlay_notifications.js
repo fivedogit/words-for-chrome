@@ -78,7 +78,7 @@ function getNotifications()
 	            if (data.response_status === "error") 
 	            {
 	            	//alert('reset activity count error');
-	            	displayMessage(data.message, "red", "message_div_top");
+	            	displayMessage(data.message, "red", "message_div_" + currentURLhash);
 	            }
 	            else // on success reset the button image
 	            {
@@ -88,7 +88,7 @@ function getNotifications()
 	            }
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	displayMessage("Ajax alert for resetActivity method.", "red", "message_div_top");
+	        	displayMessage("Ajax alert for resetActivity method.", "red", "message_div_" + currentURLhash);
 	            console.log(textStatus, errorThrown);
 	        } 
 		});
@@ -376,7 +376,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	}	
 	else
 	{
-		displayMessage("error: feed item structure invalid. item_id=" + item_id, "red", "message_div_top");
+		displayMessage("error: feed item structure invalid. item_id=" + item_id, "red", "message_div_" + currentURLhash);
 	}	
 }
 

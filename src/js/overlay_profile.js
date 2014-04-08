@@ -64,7 +64,7 @@ function getProfile(screenname)
         async: true,
         success: function (data, status) {
             if (data.response_status === "error") {
-            	displayMessage(data.message, "red", "message_div_top");
+            	displayMessage(data.message, "red", "message_div_" + currentURLhash);
             } else 
             {
             	target_user_jo = data.target_user_jo; // backend will provide something that looks like this:
@@ -857,7 +857,7 @@ function getProfile(screenname)
         
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-        	displayMessage("Ajax error setUserPreference: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_top");
+        	displayMessage("Ajax error setUserPreference: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + currentURLhash);
             console.log(textStatus, errorThrown);
         } 
 	});

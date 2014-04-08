@@ -8,12 +8,6 @@
  *     \___/ \___/\____/ \/  \/    \_/ \_| |_/\_| \_\____/\_| |_/___/                                                                   
  */
 
-function getHost(loc_url)
-{
-	var parser = document.createElement('a');
-	parser.href = loc_url;
-	return parser.host;
-}
 
 // this function says "Do we have the thread from the bg yet? If not, wait. If so, proceed.
 function doThreadTab() 
@@ -30,19 +24,15 @@ function doThreadTab()
 	$("div#words_div #comment_submission_form_div_" + currentURLhash).show();
 	
 	$("div#words_div #main_div_" + currentURLhash).html("");
-	var host = getHost(currentURL);
-	alert(host);
-	if (currentURL !== null && currentURL !== "" && (currentURL.substring(0,4) === "http"))
-		//&& (host.indexOf(":") == -1) && (host.indexOf(".") != -1))
+	
+	if(isValidURLFormation(currentURL))
 	{
 		if(typeof thread_jo === "undefined" || thread_jo === null)
 		{
 			var url_at_function_call = currentURL;
-			// this is the only "unwanted" reference to bg
-			// It is necessary for overlay.js in case someone clicks the button before the thread has completely loaded.
-		    // If this line IS ever executed (in the overlay sense only), then overlay.js has gotten bg for us already
-			// no need to get it again.
-			bg.gotThread_wedge_for_ntj(url_at_function_call);
+			// wait for thread to load
+			$("div#words_div #main_div_" + currentURLhash).html("Retrieving thread... <img style=\"padding:10px;vertical-align:middle\" src=\"images/ajaxSnake.gif\">");
+			gotThread_wedge_for_ntj(url_at_function_call);
 			// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
 		}
 		else 
@@ -50,18 +40,14 @@ function doThreadTab()
 			gotThread();
 		}
 	}
-	else
+	else // not a valid URL formation
 	{
 		beginindex = 0;
 		$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
 		var main_div_string = "<div class=\"no-comments-div\">Commenting for non-websites is currently disabled.<br>";
-		main_div_string = main_div_string + "		(URL must start with \"http\".)";
+		main_div_string = main_div_string + "		(URL must start with \"http\".)"; // , hostname must contain a \".\" and lack a \":\".
 		main_div_string = main_div_string + "</div>";
 		$("div#words_div #main_div_" + currentURLhash).html(main_div_string);
-		
-		$("div#words_div #check_out_trending_link").click( function() {
-			$("div#words_div #trending_tab_link").trigger("click"); 
-			});
 	}
 }
 
@@ -229,7 +215,7 @@ function gotThread()
 	 			});*/
 	 	
 		if(currentURL.length > 255)
-			displayMessage("Can't comment here. Words does not support URLs > 255 chars. Sorry.", "red", "message_div_top");
+			displayMessage("Can't comment here. Words does not support URLs > 255 chars. Sorry.", "red", "message_div_" + currentURLhash);
 		
 		beginindex = 0;
 		endindex = 8;
@@ -319,10 +305,6 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\"><img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (48 hrs)</div>";
 			main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px;display:none\" id=\"other_pages_on_this_site_div\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
 			$("div#words_div #main_div_" + currentURLhash).html(main_div_string);
-
-			$("div#words_div #check_out_trending_link").click( function() {
-				$("div#words_div #trending_tab_link").trigger("click"); 
-				});
 
 			$.ajax({
 				type: 'GET',
@@ -783,7 +765,7 @@ function submitComment(parent) // submits comment and updates thread
 	        if (data.response_status === "error") 
 	        {
 	        	//if (parent_to_submit.indexOf(".") !== -1) // on server-fail of toplevel form comm submission, reenable submit button and remove spinner
-		    	//	displayMessage(data.message, "red", "message_div_top");
+		    	//	displayMessage(data.message, "red", "message_div_" + currentURLhash);
 	        	//else
 	        	displayMessage(data.message, "red", "message_div_" + parent);
 	        	// on error, leave the comment box open with whatever was in there, char count the same. Just re-enable the submit button.
@@ -824,7 +806,7 @@ function submitComment(parent) // submits comment and updates thread
 	        	docCookies.removeItem("saved_text_dom_id");
 	        	
 	        	//if(parent.indexOf(".") !== -1) // toplevel
-	        	//	displayMessage("Comment posted.", "black", "message_div_top");
+	        	//	displayMessage("Comment posted.", "black", "message_div_" + currentURLhash);
 	        	//else 
 	        	displayMessage("Comment posted.", "black", "message_div_" + parent);
 				
@@ -929,4 +911,54 @@ function likeOrDislikeComment(id, like_or_dislike)
 	{
 		displayMessage("Please login first.", "red", "message_div_" + id);
 	}		 
+}
+
+//this ugly function happens when a user has clicked the activation button before
+//the thread has been downloaded from the backend.
+//it waits for up to 7 seconds, letting the OTHER wedge animate all along. 
+//and then populates the appropriate areas when finished (so long as the URL is still correct)
+function gotThread_wedge_for_ntj(url_at_function_call)
+{
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
+	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+	{displayMessage("Thread retrieval error.", "red", "message_div_"+ currentURLhash);return;}},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);
 }
