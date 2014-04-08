@@ -187,6 +187,16 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onreply_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
+					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On mention:</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "							<select id=\"onmention_selector\">";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
+					main_div_string = main_div_string + "							</select>";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onmention_result_td\">";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "						</tr>";
 					/*main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Words promo emails:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"emailpromos_selector\">";
@@ -647,6 +657,11 @@ function getProfile(screenname)
             		$("div#words_div #onreply_selector").val("email");
             	else if (user_jo.onreply === "do nothing")
             		$("div#words_div #onreply_selector").val("do nothing");
+            	
+            	if (user_jo.onmention === "email")
+            		$("div#words_div #onmention_selector").val("email");
+            	else if (user_jo.onmention === "do nothing")
+            		$("div#words_div #onmention_selector").val("do nothing");
             	
             	/*if (user_jo.emailpromos === "yes")
             		$("div#words_div #emailpromos_selector").val("yes");

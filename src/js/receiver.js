@@ -91,7 +91,7 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 		error: function (XMLHttpRequest, textStatus, errorThrown) {
 			//alert("loginWithGoogle ajax failure");
 			console.log(textStatus, errorThrown);
-			displayMessage("Could not log you in. Network connection?<br><br>Please try again through the Words extension. (AJAX)", "red");
+			displayMessage("Could not log you in. Network connection? (AJAX)", "red");
 		} 
 	});  
 }
@@ -171,7 +171,7 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 				//alert("loginWithGoogle ajax failure");
 				console.log(textStatus, errorThrown);
-				displayMessage("Could not log you in. Network connection?<br><br>Please try again through the Words extension. (AJAX)", "red");
+				displayMessage("Could not confirm email. (AJAX)", "red");
 			} 
 		});  // end endpoint.login() call
 		
@@ -267,7 +267,7 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						//alert("loginWithGoogle ajax failure");
 						console.log(textStatus, errorThrown);
-						displayMessage("Could not log you in. Network connection?<br><br>Please try again through the Words extension. (AJAX)", "red");
+						displayMessage("Could not log you in. Network connection? (AJAX)", "red");
 					} 
 				});  // end endpoint.login() call
 			} // end else

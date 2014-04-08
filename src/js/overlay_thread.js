@@ -282,7 +282,7 @@ function noteThreadView(was_empty, showed_alternatives) //booleans or strings
 		error: function (XMLHttpRequest, textStatus, errorThrown) {
 			//alert("loginWithGoogle ajax failure");
 			console.log(textStatus, errorThrown);
-			displayMessage("Could not log you in. Network connection?<br><br>Please try again through the Words extension. (AJAX)", "red");
+			displayMessage("noteThreadView error (AJAX)", "red");
 		} 
 	}); 
 }

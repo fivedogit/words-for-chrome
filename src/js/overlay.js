@@ -250,7 +250,7 @@ function displayLogstatAsLoggedOut() {
 								error: function (XMLHttpRequest, textStatus, errorThrown) {
 									//alert("loginWithGoogle ajax failure");
 									console.log(textStatus, errorThrown);
-									displayMessage("Could not log you in. Network connection?<br><br>Please try again through the Words extension. (AJAX)", "red");
+									displayMessage("Could not log you in. Network connection? (AJAX)", "red");
 								} 
 							});  // end endpoint.login() call
 						} // end else
