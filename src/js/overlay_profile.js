@@ -824,6 +824,42 @@ function getProfile(screenname)
 					});
             	});
             	
+            	$("div#words_div #onmention_selector").change(function () {
+					$.ajax({
+						type: 'GET',
+						url: endpoint,
+						data: {
+				            method: "setUserPreference",
+				            email: email,             
+				            this_access_token: this_access_token,  
+				            which: "onmention",
+				            value: $("div#words_div #onmention_selector").val() 
+				        },
+				        dataType: 'json',
+				        async: true,
+				        success: function (data, status) {
+				        	if (data.response_status === "error")
+				        	{
+				        		$("div#words_div #onmention_result_td").html("Error: " + data.message);
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.onmention === "email")
+				            		$("div#words_div #onmention_selector").val("email");
+				            	else if (user_jo.onmention === "do nothing")
+				            		$("div#words_div #onmention_selector").val("do nothing");
+				        	}
+				        	else
+				        		$("div#words_div #onmention_result_td").html("updated");
+				        	setTimeout(function(){$("div#words_div #onmention_result_td").html("");},3000);
+				        }
+				        ,
+				        error: function (XMLHttpRequest, textStatus, errorThrown) {
+				        	$("div#words_div #onmention_result_td").html("ajax error");
+				        	setTimeout(function(){$("div#words_div #onmention_result_td").html("");},3000);
+				            console.log(textStatus, errorThrown);
+				        }
+					});
+            	});
+            	
             	/*$("div#words_div #emailpromos_selector").change(function () {
 					$.ajax({
 						type: 'GET',
