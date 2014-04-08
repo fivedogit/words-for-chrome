@@ -394,7 +394,6 @@ $(window).scroll(function() {
  			bs = bs + "</td>";
  		bs = bs + "</tr>";
  	bs = bs + "</table>";
-
  	bs = bs + "<div class=\"utility-div\" id=\"utility_div_" + currentURLhash + "\">"; 
  		bs = bs + "<div class=\"message-div\" id=\"message_div_" + currentURLhash + "\" style=\"display:none\"></div>";
  		bs = bs + "<div id=\"header_div_top\" style=\"display:none\"></div>"; // make unique with currentURLhash?
@@ -415,8 +414,9 @@ $(window).scroll(function() {
  		bs = bs + "</div>";
  	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><span style=\"spacing:20px\">No internet connection.</span></div>";
  	bs = bs + "<div class=\"footer_div\">";
- 	var randomint = Math.floor(Math.random() * 8) + 1
- 	if(typeof user_jo !== undefined && user_jo !== null && randomint === 1) // if user is logged in, show this 1/8 threadviews
+ 	var randomint = Math.floor(Math.random() * 3) + 1
+ 	if(typeof thread_jo !== undefined && thread_jo !== null && thread_jo.children > 5 && 
+ 			typeof user_jo !== undefined && user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
  	{	
  		bs = bs + "SPREAD THE WORDS! ";
  	 	bs = bs + "<a style=\"margin-left:5px\" href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
@@ -429,7 +429,8 @@ $(window).scroll(function() {
  	bs = bs + "</div>";
  	$("#words_div").html(bs);
  	
- 	if(typeof user_jo !== undefined && user_jo !== null && randomint === 1) // show this 1/8 threadviews
+ 	if(typeof thread_jo !== undefined && thread_jo !== null && thread_jo.children > 5 && 
+ 			typeof user_jo !== undefined && user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
  	{
  		$("div#words_div #share_to_facebook_link").click(
  	 			function () {

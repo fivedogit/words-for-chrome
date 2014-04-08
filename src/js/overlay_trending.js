@@ -124,36 +124,7 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 			return b.count - a.count;
 		});
 		data.trending_jas[cutoff_in_hours] = trendingmap;
-		mds = mds + "<table>";
-		/*mds = mds + "	<tr>";
-		mds = mds + "		<td style=\"text-align:center;padding:8px;font-size:12px\">";
-		mds = mds + data.trending_jas[cutoff_in_hours].length + " items found in the last " + cutoff_in_hours + " hours.";
-		if(choices.length > 1)
-		{
-			mds = mds + "<span style=\"padding-left:10px\">";
-			var x = 0;
-			while(x < choices.length)
-			{
-				if(x == (choices.length-1))
-				{
-					if(choices[x] === cutoff_in_hours)
-						mds = mds + choices[x];
-					else
-						mds = mds + "<a href=\"#\" id=\"trending_choice_" + x + "\">" + choices[x] + "</a>";
-				}
-				else
-				{
-					if(choices[x] === cutoff_in_hours)
-						mds = mds + choices[x] + " | ";
-					else
-						mds = mds + "<a href=\"#\" id=\"trending_choice_" + x + "\">" + choices[x] + "</a> | ";
-				}
-				x++;
-			}	
-			mds = mds + "</span>";
-		}
-		mds = mds + "		</td>";
-		mds = mds + "	</tr>";*/
+		mds = mds + "<table style=\"width:100%;\">";
 		for(var x = 0; x < data.trending_jas[cutoff_in_hours].length; x++)
 		{
 			mds = mds + "	<tr>";
@@ -164,16 +135,19 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"text-align:left;padding-bottom:2px\">";
-			mds = mds + "<a class=\"newtab\" href=\"http://" + data.trending_jas[cutoff_in_hours][x].hpqsp + "\">" + data.trending_jas[cutoff_in_hours][x].url_when_created + "</a>";
+			var url_to_use = data.trending_jas[cutoff_in_hours][x].url_when_created;
+			if(url_to_use.length > 50)
+				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
+			mds = mds + "<a class=\"newtab\" href=\"http://" + data.trending_jas[cutoff_in_hours][x].hpqsp + "\">" + url_to_use + "</a>";
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"padding-bottom:5px\">";
 			mds = mds + "			<table>";
 			mds = mds + "				<tr>";
-			var left_percentage = data.trending_jas[cutoff_in_hours][x].count / max * 90;
+			var left_percentage = data.trending_jas[cutoff_in_hours][x].count / max * 92;
 			left_percentage = left_percentage|0;
-			var right_percentage = 90 - left_percentage;
+			var right_percentage = 92 - left_percentage;
 			mds = mds + "					<td style=\"height:10px;border:1px solid black;background-color:orange;width:" + left_percentage + "%\"></td>";
 			mds = mds + "					<td style=\"height:10px;text-align:left;padding-left:3px\"> " + data.trending_jas[cutoff_in_hours][x].count + "</td>";
 			mds = mds + "				</tr>";
