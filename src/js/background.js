@@ -21,19 +21,18 @@ WebFontConfig = {
     s.parentNode.insertBefore(wf, s);
 })();
 
-// to be run automatically on install, update or browser open. 
 (function() {
 	getUser();
+	t_jo = null;
 	chrome.tabs.getSelected(null, function(tab) {
 		currentURL = tab.url;
 		currentTitle = tab.title;
 		currentId = tab.id;
-		//doButtonGen();
+		setTimeout(function() {doButtonGen();},1000);
 	});
 })();
 
 // GENERIC FUNCTIONS
-
 function getColorHexStringFromRGB(r, g, b)
 {
 	var r_hex = ~~r;
@@ -179,6 +178,12 @@ function drawTTUButton(top, bottom) {
     });
 }
 
+function getHost(loc_url)
+{
+	var parser = document.createElement('a');
+	parser.href = loc_url;
+	return parser.host;
+}
 
 function doButtonGen()
 {
@@ -189,9 +194,9 @@ function doButtonGen()
 	// 1. display notifications count, if applicable
 	// 2. display a url error, if applicable
 	// 3. otherwise, display thread count (even if 0)
-	var temp_thread_jo = null;
-	
-	if (currentURL.substring(0, 4) != "http") // this looks like an invalid url...
+	var host = getHost(url_at_function_call);
+	if ((currentURL.substring(0, 4) != "http"))
+		//|| (host.indexOf(":") != -1) || (host.indexOf(".") == -1)) // this looks like an invalid url...
 	{
 		//alert("doButtonGen(): Not a real website. Showing ?/URL");
 		drawTTUButton("?", "URL");
@@ -202,7 +207,7 @@ function doButtonGen()
 		//alert("doButtonGen(): Seems like a real website." + currentURL + "  Getting thread.");
 		getUser();
 		url_at_function_call = currentURL;
-		temp_thread_jo = getThread(url_at_function_call, true); // updatebutton = true
+		getThread(url_at_function_call, true); // updatebutton = true
 	}
 }
 
@@ -232,12 +237,11 @@ function getThread(url_at_function_call, updatebutton)
         	{
         		if (typeof data.response_status === "undefined" || data.response_status === null || data.response_status === "error") 
             	{
-        			//alert("returned from getthread with error");
+        			alert("returned from getthread with error=" + data.message);
         			threadstatus=0;
             	} 
             	else  // ajax success, url still correct, no error from server...
             	{
-            		//alert("returned from getthread with success");
             		msfe_according_to_backend = data.msfe;
             		loc_thread_jo = data.thread_jo;
             		threadstatus=0;
@@ -695,4 +699,5 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-49477303-3', 'ords.co');
 ga('send', 'pageview');
+
 

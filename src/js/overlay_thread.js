@@ -8,6 +8,12 @@
  *     \___/ \___/\____/ \/  \/    \_/ \_| |_/\_| \_\____/\_| |_/___/                                                                   
  */
 
+function getHost(loc_url)
+{
+	var parser = document.createElement('a');
+	parser.href = loc_url;
+	return parser.host;
+}
 
 // this function says "Do we have the thread from the bg yet? If not, wait. If so, proceed.
 function doThreadTab() 
@@ -24,8 +30,10 @@ function doThreadTab()
 	$("div#words_div #comment_submission_form_div_" + currentURLhash).show();
 	
 	$("div#words_div #main_div_" + currentURLhash).html("");
-	
-	if (currentURL !== null && currentURL !== "" && currentURL.substring(0,4) === "http")
+	var host = getHost(currentURL);
+	alert(host);
+	if (currentURL !== null && currentURL !== "" && (currentURL.substring(0,4) === "http"))
+		//&& (host.indexOf(":") == -1) && (host.indexOf(".") != -1))
 	{
 		if(typeof thread_jo === "undefined" || thread_jo === null)
 		{
@@ -45,8 +53,7 @@ function doThreadTab()
 	else
 	{
 		beginindex = 0;
-		$("div#words_div #utility_div").hide();
-				
+		$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
 		var main_div_string = "<div class=\"no-comments-div\">Commenting for non-websites is currently disabled.<br>";
 		main_div_string = main_div_string + "		(URL must start with \"http\".)";
 		main_div_string = main_div_string + "</div>";
