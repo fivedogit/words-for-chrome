@@ -114,7 +114,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        dataType: 'json',
 	        async: true,
 	        success: function (data, status) {
-	        	activity_jo = data;
+	        	activity_jo = data.item;
 	        	fids = fids + "<table style=\"width:100%\">";
 	    		fids = fids + "	<tr>";
 	    		fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + activity_jo.id + "\">";
@@ -183,7 +183,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	    		
 	        	if(data.response_status !== "error" && tabmode === "notifications")
 	        	{
-	        		var url_to_use = data.url_when_created;
+	        		var url_to_use = data.item.url_when_created;
         			if(url_to_use.length > 50)
         				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
         			// Why? $("div#words_div #header_div_" + activity_jo.id).css("text-align", "left");
@@ -214,9 +214,17 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		    	        async: true,
 		    	        success: function (data, status) {
 		    	        	// write the comment
-		    	        	if(data.response_status !== "error" && tabmode === "notifications")
+		    	        	if(data.response_status === "success" && tabmode === "notifications")
 		    	        	{
-		    	        		writeComment(data);
+		    	        		writeComment(data.item);
+		    	        	}
+		    	        	else if (data.response_status === "error")
+		    	        	{
+		    	        		// fail silently?
+		    	        	}	
+		    	        	else
+		    	        	{
+		    	        		// didn't even get success/fail response, fail silently?
 		    	        	}
 		    	        },
 		    	        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -247,7 +255,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        dataType: 'json',
 	        async: true,
 	        success: function (data, status) {
-	        	activity_jo = data;
+	        	activity_jo = data.item;
 	        	fids = fids + "<table style=\"width:100%\">";
 	    		fids = fids + "	<tr>";
 	    		fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + activity_jo.id + "\">";
@@ -257,7 +265,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        	fids = fids + "	</tr>";
 	        	fids = fids + "</table>";
 	    		fids = fids + "<table>";
-	    		fids = fids + "	<tr>";
+	    		fids = fids + "	<tr id=\"parent_tr\" style=\"display:none\">";
 	    		fids = fids + "		<td style=\"width:15px\"></td>";
 	    		fids = fids + "		<td class=\"rotated-who-wrote\">";
 	    		fids = fids + "			You wrote:";
@@ -324,44 +332,65 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     				return false;
     			});	
 	    		
-	    		// FIXME, this is responding as just an object without response_status === "success"
-	        	if(data.response_status !== "error" && tabmode === "notifications")
+	        	if(data.response_status === "success" && tabmode === "notifications")
 	        	{
 	        		// write the comment
 	        		writeComment(activity_jo);
-	        		// get the parent
-	        		$.ajax({
-	        	        type: 'GET',
-	        	        url: endpoint,
-	        	        data: {
-	        	            method: "getFeedItem",
-	        	            id: activity_jo.parent
-	        	        },
-	        	        dataType: 'json',
-	        	        async: true,
-	        	        success: function (data, status) {
-	        	        	// write header
-	        	        	if(data.response_status !== "error" && tabmode === "notifications")
-	        	        	{
-	        	        		var url_to_use = data.url_when_created;
-	                			if(url_to_use.length > 50)
-	                				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-	                			// Why? $("div#words_div #header_div_" + activity_jo.id).css("text-align", "left");
-	                			$("div#words_div #header_td_" + activity_jo.id).html(
-	                					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> replied to you" 
-	                					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.url_when_created + "\">" + url_to_use + "</a>");
-	                			$("div#words_div #screenname_link_" + activity_jo.id).click(function() {
-	    	        		 		viewProfile(activity_jo.author_screenname);
-	    	        		 	});
-	        	        		writeComment(data);
-	        	        	}
-	        	        },
-	        	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	        	$("div#words_div #header_td_" + activity_jo.id).html("Unable to retreive parent comment and write header. (network error)");
-	        	        	$("div#words_div #notification_comment_td_" + activity_jo.id).html("Unable to retreive parent comment. (network error)");
-	        	        	console.log(textStatus, errorThrown);
-	        	        } 
-	        		});
+	        		var parent_is_a_comment = false;
+	        		var current_user_authored_parent_comment = false;
+	        		if(activity_jo.parent.indexOf(".") == -1) // only retrieve and write the parent if the parent is a comment
+	        		{	
+	        			parent_is_a_comment = true;
+	        			// get the parent
+		        		$.ajax({
+		        	        type: 'GET',
+		        	        url: endpoint,
+		        	        data: {
+		        	            method: "getFeedItem",
+		        	            id: activity_jo.parent
+		        	        },
+		        	        dataType: 'json',
+		        	        async: true,
+		        	        success: function (data, status) {
+		        	        	// write header
+		        	        	if(data.response_status === "success" && tabmode === "notifications")
+		        	        	{
+		        	        		if(data.item.author_screenname === user_jo.screenname)
+		        	        		{	
+		        	        			$("#parent_tr").show();
+		        	        			current_user_authored_parent_comment = true;
+		        	        			var url_to_use = data.item.url_when_created;
+			                			if(url_to_use.length > 50)
+			                				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
+			                			// Why? $("div#words_div #header_div_" + activity_jo.id).css("text-align", "left");
+			                			$("div#words_div #header_td_" + activity_jo.id).html(
+			                					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> replied to you" 
+			                					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.url_when_created + "\">" + url_to_use + "</a>");
+			                			$("div#words_div #screenname_link_" + activity_jo.id).click(function() {
+			    	        		 		viewProfile(activity_jo.author_screenname);
+			    	        		 	});
+			        	        		writeComment(data.item);
+		        	        		}
+		        	        	}
+		        	        },
+		        	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+		        	        	$("div#words_div #header_td_" + activity_jo.id).html("Unable to retreive parent comment and write header. (network error)");
+		        	        	$("div#words_div #notification_comment_td_" + activity_jo.id).html("Unable to retreive parent comment. (network error)");
+		        	        	console.log(textStatus, errorThrown);
+		        	        } 
+		        		});
+	        		}
+	        		else
+	        		{
+	        			var url_to_use = data.item.url_when_created;
+	        			if(url_to_use.length > 50)
+	        				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
+	        			parent_is_a_comment = false;
+	        			$("div#words_div #header_td_" + activity_jo.id).html(
+            					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> mentioned you" 
+            					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.url_when_created + "\">" + url_to_use + "</a>");
+	        			current_user_authored_parent_comment = false;
+	        		}	
 	        	}
 	        	else
 	        	{

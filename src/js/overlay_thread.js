@@ -491,20 +491,20 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
         success: function (data, status) {
         	if(data.response_status !== "error" && tabmode === "thread")
         	{
-        		writeComment(data);
-        		if(data.children && data.children.length > 0)
+        		writeComment(data.item);
+        		if(data.item.children && data.item.children.length > 0)
         		{
-        			var tempcomments = data.children;
+        			var tempcomments = data.item.children;
 					tempcomments.sort(function(a,b){
 						var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
 						var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
 						return tsa - tsb;
 					});
-					data.children = tempcomments;
-					for(var y=0; y < data.children.length; y++) 
+					data.item.children = tempcomments;
+					for(var y=0; y < data.item.children.length; y++) 
 		    		{  
 						//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
-						doThreadItem(data.children[y], comment_id, "reply");
+						doThreadItem(data.item.children[y], comment_id, "reply");
 		    		}
         		}
         	}
