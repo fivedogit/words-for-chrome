@@ -1,4 +1,3 @@
-
 var bg = chrome.extension.getBackgroundPage();
 
 /*	User clicks sign in with one of the login services
@@ -11,6 +10,40 @@ var bg = chrome.extension.getBackgroundPage();
  * 	2b.else
  * 		log user in, returning this_access_token, this_access_token_expires, screenname and email
  */
+
+//need to include this here because it resides in buttongen.js on the extension itself
+var docCookies = {
+		  getItem: function (sKey) {
+		    if (!sKey || !this.hasItem(sKey)) { return null; }
+		    return unescape(document.cookie.replace(new RegExp("(?:^|.*;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*"), "$1"));
+		  },
+		  setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+		    if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return; }
+		    var sExpires = "";
+		    if (vEnd) {
+		      switch (vEnd.constructor) {
+		        case Number:
+		          sExpires = vEnd === Infinity ? "; expires=Tue, 19 Jan 2038 03:14:07 GMT" : "; max-age=" + vEnd;
+		          break;
+		        case String:
+		          sExpires = "; expires=" + vEnd;
+		          break;
+		        case Date:
+		          sExpires = "; expires=" + vEnd.toGMTString();
+		          break;
+		      }
+		    }
+		    document.cookie = escape(sKey) + "=" + escape(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+		  },
+		  removeItem: function (sKey, sPath) {
+		    if (!sKey || !this.hasItem(sKey)) { return; }
+		    document.cookie = escape(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (sPath ? "; path=" + sPath : "");
+		  },
+		  hasItem: function (sKey) {
+		    return (new RegExp("(?:^|;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+		  },
+		};
+
 
 function displayMessage(inc_message, inc_color)
 {
@@ -31,9 +64,9 @@ function getParameterByName(name) {
 var login_type = getParameterByName("login_type");
 var capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
 if(login_type === "native")
-	displayMessage("Verifying your identity...", "black");
+	displayMessage("Verifying your identity... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
 else
-	displayMessage("Verifying your identity with " + capitalized_login_type + "...", "black");
+	displayMessage("Verifying your identity with " + capitalized_login_type + "... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
 
 if(getParameterByName("social_access_token") != null && getParameterByName("social_access_token") !== "" && 
 		getParameterByName("social_access_token") !== "null" && getParameterByName("social_access_token") !== "undefined") // user is asserting an access token, try to login only (no registration)
@@ -42,7 +75,7 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 	// a social_access_token qsp is being asserted, try pure login
 	$.ajax({
 		type: 'GET',
-		url: endpoint,
+		url: bg.endpoint,
 		data: {
 			method: "login",
 			social_access_token: getParameterByName("social_access_token"),
@@ -97,86 +130,7 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 }
 else if(getParameterByName("social_access_token") === null || getParameterByName("social_access_token") === "") // user is claiming no access token, just register
 {	
-	if(login_type === "native")
-	{
-		// compare the email value saved in this user's cookie (as the confirmation email was sent) + the UUID ("code")
-		// to the email/uuid stored in the database
-		alert("email=" + docCookies.getItem("unconfirmed_email"));
-		$.ajax({
-			type: 'GET',
-			url: endpoint,
-			data: {
-				method: "confirmEmail",
-				email: docCookies.getItem("unconfirmed_email"),
-				uuid: getParameterByName("code")
-			},
-			dataType: 'json',
-			async: true,
-			success: function (data, status) {
-				if(data.response_status === "error")
-				{
-					displayMessage(data.message, "red");
-            		docCookies.removeItem("email"); 
-            		docCookies.removeItem("this_access_token");
-            		user_jo = null;
-				}
-				else if(data.response_status === "success")
-				{
-					alert("email is confirmed");
-					if(data.show_registration === "true")
-    				{
-    					alert("login() show registration=true");
-    					showRegistration(null, "native", docCookies.getItem("unconfirmed_email")); //null == "use a stock avatar"
-    				}
-					else if(data.show_registration === "false")
-					{	
-						//alert("login() show registration=false. getUserSelf()");
-						docCookies.setItem("email", data.email, 31536e3);
-			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-			    		email = data.email;
-			    		this_access_token = data.this_access_token;
-			    		$.ajax({ 
-			    			type: 'GET', 
-			    			url: endpoint, 
-			    			data: {
-			    	            method: "getUserSelf",
-			    	            email: email,							
-			    	            this_access_token: this_access_token	
-			    	        },
-			    	        dataType: 'json', 
-			    	        async: true, 
-			    	        success: function (data, status) {
-			    	        	if (data.response_status === "error") // login was JUST successful. The credentials should be fine and never produce an error here.
-			                	{
-			    	        		displayMessage(data.message, "red"); 
-			    	        		console.log("getUserSelf() response error for getUserSelf. Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
-			    	        		docCookies.removeItem("email"); 
-			                		docCookies.removeItem("this_access_token");
-			                		user_jo = null;
-			                	} 
-			                	else if (data.response_status === "success") 
-			                	{
-			                		bg.user_jo = data.user_jo; 
-			                		doFinished();
-			                	}
-			    	        },
-			    	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-			    	            console.log(textStatus, errorThrown);
-			    	            displayMessage("getUserSelf ajax error", "red");
-			    	        } 
-			    		});
-					}
-				}	
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				//alert("loginWithGoogle ajax failure");
-				console.log(textStatus, errorThrown);
-				displayMessage("Could not confirm email. (AJAX)", "red");
-			} 
-		});  // end endpoint.login() call
-		
-	}	
-	else if(login_type === "google")
+	if(login_type === "google")
 	{
 		chrome.identity.getAuthToken({ 'interactive': true },function (token) { // interactive false. We have to show permission screen on receiver.html due to overlay closing
 			if(token == null)
@@ -189,7 +143,7 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 				// token should be valid. use it to log in.
 				$.ajax({
 					type: 'GET',
-					url: endpoint,
+					url: bg.endpoint,
 					data: {
 						method: "login",
 						social_access_token: token,
@@ -211,7 +165,7 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 	                		docCookies.removeItem("email"); 
 	                		docCookies.removeItem("this_access_token");
 	                		docCookies.removeItem("google_access_token");
-	                		user_jo = null;
+	                		bg.user_jo = null;
 						}
 						else if(data.response_status === "success")
 						{
@@ -232,7 +186,7 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 					    		this_access_token = data.this_access_token;
 					    		$.ajax({ 
 					    			type: 'GET', 
-					    			url: endpoint, 
+					    			url: bg.endpoint, 
 					    			data: {
 					    	            method: "getUserSelf",
 					    	            email: email,							
@@ -248,7 +202,7 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 					    	        		docCookies.removeItem("email"); 
 					                		docCookies.removeItem("this_access_token");
 					                		docCookies.removeItem("google_access_token");
-					                		user_jo = null;
+					                		bg.user_jo = null;
 					                	} 
 					                	else if (data.response_status === "success") 
 					                	{
@@ -269,7 +223,7 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 						console.log(textStatus, errorThrown);
 						displayMessage("Could not log you in. Network connection? (AJAX)", "red");
 					} 
-				});  // end endpoint.login() call
+				});  // end bg.endpoint.login() call
 			} // end else
 		}); // end chrome.identity.getAuthToken() call
 	}	
@@ -278,7 +232,7 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 		// get access token from code, with built-in login
 		$.ajax({
 			type: 'get',
-			url: endpoint,
+			url: bg.endpoint,
 			data: {
 				method: "getAccessTokenFromAuthorizationCode",
 				code: getParameterByName("code"),
@@ -406,7 +360,7 @@ $("#registration_screenname_button").click(
 					var response_object;
 					$.ajax({
 						type: 'GET',
-						url: endpoint,
+						url: bg.endpoint,
 						data: {
 							method: "isScreennameAvailable",
 							screenname: $("#registration_screenname_input").val()
@@ -504,7 +458,7 @@ $("#registration_screenname_button").click(
 					local_a_t = docCookies.getItem("facebook_access_token");
 				$.ajax({
 				    type: 'GET',
-				    url: endpoint,
+				    url: bg.endpoint,
 				    data: {
 				    	method: "createUser",
 				    	login_type: login_type,
@@ -553,22 +507,65 @@ $("#registration_country_select").change( function() {
 
 function doFinished()
 {
-	var finmess = "<div style=\"font-weight:bold;margin-right:auto;margin-left:auto\">You are now logged in.</div>";
-	$("#message_td").html(finmess);
-	$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
-	$("#registration_form_td").show();
-		
-	bg.getUser(); // so that user is now logged in if they click the button before switching to a new tab 
-
-	$("#close_this_tab_link").click( function () {
-		chrome.tabs.getSelected(null, function(tab) { 
-			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
-			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
-			docCookies.removeItem("last_tab_id");
-			chrome.tabs.remove(tab.id);
-		});
+	// we've gotten the login return, now we need to get the user before we can safely say, 
+	displayMessage("Identify verified. Loading Words user info... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+	$.ajax({ 
+		type: 'GET', 
+		url: bg.endpoint, 
+		data: {
+            method: "getUserSelf",
+            email: docCookies.getItem("email"),							
+            this_access_token: docCookies.getItem("this_access_token")	
+        },
+        dataType: 'json', 
+        async: true, 
+        timeout: 20000,
+        success: function (data, status) {
+        	if (data.response_status === "error") 
+        	{
+        		if(data.error_code && data.error_code === "0000")
+        		{
+        			docCookies.removeItem("email"); 
+        			docCookies.removeItem("this_access_token");
+        			bg.user_jo = null;
+        		}
+        	} 
+        	else if (data.response_status === "success") 
+        	{	
+        		if(data.user_jo) { 	bg.user_jo = data.user_jo; }
+        		var finmess = "<div style=\"font-weight:bold;margin-right:auto;margin-left:auto\">You are now logged in.</div>";
+        		$("#message_td").html(finmess);
+        		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
+        		$("#registration_form_td").show();
+        		
+        		$("#close_this_tab_link").click( function () {
+        			chrome.tabs.getSelected(null, function(tab) { 
+        				var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+        				chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+        				docCookies.removeItem("last_tab_id");
+        				chrome.tabs.remove(tab.id);
+        			});
+        		});
+        	}
+        	else
+        	{
+        		console.log("getUserSelf response not success or error. Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
+        		docCookies.removeItem("email"); 
+        		docCookies.removeItem("this_access_token");
+        		bg.user_jo = null;
+        	}
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        	if(errorThrown != null && errorThrown === "timeout")
+        	{
+        		displayMessage("Timeout retrieving Words user info.", "red");
+        	}	
+            console.log(textStatus, errorThrown);
+        } 
 	});
+	
 }
+
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

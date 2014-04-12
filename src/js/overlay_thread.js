@@ -54,6 +54,7 @@ function doThreadTab()
 // this function says "We finally received the thread from the backend. Is the tabmode still "thread"? If so, show the thread. If not, do nothing (i.e. stop)."
 function gotThread()
 {
+	$("div#words_div #main_div_" + currentURLhash).html("");
 	if (tabmode === "thread")
 	{
 		//alert("gotThread and thread_jo=" + JSON.stringify(thread_jo));
@@ -283,10 +284,9 @@ function noteThreadView(was_empty, showed_alternatives) //booleans or strings
 // this function says "Is the thread empty? If so, show empty message. If not, prepare comment divs and then call doThreadItem for each to populate them"
 function prepareGetAndPopulateThreadPortion()
 {
-	//alert("entering prepareGetAndPopulateThreadPortion");
 	if (tabmode === "thread")
 	{
-		
+		//alert("entering prepareGetAndPopulateThreadPortion");
 		/*if(thread_jo.combined_or_separated === "combined")
 		{
 			$("div#words_div #header_div_top").html(t_jo.hostname + " (combined) - Like site");
@@ -298,6 +298,7 @@ function prepareGetAndPopulateThreadPortion()
 		
 		if ((typeof thread_jo.children === "undefined" || thread_jo.children === null || thread_jo.children.length === 0) && threadstatus === 0)
 		{
+			//alert("Thread had no children");
 			var main_div_string = "";
 			main_div_string = main_div_string + "<div class=\"no-comments-div\">";
 			main_div_string = main_div_string + "		No comments for this page. Write one!";
@@ -618,7 +619,7 @@ function writeComment(feeditem_jo)
 			tempstr = tempstr + "	       <td class=\"comment-dislike-image-td\"><img src=\"images/dislike.png\" id=\"dislike_image_" + feeditem_jo.id + "\"></td>";
         }
 		tempstr = tempstr + "		   <td class=\"comment-dislikes-count-td\">" + feeditem_jo.dislikes.length + "</td>";
-		if ((tabmode === "thread") && (user_jo && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
+		if ((tabmode === "thread") && (bg.user_jo && bg.user_jo.screenname === feeditem_jo.author_screenname)) // if no bg.user_jo or screennames don't match, hide
 		{
 			tempstr = tempstr + "		   <td class=\"comment-delete-td\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + feeditem_jo.id + "\">X</a>";
@@ -696,7 +697,7 @@ function writeComment(feeditem_jo)
 	if (tabmode === "thread")
 	{
 		$("div#words_div #reply_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
-			if (user_jo)
+			if (bg.user_jo)
 			{
 				if(!$("div#words_div #reply_td_" + event.data.value).is(":visible"))
 					$("div#words_div #reply_td_" + event.data.value).show();
@@ -865,7 +866,7 @@ function hideComment(inc_id) // submits comment and updates thread
 
 function likeOrDislikeComment(id, like_or_dislike)
 {
-	if (user_jo)
+	if (bg.user_jo)
 	{
 		var email = docCookies.getItem("email");
 		var this_access_token = docCookies.getItem("this_access_token");

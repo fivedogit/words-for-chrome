@@ -23,7 +23,7 @@ function viewProfile(screenname)
 	$("div#words_div #header_div_top").html("Profile");
 	$("div#words_div #header_div_top").show();
 	$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
-	if (user_jo != null)
+	if (bg.user_jo != null)
 	{	
 		$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading profile... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>");
 		getProfile(screenname);
@@ -39,7 +39,7 @@ function getProfile(screenname)
 {
 	var main_div_string = "";
 	var target_user_jo;
-	if (typeof user_jo ==="undefined" || user_jo === null) // not logged in nor was a target specified, 
+	if (typeof bg.user_jo ==="undefined" || bg.user_jo === null) // not logged in nor was a target specified, 
 	{																			
 		$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");
 	}
@@ -57,15 +57,25 @@ function getProfile(screenname)
 		data: {
             method: "getUserByScreenname",
             email: email,             // this can be called with no email
-            this_access_token: this_access_token,   // this can be called with no this_access_token,user_jo will just come back erroneous
+            this_access_token: this_access_token,   // this can be called with no this_access_token,bg.user_jo will just come back erroneous
             screenname: screenname // the screenname of the user to get. Backend will determine if self, provide correct response
         },
         dataType: 'json',
         async: true,
         success: function (data, status) {
-            if (data.response_status === "error") {
+            if (data.response_status === "error")
+            {
             	displayMessage(data.message, "red", "message_div_" + currentURLhash);
-            } else 
+            	if(data.error_code && data.error_code === "0000")
+        		{
+        			displayMessage("Your login has expired. Please relog.", "red");
+        			docCookies.removeItem("email"); 
+        			docCookies.removeItem("this_access_token");
+        			bg.user_jo = null;
+        			updateLogstat();
+        		}
+            }
+            else 
             {
             	target_user_jo = data.target_user_jo; // backend will provide something that looks like this:
             	
@@ -362,7 +372,7 @@ function getProfile(screenname)
 				        		setTimeout( function () { 
 									$("div#words_div #screenname_result_td").html("");
 								}, 3000);
-				        		user_jo.screenname = $("div#words_div #screenname_change_input").val();
+				        		bg.user_jo.screenname = $("div#words_div #screenname_change_input").val();
 				        		displayLogstatAsLoggedIn(); //updateLogstat();
 				        		viewProfile($("div#words_div #screenname_change_input").val());
 				        		$("div#words_div #screenname_change_input").val("");
@@ -376,30 +386,30 @@ function getProfile(screenname)
 					});
             	});
             	
-            	if(typeof user_jo.google_picture !== "undefined" && user_jo.google_picture !== null)
+            	if(typeof bg.user_jo.google_picture !== "undefined" && bg.user_jo.google_picture !== null)
             		$("div#words_div #google_radio_table").show();
             	else
             		$("div#words_div #google_radio_table").hide();
-            	if(typeof user_jo.facebook_picture !== "undefined" && user_jo.facebook_picture !== null)
+            	if(typeof bg.user_jo.facebook_picture !== "undefined" && bg.user_jo.facebook_picture !== null)
             		$("div#words_div #facebook_radio_table").show();
             	else
             		$("div#words_div #facebook_radio_table").hide();
             	
-            	if(user_jo.which_picture === "avatar_icon")
+            	if(bg.user_jo.which_picture === "avatar_icon")
             	{
             		$("div#words_div #words_avatar_selector_table").show();
         			$("div#words_div #use_words_image_radio").prop('checked', true);
-        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
+        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
             	}	
-            	else if (user_jo.which_picture === "google_picture")
+            	else if (bg.user_jo.which_picture === "google_picture")
         		{
         			$("div#words_div #use_google_picture_radio").prop('checked', true);
-        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
+        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
         		}
-            	else if (user_jo.which_picture === "facebook_picture")
+            	else if (bg.user_jo.which_picture === "facebook_picture")
         		{
         			$("div#words_div #use_facebook_picture_radio").prop('checked', true);
-        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
+        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
         		}	
             	
             	// TODO User should have the option of deleting social service access tokens, in addition to this_access_token
@@ -511,7 +521,7 @@ function getProfile(screenname)
                         				}
                         				email = null;
                         				this_access_token = null;
-                        				user_jo = null;
+                        				bg.user_jo = null;
                         				displayLogstatAsLoggedOut();
                         				doThreadTab();
                         			});
@@ -521,7 +531,7 @@ function getProfile(screenname)
             	
             	$("div#words_div #use_google_picture_radio").click(function () {
             		$("div#words_div #words_avatar_selector_table").hide();
-            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
+            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
             		$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -540,9 +550,9 @@ function getProfile(screenname)
 				        	else
 				        	{
 				        		$("div#words_div #avatar_result_td").html("updated");
-				        		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"" + user_jo.google_picture + "\" style=\"width:128px;height:128px\"></img>");
-				        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + user_jo.google_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-				        		user_jo.which_picture = "google_picture";
+				        		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:128px;height:128px\"></img>");
+				        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
+				        		bg.user_jo.which_picture = "google_picture";
 				        	}
 				        }
 				        ,
@@ -555,7 +565,7 @@ function getProfile(screenname)
 
             	$("div#words_div #use_facebook_picture_radio").click(function () {
             		$("div#words_div #words_avatar_selector_table").hide();
-            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
+            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
             		$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -574,9 +584,9 @@ function getProfile(screenname)
 				        	else
 				        	{
 				        		$("div#words_div #avatar_result_td").html("updated");
-				        		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"" + user_jo.facebook_picture + "?type=large\" style=\"height:128px;\"></img>");
-				        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + user_jo.facebook_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-				        		user_jo.which_picture = "facebook_picture";
+				        		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "?type=large\" style=\"height:128px;\"></img>");
+				        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
+				        		bg.user_jo.which_picture = "facebook_picture";
 				        	}
 				        }
 				        ,
@@ -590,10 +600,10 @@ function getProfile(screenname)
             	$("div#words_div #use_words_image_radio").click(function () {
             		$("div#words_div #avatar_result_td").html("updated");
             		$("div#words_div #words_avatar_selector_table").show();
-            		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + user_jo.avatar_icon + "\"></img>");
-	        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + user_jo.avatar_icon + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
-            		user_jo.which_picture = "avatar_icon";
+            		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + bg.user_jo.avatar_icon + "\"></img>");
+	        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
+            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
+            		bg.user_jo.which_picture = "avatar_icon";
             	});
             	
             	$('#avatar_change_selector').ddslick({
@@ -625,8 +635,8 @@ function getProfile(screenname)
         				        		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + $('#hidden_avatar_change_input').val() + "\"></img>");
         				        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + $('#hidden_avatar_change_input').val() + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
         				        		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + $('#hidden_avatar_change_input').val() + "\" style=\"width:48px;height:48px\">");
-        				        		user_jo.avatar_icon = $('#hidden_avatar_change_input').val();
-        				        		user_jo.which_picture = "avatar_icon";
+        				        		bg.user_jo.avatar_icon = $('#hidden_avatar_change_input').val();
+        				        		bg.user_jo.which_picture = "avatar_icon";
         				        	}
         				        }
         				        ,
@@ -638,34 +648,34 @@ function getProfile(screenname)
             	    }    
             	});
             	
-            	if (user_jo.overlay_size === 600)
+            	if (bg.user_jo.overlay_size === 600)
             		$("div#words_div #size_selector").val("wide");
-            	else if (user_jo.overlay_size === 450)
+            	else if (bg.user_jo.overlay_size === 450)
             		$("div#words_div #size_selector").val("medium");
             	
-            	if (user_jo.onlike === "email")
+            	if (bg.user_jo.onlike === "email")
             		$("div#words_div #onlike_selector").val("email");
-            	else if (user_jo.onlike === "do nothing")
+            	else if (bg.user_jo.onlike === "do nothing")
             		$("div#words_div #onlike_selector").val("do nothing");
             	
-            	if (user_jo.ondislike === "email")
+            	if (bg.user_jo.ondislike === "email")
             		$("div#words_div #ondislike_selector").val("email");
-            	else if (user_jo.ondislike === "do nothing")
+            	else if (bg.user_jo.ondislike === "do nothing")
             		$("div#words_div #ondislike_selector").val("do nothing");
             	
-            	if (user_jo.onreply === "email")
+            	if (bg.user_jo.onreply === "email")
             		$("div#words_div #onreply_selector").val("email");
-            	else if (user_jo.onreply === "do nothing")
+            	else if (bg.user_jo.onreply === "do nothing")
             		$("div#words_div #onreply_selector").val("do nothing");
             	
-            	if (user_jo.onmention === "email")
+            	if (bg.user_jo.onmention === "email")
             		$("div#words_div #onmention_selector").val("email");
-            	else if (user_jo.onmention === "do nothing")
+            	else if (bg.user_jo.onmention === "do nothing")
             		$("div#words_div #onmention_selector").val("do nothing");
             	
-            	/*if (user_jo.emailpromos === "yes")
+            	/*if (bg.user_jo.emailpromos === "yes")
             		$("div#words_div #emailpromos_selector").val("yes");
-            	else if (user_jo.emailpromos === "no")
+            	else if (bg.user_jo.emailpromos === "no")
             		$("div#words_div #emailpromos_selector").val("no");*/
             	
             	$("div#words_div #size_selector").change(function () {
@@ -685,10 +695,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("div#words_div #size_result_td").html("Error: " + data.message);
-				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.overlay_size === 600)
+				        		// on error, reset the selector to the bg.user_jo value
+				        		if (bg.user_jo.overlay_size === 600)
 				            		$("div#words_div #size_selector").val("wide");
-				            	else if (user_jo.overlay_size === 450)
+				            	else if (bg.user_jo.overlay_size === 450)
 				            		$("div#words_div #size_selector").val("medium");
 				            	else
 				            		$("div#words_div #size_selector").val("medium");
@@ -697,12 +707,12 @@ function getProfile(screenname)
 				        	{
 				        		$("div#words_div #size_result_td").html("updated");
 				        		if($("div#words_div #size_selector").val() === "wide")
-				        			user_jo.overlay_size = 600;
+				        			bg.user_jo.overlay_size = 600;
 				        		else if($("div#words_div #size_selector").val() === "medium")
-				        			user_jo.overlay_size = 450;
+				        			bg.user_jo.overlay_size = 450;
 				        		else
-				        			user_jo.overlay_size = 450;
-				        		$("body").css("width", user_jo.overlay_size + "px");
+				        			bg.user_jo.overlay_size = 450;
+				        		$("body").css("width", bg.user_jo.overlay_size + "px");
 				        	}
 				        	setTimeout(function(){$("div#words_div #size_result_td").html("");},3000);
 				        }
@@ -732,10 +742,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("div#words_div #onlike_result_td").html("Error: " + data.message);
-				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onlike === "email")
+				        		// on error, reset the selector to the bg.user_jo value
+				        		if (bg.user_jo.onlike === "email")
 				            		$("div#words_div #onlike_selector").val("email");
-				            	else if (user_jo.onlike === "do nothing")
+				            	else if (bg.user_jo.onlike === "do nothing")
 				            		$("div#words_div #onlike_selector").val("do nothing");
 				        	}
 				        	else
@@ -769,10 +779,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("div#words_div #ondislike_result_td").html("Error: " + data.message);
-				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.ondislike === "email")
+				        		// on error, reset the selector to the bg.user_jo value
+				        		if (bg.user_jo.ondislike === "email")
 				            		$("div#words_div #ondislike_selector").val("email");
-				            	else if (user_jo.ondislike === "do nothing")
+				            	else if (bg.user_jo.ondislike === "do nothing")
 				            		$("div#words_div #ondislike_selector").val("do nothing");
 				        	}
 				        	else
@@ -805,10 +815,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("div#words_div #onreply_result_td").html("Error: " + data.message);
-				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onreply === "email")
+				        		// on error, reset the selector to the bg.user_jo value
+				        		if (bg.user_jo.onreply === "email")
 				            		$("div#words_div #onreply_selector").val("email");
-				            	else if (user_jo.onreply === "do nothing")
+				            	else if (bg.user_jo.onreply === "do nothing")
 				            		$("div#words_div #onreply_selector").val("do nothing");
 				        	}
 				        	else
@@ -841,10 +851,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("div#words_div #onmention_result_td").html("Error: " + data.message);
-				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onmention === "email")
+				        		// on error, reset the selector to the bg.user_jo value
+				        		if (bg.user_jo.onmention === "email")
 				            		$("div#words_div #onmention_selector").val("email");
-				            	else if (user_jo.onmention === "do nothing")
+				            	else if (bg.user_jo.onmention === "do nothing")
 				            		$("div#words_div #onmention_selector").val("do nothing");
 				        	}
 				        	else

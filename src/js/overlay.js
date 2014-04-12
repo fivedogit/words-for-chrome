@@ -1,6 +1,5 @@
 
 var bg = chrome.extension.getBackgroundPage();
-var user_jo = bg.user_jo;
 var thread_jo = bg.t_jo; 
 var curentURLhash;
 var currentURL;
@@ -44,15 +43,15 @@ document.addEventListener('DOMContentLoaded', function () {
 // Three reasons this should never happen:
 // 1. In theory, the service should be fast enough to always have loaded before the user could even be capable of clicking the button
 // 2. In practice, hardly anyone is going to click the activation button instantly when they visit a new page
-// 3. After the first user_jo load, user_jo will be refreshed each time. Only deleted if logged out.
+// 3. After the first bg.user_jo load, bg.user_jo will be refreshed each time. Only deleted if logged out.
 
 function updateLogstat()
 {
-	if (user_jo !== null)
+	if (bg.user_jo !== null)
 	{
-		if (typeof user_jo.overlay_size !== "undefined" && user_jo.overlay_size !== null)
+		if (typeof bg.user_jo.overlay_size !== "undefined" && bg.user_jo.overlay_size !== null)
 		{
-			$("body").css("width", user_jo.overlay_size + "px");
+			$("body").css("width", bg.user_jo.overlay_size + "px");
 		}
 		updateNotificationTabLinkImage();
 		displayLogstatAsLoggedIn();
@@ -64,7 +63,7 @@ function updateLogstat()
 }
 
 function displayLogstatAsLoggedOut() {
-	if (user_jo) {
+	if (bg.user_jo) {
 		displayLogstatAsLoggedIn();
 		return;
 	}
@@ -191,7 +190,7 @@ function displayLogstatAsLoggedOut() {
 				                		docCookies.removeItem("email"); 
 				                		docCookies.removeItem("this_access_token");
 				                		docCookies.removeItem("google_access_token");
-				                		user_jo = null;
+				                		bg.user_jo = null;
 				                		updateLogstat();
 									}
 									else if(data.response_status === "success")
@@ -229,13 +228,13 @@ function displayLogstatAsLoggedOut() {
 								    	        		docCookies.removeItem("email"); 
 								                		docCookies.removeItem("this_access_token");
 								                		docCookies.removeItem("google_access_token");
-								                		user_jo = null;
+								                		bg.user_jo = null;
 								                		updateLogstat();
 								                	} 
 								                	else if (data.response_status === "success") 
 								                	{
 								                		displayMessage("Success. You are signed in with Google.", "black");
-								                		user_jo = data.user_jo; 
+								                		bg.user_jo = data.user_jo; 
 								                		updateLogstat();
 								                	}
 								    	        },
@@ -260,7 +259,7 @@ function displayLogstatAsLoggedOut() {
 }
 
 function displayLogstatAsLoggedIn() {
-	if (!user_jo) {
+	if (!bg.user_jo) {
 		displayLogstatAsLoggedOut();
 		return;
 	}
@@ -269,18 +268,18 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td id=\"logstat_logo_td\">";
 	welcomearea = welcomearea + "			<span id=\"logged_in_profile_image_span\">";
-	if(user_jo.which_picture === "avatar_icon")
-		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"images/avatars/48" + user_jo.avatar_icon + "\">";
-	else if(user_jo.which_picture === "facebook_picture") // have to set a span, write the span with entire welcomearea (below), then asynchronously insert the facebook photo.
-		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"" + user_jo.facebook_picture + "\">";
-	else if(user_jo.which_picture === "google_picture")
-		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"" + user_jo.google_picture + "\">";
+	if(bg.user_jo.which_picture === "avatar_icon")
+		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\">";
+	else if(bg.user_jo.which_picture === "facebook_picture") // have to set a span, write the span with entire welcomearea (below), then asynchronously insert the facebook photo.
+		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"" + bg.user_jo.facebook_picture + "\">";
+	else if(bg.user_jo.which_picture === "google_picture")
+		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"" + bg.user_jo.google_picture + "\">";
 	else
 		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"images/avatars/48avatar00.png\">";
 	welcomearea = welcomearea + "			</span>";
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\">";
-	welcomearea = welcomearea + "			<a href=\"#\" id=\"screenname_link\">" + user_jo.screenname + "</a>";
+	welcomearea = welcomearea + "			<a href=\"#\" id=\"screenname_link\">" + bg.user_jo.screenname + "</a>";
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
@@ -288,7 +287,7 @@ function displayLogstatAsLoggedIn() {
 	
 	$("div#words_div #screenname_link").click(
 			function () {
-				viewProfile(user_jo.screenname);
+				viewProfile(bg.user_jo.screenname);
 				return;
 			});
 }
@@ -317,11 +316,11 @@ function updateNotificationTabLinkImage()
 {
 	if (tabmode === "notifications")
 		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_blue.png") + "\"></img>");
-	else if ((typeof user_jo==="undefined") || user_jo === null || user_jo.notification_count === 0)
+	else if ((typeof bg.user_jo==="undefined") || bg.user_jo === null || bg.user_jo.notification_count === 0)
 		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
-	else if (user_jo.notification_count <= 10)
-		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag" + user_jo.notification_count + ".png") + "\"></img>");
-	else if (user_jo.notification_count > 10)
+	else if (bg.user_jo.notification_count <= 10)
+		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag" + bg.user_jo.notification_count + ".png") + "\"></img>");
+	else if (bg.user_jo.notification_count > 10)
 		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag11plus.png") + "\"></img>");
 	else
 		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
@@ -412,25 +411,25 @@ $(window).scroll(function() {
  				bs = bs + "</div>";
  			bs = bs + "</form>";
  		bs = bs + "</div>";
- 	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><span style=\"spacing:20px\">No internet connection.</span></div>";
+ 	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><div style=\"padding:20px\">No internet connection.</div></div>";
  	bs = bs + "<div class=\"footer_div\">";
  	var randomint = Math.floor(Math.random() * 3) + 1
  	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && thread_jo.children > 5 && 
- 			typeof user_jo !== undefined && user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
+ 			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
  	{	
  		bs = bs + "SPREAD THE WORDS! ";
  	 	bs = bs + "<a style=\"margin-left:5px\" href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
  	 	bs = bs + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";
  	 	bs = bs + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
  	 	bs = bs + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
- 	 	if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+ 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
  	 		bs = bs + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
  	}
  	bs = bs + "</div>";
  	$("#words_div").html(bs);
  	
  	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && thread_jo.children > 5 && 
- 			typeof user_jo !== undefined && user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
+ 			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
  	{
  		$("div#words_div #share_to_facebook_link").click(
  	 			function () {
@@ -580,10 +579,10 @@ $(window).scroll(function() {
 
  	$("div#words_div #profile_tab_link").click(
  			function () {
- 				if(user_jo == null || user_jo.screenname == null)
+ 				if(bg.user_jo == null || bg.user_jo.screenname == null)
  					viewProfile();
  				else
- 					viewProfile(user_jo.screenname);
+ 					viewProfile(bg.user_jo.screenname);
  				return false;
  			});
 
@@ -611,7 +610,7 @@ $(window).scroll(function() {
 				 
 				 $("div#words_div #comment_submission_form_submit_button_" + event.data.id).attr("disabled", "disabled");
 				 $("div#words_div #comment_submission_progress_span_" + event.data.id).show();
-				 if (user_jo) 
+				 if (bg.user_jo) 
 				 {
 					 // no need to check for comment rating here. Backend will let the user know on submit.
 					 if ($("div#words_div #comment_textarea_" + event.data.id) && $("div#words_div #comment_textarea_" + event.data.id).val() != "") 
@@ -674,12 +673,12 @@ $(window).scroll(function() {
 	 $("div#words_div #comment_textarea_" + id).focus({id: id},
 			 function (event) {
 		 
-		 if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.rating <= -5)
+		 if(typeof bg.user_jo !== "undefined" && bg.user_jo !== null && bg.user_jo.rating <= -5)
 		 {
 			 displayMessage("Unable to compose comment. Your comment rating is too low.", "red", "message_div_" + event.data.id);
 			 $("div#words_div #comment_textarea_" + event.data.id).trigger("blur");
 		 }
-		 if(typeof user_jo === "undefined" || user_jo === null)
+		 if(typeof bg.user_jo === "undefined" || bg.user_jo === null)
 		 {
 			 displayMessage("Unable to compose comment. You are not logged in.", "red", "message_div_" + event.data.id);
 			 $("div#words_div #comment_textarea_" + event.data.id).trigger("blur");

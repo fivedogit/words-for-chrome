@@ -28,18 +28,18 @@ function doNotificationsTab()
 
 function getNotifications()
 {
-	if (typeof user_jo==="undefined" || user_jo === null)
+	if (typeof bg.user_jo==="undefined" || bg.user_jo === null)
 	{
 		$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to view your activity feed.</div>");
 	}
 	else
 	{
 		var main_div_string = "";
-		if (typeof user_jo.activity_ids === "undefined" || user_jo.activity_ids === null || user_jo.activity_ids.length === 0)
+		if (typeof bg.user_jo.activity_ids === "undefined" || bg.user_jo.activity_ids === null || bg.user_jo.activity_ids.length === 0)
 			main_div_string = "<div style=\"padding:20px;\">No activity to display.</div>";
 		else
 		{
-			var sorted_activity_ids = user_jo.activity_ids;
+			var sorted_activity_ids = bg.user_jo.activity_ids;
 			sorted_activity_ids.sort(function(a,b){
 				a = fromOtherBaseToDecimal(62, a.substring(0,7));
 				b = fromOtherBaseToDecimal(62, b.substring(0,7));
@@ -48,16 +48,16 @@ function getNotifications()
 			for(var x=0; x < sorted_activity_ids.length; x++) 
 			{   
 				main_div_string = main_div_string + "<div class=\"complete-horiz-line-div\"></div>";
-				if(x < user_jo.notification_count)
+				if(x < bg.user_jo.notification_count)
 					main_div_string = main_div_string + "<div id=\"feeditem_div_" + x + "\" style=\"background-color:#fffed6;padding:5px;text-align:left;" + x + "\"></div>";
 				else
 					main_div_string = main_div_string + "<div id=\"feeditem_div_" + x + "\" style=\"padding:5px;text-align:left;" + x + "\"></div>";
 			}  
 		}
 		$("div#words_div #main_div_" + currentURLhash).html(main_div_string);
-		for(var x=0; x < user_jo.activity_ids.length; x++) 
+		for(var x=0; x < bg.user_jo.activity_ids.length; x++) 
 		{  
-			doNotificationItem(user_jo.activity_ids[x], "feeditem_div_" + x, "notifications");
+			doNotificationItem(bg.user_jo.activity_ids[x], "feeditem_div_" + x, "notifications");
 		} 
 
 		// now that the user has viewed this tab, reset activity count to 0
@@ -69,7 +69,7 @@ function getNotifications()
 	        data: {
 	            method: "resetActivityCount",
 	            email: email,             // this can be called with no email
-	            this_access_token: this_access_token   // this can be called with no this_access_token, user_jo will just come back erroneous
+	            this_access_token: this_access_token   // this can be called with no this_access_token, bg.user_jo will just come back erroneous
 	        },
 	        dataType: 'json',
 	        async: true,
@@ -82,7 +82,7 @@ function getNotifications()
 	            }
 	            else // on success reset the button image
 	            {
-	            	user_jo.notification_count = 0;
+	            	bg.user_jo.notification_count = 0;
 	            	updateNotificationTabLinkImage();
 	            	bg.doButtonGen(); // to avoid the reference to bg, we can just let this update on the next tab view
 	            }
@@ -155,7 +155,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     			        	if(data.response_status === "success")
     			        	{
     			        		// remove it locally, then repopulate the activity notifications page
-    			        		var temp_act_ids = user_jo.activity_ids;
+    			        		var temp_act_ids = bg.user_jo.activity_ids;
     			        		for(var x = 0; x < temp_act_ids.length; x++)
     			        		{
     			        			if(temp_act_ids[x] === removal_target)
@@ -164,7 +164,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     			        				break;
     			        			}	
     			        		}	
-    			        		user_jo.activity_ids = temp_act_ids;
+    			        		bg.user_jo.activity_ids = temp_act_ids;
     			        		doNotificationsTab();
     			        	}
     			        	else if(data.response_status === "error")
@@ -307,7 +307,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     			        	if(data.response_status === "success")
     			        	{
     			        		// remove it locally, then repopulate the activity notifications page
-    			        		var temp_act_ids = user_jo.activity_ids;
+    			        		var temp_act_ids = bg.user_jo.activity_ids;
     			        		for(var x = 0; x < temp_act_ids.length; x++)
     			        		{
     			        			if(temp_act_ids[x] === removal_target)
@@ -316,7 +316,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     			        				break;
     			        			}	
     			        		}	
-    			        		user_jo.activity_ids = temp_act_ids;
+    			        		bg.user_jo.activity_ids = temp_act_ids;
     			        		doNotificationsTab();
     			        	}
     			        	else if(data.response_status === "error")
@@ -355,7 +355,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		        	        	// write header
 		        	        	if(data.response_status === "success" && tabmode === "notifications")
 		        	        	{
-		        	        		if(data.item.author_screenname === user_jo.screenname)
+		        	        		if(data.item.author_screenname === bg.user_jo.screenname)
 		        	        		{	
 		        	        			$("#parent_tr").show();
 		        	        			current_user_authored_parent_comment = true;

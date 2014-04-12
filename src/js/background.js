@@ -22,7 +22,7 @@ WebFontConfig = {
 })();
 
 (function() {
-	getUser();
+	getUser(); // user_jo should always be null when this is called
 	t_jo = null;
 	chrome.tabs.getSelected(null, function(tab) {
 		currentURL = tab.url;
@@ -106,7 +106,8 @@ function doButtonGen()
 	}	
 	else 
 	{
-		getUser();
+		if(user_jo == null) // if typeof user_jo is "undefined", the getUser won't work anyway. user_jo is definitely defined by the time we call this
+			getUser();
 		url_at_function_call = currentURL;
 		getThread(url_at_function_call, true); // updatebutton = true
 	}
@@ -138,7 +139,8 @@ function getThread(url_at_function_call, updatebutton)
         	{
         		if (typeof data.response_status === "undefined" || data.response_status === null || data.response_status === "error") 
             	{
-        			alert("returned from getthread with error=" + data.message);
+        			// no need to provide code "0000" coverage here as credentials are never required for getThread anyway
+        			displayMessage(data.message, "red");
         			threadstatus=0;
             	} 
             	else  // ajax success, url still correct, no error from server...
@@ -621,6 +623,67 @@ function drawTTUButton(top, bottom) {
    imageData: imageData
  });
 }
+
+
+function getUser()
+{
+	var email = docCookies.getItem("email");
+	var this_access_token = docCookies.getItem("this_access_token");
+	if(email !== null && email.length >=6 && this_access_token !== null && this_access_token.length == 36)// the shortest possible email length is x@b.co = 6.
+	{
+		$.ajax({ 
+			type: 'GET', 
+			url: endpoint, 
+			data: {
+	            method: "getUserSelf",
+	            email: email,							
+	            this_access_token: this_access_token	
+	        },
+	        dataType: 'json', 
+	        async: true, 
+	        timeout: 20000,
+	        success: function (data, status) {
+	        	if (data.response_status === "error") 
+            	{
+            		if(data.error_code && data.error_code === "0000")
+            		{
+            			displayMessage("Your login has expired. Please relog.", "red");
+            			docCookies.removeItem("email"); 
+            			docCookies.removeItem("this_access_token");
+            			bg.user_jo = null;
+            		}
+            	} 
+            	else if (data.response_status === "success") 
+            	{	if(data.user_jo) { 	bg.user_jo = data.user_jo; }    }
+            	else
+            	{
+            		console.log("getUserSelf response not success or error. Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
+            		docCookies.removeItem("email"); 
+            		docCookies.removeItem("this_access_token");
+            		bg.user_jo = null;
+            	}
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	        	if(errorThrown != null && errorThrown === "timeout")
+	        	{
+	        		displayMessage("getUserSelf (both) timeout", "red");
+	        	}	
+	            console.log(textStatus, errorThrown);
+	        } 
+		});
+	}
+	else if(email !== null || this_access_token !== null) // if either of these is not null and we've gotten here, 
+	{													  // something is rotten in denmark re: cookie credentials, delete them 	
+		docCookies.removeItem("email"); 
+		docCookies.removeItem("this_access_token");
+		bg.user_jo = null;
+	}
+	else
+	{
+		bg.user_jo = null; // proceed with bg.user_jo = null
+	}
+}
+
 
 /***
  *     _____ _____  _____ _____  _      _____    ___   _   _   ___   _   __   _______ _____ _____  _____ 

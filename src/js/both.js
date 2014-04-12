@@ -1,5 +1,4 @@
 
-var user_jo;
 var devel = true;
 var endpoint = "https://w.ords.co/endpoint";
 if (devel)
@@ -41,7 +40,7 @@ function fromDecimalToOtherBase ( base, decimalNumber ) {
     return tempVal.substring(tempVal.length - 7);
 }
 
-// need to include this here because it resides in buttongen.js on the extension itself
+//need to include this here because it resides in buttongen.js on the extension itself
 var docCookies = {
 		  getItem: function (sKey) {
 		    if (!sKey || !this.hasItem(sKey)) { return null; }
@@ -131,59 +130,6 @@ function isValidURLFormation(inc_url)
 		}
 	}
 	return validurl;
-}
-
-function getUser()
-{
-	var email = docCookies.getItem("email");
-	var this_access_token = docCookies.getItem("this_access_token");
-	if(email !== null && email.length >=6 && this_access_token !== null && this_access_token.length == 36)// the shortest possible email length is x@b.co = 6.
-	{
-		$.ajax({ 
-			type: 'GET', 
-			url: endpoint, 
-			data: {
-	            method: "getUserSelf",
-	            email: email,							
-	            this_access_token: this_access_token	
-	        },
-	        dataType: 'json', 
-	        async: true, 
-	        success: function (data, status) {
-	        	if (data.response_status === "error") 
-            	{
-            		if(data.error_code && data.error_code === "0000")
-            		{
-            			docCookies.removeItem("email"); 
-            			docCookies.removeItem("this_access_token");
-            			user_jo = null;
-            		}
-            	} 
-            	else if (data.response_status === "success") 
-            	{	if(data.user_jo) { 	user_jo = data.user_jo; }    }
-            	else
-            	{
-            		console.log("getUser() response not success or error. Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
-            		docCookies.removeItem("email"); 
-            		docCookies.removeItem("this_access_token");
-            		user_jo = null;
-            	}
-	        },
-	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	            console.log(textStatus, errorThrown);
-	        } 
-		});
-	}
-	else if(email !== null || this_access_token !== null) // if either of these is not null and we've gotten here, 
-	{													  // something is rotten in denmark re: cookie credentials, delete them 	
-		docCookies.removeItem("email"); 
-		docCookies.removeItem("this_access_token");
-		user_jo = null;
-	}
-	else
-	{
-		user_jo = null; // proceed with user_jo = null
-	}
 }
 
 /***
