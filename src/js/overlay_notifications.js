@@ -77,8 +77,15 @@ function getNotifications()
 
 	            if (data.response_status === "error") 
 	            {
-	            	//alert('reset activity count error');
 	            	displayMessage(data.message, "red", "message_div_" + currentURLhash);
+	            	if(data.error_code && data.error_code === "0000")
+	        		{
+	        			displayMessage("Your login has expired. Please relog.", "red");
+	        			docCookies.removeItem("email"); 
+	        			docCookies.removeItem("this_access_token");
+	        			bg.user_jo = null;
+	        			updateLogstat();
+	        		}
 	            }
 	            else // on success reset the button image
 	            {
@@ -169,7 +176,15 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     			        	}
     			        	else if(data.response_status === "error")
     			        	{
-    			        		//alert("error");
+    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+    			            	if(data.error_code && data.error_code === "0000")
+    			        		{
+    			        			displayMessage("Your login has expired. Please relog.", "red");
+    			        			docCookies.removeItem("email"); 
+    			        			docCookies.removeItem("this_access_token");
+    			        			bg.user_jo = null;
+    			        			updateLogstat();
+    			        		}
     			        	}	
     			        },
     			        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -321,7 +336,15 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     			        	}
     			        	else if(data.response_status === "error")
     			        	{
-    			        		//alert("error");
+    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+    			            	if(data.error_code && data.error_code === "0000")
+    			        		{
+    			        			displayMessage("Your login has expired. Please relog.", "red");
+    			        			docCookies.removeItem("email"); 
+    			        			docCookies.removeItem("this_access_token");
+    			        			bg.user_jo = null;
+    			        			updateLogstat();
+    			        		}
     			        	}	
     			        },
     			        error: function (XMLHttpRequest, textStatus, errorThrown) {

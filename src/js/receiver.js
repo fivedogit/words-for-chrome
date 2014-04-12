@@ -197,12 +197,15 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 					    	        success: function (data, status) {
 					    	        	if (data.response_status === "error") // login was JUST successful. The credentials should be fine and never produce an error here.
 					                	{
-					    	        		displayMessage(data.message, "red"); 
-					    	        		console.log("getUserSelf() response error for getUserSelf. Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
-					    	        		docCookies.removeItem("email"); 
-					                		docCookies.removeItem("this_access_token");
-					                		docCookies.removeItem("google_access_token");
-					                		bg.user_jo = null;
+					    	        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+					    	            	if(data.error_code && data.error_code === "0000")
+					    	        		{
+					    	        			displayMessage("Your login has expired. Please relog.", "red");
+					    	        			docCookies.removeItem("email"); 
+					    	        			docCookies.removeItem("this_access_token");
+					    	        			bg.user_jo = null;
+					    	        			updateLogstat();
+					    	        		}
 					                	} 
 					                	else if (data.response_status === "success") 
 					                	{

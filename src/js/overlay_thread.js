@@ -182,7 +182,15 @@ function gotThread()
     			        	}
     			        	else if(data.response_status === "error")
     			        	{
-    			        		displayMessage("Unable to like page. message=" + data.message, "red", "message_div_" + currentURLhash);
+    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+            	if(data.error_code && data.error_code === "0000")
+        		{
+        			displayMessage("Your login has expired. Please relog.", "red");
+        			docCookies.removeItem("email"); 
+        			docCookies.removeItem("this_access_token");
+        			bg.user_jo = null;
+        			updateLogstat();
+        		}
     			        	}	
     			        },
     			        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -768,7 +776,15 @@ function submitComment(parent) // submits comment and updates thread
 	        	//if (parent_to_submit.indexOf(".") !== -1) // on server-fail of toplevel form comm submission, reenable submit button and remove spinner
 		    	//	displayMessage(data.message, "red", "message_div_" + currentURLhash);
 	        	//else
-	        	displayMessage(data.message, "red", "message_div_" + parent);
+	        	displayMessage(data.message, "red", "message_div_" + currentURLhash);
+            	if(data.error_code && data.error_code === "0000")
+        		{
+        			displayMessage("Your login has expired. Please relog.", "red");
+        			docCookies.removeItem("email"); 
+        			docCookies.removeItem("this_access_token");
+        			bg.user_jo = null;
+        			updateLogstat();
+        		}
 	        	// on error, leave the comment box open with whatever was in there, char count the same. Just re-enable the submit button.
 	        	$("div#words_div #comment_submission_form_submit_button_" + parent).removeAttr('disabled');
 	        	$("div#words_div #comment_submission_progress_span_" + parent).hide();
@@ -844,8 +860,17 @@ function hideComment(inc_id) // submits comment and updates thread
 	    async: true,
 	    success: function (data, status) {
 
-	        if (data.response_status == "error") {
+	        if (data.response_status == "error") 
+	        {
 	        	displayMessage(data.message, "red", "message_div_" + inc_id);
+            	if(data.error_code && data.error_code === "0000")
+        		{
+        			displayMessage("Your login has expired. Please relog.", "red");
+        			docCookies.removeItem("email"); 
+        			docCookies.removeItem("this_access_token");
+        			bg.user_jo = null;
+        			updateLogstat();
+        		}
 	        }
 	        else if (data.response_status === "success")
 	        {
@@ -887,6 +912,14 @@ function likeOrDislikeComment(id, like_or_dislike)
 				if (data.response_status === "error") 
 				{
 					displayMessage(data.message, "red", "message_div_" + id);
+	            	if(data.error_code && data.error_code === "0000")
+	        		{
+	        			displayMessage("Your login has expired. Please relog.", "red");
+	        			docCookies.removeItem("email"); 
+	        			docCookies.removeItem("this_access_token");
+	        			bg.user_jo = null;
+	        			updateLogstat();
+	        		}
 					return;
 				} 
 				else if (data.response_status === "success")

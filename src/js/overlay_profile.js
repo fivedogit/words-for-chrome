@@ -365,7 +365,18 @@ function getProfile(screenname)
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
+				        	{
 				        		$("div#words_div #screenname_result_td").html("error");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
 				        	else
 				        	{
 				        		$("div#words_div #screenname_result_td").html("updated");
@@ -546,7 +557,18 @@ function getProfile(screenname)
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
+				        	{
 				        		$("div#words_div #avatar_result_td").html("error");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
 				        	else
 				        	{
 				        		$("div#words_div #avatar_result_td").html("updated");
@@ -580,7 +602,18 @@ function getProfile(screenname)
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
+				        	{
 				        		$("div#words_div #avatar_result_td").html("error");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
 				        	else
 				        	{
 				        		$("div#words_div #avatar_result_td").html("updated");
@@ -628,7 +661,18 @@ function getProfile(screenname)
         				        async: true,
         				        success: function (data, status) {
         				        	if (data.response_status === "error")
+        				        	{
         				        		$("div#words_div #avatar_result_td").html("error");
+        				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+        				            	if(data.error_code && data.error_code === "0000")
+        				        		{
+        				        			displayMessage("Your login has expired. Please relog.", "red");
+        				        			docCookies.removeItem("email"); 
+        				        			docCookies.removeItem("this_access_token");
+        				        			bg.user_jo = null;
+        				        			updateLogstat();
+        				        		}
+        				        	}
         				        	else
         				        	{
         				        		$("div#words_div #avatar_result_td").html("updated");
@@ -702,6 +746,15 @@ function getProfile(screenname)
 				            		$("div#words_div #size_selector").val("medium");
 				            	else
 				            		$("div#words_div #size_selector").val("medium");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
 				        	}
 				        	else
 				        	{
@@ -747,6 +800,15 @@ function getProfile(screenname)
 				            		$("div#words_div #onlike_selector").val("email");
 				            	else if (bg.user_jo.onlike === "do nothing")
 				            		$("div#words_div #onlike_selector").val("do nothing");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
 				        	}
 				        	else
 				        		$("div#words_div #onlike_result_td").html("updated");
@@ -784,6 +846,15 @@ function getProfile(screenname)
 				            		$("div#words_div #ondislike_selector").val("email");
 				            	else if (bg.user_jo.ondislike === "do nothing")
 				            		$("div#words_div #ondislike_selector").val("do nothing");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
 				        	}
 				        	else
 				        		$("div#words_div #ondislike_result_td").html("updated");
@@ -820,6 +891,15 @@ function getProfile(screenname)
 				            		$("div#words_div #onreply_selector").val("email");
 				            	else if (bg.user_jo.onreply === "do nothing")
 				            		$("div#words_div #onreply_selector").val("do nothing");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
 				        	}
 				        	else
 				        		$("div#words_div #onreply_result_td").html("updated");
@@ -856,6 +936,15 @@ function getProfile(screenname)
 				            		$("div#words_div #onmention_selector").val("email");
 				            	else if (bg.user_jo.onmention === "do nothing")
 				            		$("div#words_div #onmention_selector").val("do nothing");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
 				        	}
 				        	else
 				        		$("div#words_div #onmention_result_td").html("updated");
