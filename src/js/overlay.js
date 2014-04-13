@@ -415,9 +415,9 @@ $(window).scroll(function() {
  		bs = bs + "</div>";
  	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><div style=\"padding:20px\">No internet connection.</div></div>";
  	bs = bs + "<div class=\"footer_div\">";
- 	var randomint = Math.floor(Math.random() * 3) + 1
- 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && thread_jo.children > 5 && 
- 			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
+ 	var randomint = Math.floor(Math.random() * 10) + 1
+ 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && //thread_jo.children > 5 && 
+ 			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/10 threadviews
  	{	
  		bs = bs + "SPREAD THE WORDS! ";
  	 	bs = bs + "<a style=\"margin-left:5px\" href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
@@ -430,8 +430,8 @@ $(window).scroll(function() {
  	bs = bs + "</div>";
  	$("#words_div").html(bs);
  	
- 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && thread_jo.children > 5 && 
- 			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/3 threadviews
+ 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && //thread_jo.children > 5 && 
+ 			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/10 threadviews
  	{
  		$("div#words_div #share_to_facebook_link").click(
  	 			function () {
