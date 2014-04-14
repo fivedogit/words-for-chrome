@@ -135,9 +135,9 @@ function displayLogstatAsLoggedOut() {
 					if(docCookies.getItem("facebook_access_token") == null)
 					{
 						//alert("click event, f_a_t is null");
-						var randomnumber=Math.floor(Math.random()*1000000); // shouldn't really need a state value unless Facebook explicitly requires it.
-						var state = randomnumber+""; // Extensions are not exposed to cross site attacks as the cookies needed to talk to w.ords.co live on ldcakhigmpnhajknihgiepmlahiibmlj hostname
-						var facebook_url = "https://www.facebook.com/dialog/oauth?client_id=271212039709142&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=email&state=" + randomnumber;
+						//var randomnumber=Math.floor(Math.random()*1000000); // shouldn't really need a state value unless Facebook explicitly requires it.
+						//var state = randomnumber+""; // Extensions are not exposed to cross site attacks as the cookies needed to talk to w.ords.co live on ldcakhigmpnhajknihgiepmlahiibmlj hostname
+						var facebook_url = "https://www.facebook.com/dialog/oauth?client_id=271212039709142&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=email";
 						chrome.tabs.create({url: facebook_url});
 					}	
 					else
@@ -151,113 +151,31 @@ function displayLogstatAsLoggedOut() {
 	
 	$("div#words_div #google_login_link").click(
 			function () {
-				// onclick, use chrome.identity to get the AuthToken immediately
-				// then use the access token to call the backend's "login" method.
-				// if error, print the error and move on
 				var currenttabid;
 				chrome.tabs.getSelected(null, function(tab) { 
 					currenttabid = tab.id; 
 					docCookies.setItem("last_tab_id", currenttabid, 31536e3);
-					chrome.identity.getAuthToken({ 'interactive': false },function (token) { // interactive false. We have to show permission screen on receiver.html due to overlay closing
-						if(token == null)
-						{
-							// if no token available, go to reciever.html for permission/registration
-							chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=google"});
-						}	
-						else
-						{	
-							$.ajax({
-								type: 'GET',
-								url: endpoint,
-								data: {
-									method: "login",
-									social_access_token: token,
-									login_type: "google"
-								},
-								dataType: 'json',
-								async: true,
-								success: function (data, status) {
-									if(data.response_status === "error")
-									{
-										displayMessage(data.message, "red");
-										console.log("login() response error. Google auth token bad? Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
-										chrome.identity.getAuthToken({ 'interactive': false },
-			      						      function(current_token) {
-			      						        if (!chrome.runtime.lastError) {
-			      						          chrome.identity.removeCachedAuthToken({ token: current_token }, function() {});
-			      						        }
-										});
-				                		docCookies.removeItem("email"); 
-				                		docCookies.removeItem("this_access_token");
-				                		docCookies.removeItem("google_access_token");
-				                		bg.user_jo = null;
-				                		updateLogstat();
-									}
-									else if(data.response_status === "success")
-									{
-										if(data.show_registration === "true")
-				        				{
-				        					//alert("login() show registration=true");
-				        					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-				        					docCookies.setItem("email", data.email, 31536e3);
-				        					chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=google&social_access_token=" + docCookies.getItem("google_access_token")});
-				        				}
-										else if(data.show_registration === "false")
-										{	
-											//alert("login() show registration=false. getUserSelf()");
-											docCookies.setItem("email", data.email, 31536e3);
-											docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-								    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-								    		email = data.email;
-								    		this_access_token = data.this_access_token;
-								    		$.ajax({ 
-								    			type: 'GET', 
-								    			url: endpoint, 
-								    			data: {
-								    	            method: "getUserSelf",
-								    	            email: email,							
-								    	            this_access_token: this_access_token	
-								    	        },
-								    	        dataType: 'json', 
-								    	        async: true, 
-								    	        success: function (data, status) {
-								    	        	if (data.response_status === "error") // login was JUST successful. The credentials should be fine and never produce an error here.
-								                	{
-								    	        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
-								    	            	if(data.error_code && data.error_code === "0000")
-								    	        		{
-								    	        			displayMessage("Your login has expired. Please relog.", "red");
-								    	        			docCookies.removeItem("email"); 
-								    	        			docCookies.removeItem("this_access_token");
-								    	        			bg.user_jo = null;
-								    	        			updateLogstat();
-								    	        		}
-								                	} 
-								                	else if (data.response_status === "success") 
-								                	{
-								                		displayMessage("Success. You are signed in with Google.", "black");
-								                		bg.user_jo = data.user_jo; 
-								                		updateLogstat();
-								                	}
-								    	        },
-								    	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-								    	            console.log(textStatus, errorThrown);
-								    	            displayMessage("getUserSelf ajax error", "red");
-								    	        } 
-								    		});
-										}
-									}	
-								},
-								error: function (XMLHttpRequest, textStatus, errorThrown) {
-									//alert("loginWithGoogle ajax failure");
-									console.log(textStatus, errorThrown);
-									displayMessage("Could not log you in. Network connection? (AJAX)", "red");
-								} 
-							});  // end endpoint.login() call
-						} // end else
-					}); // end chrome.identity.getAuthToken() call
-				}); // end chrome.tabs.getSelected() call
-			}); // end click event
+					if(docCookies.getItem("google_access_token") == null)
+					{
+						//alert("click event, g_a_t is null, opening permission page");
+						//var randomnumber=Math.floor(Math.random()*1000000); // shouldn't really need a state value unless Facebook explicitly requires it.
+						//var state = randomnumber+""; // Extensions are not exposed to cross site attacks as the cookies needed to talk to w.ords.co live on ldcakhigmpnhajknihgiepmlahiibmlj hostname
+						var google_url = 'https://accounts.google.com/o/oauth2/auth?' +
+					      'scope=profile email&' +
+					   //   'state="' + state + '&' +
+					      'redirect_uri=urn:ietf:wg:oauth:2.0:oob&'+
+					      'response_type=code&' +
+					      'client_id=591907226969-rrjdbkf5ugett5nspi518gkh3qs0ghsj.apps.googleusercontent.com&' +
+					      'access_type=offline';
+						chrome.tabs.create({url: google_url});
+					}	
+					else
+					{
+						//alert("click event, g_a_t is not null, opening receiver page with existing social access token");
+						chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=google&social_access_token=" + docCookies.getItem("google_access_token")});
+					}
+				});
+			});
 }
 
 function displayLogstatAsLoggedIn() {

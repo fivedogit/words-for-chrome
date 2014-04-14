@@ -94,6 +94,13 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
 				}	
+				if(data.error_code == "0000" && data.login_type === "google")
+				{
+					docCookies.removeItem("last_tab_id");
+					docCookies.removeItem("google_access_token");
+					docCookies.removeItem("email");
+					docCookies.removeItem("this_access_token");
+				}	
 			}
 			else if(data.response_status === "success")
 			{
@@ -104,6 +111,14 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 					docCookies.setItem("email", data.email, 31536e3);
 					showRegistration(data.picture, data.login_type, data.email);
 				}
+				else if(data.show_registration === "false" && data.login_type === "google")
+				{
+					//alert("login() show registration=false");
+					docCookies.setItem("email", data.email, 31536e3);
+					docCookies.setItem("google_access_token", data.facebook_access_token, 31536e3);
+		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+		    		doFinished();
+				}	
 				else if(data.show_registration === "true" && data.login_type === "facebook")
 				{
 					//alert("login() show registration=true");
@@ -130,108 +145,7 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 }
 else if(getParameterByName("social_access_token") === null || getParameterByName("social_access_token") === "") // user is claiming no access token, just register
 {	
-	if(login_type === "google")
-	{
-		chrome.identity.getAuthToken({ 'interactive': true },function (token) { // interactive false. We have to show permission screen on receiver.html due to overlay closing
-			if(token == null)
-			{
-				// if no token available, user declined or encountered a strange error. Ask them to try again. 
-				displayMessage("Encountered error trying to login with Google. Please try again.");
-			}	
-			else
-			{		
-				// token should be valid. use it to log in.
-				$.ajax({
-					type: 'GET',
-					url: bg.endpoint,
-					data: {
-						method: "login",
-						social_access_token: token,
-						login_type: "google"
-					},
-					dataType: 'json',
-					async: true,
-					success: function (data, status) {
-						if(data.response_status === "error")
-						{
-							displayMessage(data.message, "red");
-							console.log("login() response error. Google auth token bad? Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
-							chrome.identity.getAuthToken({ 'interactive': false },
-      						      function(current_token) {
-      						        if (!chrome.runtime.lastError) {
-      						          chrome.identity.removeCachedAuthToken({ token: current_token }, function() {});
-      						        }
-							});
-	                		docCookies.removeItem("email"); 
-	                		docCookies.removeItem("this_access_token");
-	                		docCookies.removeItem("google_access_token");
-	                		bg.user_jo = null;
-						}
-						else if(data.response_status === "success")
-						{
-							if(data.show_registration === "true")
-	        				{
-	        					//alert("login() show registration=true");
-	        					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-	        					docCookies.setItem("email", data.email, 31536e3);
-	        					window.location = chrome.extension.getURL('receiver.html') + "?login_type=google&social_access_token=" + docCookies.getItem("google_access_token");
-	        				}
-							else if(data.show_registration === "false")
-							{	
-								//alert("login() show registration=false. getUserSelf()");
-								docCookies.setItem("email", data.email, 31536e3);
-								docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-					    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-					    		email = data.email;
-					    		this_access_token = data.this_access_token;
-					    		$.ajax({ 
-					    			type: 'GET', 
-					    			url: bg.endpoint, 
-					    			data: {
-					    	            method: "getUserSelf",
-					    	            email: email,							
-					    	            this_access_token: this_access_token	
-					    	        },
-					    	        dataType: 'json', 
-					    	        async: true, 
-					    	        success: function (data, status) {
-					    	        	if (data.response_status === "error") // login was JUST successful. The credentials should be fine and never produce an error here.
-					                	{
-					    	        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
-					    	            	if(data.error_code && data.error_code === "0000")
-					    	        		{
-					    	        			displayMessage("Your login has expired. Please relog.", "red");
-					    	        			docCookies.removeItem("email"); 
-					    	        			docCookies.removeItem("this_access_token");
-					    	        			bg.user_jo = null;
-					    	        			updateLogstat();
-					    	        		}
-					                	} 
-					                	else if (data.response_status === "success") 
-					                	{
-					                		bg.user_jo = data.user_jo; 
-					                		doFinished();
-					                	}
-					    	        },
-					    	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-					    	            console.log(textStatus, errorThrown);
-					    	            displayMessage("getUserSelf ajax error", "red");
-					    	        } 
-					    		});
-							}
-						}	
-					},
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						//alert("loginWithGoogle ajax failure");
-						console.log(textStatus, errorThrown);
-						displayMessage("Could not log you in. Network connection? (AJAX)", "red");
-					} 
-				});  // end bg.endpoint.login() call
-			} // end else
-		}); // end chrome.identity.getAuthToken() call
-	}	
-	else // not google
-	{	
+		//alert("polling backend for access token from auth code")
 		// get access token from code, with built-in login
 		$.ajax({
 			type: 'get',
@@ -253,6 +167,13 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 						docCookies.removeItem("email");
 						docCookies.removeItem("this_access_token");
 					}	
+					if(data.error_code === "0000" && data.login_type === "google")
+					{
+						docCookies.removeItem("last_tab_id");
+						docCookies.removeItem("google_access_token");
+						docCookies.removeItem("email");
+						docCookies.removeItem("this_access_token");
+					}	
 				}
 				else if(data.response_status === "success")
 				{
@@ -271,6 +192,21 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 			    		doFinished();
 					}	
+					if(data.show_registration === "true" && data.login_type === "google")
+					{
+						//alert("getAccessTokenFromAuthorizationCode() show registration=true");
+						docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
+						docCookies.setItem("email", data.email, 31536e3);
+						showRegistration(data.picture, data.login_type, data.email);
+					}
+					else if(data.show_registration === "false" && data.login_type === "google")
+					{
+						//alert("getAccessTokenFromAuthorizationCode() show registration=false");
+						docCookies.setItem("email", data.email, 31536e3);
+						docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
+			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+			    		doFinished();
+					}	
 				}	
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -278,7 +214,6 @@ else if(getParameterByName("social_access_token") === null || getParameterByName
 				displayMessage("Could not retrieve access token. Please try again through the Words extension. (AJAX)", "red");
 			} 
 		}); 
-	}
 }
 else
 {
@@ -319,7 +254,30 @@ function showRegistration(picture, login_type, email)
 	}
 	$("#registration_email_td").html(email);
 	$("#registration_form_td").show();
+	
+	
+	
 }
+
+//EVENT HANDLERS
+
+$("#not_you_link").click(function () {
+	docCookies.removeItem("email");
+	docCookies.removeItem("last_tab_id");
+	docCookies.removeItem("google_access_token");
+	docCookies.removeItem("this_access_token");
+	docCookies.removeItem("facebook_access_token");
+	$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
+	$("#registration_form_td").show();
+	var finmess = "<div style=\"font-weight:bold;margin-right:auto;margin-left:auto\">The existing user information has been removed. Please start the login process again.</div>";
+	$("#message_td").html(finmess);
+	
+	$("#close_this_tab_link").click( function () {
+		chrome.tabs.getSelected(null, function(tab) { 
+			chrome.tabs.remove(tab.id);
+		});
+	});
+});
 
 $("#use_picture_radio").click(function () {
 	$("#picture_div").show();
@@ -569,11 +527,40 @@ function doFinished()
 	
 }
 
+/***
+ *          __      __  _______       _____  
+ *         /\ \    / /\|__   __|/\   |  __ \ 
+ *        /  \ \  / /  \  | |  /  \  | |__) |
+ *       / /\ \ \/ / /\ \ | | / /\ \ |  _  / 
+ *      / ____ \  / ____ \| |/ ____ \| | \ \ 
+ *     /_/    \_\/_/    \_\_/_/    \_\_|  \_\
+ *                                           
+ *                                           
+ */
 
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-	ga('create', 'UA-49477303-3', 'ords.co');
-	ga('send', 'pageview');
+//Dropdown plugin data
+var avatarData=[{text:"Avatar 0",value:0,selected:false,description:"Avatar 0",imageSrc:"images/avatars/48avatar00.png"},
+                {text:"Avatar 1",value:1,selected:false,description:"Avatar 1",imageSrc:"images/avatars/48avatar01.png"},
+                {text:"Avatar 2",value:2,selected:false,description:"Avatar 2",imageSrc:"images/avatars/48avatar02.png"},
+                {text:"Avatar 3",value:3,selected:false,description:"Avatar 3",imageSrc:"images/avatars/48avatar03.png"},
+                {text:"Avatar 4",value:4,selected:false,description:"Avatar 4",imageSrc:"images/avatars/48avatar04.png"},
+                {text:"Avatar 5",value:5,selected:false,description:"Avatar 5",imageSrc:"images/avatars/48avatar05.png"},
+                {text:"Avatar 6",value:6,selected:false,description:"Avatar 6",imageSrc:"images/avatars/48avatar06.png"},
+                {text:"Avatar 7",value:7,selected:false,description:"Avatar 7",imageSrc:"images/avatars/48avatar07.png"},
+                {text:"Avatar 8",value:8,selected:false,description:"Avatar 8",imageSrc:"images/avatars/48avatar08.png"},
+                {text:"Avatar 9",value:9,selected:false,description:"Avatar 9",imageSrc:"images/avatars/48avatar09.png"},
+                {text:"Avatar 10",value:10,selected:false,description:"Avatar 10",imageSrc:"images/avatars/48avatar10.png"},
+                {text:"Avatar 11",value:11,selected:false,description:"Avatar 11",imageSrc:"images/avatars/48avatar11.png"},
+                {text:"Avatar 12",value:12,selected:false,description:"Avatar 12",imageSrc:"images/avatars/48avatar12.png"},
+                {text:"Avatar 13",value:13,selected:false,description:"Avatar 13",imageSrc:"images/avatars/48avatar13.png"},
+                {text:"Avatar 14",value:14,selected:false,description:"Avatar 14",imageSrc:"images/avatars/48avatar14.png"},
+                {text:"Avatar 15",value:15,selected:false,description:"Avatar 15",imageSrc:"images/avatars/48avatar15.png"},
+                {text:"Avatar 16",value:16,selected:false,description:"Avatar 16",imageSrc:"images/avatars/48avatar16.png"},
+                {text:"Avatar 17",value:17,selected:false,description:"Avatar 17",imageSrc:"images/avatars/48avatar17.png"},
+                {text:"Avatar 18",value:18,selected:false,description:"Avatar 18",imageSrc:"images/avatars/48avatar18.png"},
+                {text:"Avatar 23",value:23,selected:false,description:"Avatar 23",imageSrc:"images/avatars/48avatar23.png"},
+                {text:"Avatar 20",value:20,selected:false,description:"Avatar 20",imageSrc:"images/avatars/48avatar20.png"},
+                {text:"Avatar 21",value:21,selected:false,description:"Avatar 21",imageSrc:"images/avatars/48avatar21.png"},
+                {text:"Avatar 22",value:22,selected:false,description:"Avatar 22",imageSrc:"images/avatars/48avatar22.png"},
+                {text:"Avatar 23",value:23,selected:false,description:"Avatar 23",imageSrc:"images/avatars/48avatar23.png"},
+                {text:"Avatar 24",value:24,selected:false,description:"Avatar 24",imageSrc:"images/avatars/48avatar24.png"}];
