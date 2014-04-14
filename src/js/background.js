@@ -625,8 +625,11 @@ function drawTTUButton(top, bottom) {
 }
 
 
-function getUser()
+function getUser(retrieve_asynchronously)
 {
+	var async = true;
+	if(retrieve_asynchronously != null && retrieve_asynchronously == false)
+		async = false;
 	var email = docCookies.getItem("email");
 	var this_access_token = docCookies.getItem("this_access_token");
 	if(email !== null && email.length >=6 && this_access_token !== null && this_access_token.length == 36)// the shortest possible email length is x@b.co = 6.
@@ -640,7 +643,7 @@ function getUser()
 	            this_access_token: this_access_token	
 	        },
 	        dataType: 'json', 
-	        async: true, 
+	        async: async, 
 	        timeout: 20000,
 	        success: function (data, status) {
 	        	if (data.response_status === "error") 

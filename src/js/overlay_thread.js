@@ -659,13 +659,25 @@ function writeComment(feeditem_jo)
 	  		tempstr = tempstr + "						<form class=\"comment-submission-form\" method=post action=\"#\">";
 	  		tempstr = tempstr + "							<div class=\"comment-submission-form-div\">";
 	  		var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
+				var charsleft = 500;
+		  		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + feeditem_jo.id) 
+		  				&& docCookies.getItem("saved_text") != null && docCookies.getItem("saved_text").trim().length > 0)
+		  		{
+		  			var s_text = docCookies.getItem("saved_text");
+		  			tempstr = tempstr + "<textarea class=\"composition-textarea\" style=\"color:black\" id=\"comment_textarea_" + feeditem_jo.id + "\">" + s_text + "</textarea>";
+		  			charsleft = 500 -  s_text.length;
+		  		}
+		  		else	
+		  			tempstr = tempstr + "<textarea class=\"composition-textarea\" style=\"height:22px;color:#aaa\" id=\"comment_textarea_" + feeditem_jo.id + "\">Say something...</textarea>";
+	  	/*	var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
 	  		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + feeditem_jo.id))
 	  			tempstr = tempstr + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + feeditem_jo.id + "\">" + docCookies.getItem("saved_text") + "</textarea>";
 	  		else	
-	  			tempstr = tempstr + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + feeditem_jo.id + "\">Use your Words...</textarea>";
+	  			tempstr = tempstr + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + feeditem_jo.id + "\">Say something...</textarea>";
+	  			*/
 	  		tempstr = tempstr + "								<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + feeditem_jo.id + "\">";
 	  		tempstr = tempstr + "									<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + feeditem_jo.id + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
-	  		tempstr = tempstr + "									<span id=\"charsleft_" + feeditem_jo.id + "\">500</span>";
+	  		tempstr = tempstr + "									<span id=\"charsleft_" + feeditem_jo.id + "\">" + charsleft + "</span>";
 	  		tempstr = tempstr + "									<span><input id=\"comment_submission_form_submit_button_" + feeditem_jo.id + "\" type=button value=\"Submit\"></input></span>";
 	  		tempstr = tempstr + "								</div>";
 	  		tempstr = tempstr + "							</div>";
@@ -708,7 +720,14 @@ function writeComment(feeditem_jo)
 			if (bg.user_jo)
 			{
 				if(!$("div#words_div #reply_td_" + event.data.value).is(":visible"))
+				{
 					$("div#words_div #reply_td_" + event.data.value).show();
+					var currtext = $("div#words_div #comment_textarea_" + event.data.value).val();
+					if(currtext !== "Say something...")
+				 	{
+				 		$("div#words_div #comment_textarea_" + event.data.value).css("height", getTextAreaHeight($("div#words_div #comment_textarea_" + event.data.value).val().length) + "px");
+				 	}
+				}
 				else
 					$("div#words_div #reply_td_" + event.data.value).hide();
 			}
@@ -812,7 +831,7 @@ function submitComment(parent) // submits comment and updates thread
 	        	
 	        	// on success, reset the form stuff
 	        	$("div#words_div #comment_textarea_" + parent).css("height", "22px");			// set it back to normal height
-	        	$("div#words_div #comment_textarea_" + parent).val("Use your Words..."); // set the default wording
+	        	$("div#words_div #comment_textarea_" + parent).val("Say something..."); // set the default wording
 	        	$("div#words_div #char_count_and_submit_button_div_" + parent).hide();			// hide the charcount and submit area
 	        	if(parent.length === 11) // not toplevel
 	        		$("div#words_div #reply_td_" + parent).hide();								// hide the reply area div

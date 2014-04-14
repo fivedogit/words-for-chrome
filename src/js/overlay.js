@@ -213,7 +213,29 @@ function displayLogstatAsLoggedIn() {
 	{
 		$("div#words_div #alt_dropdown_img").click(
 				function () {
-					alert("show alts");
+					var alts_counter = 0;
+					var str = "";
+					while(alts_counter < bg.user_jo.alts.length)
+					{
+						str = str + "<a href=\"#\" id=\"user_" + bg.user_jo.alts[alts_counter].screenname + "_link\">" + bg.user_jo.alts[alts_counter].screenname + "</a> - ";
+						alts_counter++;
+					}	
+					str = str.substring(0, str.length - 2);
+					$("div#words_div #header_div_top").html(str);
+					alts_counter = 0;
+					while(alts_counter < bg.user_jo.alts.length)
+					{
+						$("#user_" + bg.user_jo.alts[alts_counter].screenname + "_link").click({altuser: bg.user_jo.alts[alts_counter]},
+								function (event) {
+									//alert(event.data.altuser.email + " " + event.data.altuser.this_access_token);
+									docCookies.setItem("email", event.data.altuser.email, 31536e3);
+									docCookies.setItem("this_access_token", event.data.altuser.this_access_token, 31536e3);
+									bg.getUser(false); // this is the ONLY synchronous getUser request bc this feature is only accessible by admins anyway
+									displayLogstatAsLoggedIn();
+									return;
+								});
+						alts_counter++;
+					}	
 					return;
 				});
 	}	
@@ -332,15 +354,21 @@ $(window).scroll(function() {
  			bs = bs + "<form class=\"comment-submission-form\" method=post action=\"#\">"; 
  				bs = bs + "<div class=\"comment-submission-form-div\" id=\"comment_submission_form_div_" + currentURLhash + "\" style=\"padding-top:6px\">"; 
  				var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
- 		  		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + currentURLhash))
- 		  			bs = bs + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + currentURLhash + "\">" + docCookies.getItem("saved_text") + "</textarea>";
+ 				var charsleft = 500;
+ 		  		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + currentURLhash) 
+ 		  				&& docCookies.getItem("saved_text") != null && docCookies.getItem("saved_text").trim().length > 0)
+ 		  		{
+ 		  			var s_text = docCookies.getItem("saved_text");
+ 		  			bs = bs + "<textarea class=\"composition-textarea\" style=\"color:black\" id=\"comment_textarea_" + currentURLhash + "\">" + s_text + "</textarea>";
+ 		  			charsleft = 500 -  s_text.length;
+ 		  		}
  		  		else	
- 		  			bs = bs + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + currentURLhash + "\">Use your Words...</textarea>";
- 		  			bs = bs + "<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + currentURLhash + "\">";
- 		  			bs = bs + "<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
- 		  			bs = bs + "<span id=\"charsleft_" + currentURLhash + "\">500</span> ";
- 		  			bs = bs + "<span><input id=\"comment_submission_form_submit_button_" + currentURLhash + "\" type=button value=\"Submit\"></input></span>";
- 		  			bs = bs + "</div>";
+ 		  			bs = bs + "<textarea class=\"composition-textarea\" style=\"height:22px;color:#aaa\" id=\"comment_textarea_" + currentURLhash + "\">Say something...</textarea>";
+ 		  		bs = bs + "	<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + currentURLhash + "\">";
+ 		  		bs = bs + "		<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
+ 		  		bs = bs + "		<span id=\"charsleft_" + currentURLhash + "\">" + charsleft + "</span> ";
+ 		  		bs = bs + "		<span><input id=\"comment_submission_form_submit_button_" + currentURLhash + "\" type=button value=\"Submit\"></input></span>";
+ 		  		bs = bs + "	</div>";
  				bs = bs + "</div>";
  			bs = bs + "</form>";
  		bs = bs + "</div>";
@@ -360,6 +388,11 @@ $(window).scroll(function() {
  	}
  	bs = bs + "</div>";
  	$("#words_div").html(bs);
+ 	
+ 	if(charsleft < 500) // there was saved text
+ 	{
+ 		$("div#words_div #comment_textarea_" + currentURLhash).css("height", getTextAreaHeight($("div#words_div #comment_textarea_" + currentURLhash).val().length) + "px");
+ 	}
  	
  	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && //thread_jo.children > 5 && 
  			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/10 threadviews
@@ -576,7 +609,7 @@ $(window).scroll(function() {
 				 {
 					 var currentheight = $("div#words_div #comment_textarea_" + event.data.id).css("height");
 					 currentheight = (currentheight.substring(0, currentheight.length - 2)*1) + 17;
-					 $("div#words_div #comment_textarea_" + event.data.id).css("height", currentheight + "px");
+					 $("div#words_div #comment_textarea_" + event.data.id).css("height", getTextAreaHeight($("div#words_div #comment_textarea_" + event.data.id).val().length) + "px");
 				 }
 				 if($("div#words_div #comment_textarea_" + event.data.id).val().length > 500)
 					 $("div#words_div #comment_textarea_" + event.data.id).val($("div#words_div #comment_textarea_" + event.data.id).val().substring(0,charlimit));
@@ -594,7 +627,7 @@ $(window).scroll(function() {
 				if($("div#words_div #comment_textarea_" + event.data.id).val() === "") // if the user has written anything, leave the composition + submission area the way it is
 				{
 					$("div#words_div #comment_textarea_" + event.data.id).css("height", "22px");			// set it back to normal height
-					$("div#words_div #comment_textarea_" + event.data.id).val("Use your Words..."); // set the default wording
+					$("div#words_div #comment_textarea_" + event.data.id).val("Say something..."); // set the default wording
 					$("div#words_div #char_count_and_submit_button_div_" + event.data.id).hide();			// hide the charcount and submit area
 					$("div#words_div #comment_textarea_" + event.data.id).css("color", "#aaa");			// reset the text to gray
 				}
@@ -618,18 +651,14 @@ $(window).scroll(function() {
 		 }
 		 else // user logged in and rating ok
 		 {	 
-			 if($("div#words_div #comment_textarea_" + event.data.id).val() === "Use your Words...") // only do this if the textarea is currently "blank"
+			 if($("div#words_div #comment_textarea_" + event.data.id).val() === "Say something...") // only do this if the textarea is currently "blank"
 			 {
 				 $("div#words_div #comment_textarea_" + event.data.id).val("");							 // blank it out
-				 var currentheight = $("div#words_div #comment_textarea_" + event.data.id).css("height"); 
-				 currentheight = (currentheight.substring(0, currentheight.length - 2))*3;
-				 $("div#words_div #comment_textarea_" + event.data.id).css("height", currentheight + "px"); // expand the height by 3x
+				 $("div#words_div #comment_textarea_" + event.data.id).css("height", "90px"); // expand the height by 3x
 			 }
-			 else if ($("div#words_div #comment_textarea_" + event.data.id).css("height") === "22px") // there is saved text here, but the box is back to normal height. open it up
+			 else 
 			 {
-				 var currentheight = $("div#words_div #comment_textarea_" + event.data.id).css("height"); 
-				 currentheight = (currentheight.substring(0, currentheight.length - 2))*3;
-				 $("div#words_div #comment_textarea_" + event.data.id).css("height", currentheight + "px");
+				 $("div#words_div #comment_textarea_" + event.data.id).css("height", getTextAreaHeight($("div#words_div #comment_textarea_" + event.data.id).val()) + "px");
 			 } 
 				 
 			 $("div#words_div #comment_textarea_" + event.data.id).css("color", "#000"); 				// set the text to black
@@ -670,3 +699,16 @@ $(window).scroll(function() {
  	}); 
  }
  
+ function getTextAreaHeight(numchars)
+ {
+	 if(numchars < 100)
+		 return 90;
+	 else if(numchars < 200)
+		 return 130; 
+	 else if(numchars < 300)
+		 return 170; 
+	 else if(numchars < 400)
+		 return 210; 
+	 else if(numchars < 500)
+		 return 250; 
+ }

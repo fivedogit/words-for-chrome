@@ -129,9 +129,7 @@ div#words_div .comment-submission-form-div {
 div#words_div .composition-textarea
 {
 	width:98%;
- 	height:22px;
   	margin-bottom:2px;
-  	color:#aaa;
   	border: 1px solid #7c7c7c;
     border-radius: 4px;
     padding: 2px;
