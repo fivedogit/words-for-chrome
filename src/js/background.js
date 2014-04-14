@@ -650,17 +650,17 @@ function getUser()
             			displayMessage("Your login has expired. Please relog.", "red");
             			docCookies.removeItem("email"); 
             			docCookies.removeItem("this_access_token");
-            			bg.user_jo = null;
+            			user_jo = null;
             		}
             	} 
             	else if (data.response_status === "success") 
-            	{	if(data.user_jo) { 	bg.user_jo = data.user_jo; }    }
+            	{	if(data.user_jo) { 	user_jo = data.user_jo; }    }
             	else
             	{
             		console.log("getUserSelf response not success or error. Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
             		docCookies.removeItem("email"); 
             		docCookies.removeItem("this_access_token");
-            		bg.user_jo = null;
+            		user_jo = null;
             	}
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -676,31 +676,13 @@ function getUser()
 	{													  // something is rotten in denmark re: cookie credentials, delete them 	
 		docCookies.removeItem("email"); 
 		docCookies.removeItem("this_access_token");
-		bg.user_jo = null;
+		user_jo = null;
 	}
 	else
 	{
-		bg.user_jo = null; // proceed with bg.user_jo = null
+		user_jo = null; // proceed with user_jo = null
 	}
 }
 
-
-/***
- *     _____ _____  _____ _____  _      _____    ___   _   _   ___   _   __   _______ _____ _____  _____ 
- *    |  __ \  _  ||  _  |  __ \| |    |  ___|  / _ \ | \ | | / _ \ | |  \ \ / /_   _|_   _/  __ \/  ___|
- *    | |  \/ | | || | | | |  \/| |    | |__   / /_\ \|  \| |/ /_\ \| |   \ V /  | |   | | | /  \/\ `--. 
- *    | | __| | | || | | | | __ | |    |  __|  |  _  || . ` ||  _  || |    \ /   | |   | | | |     `--. \
- *    | |_\ \ \_/ /\ \_/ / |_\ \| |____| |___  | | | || |\  || | | || |____| |   | |  _| |_| \__/\/\__/ /
- *     \____/\___/  \___/ \____/\_____/\____/  \_| |_/\_| \_/\_| |_/\_____/\_/   \_/  \___/ \____/\____/ 
- *                                                                                                                                                                                                         
- */
-
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-49477303-3', 'ords.co');
-ga('send', 'pageview');
 
 

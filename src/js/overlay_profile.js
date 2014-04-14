@@ -218,12 +218,15 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";*/
 					main_div_string = main_div_string + "						<tr>"
-					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">Change avatar:</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">Change avatar:";
+					main_div_string = main_div_string + "							<br><span style=\"font-weight:normal;font-style:italic\">(No custom avatars yet, sorry!)</span></td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
-					main_div_string = main_div_string + "									<table id=\"google_radio_table\"><tr><td><input style=\"width:20px\" id=\"use_google_picture_radio\" type=\"radio\" name=\"picture_type\" value=\"google\"></td><td>Use my Google+ picture</td></tr></table>";
-					main_div_string = main_div_string + "									<table id=\"facebook_radio_table\"><tr><td><input style=\"width:20px\" id=\"use_facebook_picture_radio\" type=\"radio\" name=\"picture_type\" value=\"facebook\"></td><td>Use my Facebook picture</td></tr></table>";
-					main_div_string = main_div_string + "									<table id=\"words_radio_table\"><tr><td><input style=\"width:20px\" id=\"use_words_image_radio\" type=\"radio\" name=\"picture_type\" value=\"words\"></td><td>Use a Words image instead</td></tr></table>";
+					main_div_string = main_div_string + "									<table id=\"image_selection_table\">";
+					main_div_string = main_div_string + "<tr id=\"google_radio_tr\"><td><input id=\"use_google_picture_radio\" type=\"radio\" name=\"picture_type\" value=\"google\"></td><td style=\"text-align:left\">Use my Google picture</td></tr>";
+					main_div_string = main_div_string + "<tr id=\"facebook_radio_tr\"><td><input id=\"use_facebook_picture_radio\" type=\"radio\" name=\"picture_type\" value=\"facebook\"></td><td style=\"text-align:left\">Use my Facebook picture</td></tr>";
+					main_div_string = main_div_string + "<tr id=\"words_radio_tr\"><td><input id=\"use_words_image_radio\" type=\"radio\" name=\"picture_type\" value=\"words\"></td><td style=\"text-align:left\">Use a Words image instead</td></tr>";
+					main_div_string = main_div_string + "									</table>";
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "								<div id=\"picture_div\" style=\"text-align:center\"></div>";
 					//main_div_string = main_div_string + "								<div id=\"facebook_picture_div\" style=\"text-align:center;display:none\"></div>";
@@ -398,13 +401,13 @@ function getProfile(screenname)
             	});
             	
             	if(typeof bg.user_jo.google_picture !== "undefined" && bg.user_jo.google_picture !== null)
-            		$("div#words_div #google_radio_table").show();
+            		$("div#words_div #google_radio_tr").show();
             	else
-            		$("div#words_div #google_radio_table").hide();
+            		$("div#words_div #google_radio_tr").hide();
             	if(typeof bg.user_jo.facebook_picture !== "undefined" && bg.user_jo.facebook_picture !== null)
-            		$("div#words_div #facebook_radio_table").show();
+            		$("div#words_div #facebook_radio_tr").show();
             	else
-            		$("div#words_div #facebook_radio_table").hide();
+            		$("div#words_div #facebook_radio_tr").hide();
             	
             	if(bg.user_jo.which_picture === "avatar_icon")
             	{

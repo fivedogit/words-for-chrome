@@ -1,7 +1,7 @@
 {
     "name": "Words",
     "short_name": "Words",
-    "version": "0.112",
+    "version": "0.115",
     "manifest_version": 2,
     "description": "Better comments everywhere",
     "icons": {
@@ -31,7 +31,7 @@
         "tabs",
         "identity"
     ],
-    "web_accessible_resources": ["receiver.html", "images/*", "js/jquery-1.8.2.js", "js/jquery.ddslick.js", "js/both.js"],
+    "web_accessible_resources": ["receiver.html", "images/*", "js/jquery-1.8.2.js", "js/jquery.ddslick.js"],
     "content_security_policy": "script-src 'self' https://www.google-analytics.com https://ajax.googleapis.com https://accounts.google.com; object-src 'self'",
     "oauth2": {
     "client_id": "657060452277.apps.googleusercontent.com",
