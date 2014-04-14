@@ -200,10 +200,23 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\">";
 	welcomearea = welcomearea + "			<a href=\"#\" id=\"screenname_link\">" + bg.user_jo.screenname + "</a>";
+	if(bg.user_jo.email.endsWith("@ords.co") && typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
+	{
+		welcomearea = welcomearea + " <img id=\"alt_dropdown_img\" src=\"images/dropdown_triangle.png\">";
+	}	
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
 	$("div#words_div #logstat_td").html(welcomearea);
+	
+	if(bg.user_jo.email.endsWith("@ords.co") && typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
+	{
+		$("div#words_div #alt_dropdown_img").click(
+				function () {
+					alert("show alts");
+					return;
+				});
+	}	
 	
 	$("div#words_div #screenname_link").click(
 			function () {
@@ -261,7 +274,7 @@ function displayMessage(inc_message, inc_color, dom_id, s)
 	if(typeof dom_id === "undefined" || dom_id === null)
 		dom_id = "message_div_" + currentURLhash;
 	var ms;
-	if(!$.isNumeric(s) ||  Math.floor(s) != s) // not a number or not an integer 
+	if(s === null || !$.isNumeric(s) ||  Math.floor(s) != s) // not a number or not an integer 
 		ms = 3000;
 	else
 		ms = s * 1000;

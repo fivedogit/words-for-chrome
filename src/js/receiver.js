@@ -45,11 +45,21 @@ var docCookies = {
 		};
 
 
-function displayMessage(inc_message, inc_color)
+function displayMessage(inc_message, inc_color, dom_id, s)
 {
-	if(inc_color === null)
+	if(typeof dom_id === "undefined" || dom_id === null)
+		dom_id = "message_td";
+	var ms;
+	if(s === null || !$.isNumeric(s) ||  Math.floor(s) != s) // not a number or not an integer 
+		ms = 3000;
+	else
+		ms = s * 1000;
+	if (typeof inc_color === "undefined" || inc_color === null)
 		inc_color = "red";
-	$("#message_td").html("<span style=\"color:" + inc_color + "\">" + inc_message + "</span>");
+	$("#" + dom_id).css("color", inc_color);
+	$("#" + dom_id).html(inc_message);
+	$("#" + dom_id).show();
+	//setTimeout(function() { $("#" + dom_id).hide();}, ms);
 }
 
 function getParameterByName(name) {
@@ -236,7 +246,7 @@ function showRegistration(picture, login_type, email)
 	}
 	var mess = "";
 	mess = "<b>Welcome! Let's create a Words account for you.</b>";
-	displayMessage(mess, "black");
+	$("#message_td").html(mess);
 	if(!picture)
 	{
 		// do nothing, the user will be shown the avatar selector and that's all
@@ -255,29 +265,52 @@ function showRegistration(picture, login_type, email)
 	$("#registration_email_td").html(email);
 	$("#registration_form_td").show();
 	
-	
-	
-}
 
-//EVENT HANDLERS
+	//EVENT HANDLERS
 
-$("#not_you_link").click(function () {
-	docCookies.removeItem("email");
-	docCookies.removeItem("last_tab_id");
-	docCookies.removeItem("google_access_token");
-	docCookies.removeItem("this_access_token");
-	docCookies.removeItem("facebook_access_token");
-	$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
-	$("#registration_form_td").show();
-	var finmess = "<div style=\"font-weight:bold;margin-right:auto;margin-left:auto\">The existing user information has been removed. Please start the login process again.</div>";
-	$("#message_td").html(finmess);
-	
-	$("#close_this_tab_link").click( function () {
-		chrome.tabs.getSelected(null, function(tab) { 
-			chrome.tabs.remove(tab.id);
+	$("#not_you_link").click(function () {
+		docCookies.removeItem("email");
+		docCookies.removeItem("last_tab_id");
+		docCookies.removeItem("google_access_token");
+		docCookies.removeItem("this_access_token");
+		docCookies.removeItem("facebook_access_token");
+		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
+		$("#registration_form_td").show();
+		var finmess = "<div style=\"font-weight:bold;margin-right:auto;margin-left:auto\">The existing user information has been removed. Please start the login process again.</div>";
+		$("#message_td").html(finmess);
+		
+		$("#close_this_tab_link").click( function () {
+			chrome.tabs.getSelected(null, function(tab) { 
+				chrome.tabs.remove(tab.id);
+			});
 		});
 	});
-});
+
+	
+	$("#registration_country_select").change( function() {
+		if($("#registration_country_select").val() === "USA")
+			$("#registration_state_select_tr").show();
+		else
+		{
+			$("#registration_state_select_tr").hide();
+			$("#registration_state_select").val("");
+		}
+	});
+	
+	
+	$('#registration_avatar_selector').ddslick({
+		    data: avatarData,
+		    width: 200,
+		    imagePosition: "left",
+		    selectText: "Select your Avatar",
+		    onSelected: function(data){  
+		    	$('html, body').animate({ scrollTop: 0 }, 0);
+		    	$('#hidden_avatar_input').val(data.selectedData.imageSrc.substring(data.selectedData.imageSrc.lastIndexOf("/48") + 3));
+		    	$("#registration_submit_button").focus();
+		    }    
+	});
+	
+}
 
 $("#use_picture_radio").click(function () {
 	$("#picture_div").show();
@@ -289,32 +322,21 @@ $("#use_words_image_radio").click(function () {
 	$("#words_image_div").show();
 });
 
-$('#registration_avatar_selector').ddslick({
-	    data: avatarData,
-	    width: 200,
-	    imagePosition: "left",
-	    selectText: "Select your Avatar",
-	    onSelected: function(data){  
-	    	$('html, body').animate({ scrollTop: 0 }, 0);
-	    	$('#hidden_avatar_input').val(data.selectedData.imageSrc.substring(data.selectedData.imageSrc.lastIndexOf("/48") + 3));
-	    	$("#registration_submit_button").focus();
-	    }    
-});
-
 $("#registration_screenname_button").click(
 		function () 
 		{
-				//$("#screenname_availability_span").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">");
-	         	$("#screenname_availability_span").show();
+				$("#screenname_availability_span").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">");
 				if ($("#registration_screenname_input").val().length <= 0) 
 				{
-					$("#screenname_availability_span").html("<font color=red>Blank</font>");
-					return;
+					$("#screenname_availability_span").css("color", "red");
+					$("#screenname_availability_span").html("Blank");
+					setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
 				} 
 				else if ($("#registration_screenname_input").val().length < 6) 
 				{
-					$("#screenname_availability_span").html("<font color=red>Too short</font>");
-					return;
+					$("#screenname_availability_span").css("color", "red");
+					$("#screenname_availability_span").html("Too short");
+					setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
 				} 
 				else 
 				{
@@ -333,16 +355,28 @@ $("#registration_screenname_button").click(
 							response_object = data;
 							if (response_object.response_status === "error") 
 							{
-								$("#screenname_availability_span").html("<font color=red>Error</font>");
+								$("#screenname_availability_span").css("color", "red");
+								$("#screenname_availability_span").html(data.message);
+								setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
 							} 
 							else if (response_object.response_status === "success") 
 							{
 								if (response_object.screenname_available === "true") 
-									$("#screenname_availability_span").html("<font color=green>Available</font>");
+								{
+									$("#screenname_availability_span").css("color", "green");
+									$("#screenname_availability_span").html("Available");
+								}
 								else if (response_object.screenname_available === "false") 
-									$("#screenname_availability_span").html("<font color=red>Unavailable</font>");
+								{
+									$("#screenname_availability_span").css("color", "red");
+									$("#screenname_availability_span").html("Unavailable");
+								}
 								else
-									$("#screenname_availability_span").html("<font color=red>Error. Value !t/f.</font>");
+								{
+									$("#screenname_availability_span").css("color", "red");
+									$("#screenname_availability_span").html("Error. Value !t/f.");
+								}
+								setTimeout(function() { $("#screenname_availability_span").html();}, 3000);
 							}
 							else
 							{
@@ -456,15 +490,7 @@ $("#registration_screenname_button").click(
 				});
 			});
 
-$("#registration_country_select").change( function() {
-	if($("#registration_country_select").val() === "USA")
-		$("#registration_state_select_tr").show();
-	else
-	{
-		$("#registration_state_select_tr").hide();
-		$("#registration_state_select").val("");
-	}
-});
+
 
 function doFinished()
 {
