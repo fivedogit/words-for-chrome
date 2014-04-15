@@ -74,10 +74,108 @@ function gotThread()
 			happy = happy + "<img id=\"separated_img\" src=\"images/separated_icon.png\"> ";
 		happy = happy + url_to_use + " ";
 		if(thread_jo.combined_or_separated === "separated") // can only like separated sites
-			happy = happy + "<img id=\"pagelike_img\" src=\"images/like_arrow_12x12.png\">";
+		{
+			happy = happy + "<span id=\"has_user_liked_span\"></span>";
+			
+		}
 		
 		// like/dislike indicator here
 		$("div#words_div #header_div_top").html(happy);
+		
+		if(thread_jo.combined_or_separated === "separated") // can only like separated sites
+		{
+			$.ajax({
+				type: 'GET',
+		        url: endpoint,
+		        data: {
+		            method: "haveILikedThisHPQSP",
+		            url: currentURL,
+		            email: docCookies.getItem("email"),
+		            this_access_token: docCookies.getItem("this_access_token")
+		        },
+		        dataType: 'json',
+		        async: true,
+		        success: function (data, status) {
+		        	if (data.response_status === "error")
+		        	{
+		        		$("#has_user_liked_span").html("err");
+		        	}
+		        	else if (data.response_status === "success")
+		        	{
+		        		if(data.response_value === true)
+		        			$("#has_user_liked_span").html("<img id=\"hpqsplike_img\" src=\"images/star_16x16.png\">");
+		        		else
+		        			$("#has_user_liked_span").html("<img id=\"hpqsplike_img\" src=\"images/star_grayscale_16x16.png\">");
+		        		
+		        		$("div#words_div #hpqsplike_img").click(
+		        	 			function () {
+		        	 				$.ajax({
+		            			        type: 'GET',
+		            			        url: endpoint,
+		            			        data: {
+		            			        	email: docCookies.getItem("email"),
+		            			        	this_access_token: docCookies.getItem("this_access_token"),
+		            			            method: "likeHPQSP",
+		            			            url: currentURL
+		            			        },
+		            			        dataType: 'json',
+		            			        async: true,
+		            			        success: function (data, status) {
+		            			        	if(data.response_status === "success")
+		            			        	{
+		            			        		displayMessage("Page liked.", "black");
+		            			        		$("div#words_div #hpqsplike_img").attr("src", "images/star_16x16.png");
+		            			        	}
+		            			        	else if(data.response_status === "error")
+		            			        	{
+		            			        		displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
+		            			        		if(data.error_code && data.error_code === "0000")
+		            			        		{
+		            			        			displayMessage("Your login has expired. Please relog.", "red");
+		            			        			docCookies.removeItem("email"); 
+		            			        			docCookies.removeItem("this_access_token");
+		            			        			bg.user_jo = null;
+		            			        			displayAsLoggedOut();
+		            			        		}
+		            			        	}	
+		            			        },
+		            			        error: function (XMLHttpRequest, textStatus, errorThrown) {
+		            			        	displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
+		            			        	console.log(textStatus, errorThrown);
+		            			        }
+		            				});
+		        	 				return false;
+		        	 			});
+		        	 	
+		        	 	$("div#words_div #hpqsplike_img").mouseover(
+		        	 			function () {
+		        	 				if($("div#words_div #hpqsplike_img").attr("src").indexOf("grayscale") == -1) // this is the yellow star, not the grayscale one
+		        	 					$("div#words_div #tab_tooltip_td").html("You've liked this");
+		        	 				else
+		        	 					$("div#words_div #tab_tooltip_td").html("Like this page");
+		        	 				return false;
+		        	 			});
+
+		        	 	$("div#words_div #hpqsplike_img").mouseout(
+		        	 			function () {
+		        	 				if(tabmode === "thread")
+		        	 					$("div#words_div #tab_tooltip_td").html("Comments");
+		        	 				else if(tabmode === "trending")
+		        	 					$("div#words_div #tab_tooltip_td").html("Trending");
+		        	 				else if(tabmode === "notifications")
+		        	 					$("div#words_div #tab_tooltip_td").html("Notifications");
+		        	 				else if(tabmode === "profile")
+		        	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+		        	 				return false;
+		        	 			});
+		        	}
+		        },
+		        error: function (XMLHttpRequest, textStatus, errorThrown) {
+		        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+		            console.log(textStatus, errorThrown);
+		        } 
+			});
+		}
 		
 		$("div#words_div #combined_img").click(
 				function () {
@@ -97,7 +195,7 @@ function gotThread()
 				        	{
 				        		// if someone clicks this without proper admin credentials to separate the hostname, just fail silently as if nothing happened.
 				        	}
-				        	else (data.response_status === "success")
+				        	else if (data.response_status === "success")
 				        	{
 				        		displayMessage("hostname separated", "red", "message_div_" + currentURLhash);
 				        		
@@ -168,66 +266,7 @@ function gotThread()
 	 				return false;
 	 			});
 		
-	 	$("div#words_div #pagelike_img").click(
-	 			function () {
-	 				$.ajax({
-    			        type: 'GET',
-    			        url: endpoint,
-    			        data: {
-    			        	email: docCookies.getItem("email"),
-    			        	this_access_token: docCookies.getItem("this_access_token"),
-    			            method: "likePage",
-    			            url: currentURL
-    			        },
-    			        dataType: 'json',
-    			        async: true,
-    			        success: function (data, status) {
-    			        	if(data.response_status === "success")
-    			        	{
-    			        		displayMessage("Page liked.", "black");
-    			        	}
-    			        	else if(data.response_status === "error")
-    			        	{
-    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
-    			        		if(data.error_code && data.error_code === "0000")
-    			        		{
-    			        			displayMessage("Your login has expired. Please relog.", "red");
-    			        			docCookies.removeItem("email"); 
-    			        			docCookies.removeItem("this_access_token");
-    			        			bg.user_jo = null;
-    			        			displayAsLoggedOut();
-    			        		}
-    			        	}	
-    			        },
-    			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-    			        	displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
-    			        	console.log(textStatus, errorThrown);
-    			        }
-    				});
-	 				return false;
-	 			});
-	 	
-	 	$("div#words_div #pagelike_img").mouseover(
-	 			function () {
-	 				if(thread_jo.combined_or_separated === "combined")
-	 					$("div#words_div #tab_tooltip_td").html("Like this site");
-	 				else
-	 					$("div#words_div #tab_tooltip_td").html("Like this page");
-	 				return false;
-	 			});
-
-	 	$("div#words_div #pagelike_img").mouseout(
-	 			function () {
-	 				if(tabmode === "thread")
-	 					$("div#words_div #tab_tooltip_td").html("Comments");
-	 				else if(tabmode === "trending")
-	 					$("div#words_div #tab_tooltip_td").html("Trending");
-	 				else if(tabmode === "notifications")
-	 					$("div#words_div #tab_tooltip_td").html("Notifications");
-	 				else if(tabmode === "profile")
-	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
-	 				return false;
-	 			});
+	 
 	 	
 		if(currentURL.length > 255)
 			displayMessage("Can't comment here. Words does not support URLs > 255 chars. Sorry.", "red", "message_div_" + currentURLhash);
@@ -241,8 +280,8 @@ function gotThread()
 function noteThreadView(was_empty, showed_alternatives) //booleans or strings
 {
 	// function is called in 3 instances after user has clicked button:
-	// 1. There were no normal results and getTrending for the hostname returned nothing
-	// 2. There were no normal results and getTrending for the hostname returned alternatives
+	// 1. There were no normal results and getTrendingActivity for the hostname returned nothing
+	// 2. There were no normal results and getTrendingActivity for the hostname returned alternatives
 	// 3. There were normal results for this page
 	// Each of these three calls can be found below in prepareGetAndPopulateThreadPortion
 	
@@ -325,7 +364,7 @@ function prepareGetAndPopulateThreadPortion()
 				type: 'GET',
 				url: endpoint,
 				data: {
-					method: "getTrending",
+					method: "getTrendingActivity",
 					url: currentURL
 						// for right now, backend is doing 6, 12, 24, 48, but frontend should specify what it wants, right?
 				},
@@ -334,7 +373,7 @@ function prepareGetAndPopulateThreadPortion()
 				success: function (data, status) {
 					if (data.response_status === "success") 
 					{
-						if(typeof data.trending_jas == "undefined" || data.trending_jas == null)
+						if(typeof data.trendingactivity_jas == "undefined" || data.trendingactivity_jas == null)
 						{
 							noteThreadView(true, false); // (was_empty, showed_alternatives)
 						}
@@ -350,14 +389,12 @@ function prepareGetAndPopulateThreadPortion()
 					}
 					else if (data.response_status === "error") 
 					{
-						alert("getTrending error");
 						displayMessage(data.message, "red", "message_div_" + currentURLhash);
 						return;
 					}
 					else
 					{
-						//alert("nonajax error");
-						alert("getTrending invalid response");
+						displayMessage("getTrendingActivity invalid response", "red", "message_div_" + currentURLhash);
 						return;
 					}
 				},

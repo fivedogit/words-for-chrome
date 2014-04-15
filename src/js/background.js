@@ -139,7 +139,8 @@ function getThread(url_at_function_call, updatebutton)
         	{
         		if (typeof data.response_status === "undefined" || data.response_status === null || data.response_status === "error") 
             	{
-        			// no need to provide code "0000" coverage here as credentials are never required for getThread anyway
+        			// no need to provide code "0000" coverage here as credentials are not required for getThread
+        			
         			displayMessage(data.message, "red");
         			threadstatus=0;
             	} 

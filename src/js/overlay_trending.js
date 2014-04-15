@@ -24,17 +24,17 @@ function doTrendingTab()
 	var mds = "";  // main div string
 	mds = mds + "<div id=\"MAIN_trending_div\" style=\"padding:10px;\">Loading trending pages... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>";
 	$("div#words_div #main_div_" + currentURLhash).html(mds);
-	getTrending(48, [48]); // initial window, choices
+	getTrendingActivity(48, [48]); // initial window, choices
 }
 
-function getTrending(cutoff_in_hours, choices)
+function getTrendingActivity(cutoff_in_hours, choices)
 {
 	
 	$.ajax({
 		type: 'GET',
 		url: endpoint,
 		data: {
-			method: "getTrending"
+			method: "getTrendingActivity"
 				// for right now, backend is doing 6, 12, 24, 48, but frontend should specify what it wants, right?
 		},
 		dataType: 'json',
@@ -67,7 +67,7 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 {
 	var mds = "";
 	// did the system find ANY activity at all? In any window? If not, say so.
-	if(typeof data.trending_jas === "undefined" || data.trending_jas === null)
+	if(typeof data.trendingactivity_jas === "undefined" || data.trendingactivity_jas === null)
 	{
 		mds = mds + "<table>";
 		mds = mds + "	<tr>";
@@ -77,7 +77,7 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 		mds = mds + "	</tr>";
 	}	
 	// what about for the window we want to see?
-	else if(typeof data.trending_jas[cutoff_in_hours] === "undefined" || data.trending_jas[cutoff_in_hours] === null || data.trending_jas[cutoff_in_hours].length === 0)
+	else if(typeof data.trendingactivity_jas[cutoff_in_hours] === "undefined" || data.trendingactivity_jas[cutoff_in_hours] === null || data.trendingactivity_jas[cutoff_in_hours].length === 0)
 	{
 		mds = mds + "<table>";
 		mds = mds + "	<tr>";
@@ -114,42 +114,42 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 	else
 	{
 		var max = 0;
-		for(var x = 0; x < data.trending_jas[cutoff_in_hours].length; x++)
+		for(var x = 0; x < data.trendingactivity_jas[cutoff_in_hours].length; x++)
 		{
-			if(data.trending_jas[cutoff_in_hours][x].count > max)
-				max = data.trending_jas[cutoff_in_hours][x].count;
+			if(data.trendingactivity_jas[cutoff_in_hours][x].count > max)
+				max = data.trendingactivity_jas[cutoff_in_hours][x].count;
 		}
-		var trendingmap = data.trending_jas[cutoff_in_hours];
+		var trendingmap = data.trendingactivity_jas[cutoff_in_hours];
 		trendingmap.sort(function(a,b){
 			return b.count - a.count;
 		});
-		data.trending_jas[cutoff_in_hours] = trendingmap;
+		data.trendingactivity_jas[cutoff_in_hours] = trendingmap;
 		mds = mds + "<table style=\"width:100%;\">";
-		for(var x = 0; x < data.trending_jas[cutoff_in_hours].length; x++)
+		for(var x = 0; x < data.trendingactivity_jas[cutoff_in_hours].length; x++)
 		{
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"text-align:left;padding-top:3px\">";http://www.google.com/s2/favicons?domain=
-			mds = mds + "<img src=\"http://www.google.com/s2/favicons?domain=" + data.trending_jas[cutoff_in_hours][x].hpqsp + "\" style=\"vertical-align:middle\"> ";	
-			mds = mds + data.trending_jas[cutoff_in_hours][x].page_title;
+			mds = mds + "<img src=\"http://www.google.com/s2/favicons?domain=" + data.trendingactivity_jas[cutoff_in_hours][x].hpqsp + "\" style=\"vertical-align:middle\"> ";	
+			mds = mds + data.trendingactivity_jas[cutoff_in_hours][x].page_title;
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"text-align:left;padding-bottom:2px\">";
-			var url_to_use = data.trending_jas[cutoff_in_hours][x].url_when_created;
+			var url_to_use = data.trendingactivity_jas[cutoff_in_hours][x].url_when_created;
 			if(url_to_use.length > 50)
 				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-			mds = mds + "<a class=\"newtab\" href=\"http://" + data.trending_jas[cutoff_in_hours][x].hpqsp + "\">" + url_to_use + "</a>";
+			mds = mds + "<a class=\"newtab\" href=\"http://" + data.trendingactivity_jas[cutoff_in_hours][x].hpqsp + "\">" + url_to_use + "</a>";
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"padding-bottom:5px\">";
 			mds = mds + "			<table>";
 			mds = mds + "				<tr>";
-			var left_percentage = data.trending_jas[cutoff_in_hours][x].count / max * 92;
+			var left_percentage = data.trendingactivity_jas[cutoff_in_hours][x].count / max * 92;
 			left_percentage = left_percentage|0;
 			var right_percentage = 92 - left_percentage;
 			mds = mds + "					<td style=\"height:10px;border:1px solid black;background-color:orange;width:" + left_percentage + "%\"></td>";
-			mds = mds + "					<td style=\"height:10px;text-align:left;padding-left:3px\"> " + data.trending_jas[cutoff_in_hours][x].count + "</td>";
+			mds = mds + "					<td style=\"height:10px;text-align:left;padding-left:3px\"> " + data.trendingactivity_jas[cutoff_in_hours][x].count + "</td>";
 			mds = mds + "				</tr>";
 			mds = mds + "			</table>";
 			mds = mds + "		</td>";
