@@ -200,7 +200,7 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\">";
 	welcomearea = welcomearea + "			<a href=\"#\" id=\"screenname_link\">" + bg.user_jo.screenname + "</a>";
-	if(bg.user_jo.email.endsWith("@ords.co") && typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
+	if(typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
 	{
 		welcomearea = welcomearea + " <img id=\"alt_dropdown_img\" src=\"images/dropdown_triangle.png\">";
 	}	
@@ -209,7 +209,7 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "</table>";
 	$("div#words_div #logstat_td").html(welcomearea);
 	
-	if(bg.user_jo.email.endsWith("@ords.co") && typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
+	if(typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
 	{
 		$("div#words_div #alt_dropdown_img").click(
 				function () {
@@ -332,7 +332,7 @@ $(window).scroll(function() {
  			bs = bs + "<td id=\"small_words_logo_td\">";
  			bs = bs + "<a href=\"#\" id=\"words_logo_link\"><img src=\"images/words_logo_150x24.png\"></img></a>";
  			bs = bs + "</td>";
- 			bs = bs + "<td id=\"logstat_td\">No internet connection.</td>";
+ 			bs = bs + "<td id=\"logstat_td\"> </td>";
  			bs = bs + "<td id=\"tabs_td\">";
  				bs = bs + "<table id=\"tabs_table\">";
  					bs = bs + "<tr>";
@@ -372,7 +372,7 @@ $(window).scroll(function() {
  				bs = bs + "</div>";
  			bs = bs + "</form>";
  		bs = bs + "</div>";
- 	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><div style=\"padding:20px\">No internet connection.</div></div>";
+ 	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><div style=\"padding:20px\"> </div></div>";
  	bs = bs + "<div class=\"footer_div\">";
  	var randomint = Math.floor(Math.random() * 10) + 1
  	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && //thread_jo.children > 5 && 

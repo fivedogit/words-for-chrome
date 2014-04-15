@@ -59,18 +59,25 @@ function gotThread()
 	{
 		//alert("gotThread and thread_jo=" + JSON.stringify(thread_jo));
 		var url_to_use = thread_jo.significant_designation;
+		if(url_to_use.endsWith("?"))
+			url_to_use = url_to_use.substring(0,url_to_use.length-1);
 		if(url_to_use.length > 50 && thread_jo.hostname.length < 50)
 			url_to_use = thread_jo.hostname + "/..." + url_to_use.substring(url_to_use.length - (47 - thread_jo.hostname.length));
 		else if(url_to_use.length > 50 && thread_jo.hostname.length >= 50)
 			url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
+			
+		var happy = "";
+		happy = happy + "<img src=\"http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation + "\"> "
 		if(thread_jo.combined_or_separated === "combined")
-			$("div#words_div #header_div_top").html("<img src=\"http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation + "\"> " + url_to_use + " <img id=\"combined_img\" src=\"images/combined_icon.png\">");
-		else if(thread_jo.combined_or_separated === "separated")
-		{
-			$("div#words_div #header_div_top").html("<img src=\"http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation + "\"> " + url_to_use + " <img id=\"separated_img\" src=\"images/separated_icon.png\"> ");
-			//$("div#words_div #header_div_top").html(thread_jo.significant_designation + " <img id=\"separated_img\" src=\"images/separated_icon.png\"> <img id=\"page_like_img\" src=\"images/like_transparent.png\">");
-		}
+			happy = happy + "<img id=\"combined_img\" src=\"images/combined_icon.png\"> ";
+		else
+			happy = happy + "<img id=\"separated_img\" src=\"images/separated_icon.png\"> ";
+		happy = happy + url_to_use + " ";
+		if(thread_jo.combined_or_separated === "separated") // can only like separated sites
+			happy = happy + "<img id=\"pagelike_img\" src=\"images/like_arrow_12x12.png\">";
 		
+		// like/dislike indicator here
+		$("div#words_div #header_div_top").html(happy);
 		
 		$("div#words_div #combined_img").click(
 				function () {
@@ -161,9 +168,8 @@ function gotThread()
 	 				return false;
 	 			});
 		
-	 	/*$("div#words_div #page_like_img").click(
+	 	$("div#words_div #pagelike_img").click(
 	 			function () {
-	 				//alert("click");
 	 				$.ajax({
     			        type: 'GET',
     			        url: endpoint,
@@ -178,19 +184,19 @@ function gotThread()
     			        success: function (data, status) {
     			        	if(data.response_status === "success")
     			        	{
-    			        		alert("success");
+    			        		displayMessage("Page liked.", "black");
     			        	}
     			        	else if(data.response_status === "error")
     			        	{
-    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
-            	if(data.error_code && data.error_code === "0000")
-        		{
-        			displayMessage("Your login has expired. Please relog.", "red");
-        			docCookies.removeItem("email"); 
-        			docCookies.removeItem("this_access_token");
-        			bg.user_jo = null;
-        			updateLogstat();
-        		}
+    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
+    			        		if(data.error_code && data.error_code === "0000")
+    			        		{
+    			        			displayMessage("Your login has expired. Please relog.", "red");
+    			        			docCookies.removeItem("email"); 
+    			        			docCookies.removeItem("this_access_token");
+    			        			bg.user_jo = null;
+    			        			displayAsLoggedOut();
+    			        		}
     			        	}	
     			        },
     			        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -201,7 +207,7 @@ function gotThread()
 	 				return false;
 	 			});
 	 	
-	 	$("div#words_div #page_like_img").mouseover(
+	 	$("div#words_div #pagelike_img").mouseover(
 	 			function () {
 	 				if(thread_jo.combined_or_separated === "combined")
 	 					$("div#words_div #tab_tooltip_td").html("Like this site");
@@ -210,7 +216,7 @@ function gotThread()
 	 				return false;
 	 			});
 
-	 	$("div#words_div #page_like_img").mouseout(
+	 	$("div#words_div #pagelike_img").mouseout(
 	 			function () {
 	 				if(tabmode === "thread")
 	 					$("div#words_div #tab_tooltip_td").html("Comments");
@@ -221,7 +227,7 @@ function gotThread()
 	 				else if(tabmode === "profile")
 	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
 	 				return false;
-	 			});*/
+	 			});
 	 	
 		if(currentURL.length > 255)
 			displayMessage("Can't comment here. Words does not support URLs > 255 chars. Sorry.", "red", "message_div_" + currentURLhash);
@@ -623,8 +629,8 @@ function writeComment(feeditem_jo)
 		tempstr = tempstr + "		   <td class=\"comment-likes-count-td\">" + feeditem_jo.likes.length + "</td>";
 		if (tabmode === "thread") 
         {
-			tempstr = tempstr + "	       <td class=\"comment-like-image-td\"><img src=\"images/like.png\" id=\"like_image_" + feeditem_jo.id + "\"></td>";
-			tempstr = tempstr + "	       <td class=\"comment-dislike-image-td\"><img src=\"images/dislike.png\" id=\"dislike_image_" + feeditem_jo.id + "\"></td>";
+			tempstr = tempstr + "	       <td class=\"comment-like-image-td\"><img src=\"images/like_arrow.png\" id=\"like_image_" + feeditem_jo.id + "\"></td>";
+			tempstr = tempstr + "	       <td class=\"comment-dislike-image-td\"><img src=\"images/dislike_arrow.png\" id=\"dislike_image_" + feeditem_jo.id + "\"></td>";
         }
 		tempstr = tempstr + "		   <td class=\"comment-dislikes-count-td\">" + feeditem_jo.dislikes.length + "</td>";
 		if ((tabmode === "thread") && (bg.user_jo && bg.user_jo.screenname === feeditem_jo.author_screenname)) // if no bg.user_jo or screennames don't match, hide
