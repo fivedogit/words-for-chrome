@@ -75,7 +75,7 @@ function gotThread()
 		happy = happy + url_to_use + " ";
 		if(thread_jo.combined_or_separated === "separated") // can only like separated sites
 		{
-			happy = happy + "<span id=\"has_user_liked_span\"></span>";
+			happy = happy + "<span id=\"has_user_liked_span\"><img id=\"hpqsplike_img\" src=\"images/star_grayscale_16x16.png\"></span> <span style=\"color:green\" id=\"num_hpqsplikes_span\"></span>";
 			
 		}
 		
@@ -84,14 +84,105 @@ function gotThread()
 		
 		if(thread_jo.combined_or_separated === "separated") // can only like separated sites
 		{
+			$("div#words_div #hpqsplike_img").click(
+    	 			function () {
+    	 				$.ajax({
+        			        type: 'GET',
+        			        url: endpoint,
+        			        data: {
+        			        	email: docCookies.getItem("email"),
+        			        	this_access_token: docCookies.getItem("this_access_token"),
+        			            method: "likeHPQSP",
+        			            url: currentURL
+        			        },
+        			        dataType: 'json',
+        			        async: true,
+        			        success: function (data, status) {
+        			        	if(data.response_status === "success")
+        			        	{
+        			        		displayMessage("Page liked.", "black");
+        			        		$("div#words_div #hpqsplike_img").attr("src", "images/star_16x16.png");
+        			        	}
+        			        	else if(data.response_status === "error")
+        			        	{
+        			        		displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
+        			        		if(data.error_code && data.error_code === "0000")
+        			        		{
+        			        			displayMessage("Your login has expired. Please relog.", "red");
+        			        			docCookies.removeItem("email"); 
+        			        			docCookies.removeItem("this_access_token");
+        			        			bg.user_jo = null;
+        			        			displayAsLoggedOut();
+        			        		}
+        			        	}	
+        			        },
+        			        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        			        	displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
+        			        	console.log(textStatus, errorThrown);
+        			        }
+        				});
+    	 				return false;
+    	 			});
+    	 	
+    	 	$("div#words_div #hpqsplike_img").mouseover(
+    	 			function () {
+    	 				if($("div#words_div #hpqsplike_img").attr("src").indexOf("grayscale") == -1) // this is the yellow star, not the grayscale one
+    	 					$("div#words_div #tab_tooltip_td").html("You've liked this");
+    	 				else
+    	 					$("div#words_div #tab_tooltip_td").html("Like this page");
+    	 				return false;
+    	 			});
+
+    	 	$("div#words_div #hpqsplike_img").mouseout(
+    	 			function () {
+    	 				if(tabmode === "thread")
+    	 					$("div#words_div #tab_tooltip_td").html("Comments");
+    	 				else if(tabmode === "trending")
+    	 					$("div#words_div #tab_tooltip_td").html("Trending");
+    	 				else if(tabmode === "notifications")
+    	 					$("div#words_div #tab_tooltip_td").html("Notifications");
+    	 				else if(tabmode === "profile")
+    	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+    	 				return false;
+    	 			});
+			if(bg.user_jo !== null)
+			{
+				$.ajax({
+					type: 'GET',
+			        url: endpoint,
+			        data: {
+			            method: "haveILikedThisHPQSP",
+			            url: currentURL,
+			            email: docCookies.getItem("email"),
+			            this_access_token: docCookies.getItem("this_access_token")
+			        },
+			        dataType: 'json',
+			        async: true,
+			        success: function (data, status) {
+			        	if (data.response_status === "error")
+			        	{
+			        		$("#has_user_liked_span").html("err");
+			        	}
+			        	else if (data.response_status === "success")
+			        	{
+			        		if(data.response_value === true)
+			        			$("#hpqsplike_img").attr("src","images/star_16x16.png");
+			        		//else // it should already be gray
+			        		//	$("#has_user_liked_span").html("<img id=\"hpqsplike_img\" src=\"images/star_grayscale_16x16.png\">");
+			        	}
+			        },
+			        error: function (XMLHttpRequest, textStatus, errorThrown) {
+			        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+			            console.log(textStatus, errorThrown);
+			        } 
+				});
+			}
 			$.ajax({
 				type: 'GET',
 		        url: endpoint,
 		        data: {
-		            method: "haveILikedThisHPQSP",
-		            url: currentURL,
-		            email: docCookies.getItem("email"),
-		            this_access_token: docCookies.getItem("this_access_token")
+		            method: "getHPQSPLikes",
+		            url: currentURL
 		        },
 		        dataType: 'json',
 		        async: true,
@@ -102,72 +193,7 @@ function gotThread()
 		        	}
 		        	else if (data.response_status === "success")
 		        	{
-		        		if(data.response_value === true)
-		        			$("#has_user_liked_span").html("<img id=\"hpqsplike_img\" src=\"images/star_16x16.png\">");
-		        		else
-		        			$("#has_user_liked_span").html("<img id=\"hpqsplike_img\" src=\"images/star_grayscale_16x16.png\">");
-		        		
-		        		$("div#words_div #hpqsplike_img").click(
-		        	 			function () {
-		        	 				$.ajax({
-		            			        type: 'GET',
-		            			        url: endpoint,
-		            			        data: {
-		            			        	email: docCookies.getItem("email"),
-		            			        	this_access_token: docCookies.getItem("this_access_token"),
-		            			            method: "likeHPQSP",
-		            			            url: currentURL
-		            			        },
-		            			        dataType: 'json',
-		            			        async: true,
-		            			        success: function (data, status) {
-		            			        	if(data.response_status === "success")
-		            			        	{
-		            			        		displayMessage("Page liked.", "black");
-		            			        		$("div#words_div #hpqsplike_img").attr("src", "images/star_16x16.png");
-		            			        	}
-		            			        	else if(data.response_status === "error")
-		            			        	{
-		            			        		displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
-		            			        		if(data.error_code && data.error_code === "0000")
-		            			        		{
-		            			        			displayMessage("Your login has expired. Please relog.", "red");
-		            			        			docCookies.removeItem("email"); 
-		            			        			docCookies.removeItem("this_access_token");
-		            			        			bg.user_jo = null;
-		            			        			displayAsLoggedOut();
-		            			        		}
-		            			        	}	
-		            			        },
-		            			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-		            			        	displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
-		            			        	console.log(textStatus, errorThrown);
-		            			        }
-		            				});
-		        	 				return false;
-		        	 			});
-		        	 	
-		        	 	$("div#words_div #hpqsplike_img").mouseover(
-		        	 			function () {
-		        	 				if($("div#words_div #hpqsplike_img").attr("src").indexOf("grayscale") == -1) // this is the yellow star, not the grayscale one
-		        	 					$("div#words_div #tab_tooltip_td").html("You've liked this");
-		        	 				else
-		        	 					$("div#words_div #tab_tooltip_td").html("Like this page");
-		        	 				return false;
-		        	 			});
-
-		        	 	$("div#words_div #hpqsplike_img").mouseout(
-		        	 			function () {
-		        	 				if(tabmode === "thread")
-		        	 					$("div#words_div #tab_tooltip_td").html("Comments");
-		        	 				else if(tabmode === "trending")
-		        	 					$("div#words_div #tab_tooltip_td").html("Trending");
-		        	 				else if(tabmode === "notifications")
-		        	 					$("div#words_div #tab_tooltip_td").html("Notifications");
-		        	 				else if(tabmode === "profile")
-		        	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
-		        	 				return false;
-		        	 			});
+		        		$("#num_hpqsplikes_span").html(data.num_hpqsplikes);
 		        	}
 		        },
 		        error: function (XMLHttpRequest, textStatus, errorThrown) {
