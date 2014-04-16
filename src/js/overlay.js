@@ -702,13 +702,13 @@ $(window).scroll(function() {
  function getTextAreaHeight(numchars)
  {
 	 if(numchars < 100)
-		 return 90;
+		 return 60;
 	 else if(numchars < 200)
-		 return 130; 
+		 return 100; 
 	 else if(numchars < 300)
-		 return 170; 
+		 return 140; 
 	 else if(numchars < 400)
-		 return 210; 
+		 return 180; 
 	 else if(numchars < 500)
-		 return 250; 
+		 return 220; 
  }

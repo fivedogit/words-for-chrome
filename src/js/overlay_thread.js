@@ -694,12 +694,12 @@ function writeComment(feeditem_jo)
 		// show like/dislike (and maybe delete) buttons
 		tempstr = tempstr + "					<td> ";
 		tempstr = tempstr + "	<table>";
-		tempstr = tempstr + "		<tr>";
+		tempstr = tempstr + "		<tr> ";
 		tempstr = tempstr + "		   <td class=\"comment-likes-count-td\">" + feeditem_jo.likes.length + "</td>";
 		if (tabmode === "thread") 
         {
-			tempstr = tempstr + "	       <td class=\"comment-like-image-td\"><img src=\"images/like_arrow.png\" id=\"like_image_" + feeditem_jo.id + "\"></td>";
-			tempstr = tempstr + "	       <td class=\"comment-dislike-image-td\"><img src=\"images/dislike_arrow.png\" id=\"dislike_image_" + feeditem_jo.id + "\"></td>";
+			tempstr = tempstr + "	       <td class=\"comment-like-image-td\"><img src=\"images/like_arrow.png\" id=\"like_img_" + feeditem_jo.id + "\"></td>";
+			tempstr = tempstr + "	       <td class=\"comment-dislike-image-td\"><img src=\"images/dislike_arrow.png\" id=\"dislike_img_" + feeditem_jo.id + "\"></td>";
         }
 		tempstr = tempstr + "		   <td class=\"comment-dislikes-count-td\">" + feeditem_jo.dislikes.length + "</td>";
 		if ((tabmode === "thread") && (bg.user_jo && bg.user_jo.screenname === feeditem_jo.author_screenname)) // if no bg.user_jo or screennames don't match, hide
@@ -816,12 +816,12 @@ function writeComment(feeditem_jo)
 	 	createBlurEventForTextarea(feeditem_jo.id);
 	 	createKeyupEventForTextarea(feeditem_jo.id, 500);
 		
-		$("div#words_div #like_image_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+		$("div#words_div #like_img_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
 			likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
 			return false;
 		});
 	 		 
-		$("div#words_div #dislike_image_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+		$("div#words_div #dislike_img_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
 			likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
 			return false;
 		});
@@ -985,6 +985,16 @@ function hideComment(inc_id) // submits comment and updates thread
 
 function likeOrDislikeComment(id, like_or_dislike)
 {
+	if(like_or_dislike === "like")
+	{
+		$("#like_img_" + id).attr("src", "images/like_snake.gif");
+		//alert("like snake");
+	}
+	else
+	{
+		$("#dislike_img_" + id).attr("src", "images/dislike_snake.gif");
+		//alert("dislike snake");
+	}
 	if (bg.user_jo)
 	{
 		var email = docCookies.getItem("email");
@@ -1003,6 +1013,10 @@ function likeOrDislikeComment(id, like_or_dislike)
 			dataType: 'json',
 			async: true,
 			success: function (data, status) {
+				if(like_or_dislike === "like")
+					$("#like_img_" + id).attr("src", "images/like_arrow.png");
+				else
+					$("#dislike_img_" + id).attr("src", "images/dislike_arrow.png");
 				if (data.response_status === "error") 
 				{
 					displayMessage(data.message, "red", "message_div_" + id);

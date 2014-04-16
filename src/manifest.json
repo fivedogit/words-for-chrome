@@ -27,7 +27,7 @@
         "run_at": "document_end"
     }],
     "permissions": [
-        "https://w.ords.co/", 
+        "https://w.ords.co/", "http://*/",
         "tabs",
         "identity"
     ],
