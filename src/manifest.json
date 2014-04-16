@@ -1,7 +1,7 @@
 {
     "name": "Words",
     "short_name": "Words",
-    "version": "0.115",
+    "version": "0.116",
     "manifest_version": 2,
     "description": "Better comments everywhere",
     "icons": {
@@ -27,7 +27,7 @@
         "run_at": "document_end"
     }],
     "permissions": [
-        "https://w.ords.co/", "http://*/",
+        "https://w.ords.co/", 
         "tabs",
         "identity"
     ],

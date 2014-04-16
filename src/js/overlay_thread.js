@@ -102,6 +102,7 @@ function gotThread()
         			        	{
         			        		displayMessage("Page liked.", "black");
         			        		$("div#words_div #hpqsplike_img").attr("src", "images/star_16x16.png");
+        			        		getHPQSPLikes();
         			        	}
         			        	else if(data.response_status === "error")
         			        	{
@@ -177,30 +178,7 @@ function gotThread()
 			        } 
 				});
 			}
-			$.ajax({
-				type: 'GET',
-		        url: endpoint,
-		        data: {
-		            method: "getHPQSPLikes",
-		            url: currentURL
-		        },
-		        dataType: 'json',
-		        async: true,
-		        success: function (data, status) {
-		        	if (data.response_status === "error")
-		        	{
-		        		$("#has_user_liked_span").html("err");
-		        	}
-		        	else if (data.response_status === "success")
-		        	{
-		        		$("#num_hpqsplikes_span").html(data.num_hpqsplikes);
-		        	}
-		        },
-		        error: function (XMLHttpRequest, textStatus, errorThrown) {
-		        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
-		            console.log(textStatus, errorThrown);
-		        } 
-			});
+			getHPQSPLikes();
 		}
 		
 		$("div#words_div #combined_img").click(
@@ -301,6 +279,34 @@ function gotThread()
 		endindex = 8;
 		prepareGetAndPopulateThreadPortion();
 	}
+}
+
+function getHPQSPLikes()
+{
+	$.ajax({
+		type: 'GET',
+        url: endpoint,
+        data: {
+            method: "getHPQSPLikes",
+            url: currentURL
+        },
+        dataType: 'json',
+        async: true,
+        success: function (data, status) {
+        	if (data.response_status === "error")
+        	{
+        		$("#has_user_liked_span").html("err");
+        	}
+        	else if (data.response_status === "success")
+        	{
+        		$("#num_hpqsplikes_span").html(data.num_hpqsplikes);
+        	}
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+            console.log(textStatus, errorThrown);
+        } 
+	});
 }
 
 function noteThreadView(was_empty, showed_alternatives) //booleans or strings
