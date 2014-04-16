@@ -13,24 +13,24 @@
 function viewProfile(screenname)
 {
 	tabmode = "profile";
-	$("div#words_div #thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
-	$("div#words_div #trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
+	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
 	updateNotificationTabLinkImage();
-	$("div#words_div #profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_blue.png") + "\"></img>");
+	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_blue.png") + "\"></img>");
 
 	
-	$("div#words_div #utility_div").show();
-	$("div#words_div #header_div_top").html("Profile");
-	$("div#words_div #header_div_top").show();
-	$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
+	$("#utility_div").show();
+	$("#header_div_top").html("Profile");
+	$("#header_div_top").show();
+	$("#comment_submission_form_div_" + currentURLhash).hide();
 	if (bg.user_jo != null)
 	{	
-		$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading profile... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading profile... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>");
 		getProfile(screenname);
 	}
 	else
 	{
-		$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");
 	}
 }
 
@@ -41,11 +41,11 @@ function getProfile(screenname)
 	var target_user_jo;
 	if (typeof bg.user_jo ==="undefined" || bg.user_jo === null) // not logged in nor was a target specified, 
 	{																			
-		$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");
 	}
 	else if(typeof screenname === "undefined" || screenname === null)
 	{
-		$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">No target screenname provided. Check the link and try again.</div>");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">No target screenname provided. Check the link and try again.</div>");
 	}	
 	else
 	{
@@ -274,10 +274,10 @@ function getProfile(screenname)
             	}
             	main_div_string = main_div_string + "</table>";
             	main_div_string = main_div_string + "</div>";
-            	$("div#words_div #main_div_" + currentURLhash).html(main_div_string);
+            	$("#main_div_" + currentURLhash).html(main_div_string);
             	
             	
-            	$("div#words_div #screenname_available_button").click(
+            	$("#screenname_available_button").click(
             			function () 
             			{
             					//$("#screenname_availability_span").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">");
@@ -353,7 +353,7 @@ function getProfile(screenname)
             					}
             				});				
             	
-            	$("div#words_div #screenname_submit_button").click(function () {
+            	$("#screenname_submit_button").click(function () {
             		$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -369,7 +369,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("div#words_div #screenname_result_td").html("error");
+				        		$("#screenname_result_td").html("error");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -382,52 +382,52 @@ function getProfile(screenname)
 				        	}
 				        	else
 				        	{
-				        		$("div#words_div #screenname_result_td").html("updated");
+				        		$("#screenname_result_td").html("updated");
 				        		setTimeout( function () { 
-									$("div#words_div #screenname_result_td").html("");
+									$("#screenname_result_td").html("");
 								}, 3000);
-				        		bg.user_jo.screenname = $("div#words_div #screenname_change_input").val();
+				        		bg.user_jo.screenname = $("#screenname_change_input").val();
 				        		displayLogstatAsLoggedIn(); //updateLogstat();
-				        		viewProfile($("div#words_div #screenname_change_input").val());
-				        		$("div#words_div #screenname_change_input").val("");
+				        		viewProfile($("#screenname_change_input").val());
+				        		$("#screenname_change_input").val("");
 				        	}
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #screenname_result_td").html("error");
+				        	$("#screenname_result_td").html("error");
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
             	
             	if(typeof bg.user_jo.google_picture !== "undefined" && bg.user_jo.google_picture !== null)
-            		$("div#words_div #google_radio_tr").show();
+            		$("#google_radio_tr").show();
             	else
-            		$("div#words_div #google_radio_tr").hide();
+            		$("#google_radio_tr").hide();
             	if(typeof bg.user_jo.facebook_picture !== "undefined" && bg.user_jo.facebook_picture !== null)
-            		$("div#words_div #facebook_radio_tr").show();
+            		$("#facebook_radio_tr").show();
             	else
-            		$("div#words_div #facebook_radio_tr").hide();
+            		$("#facebook_radio_tr").hide();
             	
             	if(bg.user_jo.which_picture === "avatar_icon")
             	{
-            		$("div#words_div #words_avatar_selector_table").show();
-        			$("div#words_div #use_words_image_radio").prop('checked', true);
-        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
+            		$("#words_avatar_selector_table").show();
+        			$("#use_words_image_radio").prop('checked', true);
+        			$("#picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
             	}	
             	else if (bg.user_jo.which_picture === "google_picture")
         		{
-        			$("div#words_div #use_google_picture_radio").prop('checked', true);
-        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
+        			$("#use_google_picture_radio").prop('checked', true);
+        			$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
         		}
             	else if (bg.user_jo.which_picture === "facebook_picture")
         		{
-        			$("div#words_div #use_facebook_picture_radio").prop('checked', true);
-        			$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
+        			$("#use_facebook_picture_radio").prop('checked', true);
+        			$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
         		}	
             	
             	// TODO User should have the option of deleting social service access tokens, in addition to this_access_token
-            	$("div#words_div #logout_link").click(
+            	$("#logout_link").click(
             			function () {
             				var google_access_token = docCookies.getItem("google_access_token");
             				var facebook_access_token = docCookies.getItem("facebook_access_token");
@@ -476,14 +476,14 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "	</tr>";
             				logoutmessage = logoutmessage + "</table>";
             				logoutmessage = logoutmessage + "</div>";
-            				$("div#words_div #main_div_" + currentURLhash).html(logoutmessage);
+            				$("#main_div_" + currentURLhash).html(logoutmessage);
             				
-            				$("div#words_div #logout_confirmation_button").click(
+            				$("#logout_confirmation_button").click(
                         			function () {
                         				docCookies.removeItem("email");
                         				docCookies.removeItem("this_access_token");
                         				docCookies.removeItem("this_access_token_expires");
-                        				if($("div#words_div #facebook_disconnect_checkbox").prop("checked"))
+                        				if($("#facebook_disconnect_checkbox").prop("checked"))
                         				{
                         					//alert("telling facebook to delete permissions");
                         					$.ajax({
@@ -504,7 +504,7 @@ function getProfile(screenname)
                         					});	 
                         					docCookies.removeItem("facebook_access_token");
                         				}
-                        				if($("div#words_div #google_disconnect_checkbox").prop("checked"))
+                        				if($("#google_disconnect_checkbox").prop("checked"))
                         				{
                         					/*chrome.identity.getAuthToken({ 'interactive': false },
                         						      function(current_token) {
@@ -543,9 +543,9 @@ function getProfile(screenname)
             			});
             	
             	
-            	$("div#words_div #use_google_picture_radio").click(function () {
-            		$("div#words_div #words_avatar_selector_table").hide();
-            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
+            	$("#use_google_picture_radio").click(function () {
+            		$("#words_avatar_selector_table").hide();
+            		$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
             		$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -561,7 +561,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("div#words_div #avatar_result_td").html("error");
+				        		$("#avatar_result_td").html("error");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -574,23 +574,23 @@ function getProfile(screenname)
 				        	}
 				        	else
 				        	{
-				        		$("div#words_div #avatar_result_td").html("updated");
-				        		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:128px;height:128px\"></img>");
-				        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
+				        		$("#avatar_result_td").html("updated");
+				        		$("#large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:128px;height:128px\"></img>");
+				        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
 				        		bg.user_jo.which_picture = "google_picture";
 				        	}
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #avatar_result_td").html("error");
+				        	$("#avatar_result_td").html("error");
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
 
-            	$("div#words_div #use_facebook_picture_radio").click(function () {
-            		$("div#words_div #words_avatar_selector_table").hide();
-            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
+            	$("#use_facebook_picture_radio").click(function () {
+            		$("#words_avatar_selector_table").hide();
+            		$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
             		$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -606,7 +606,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("div#words_div #avatar_result_td").html("error");
+				        		$("#avatar_result_td").html("error");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -619,26 +619,26 @@ function getProfile(screenname)
 				        	}
 				        	else
 				        	{
-				        		$("div#words_div #avatar_result_td").html("updated");
-				        		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "?type=large\" style=\"height:128px;\"></img>");
-				        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
+				        		$("#avatar_result_td").html("updated");
+				        		$("#large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "?type=large\" style=\"height:128px;\"></img>");
+				        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
 				        		bg.user_jo.which_picture = "facebook_picture";
 				        	}
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #avatar_result_td").html("error");
+				        	$("#avatar_result_td").html("error");
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
             	
-            	$("div#words_div #use_words_image_radio").click(function () {
-            		$("div#words_div #avatar_result_td").html("updated");
-            		$("div#words_div #words_avatar_selector_table").show();
-            		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + bg.user_jo.avatar_icon + "\"></img>");
-	        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-            		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
+            	$("#use_words_image_radio").click(function () {
+            		$("#avatar_result_td").html("updated");
+            		$("#words_avatar_selector_table").show();
+            		$("#large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + bg.user_jo.avatar_icon + "\"></img>");
+	        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
+            		$("#picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
             		bg.user_jo.which_picture = "avatar_icon";
             	});
             	
@@ -665,7 +665,7 @@ function getProfile(screenname)
         				        success: function (data, status) {
         				        	if (data.response_status === "error")
         				        	{
-        				        		$("div#words_div #avatar_result_td").html("error");
+        				        		$("#avatar_result_td").html("error");
         				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
         				            	if(data.error_code && data.error_code === "0000")
         				        		{
@@ -678,17 +678,17 @@ function getProfile(screenname)
         				        	}
         				        	else
         				        	{
-        				        		$("div#words_div #avatar_result_td").html("updated");
-        				        		$("div#words_div #large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + $('#hidden_avatar_change_input').val() + "\"></img>");
-        				        		$("div#words_div #logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + $('#hidden_avatar_change_input').val() + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-        				        		$("div#words_div #picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + $('#hidden_avatar_change_input').val() + "\" style=\"width:48px;height:48px\">");
+        				        		$("#avatar_result_td").html("updated");
+        				        		$("#large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + $('#hidden_avatar_change_input').val() + "\"></img>");
+        				        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + $('#hidden_avatar_change_input').val() + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
+        				        		$("#picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + $('#hidden_avatar_change_input').val() + "\" style=\"width:48px;height:48px\">");
         				        		bg.user_jo.avatar_icon = $('#hidden_avatar_change_input').val();
         				        		bg.user_jo.which_picture = "avatar_icon";
         				        	}
         				        }
         				        ,
         				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-        				        	$("div#words_div #avatar_result_td").html("error");
+        				        	$("#avatar_result_td").html("error");
         				            console.log(textStatus, errorThrown);
         				        }
         					});
@@ -696,36 +696,36 @@ function getProfile(screenname)
             	});
             	
             	if (bg.user_jo.overlay_size === 600)
-            		$("div#words_div #size_selector").val("wide");
+            		$("#size_selector").val("wide");
             	else if (bg.user_jo.overlay_size === 450)
-            		$("div#words_div #size_selector").val("medium");
+            		$("#size_selector").val("medium");
             	
             	if (bg.user_jo.onlike === "email")
-            		$("div#words_div #onlike_selector").val("email");
+            		$("#onlike_selector").val("email");
             	else if (bg.user_jo.onlike === "do nothing")
-            		$("div#words_div #onlike_selector").val("do nothing");
+            		$("#onlike_selector").val("do nothing");
             	
             	if (bg.user_jo.ondislike === "email")
-            		$("div#words_div #ondislike_selector").val("email");
+            		$("#ondislike_selector").val("email");
             	else if (bg.user_jo.ondislike === "do nothing")
-            		$("div#words_div #ondislike_selector").val("do nothing");
+            		$("#ondislike_selector").val("do nothing");
             	
             	if (bg.user_jo.onreply === "email")
-            		$("div#words_div #onreply_selector").val("email");
+            		$("#onreply_selector").val("email");
             	else if (bg.user_jo.onreply === "do nothing")
-            		$("div#words_div #onreply_selector").val("do nothing");
+            		$("#onreply_selector").val("do nothing");
             	
             	if (bg.user_jo.onmention === "email")
-            		$("div#words_div #onmention_selector").val("email");
+            		$("#onmention_selector").val("email");
             	else if (bg.user_jo.onmention === "do nothing")
-            		$("div#words_div #onmention_selector").val("do nothing");
+            		$("#onmention_selector").val("do nothing");
             	
             	/*if (bg.user_jo.emailpromos === "yes")
-            		$("div#words_div #emailpromos_selector").val("yes");
+            		$("#emailpromos_selector").val("yes");
             	else if (bg.user_jo.emailpromos === "no")
-            		$("div#words_div #emailpromos_selector").val("no");*/
+            		$("#emailpromos_selector").val("no");*/
             	
-            	$("div#words_div #size_selector").change(function () {
+            	$("#size_selector").change(function () {
 					$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -734,21 +734,21 @@ function getProfile(screenname)
 				            email: email,             
 				            this_access_token: this_access_token,  
 				            which: "overlay_size",
-				            value: $("div#words_div #size_selector").val() 
+				            value: $("#size_selector").val() 
 				        },
 				        dataType: 'json',
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("div#words_div #size_result_td").html("Error: " + data.message);
+				        		$("#size_result_td").html("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.overlay_size === 600)
-				            		$("div#words_div #size_selector").val("wide");
+				            		$("#size_selector").val("wide");
 				            	else if (bg.user_jo.overlay_size === 450)
-				            		$("div#words_div #size_selector").val("medium");
+				            		$("#size_selector").val("medium");
 				            	else
-				            		$("div#words_div #size_selector").val("medium");
+				            		$("#size_selector").val("medium");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -761,27 +761,27 @@ function getProfile(screenname)
 				        	}
 				        	else
 				        	{
-				        		$("div#words_div #size_result_td").html("updated");
-				        		if($("div#words_div #size_selector").val() === "wide")
+				        		$("#size_result_td").html("updated");
+				        		if($("#size_selector").val() === "wide")
 				        			bg.user_jo.overlay_size = 600;
-				        		else if($("div#words_div #size_selector").val() === "medium")
+				        		else if($("#size_selector").val() === "medium")
 				        			bg.user_jo.overlay_size = 450;
 				        		else
 				        			bg.user_jo.overlay_size = 450;
 				        		$("body").css("width", bg.user_jo.overlay_size + "px");
 				        	}
-				        	setTimeout(function(){$("div#words_div #size_result_td").html("");},3000);
+				        	setTimeout(function(){$("#size_result_td").html("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #size_result_td").html("ajax error");
-				        	setTimeout(function(){$("div#words_div #size_result_td").html("");},3000);
+				        	$("#size_result_td").html("ajax error");
+				        	setTimeout(function(){$("#size_result_td").html("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
             	
-            	$("div#words_div #onlike_selector").change(function () {
+            	$("#onlike_selector").change(function () {
 					$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -790,19 +790,19 @@ function getProfile(screenname)
 				            email: email,             
 				            this_access_token: this_access_token,  
 				            which: "onlike",
-				            value: $("div#words_div #onlike_selector").val() 
+				            value: $("#onlike_selector").val() 
 				        },
 				        dataType: 'json',
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("div#words_div #onlike_result_td").html("Error: " + data.message);
+				        		$("#onlike_result_td").html("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.onlike === "email")
-				            		$("div#words_div #onlike_selector").val("email");
+				            		$("#onlike_selector").val("email");
 				            	else if (bg.user_jo.onlike === "do nothing")
-				            		$("div#words_div #onlike_selector").val("do nothing");
+				            		$("#onlike_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -814,19 +814,19 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("div#words_div #onlike_result_td").html("updated");
-				        	setTimeout(function(){$("div#words_div #onlike_result_td").html("");},3000);
+				        		$("#onlike_result_td").html("updated");
+				        	setTimeout(function(){$("#onlike_result_td").html("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #onlike_result_td").html("ajax error");
-				        	setTimeout(function(){$("div#words_div #onlike_result_td").html("");},3000);
+				        	$("#onlike_result_td").html("ajax error");
+				        	setTimeout(function(){$("#onlike_result_td").html("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
             	
-            	$("div#words_div #ondislike_selector").change(function () {
+            	$("#ondislike_selector").change(function () {
             		var previousval = 
 					$.ajax({
 						type: 'GET',
@@ -836,19 +836,19 @@ function getProfile(screenname)
 				            email: email,             
 				            this_access_token: this_access_token,  
 				            which: "ondislike",
-				            value: $("div#words_div #ondislike_selector").val() 
+				            value: $("#ondislike_selector").val() 
 				        },
 				        dataType: 'json',
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("div#words_div #ondislike_result_td").html("Error: " + data.message);
+				        		$("#ondislike_result_td").html("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.ondislike === "email")
-				            		$("div#words_div #ondislike_selector").val("email");
+				            		$("#ondislike_selector").val("email");
 				            	else if (bg.user_jo.ondislike === "do nothing")
-				            		$("div#words_div #ondislike_selector").val("do nothing");
+				            		$("#ondislike_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -860,19 +860,19 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("div#words_div #ondislike_result_td").html("updated");
-				        	setTimeout(function(){$("div#words_div #ondislike_result_td").html("");},3000);
+				        		$("#ondislike_result_td").html("updated");
+				        	setTimeout(function(){$("#ondislike_result_td").html("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #ondislike_result_td").html("ajax error");
-				        	setTimeout(function(){$("div#words_div #ondislike_result_td").html("");},3000);
+				        	$("#ondislike_result_td").html("ajax error");
+				        	setTimeout(function(){$("#ondislike_result_td").html("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
             	
-            	$("div#words_div #onreply_selector").change(function () {
+            	$("#onreply_selector").change(function () {
 					$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -881,19 +881,19 @@ function getProfile(screenname)
 				            email: email,             
 				            this_access_token: this_access_token,  
 				            which: "onreply",
-				            value: $("div#words_div #onreply_selector").val() 
+				            value: $("#onreply_selector").val() 
 				        },
 				        dataType: 'json',
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("div#words_div #onreply_result_td").html("Error: " + data.message);
+				        		$("#onreply_result_td").html("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.onreply === "email")
-				            		$("div#words_div #onreply_selector").val("email");
+				            		$("#onreply_selector").val("email");
 				            	else if (bg.user_jo.onreply === "do nothing")
-				            		$("div#words_div #onreply_selector").val("do nothing");
+				            		$("#onreply_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -905,19 +905,19 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("div#words_div #onreply_result_td").html("updated");
-				        	setTimeout(function(){$("div#words_div #onreply_result_td").html("");},3000);
+				        		$("#onreply_result_td").html("updated");
+				        	setTimeout(function(){$("#onreply_result_td").html("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #onreply_result_td").html("ajax error");
-				        	setTimeout(function(){$("div#words_div #onreply_result_td").html("");},3000);
+				        	$("#onreply_result_td").html("ajax error");
+				        	setTimeout(function(){$("#onreply_result_td").html("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
             	
-            	$("div#words_div #onmention_selector").change(function () {
+            	$("#onmention_selector").change(function () {
 					$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -926,19 +926,19 @@ function getProfile(screenname)
 				            email: email,             
 				            this_access_token: this_access_token,  
 				            which: "onmention",
-				            value: $("div#words_div #onmention_selector").val() 
+				            value: $("#onmention_selector").val() 
 				        },
 				        dataType: 'json',
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("div#words_div #onmention_result_td").html("Error: " + data.message);
+				        		$("#onmention_result_td").html("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.onmention === "email")
-				            		$("div#words_div #onmention_selector").val("email");
+				            		$("#onmention_selector").val("email");
 				            	else if (bg.user_jo.onmention === "do nothing")
-				            		$("div#words_div #onmention_selector").val("do nothing");
+				            		$("#onmention_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -950,19 +950,19 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("div#words_div #onmention_result_td").html("updated");
-				        	setTimeout(function(){$("div#words_div #onmention_result_td").html("");},3000);
+				        		$("#onmention_result_td").html("updated");
+				        	setTimeout(function(){$("#onmention_result_td").html("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #onmention_result_td").html("ajax error");
-				        	setTimeout(function(){$("div#words_div #onmention_result_td").html("");},3000);
+				        	$("#onmention_result_td").html("ajax error");
+				        	setTimeout(function(){$("#onmention_result_td").html("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
             	
-            	/*$("div#words_div #emailpromos_selector").change(function () {
+            	/*$("#emailpromos_selector").change(function () {
 					$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -971,25 +971,25 @@ function getProfile(screenname)
 				            email: email,             
 				            this_access_token: this_access_token,  
 				            which: "emailpromos",
-				            value: $("div#words_div #emailpromos_selector").val() 
+				            value: $("#emailpromos_selector").val() 
 				        },
 				        dataType: 'json',
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
-				        		$("div#words_div #emailpromos_result_td").html("Error: " + data.message);
+				        		$("#emailpromos_result_td").html("Error: " + data.message);
 				        	else
-				        		$("div#words_div #emailpromos_result_td").html("updated");
-				        	setTimeout(function(){$("div#words_div #emailpromos_result_td").html("");},3000);
+				        		$("#emailpromos_result_td").html("updated");
+				        	setTimeout(function(){$("#emailpromos_result_td").html("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("div#words_div #emailpromos_result_td").html("ajax error");
-				        	setTimeout(function(){$("div#words_div #emailpromos_result_td").html("");},3000);
+				        	$("#emailpromos_result_td").html("ajax error");
+				        	setTimeout(function(){$("#emailpromos_result_td").html("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
-					$("div#words_div #emailpromos_result_td").html("updated");
+					$("#emailpromos_result_td").html("updated");
             	});*/
             }
         

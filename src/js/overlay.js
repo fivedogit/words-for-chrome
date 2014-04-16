@@ -75,58 +75,58 @@ function displayLogstatAsLoggedOut() {
 	welcomearea = welcomearea + "		<td style=\"width:24px\"><a href=\"#\" id=\"facebook_login_link\"><img id=\"facebook_login_img\" src=\"images/facebook_button_24x24.png\"></a></td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
-	$("div#words_div #logstat_td").html(welcomearea);
+	$("#logstat_td").html(welcomearea);
 
 	var temphtml = "";
-	$("div#words_div #google_login_img").mouseover( function() {
-		temphtml = $("div#words_div #header_div_top").html();
-		$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
-		$("div#words_div #header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>Words cannot post on your behalf nor access any non-basic information.<br>Your Words screenname/pic are separate and anonymous.</span>");
-		$("div#words_div #google_login_img").attr("src","images/google_button_24x24_mo.png");
-		$("div#words_div #tab_tooltip_td").html("Login with Google");
+	$("#google_login_img").mouseover( function() {
+		temphtml = $("#header_div_top").html();
+		$("#comment_submission_form_div_" + currentURLhash).hide();
+		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>Words cannot post on your behalf nor access any non-basic information.<br>Your Words screenname/pic are separate and anonymous.</span>");
+		$("#google_login_img").attr("src","images/google_button_24x24_mo.png");
+		$("#tab_tooltip_td").html("Login with Google");
 		return false;
 	});
-	$("div#words_div #google_login_img").mouseout( function() {
+	$("#google_login_img").mouseout( function() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
-		$("div#words_div #header_div_top").html(temphtml);
-		$("div#words_div #comment_submission_form_div_" + currentURLhash).show();
-		$("div#words_div #google_login_img").attr("src","images/google_button_24x24.png");
+		$("#header_div_top").html(temphtml);
+		$("#comment_submission_form_div_" + currentURLhash).show();
+		$("#google_login_img").attr("src","images/google_button_24x24.png");
 		if(tabmode === "thread")
-				$("div#words_div #tab_tooltip_td").html("Comments");
+				$("#tab_tooltip_td").html("Comments");
 			else if(tabmode === "trending")
-				$("div#words_div #tab_tooltip_td").html("Trending");
+				$("#tab_tooltip_td").html("Trending");
 			else if(tabmode === "notifications")
-				$("div#words_div #tab_tooltip_td").html("Notifications");
+				$("#tab_tooltip_td").html("Notifications");
 			else if(tabmode === "profile")
-				$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+				$("#tab_tooltip_td").html("Profile/Settings");
 		return false;
 	});
 	
-	$("div#words_div #facebook_login_img").mouseover( function() {
-		temphtml = $("div#words_div #header_div_top").html();
-		$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
-		$("div#words_div #header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>Words cannot post to Facebook nor access any non-basic information.<br>Your Words screenname/pic are separate and anonymous.</span>");
-		$("div#words_div #facebook_login_img").attr("src","images/facebook_button_24x24_mo.png");
-		$("div#words_div #tab_tooltip_td").html("Login with FB");
+	$("#facebook_login_img").mouseover( function() {
+		temphtml = $("#header_div_top").html();
+		$("#comment_submission_form_div_" + currentURLhash).hide();
+		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>Words cannot post to Facebook nor access any non-basic information.<br>Your Words screenname/pic are separate and anonymous.</span>");
+		$("#facebook_login_img").attr("src","images/facebook_button_24x24_mo.png");
+		$("#tab_tooltip_td").html("Login with FB");
 		return false;
 	});
-	$("div#words_div #facebook_login_img").mouseout( function() {
+	$("#facebook_login_img").mouseout( function() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
-		$("div#words_div #header_div_top").html(temphtml);
-		$("div#words_div #comment_submission_form_div_" + currentURLhash).show();
-		$("div#words_div #facebook_login_img").attr("src","images/facebook_button_24x24.png");
+		$("#header_div_top").html(temphtml);
+		$("#comment_submission_form_div_" + currentURLhash).show();
+		$("#facebook_login_img").attr("src","images/facebook_button_24x24.png");
 		if(tabmode === "thread")
-				$("div#words_div #tab_tooltip_td").html("Comments");
+				$("#tab_tooltip_td").html("Comments");
 			else if(tabmode === "trending")
-				$("div#words_div #tab_tooltip_td").html("Trending");
+				$("#tab_tooltip_td").html("Trending");
 			else if(tabmode === "notifications")
-				$("div#words_div #tab_tooltip_td").html("Notifications");
+				$("#tab_tooltip_td").html("Notifications");
 			else if(tabmode === "profile")
-				$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+				$("#tab_tooltip_td").html("Profile/Settings");
 			return false;
 	});
 	
-	$("div#words_div #facebook_login_link").click(
+	$("#facebook_login_link").click(
 			function () {
 				var currenttabid;
 				chrome.tabs.getSelected(null, function(tab) { 
@@ -149,7 +149,7 @@ function displayLogstatAsLoggedOut() {
 			});
 	
 	
-	$("div#words_div #google_login_link").click(
+	$("#google_login_link").click(
 			function () {
 				var currenttabid;
 				chrome.tabs.getSelected(null, function(tab) { 
@@ -207,11 +207,11 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
-	$("div#words_div #logstat_td").html(welcomearea);
+	$("#logstat_td").html(welcomearea);
 	
 	if(typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
 	{
-		$("div#words_div #alt_dropdown_img").click(
+		$("#alt_dropdown_img").click(
 				function () {
 					var alts_counter = 0;
 					var str = "";
@@ -221,7 +221,7 @@ function displayLogstatAsLoggedIn() {
 						alts_counter++;
 					}	
 					str = str.substring(0, str.length - 2);
-					$("div#words_div #header_div_top").html(str);
+					$("#header_div_top").html(str);
 					alts_counter = 0;
 					while(alts_counter < bg.user_jo.alts.length)
 					{
@@ -240,7 +240,7 @@ function displayLogstatAsLoggedIn() {
 				});
 	}	
 	
-	$("div#words_div #screenname_link").click(
+	$("#screenname_link").click(
 			function () {
 				viewProfile(bg.user_jo.screenname);
 				return;
@@ -270,25 +270,15 @@ function has_scrollbar(elem_id)
 function updateNotificationTabLinkImage()
 {
 	if (tabmode === "notifications")
-		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_blue.png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_blue.png") + "\"></img>");
 	else if ((typeof bg.user_jo==="undefined") || bg.user_jo === null || bg.user_jo.notification_count === 0)
-		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
 	else if (bg.user_jo.notification_count <= 10)
-		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag" + bg.user_jo.notification_count + ".png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag" + bg.user_jo.notification_count + ".png") + "\"></img>");
 	else if (bg.user_jo.notification_count > 10)
-		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag11plus.png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag11plus.png") + "\"></img>");
 	else
-		$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
-}
-
-
-function replaceURLWithHTMLLinks(text) {
-    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    var matchingurl = text.match(exp) + "";
-    if(matchingurl.length > 65)
-    	return text.replace(exp,"<a class='newtab' href='$1'>" + matchingurl.substring(0,65) + "...</a>");
-    else
-    	return text.replace(exp,"<a class='newtab' href='$1'>$1</a>");
+		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
 }
 
 function displayMessage(inc_message, inc_color, dom_id, s)
@@ -302,10 +292,10 @@ function displayMessage(inc_message, inc_color, dom_id, s)
 		ms = s * 1000;
 	if (typeof inc_color === "undefined" || inc_color === null)
 		inc_color = "red";
-	$("div#words_div #" + dom_id).css("color", inc_color);
-	$("div#words_div #" + dom_id).html(inc_message);
-	$("div#words_div #" + dom_id).show();
-	setTimeout(function() { $("div#words_div #" + dom_id).hide();}, ms);
+	$("#" + dom_id).css("color", inc_color);
+	$("#" + dom_id).html(inc_message);
+	$("#" + dom_id).show();
+	setTimeout(function() { $("#" + dom_id).hide();}, ms);
 }
 
 
@@ -313,7 +303,7 @@ $(window).scroll(function() {
 	   if ($(window).scrollTop() + $(window).height() === $(document).height()) {
 	       if (scrollable === 1)
 	       {
-	    	  // $("div#words_div #loading_more_comments_div").show();
+	    	  // $("#loading_more_comments_div").show();
 	    	   beginindex = beginindex + 8; 
 	    	   endindex = endindex + 8;
 	    	   prepareGetAndPopulateThreadPortion();
@@ -389,15 +379,10 @@ $(window).scroll(function() {
  	bs = bs + "</div>";
  	$("#words_div").html(bs);
  	
- 	if(charsleft < 500) // there was saved text
- 	{
- 		$("div#words_div #comment_textarea_" + currentURLhash).css("height", getTextAreaHeight($("div#words_div #comment_textarea_" + currentURLhash).val().length) + "px");
- 	}
- 	
  	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && //thread_jo.children > 5 && 
  			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/10 threadviews
  	{
- 		$("div#words_div #share_to_facebook_link").click(
+ 		$("#share_to_facebook_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
  	 					//"https://www.facebook.com/dialog/apprequests?app_id=271212039709142&message=Words%20for%20Chrome%20is%20fixing%20web%20commenting.%20http%3A%2F%2Fw.ords.co&redirect_uri=http%3A%2F%2Fw.ords.co"
@@ -407,7 +392,7 @@ $(window).scroll(function() {
  	 				return false;
  	 			});
  	 	
- 	 	$("div#words_div #share_to_twitter_link").click(
+ 	 	$("#share_to_twitter_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
  	 					"https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fw.ords.co"
@@ -416,7 +401,7 @@ $(window).scroll(function() {
  	 				return false;
  	 			});
  	 	
- 	 	$("div#words_div #share_to_googleplus_link").click(
+ 	 	$("#share_to_googleplus_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
  	 					"https://plus.google.com/share?url=http%3A%2F%2Fw.ords.co"
@@ -425,7 +410,7 @@ $(window).scroll(function() {
  	 				return false;
  	 			});
  	 	
- 	 	$("div#words_div #share_to_tumblr_link").click(
+ 	 	$("#share_to_tumblr_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
  	 					"http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fw.ords.co&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting"
@@ -434,7 +419,7 @@ $(window).scroll(function() {
  	 				return false;
  	 			});
  	 	
- 	 	$("div#words_div #invite_with_gmail_link").click(
+ 	 	$("#invite_with_gmail_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
  	 					"https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fw.ords.co%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"
@@ -443,107 +428,107 @@ $(window).scroll(function() {
  	 				return false;
  	 			});
  	}
- 	$("div#words_div #words_logo_link").click(
+ 	$("#words_logo_link").click(
  			function () {
  				doAboutTab();
  				return false;
  			});
 
- 	$("div#words_div #thread_tab_link").mouseover(
+ 	$("#thread_tab_link").mouseover(
  			function () {
- 				$("div#words_div #tab_tooltip_td").html("Comments");
+ 				$("#tab_tooltip_td").html("Comments");
  				return false;
  			});
 
- 	$("div#words_div #thread_tab_link").mouseout(
+ 	$("#thread_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("div#words_div #tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").html("Comments");
  				else if(tabmode === "trending")
- 					$("div#words_div #tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").html("Trending");
  				else if(tabmode === "notifications")
- 					$("div#words_div #tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").html("Notifications");
  				else if(tabmode === "profile")
- 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
  			});
 
- 	$("div#words_div #thread_tab_link").click(
+ 	$("#thread_tab_link").click(
  			function () {
  				doThreadTab();
  				return false;
  			});
 
- 	$("div#words_div #trending_tab_link").mouseover(
+ 	$("#trending_tab_link").mouseover(
  			function () {
- 				$("div#words_div #tab_tooltip_td").html("Trending");
+ 				$("#tab_tooltip_td").html("Trending");
  				return false;
  			});
 
- 	$("div#words_div #trending_tab_link").mouseout(
+ 	$("#trending_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("div#words_div #tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").html("Comments");
  				else if(tabmode === "trending")
- 					$("div#words_div #tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").html("Trending");
  				else if(tabmode === "notifications")
- 					$("div#words_div #tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").html("Notifications");
  				else if(tabmode === "profile")
- 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
  			});
 
- 	$("div#words_div #trending_tab_link").click(
+ 	$("#trending_tab_link").click(
  			function () {
  				doTrendingTab();
  				return false;
  			});
 
- 	$("div#words_div #notifications_tab_link").mouseover(
+ 	$("#notifications_tab_link").mouseover(
  			function () {
- 				$("div#words_div #tab_tooltip_td").html("Notifications");
+ 				$("#tab_tooltip_td").html("Notifications");
  				return false;
  			});
 
- 	$("div#words_div #notifications_tab_link").mouseout(
+ 	$("#notifications_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("div#words_div #tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").html("Comments");
  				else if(tabmode === "trending")
- 					$("div#words_div #tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").html("Trending");
  				else if(tabmode === "notifications")
- 					$("div#words_div #tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").html("Notifications");
  				else if(tabmode === "profile")
- 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
  			});
 
- 	$("div#words_div #notifications_tab_link").click(
+ 	$("#notifications_tab_link").click(
  			function () {
  				doNotificationsTab();
  				return false;
  			});
 
- 	$("div#words_div #profile_tab_link").mouseover(
+ 	$("#profile_tab_link").mouseover(
  			function () {
- 				$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+ 				$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
  			});
 
- 	$("div#words_div #profile_tab_link").mouseout(
+ 	$("#profile_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("div#words_div #tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").html("Comments");
  				else if(tabmode === "trending")
- 					$("div#words_div #tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").html("Trending");
  				else if(tabmode === "notifications")
- 					$("div#words_div #tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").html("Notifications");
  				else if(tabmode === "profile")
- 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
  			});
 
- 	$("div#words_div #profile_tab_link").click(
+ 	$("#profile_tab_link").click(
  			function () {
  				if(bg.user_jo == null || bg.user_jo.screenname == null)
  					viewProfile();
@@ -556,6 +541,9 @@ $(window).scroll(function() {
  	createFocusEventForTextarea(currentURLhash);
  	createBlurEventForTextarea(currentURLhash);
  	createKeyupEventForTextarea(currentURLhash, 500);
+ 	
+ 	if(charsleft < 500 && has_scrollbar("comment_textarea_" + currentURLhash)) // if saved text and scrollbars, grow
+ 			$("#comment_textarea_" + currentURLhash).trigger("keyup");
  }
  
  /***
@@ -571,15 +559,15 @@ $(window).scroll(function() {
  
  function createSubmissionFormSubmitButtonClickEvent(id)
  {
-	 $("div#words_div #comment_submission_form_submit_button_" + id).click({id: id},
+	 $("#comment_submission_form_submit_button_" + id).click({id: id},
 			 function (event) {
 				 
-				 $("div#words_div #comment_submission_form_submit_button_" + event.data.id).attr("disabled", "disabled");
-				 $("div#words_div #comment_submission_progress_span_" + event.data.id).show();
+				 $("#comment_submission_form_submit_button_" + event.data.id).attr("disabled", "disabled");
+				 $("#comment_submission_progress_span_" + event.data.id).show();
 				 if (bg.user_jo) 
 				 {
 					 // no need to check for comment rating here. Backend will let the user know on submit.
-					 if ($("div#words_div #comment_textarea_" + event.data.id) && $("div#words_div #comment_textarea_" + event.data.id).val() != "") 
+					 if ($("#comment_textarea_" + event.data.id) && $("#comment_textarea_" + event.data.id).val() != "") 
 					 {
 						 // event.data.id may be "top", which will be handled in submitComment();
 						 submitComment(event.data.id); // the "event.data.id" of this current comment (or hpqsp) will become the "parent" after the jump as it is the parent to which the new comment will be attached
@@ -588,33 +576,38 @@ $(window).scroll(function() {
 					 else 
 					 {
 						 displayMessage("Unable to post empty comment.", "red", "message_div_" + event.data.id);
-						 $("div#words_div #progress_span_" + event.data.id).hide();
-						 $("div#words_div #comment_submission_form_submit_button_" + event.data.id).removeAttr('disabled');
+						 $("#progress_span_" + event.data.id).hide();
+						 $("#comment_submission_form_submit_button_" + event.data.id).removeAttr('disabled');
 					 }
 				 } 
 				 else // user isn't logged in. Not sure they're seeing this form in the first place. They shouldn't be.
 				 {
 					 displayMessage("Unable to post comment. You are not logged in.", "red", "message_div_" + event.data.id); // USER SHOULD NOT SEE THIS MESSAGE. SHOULD BE WARNED OF LOGGEDOUT STATUS MUCH EARLIER
-					 $("div#words_div #progress_span_" + event.data.id).hide();
-					 $("div#words_div #comment_submission_form_submit_button_" + event.data.id).removeAttr('disabled');
+					 $("#progress_span_" + event.data.id).hide();
+					 $("#comment_submission_form_submit_button_" + event.data.id).removeAttr('disabled');
 				 }
 				 return false;
 			 });
  }
  
  function createKeyupEventForTextarea(id, charlimit){
-	 $("div#words_div #comment_textarea_" + id).keyup({id: id},
+	 $("#comment_textarea_" + id).keyup({id: id},
 			 function (event) {
 				 if(has_scrollbar("comment_textarea_" + event.data.id))
 				 {
-					 var currentheight = $("div#words_div #comment_textarea_" + event.data.id).css("height");
+					 var currentheight = $("#comment_textarea_" + event.data.id).css("height");
 					 currentheight = (currentheight.substring(0, currentheight.length - 2)*1) + 17;
-					 $("div#words_div #comment_textarea_" + event.data.id).css("height", currentheight + "px");
+					 $("#comment_textarea_" + event.data.id).css("height", currentheight + "px");
+					 // still has scrollbar? grow it again. (this happens in a big cut/paste sometimes)
+					 if(has_scrollbar("comment_textarea_" + event.data.id))
+					 {
+						 $("#comment_textarea_" + event.data.id).trigger("keyup");
+					 }
 				 }
-				 if($("div#words_div #comment_textarea_" + event.data.id).val().length > 500)
-					 $("div#words_div #comment_textarea_" + event.data.id).val($("div#words_div #comment_textarea_" + event.data.id).val().substring(0,charlimit));
-				 $("div#words_div #charsleft_" + event.data.id).html(charlimit - $("div#words_div #comment_textarea_" + event.data.id).val().length);
-				 docCookies.setItem("saved_text", $("div#words_div #comment_textarea_" + event.data.id).val(), 31536e3);
+				 if($("#comment_textarea_" + event.data.id).val().length > 500)
+					 $("#comment_textarea_" + event.data.id).val($("#comment_textarea_" + event.data.id).val().substring(0,charlimit));
+				 $("#charsleft_" + event.data.id).html(charlimit - $("#comment_textarea_" + event.data.id).val().length);
+				 docCookies.setItem("saved_text", $("#comment_textarea_" + event.data.id).val(), 31536e3);
 				 docCookies.setItem("saved_text_dom_id", "comment_textarea_" + event.data.id, 31536e3);
 			 }
 	 );
@@ -622,47 +615,48 @@ $(window).scroll(function() {
  
  function createBlurEventForTextarea(id)
  {
-	 $("div#words_div #comment_textarea_" + id).blur({id: id},
+	 $("#comment_textarea_" + id).blur({id: id},
 			function (event) {
-				if($("div#words_div #comment_textarea_" + event.data.id).val() === "") // if the user has written anything, leave the composition + submission area the way it is
+				if($("#comment_textarea_" + event.data.id).val() === "") // if the user has written anything, leave the composition + submission area the way it is
 				{
-					$("div#words_div #comment_textarea_" + event.data.id).css("height", "22px");			// set it back to normal height
-					$("div#words_div #comment_textarea_" + event.data.id).val("Say something..."); // set the default wording
-					$("div#words_div #char_count_and_submit_button_div_" + event.data.id).hide();			// hide the charcount and submit area
-					$("div#words_div #comment_textarea_" + event.data.id).css("color", "#aaa");			// reset the text to gray
+					$("#comment_textarea_" + event.data.id).css("height", "22px");			// set it back to normal height
+					$("#comment_textarea_" + event.data.id).val("Say something..."); // set the default wording
+					$("#char_count_and_submit_button_div_" + event.data.id).hide();			// hide the charcount and submit area
+					$("#comment_textarea_" + event.data.id).css("color", "#aaa");			// reset the text to gray
 				}
 			});
  }
  
  function createFocusEventForTextarea(id)
  {
-	 $("div#words_div #comment_textarea_" + id).focus({id: id},
+	 $("#comment_textarea_" + id).focus({id: id},
 			 function (event) {
 		 
 		 if(typeof bg.user_jo !== "undefined" && bg.user_jo !== null && bg.user_jo.rating <= -5)
 		 {
 			 displayMessage("Unable to compose comment. Your comment rating is too low.", "red", "message_div_" + event.data.id);
-			 $("div#words_div #comment_textarea_" + event.data.id).trigger("blur");
+			 $("#comment_textarea_" + event.data.id).trigger("blur");
 		 }
 		 if(typeof bg.user_jo === "undefined" || bg.user_jo === null)
 		 {
 			 displayMessage("Unable to compose comment. You are not logged in.", "red", "message_div_" + event.data.id);
-			 $("div#words_div #comment_textarea_" + event.data.id).trigger("blur");
+			 $("#comment_textarea_" + event.data.id).trigger("blur");
 		 }
 		 else // user logged in and rating ok
 		 {	 
-			 if($("div#words_div #comment_textarea_" + event.data.id).val() === "Say something...") // only do this if the textarea is currently "blank"
+			 $("#comment_textarea_" + event.data.id).css("height", "80px");
+			 if($("#comment_textarea_" + event.data.id).val() === "Say something...") // only do this if the textarea is currently "blank"
 			 {
-				 $("div#words_div #comment_textarea_" + event.data.id).val("");							 // blank it out
-				 $("div#words_div #comment_textarea_" + event.data.id).css("height", "90px"); // expand the height by 3x
+				 $("#comment_textarea_" + event.data.id).val("");							 // blank it out
 			 }
 			 else 
 			 {
-				 $("div#words_div #comment_textarea_" + event.data.id).css("height", getTextAreaHeight($("div#words_div #comment_textarea_" + event.data.id).val()) + "px");
+				 if(has_scrollbar("comment_textarea_" + event.data.id)) // it was increased to 80 above, but if it still has a scrollbar, grow it
+					 $("#comment_textarea_" + event.data.id).trigger("keyup");
 			 } 
 				 
-			 $("div#words_div #comment_textarea_" + event.data.id).css("color", "#000"); 				// set the text to black
-			 $("div#words_div #char_count_and_submit_button_div_" + event.data.id).show();					// show the charcount and submit buttons
+			 $("#comment_textarea_" + event.data.id).css("color", "#000"); 				// set the text to black
+			 $("#char_count_and_submit_button_div_" + event.data.id).show();					// show the charcount and submit buttons
 		 }
 	 });
  }

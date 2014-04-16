@@ -12,17 +12,17 @@
 function doNotificationsTab()
 {
 	tabmode = "notifications";
-	$("div#words_div #thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
-	$("div#words_div #trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
-	$("div#words_div #notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_blue.png") + "\"></img>");
-	$("div#words_div #profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
+	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
+	$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_blue.png") + "\"></img>");
+	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
 
 	
-	$("div#words_div #header_div_top").html("Notification Feed");
-	$("div#words_div #utility_div").show();
-	$("div#words_div #header_div_top").show();
-	$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
-	$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading activity feed... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>");
+	$("#header_div_top").html("Notification Feed");
+	$("#utility_div").show();
+	$("#header_div_top").show();
+	$("#comment_submission_form_div_" + currentURLhash).hide();
+	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading activity feed... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>");
 	getNotifications();
 }
 
@@ -30,7 +30,7 @@ function getNotifications()
 {
 	if (typeof bg.user_jo==="undefined" || bg.user_jo === null)
 	{
-		$("div#words_div #main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to view your activity feed.</div>");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to view your activity feed.</div>");
 	}
 	else
 	{
@@ -54,7 +54,7 @@ function getNotifications()
 					main_div_string = main_div_string + "<div id=\"feeditem_div_" + x + "\" style=\"padding:5px;text-align:left;" + x + "\"></div>";
 			}  
 		}
-		$("div#words_div #main_div_" + currentURLhash).html(main_div_string);
+		$("#main_div_" + currentURLhash).html(main_div_string);
 		for(var x=0; x < bg.user_jo.activity_ids.length; x++) 
 		{  
 			doNotificationItem(bg.user_jo.activity_ids[x], "feeditem_div_" + x, "notifications");
@@ -141,11 +141,11 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	    		fids = fids + "		</td>";
 	    		fids = fids + "	</tr>";
 	    		fids = fids + "</table>";
-	    		$("div#words_div #" + dom_id).html(fids);
+	    		$("#" + dom_id).html(fids);
 	        	
 	    		var email = docCookies.getItem("email");
 	    		var this_access_token = docCookies.getItem("this_access_token");
-	    		$("div#words_div #notification_hide_link_" + activity_jo.id).click({value: activity_jo.id}, function(event) {
+	    		$("#notification_hide_link_" + activity_jo.id).click({value: activity_jo.id}, function(event) {
 	    			var removal_target = event.data.value;
     				$.ajax({
     			        type: 'GET',
@@ -188,7 +188,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     			        	}	
     			        },
     			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-    			        	$("div#words_div #header_td_" + removal_target).html("Unable to hide item. (network error)");
+    			        	$("#header_td_" + removal_target).html("Unable to hide item. (network error)");
     			        	console.log(textStatus, errorThrown);
     			        }
     				});
@@ -201,21 +201,21 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        		var url_to_use = data.item.url_when_created;
         			if(url_to_use.length > 50)
         				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-        			// Why? $("div#words_div #header_div_" + activity_jo.id).css("text-align", "left");
+        			// Why? $("#header_div_" + activity_jo.id).css("text-align", "left");
 	        		if(activity_jo.id.endsWith("L"))
 	        		{
-	        			$("div#words_div #header_td_" + activity_jo.id).html("<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> liked your words: <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.url_when_created + "\">" + url_to_use + "</a>");
-	        			$("div#words_div #screenname_link_" + activity_jo.id).click(function() {
+	        			$("#header_td_" + activity_jo.id).html("<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> liked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.url_when_created + "\">" + url_to_use + "</a>");
+	        			$("#screenname_link_" + activity_jo.id).click(function() {
 	        		 		viewProfile(activity_jo.author_screenname);
 	        		 	});
 	        		}
 	        		else if(activity_jo.id.endsWith("D"))
 	        		{
-	        			$("div#words_div #header_td_" + activity_jo.id).html("Someone disliked your words: <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\"  style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + activity_jo.url_when_created + "\">" + url_to_use + "</a>");
+	        			$("#header_td_" + activity_jo.id).html("Someone disliked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\"  style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + activity_jo.url_when_created + "\">" + url_to_use + "</a>");
 	        		}	
 	        		else
 	        		{
-	        			$("div#words_div #header_td_" + activity_jo.id).html("Error determining notification item type");
+	        			$("#header_td_" + activity_jo.id).html("Error determining notification item type");
 	        			return;
 	        		}
 	        		$.ajax({
@@ -243,7 +243,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		    	        	}
 		    	        },
 		    	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-		    	        	$("div#words_div #header_td_" + removal_target).html("Unable to hide item. (network error)");
+		    	        	$("#header_td_" + removal_target).html("Unable to hide item. (network error)");
 		    	        	console.log(textStatus, errorThrown);
 		    	        } 
 		    		});
@@ -251,7 +251,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        	
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	$("div#words_div #header_td_" + item_id).html("Unable to retrieve like, dislike or reply item. (network error)");
+	        	$("#header_td_" + item_id).html("Unable to retrieve like, dislike or reply item. (network error)");
 	        	console.log(textStatus, errorThrown);
 	        } 
 		});
@@ -301,11 +301,11 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	    		fids = fids + "		</td>";
 	    		fids = fids + "	</tr>";
 	    		fids = fids + "</table>";
-	    		$("div#words_div #" + dom_id).html(fids);
+	    		$("#" + dom_id).html(fids);
 	        	
 	    		var email = docCookies.getItem("email");
 	    		var this_access_token = docCookies.getItem("this_access_token");
-	    		$("div#words_div #notification_hide_link_" + activity_jo.id).click({value: activity_jo.id}, function(event) {
+	    		$("#notification_hide_link_" + activity_jo.id).click({value: activity_jo.id}, function(event) {
 	    			var removal_target = event.data.value;
 	    			$.ajax({
     			        type: 'GET',
@@ -348,7 +348,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
     			        	}	
     			        },
     			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-    			        	$("div#words_div #header_td_" + removal_target).html("Unable to retrieve item. (network error)");
+    			        	$("#header_td_" + removal_target).html("Unable to retrieve item. (network error)");
     			        	console.log(textStatus, errorThrown);
     			        }
     				});
@@ -385,11 +385,11 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		        	        			var url_to_use = data.item.url_when_created;
 			                			if(url_to_use.length > 50)
 			                				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-			                			// Why? $("div#words_div #header_div_" + activity_jo.id).css("text-align", "left");
-			                			$("div#words_div #header_td_" + activity_jo.id).html(
+			                			// Why? $("#header_div_" + activity_jo.id).css("text-align", "left");
+			                			$("#header_td_" + activity_jo.id).html(
 			                					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> replied to you" 
 			                					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.url_when_created + "\">" + url_to_use + "</a>");
-			                			$("div#words_div #screenname_link_" + activity_jo.id).click(function() {
+			                			$("#screenname_link_" + activity_jo.id).click(function() {
 			    	        		 		viewProfile(activity_jo.author_screenname);
 			    	        		 	});
 			        	        		writeComment(data.item);
@@ -397,8 +397,8 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		        	        	}
 		        	        },
 		        	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-		        	        	$("div#words_div #header_td_" + activity_jo.id).html("Unable to retreive parent comment and write header. (network error)");
-		        	        	$("div#words_div #notification_comment_td_" + activity_jo.id).html("Unable to retreive parent comment. (network error)");
+		        	        	$("#header_td_" + activity_jo.id).html("Unable to retreive parent comment and write header. (network error)");
+		        	        	$("#notification_comment_td_" + activity_jo.id).html("Unable to retreive parent comment. (network error)");
 		        	        	console.log(textStatus, errorThrown);
 		        	        } 
 		        		});
@@ -409,7 +409,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        			if(url_to_use.length > 50)
 	        				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
 	        			parent_is_a_comment = false;
-	        			$("div#words_div #header_td_" + activity_jo.id).html(
+	        			$("#header_td_" + activity_jo.id).html(
             					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> mentioned you" 
             					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.url_when_created + "\">" + url_to_use + "</a>");
 	        			current_user_authored_parent_comment = false;
@@ -421,7 +421,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        	}
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	$("div#words_div #notification_child_div_" + item_id).html("Unable to retreive item. (network error)");
+	        	$("#notification_child_div_" + item_id).html("Unable to retreive item. (network error)");
 	        	console.log(textStatus, errorThrown);
 	        } 
 		});

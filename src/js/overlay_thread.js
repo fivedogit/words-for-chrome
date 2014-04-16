@@ -13,17 +13,17 @@
 function doThreadTab() 
 {
 	tabmode = "thread";
-	$("div#words_div #thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_blue.png") + "\"></img>");
-	$("div#words_div #trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_blue.png") + "\"></img>");
+	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
 	updateNotificationTabLinkImage();
-	$("div#words_div #profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
+	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
 	
-	$("div#words_div #utility_div").show();
-	$("div#words_div #header_div_top").html("Comment thread");
-	$("div#words_div #header_div_top").show();
-	$("div#words_div #comment_submission_form_div_" + currentURLhash).show();
+	$("#utility_div").show();
+	$("#header_div_top").html("Comment thread");
+	$("#header_div_top").show();
+	$("#comment_submission_form_div_" + currentURLhash).show();
 	
-	$("div#words_div #main_div_" + currentURLhash).html("");
+	$("#main_div_" + currentURLhash).html("");
 	
 	if(isValidURLFormation(currentURL))
 	{
@@ -31,7 +31,7 @@ function doThreadTab()
 		{
 			var url_at_function_call = currentURL;
 			// wait for thread to load
-			$("div#words_div #main_div_" + currentURLhash).html("Retrieving thread... <img style=\"padding:10px;vertical-align:middle\" src=\"images/ajaxSnake.gif\">");
+			$("#main_div_" + currentURLhash).html("Retrieving thread... <img style=\"padding:10px;vertical-align:middle\" src=\"images/ajaxSnake.gif\">");
 			gotThread_wedge_for_ntj(url_at_function_call);
 			// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
 		}
@@ -43,18 +43,18 @@ function doThreadTab()
 	else // not a valid URL formation
 	{
 		beginindex = 0;
-		$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
+		$("#comment_submission_form_div_" + currentURLhash).hide();
 		var main_div_string = "<div class=\"no-comments-div\">Commenting for non-websites is currently disabled.<br>";
 		main_div_string = main_div_string + "		(URL must start with \"http\".)"; // , hostname must contain a \".\" and lack a \":\".
 		main_div_string = main_div_string + "</div>";
-		$("div#words_div #main_div_" + currentURLhash).html(main_div_string);
+		$("#main_div_" + currentURLhash).html(main_div_string);
 	}
 }
 
 // this function says "We finally received the thread from the backend. Is the tabmode still "thread"? If so, show the thread. If not, do nothing (i.e. stop)."
 function gotThread()
 {
-	$("div#words_div #main_div_" + currentURLhash).html("");
+	$("#main_div_" + currentURLhash).html("");
 	if (tabmode === "thread")
 	{
 		//alert("gotThread and thread_jo=" + JSON.stringify(thread_jo));
@@ -80,11 +80,11 @@ function gotThread()
 		}
 		
 		// like/dislike indicator here
-		$("div#words_div #header_div_top").html(happy);
+		$("#header_div_top").html(happy);
 		
 		if(thread_jo.combined_or_separated === "separated") // can only like separated sites
 		{
-			$("div#words_div #hpqsplike_img").click(
+			$("#hpqsplike_img").click(
     	 			function () {
     	 				$.ajax({
         			        type: 'GET',
@@ -101,7 +101,7 @@ function gotThread()
         			        	if(data.response_status === "success")
         			        	{
         			        		displayMessage("Page liked.", "black");
-        			        		$("div#words_div #hpqsplike_img").attr("src", "images/star_16x16.png");
+        			        		$("#hpqsplike_img").attr("src", "images/star_16x16.png");
         			        		getHPQSPLikes();
         			        	}
         			        	else if(data.response_status === "error")
@@ -125,25 +125,25 @@ function gotThread()
     	 				return false;
     	 			});
     	 	
-    	 	$("div#words_div #hpqsplike_img").mouseover(
+    	 	$("#hpqsplike_img").mouseover(
     	 			function () {
-    	 				if($("div#words_div #hpqsplike_img").attr("src").indexOf("grayscale") == -1) // this is the yellow star, not the grayscale one
-    	 					$("div#words_div #tab_tooltip_td").html("You've liked this");
+    	 				if($("#hpqsplike_img").attr("src").indexOf("grayscale") == -1) // this is the yellow star, not the grayscale one
+    	 					$("#tab_tooltip_td").html("You've liked this");
     	 				else
-    	 					$("div#words_div #tab_tooltip_td").html("Like this page");
+    	 					$("#tab_tooltip_td").html("Like this page");
     	 				return false;
     	 			});
 
-    	 	$("div#words_div #hpqsplike_img").mouseout(
+    	 	$("#hpqsplike_img").mouseout(
     	 			function () {
     	 				if(tabmode === "thread")
-    	 					$("div#words_div #tab_tooltip_td").html("Comments");
+    	 					$("#tab_tooltip_td").html("Comments");
     	 				else if(tabmode === "trending")
-    	 					$("div#words_div #tab_tooltip_td").html("Trending");
+    	 					$("#tab_tooltip_td").html("Trending");
     	 				else if(tabmode === "notifications")
-    	 					$("div#words_div #tab_tooltip_td").html("Notifications");
+    	 					$("#tab_tooltip_td").html("Notifications");
     	 				else if(tabmode === "profile")
-    	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+    	 					$("#tab_tooltip_td").html("Profile/Settings");
     	 				return false;
     	 			});
 			if(bg.user_jo !== null)
@@ -181,7 +181,7 @@ function gotThread()
 			getHPQSPLikes();
 		}
 		
-		$("div#words_div #combined_img").click(
+		$("#combined_img").click(
 				function () {
 					$.ajax({
 				        type: 'GET',
@@ -204,23 +204,23 @@ function gotThread()
 				        		displayMessage("hostname separated", "red", "message_div_" + currentURLhash);
 				        		
 				        		// when separated for the first time, the significant designation becomes the thread's hp
-				        		$("div#words_div #header_div_top").html(thread_jo.hp + " <img id=\"separated_img\" src=\"images/separated_icon.png\">");
-				        		$("div#words_div #separated_img").mouseover(
+				        		$("#header_div_top").html(thread_jo.hp + " <img id=\"separated_img\" src=\"images/separated_icon.png\">");
+				        		$("#separated_img").mouseover(
 				        	 			function () {
-				        	 				$("div#words_div #tab_tooltip_td").html("Separated threads");
+				        	 				$("#tab_tooltip_td").html("Separated threads");
 				        	 				return false;
 				        	 			});
 
-				        	 	$("div#words_div #separated_img").mouseout(
+				        	 	$("#separated_img").mouseout(
 				        	 			function () {
 				        	 				if(tabmode === "thread")
-				        	 					$("div#words_div #tab_tooltip_td").html("Comments");
+				        	 					$("#tab_tooltip_td").html("Comments");
 				        	 				else if(tabmode === "trending")
-				        	 					$("div#words_div #tab_tooltip_td").html("Trending");
+				        	 					$("#tab_tooltip_td").html("Trending");
 				        	 				else if(tabmode === "notifications")
-				        	 					$("div#words_div #tab_tooltip_td").html("Notifications");
+				        	 					$("#tab_tooltip_td").html("Notifications");
 				        	 				else if(tabmode === "profile")
-				        	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+				        	 					$("#tab_tooltip_td").html("Profile/Settings");
 				        	 				return false;
 				        	 			});
 				        	}
@@ -232,41 +232,41 @@ function gotThread()
 					});
 				});
 		
-		$("div#words_div #combined_img").mouseover(
+		$("#combined_img").mouseover(
 	 			function () {
-	 				$("div#words_div #tab_tooltip_td").html("Combined threads");
+	 				$("#tab_tooltip_td").html("Combined threads");
 	 				return false;
 	 			});
 
-	 	$("div#words_div #combined_img").mouseout(
+	 	$("#combined_img").mouseout(
 	 			function () {
 	 				if(tabmode === "thread")
-	 					$("div#words_div #tab_tooltip_td").html("Comments");
+	 					$("#tab_tooltip_td").html("Comments");
 	 				else if(tabmode === "trending")
-	 					$("div#words_div #tab_tooltip_td").html("Trending");
+	 					$("#tab_tooltip_td").html("Trending");
 	 				else if(tabmode === "notifications")
-	 					$("div#words_div #tab_tooltip_td").html("Notifications");
+	 					$("#tab_tooltip_td").html("Notifications");
 	 				else if(tabmode === "profile")
-	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+	 					$("#tab_tooltip_td").html("Profile/Settings");
 	 				return false;
 	 			});
 	 	
-	 	$("div#words_div #separated_img").mouseover(
+	 	$("#separated_img").mouseover(
 	 			function () {
-	 				$("div#words_div #tab_tooltip_td").html("Separated threads");
+	 				$("#tab_tooltip_td").html("Separated threads");
 	 				return false;
 	 			});
 
-	 	$("div#words_div #separated_img").mouseout(
+	 	$("#separated_img").mouseout(
 	 			function () {
 	 				if(tabmode === "thread")
-	 					$("div#words_div #tab_tooltip_td").html("Comments");
+	 					$("#tab_tooltip_td").html("Comments");
 	 				else if(tabmode === "trending")
-	 					$("div#words_div #tab_tooltip_td").html("Trending");
+	 					$("#tab_tooltip_td").html("Trending");
 	 				else if(tabmode === "notifications")
-	 					$("div#words_div #tab_tooltip_td").html("Notifications");
+	 					$("#tab_tooltip_td").html("Notifications");
 	 				else if(tabmode === "profile")
-	 					$("div#words_div #tab_tooltip_td").html("Profile/Settings");
+	 					$("#tab_tooltip_td").html("Profile/Settings");
 	 				return false;
 	 			});
 		
@@ -374,11 +374,11 @@ function prepareGetAndPopulateThreadPortion()
 		//alert("entering prepareGetAndPopulateThreadPortion");
 		/*if(thread_jo.combined_or_separated === "combined")
 		{
-			$("div#words_div #header_div_top").html(t_jo.hostname + " (combined) - Like site");
+			$("#header_div_top").html(t_jo.hostname + " (combined) - Like site");
 		}	
 		else
 		{
-			$("div#words_div #header_div_top").html(t_jo.original_url + " (separated) - Like page");
+			$("#header_div_top").html(t_jo.original_url + " (separated) - Like page");
 		}*/	
 		
 		if ((typeof thread_jo.children === "undefined" || thread_jo.children === null || thread_jo.children.length === 0) && threadstatus === 0)
@@ -390,7 +390,7 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\"><img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (48 hrs)</div>";
 			main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px;display:none\" id=\"other_pages_on_this_site_div\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
-			$("div#words_div #main_div_" + currentURLhash).html(main_div_string);
+			$("#main_div_" + currentURLhash).html(main_div_string);
 
 			$.ajax({
 				type: 'GET',
@@ -472,7 +472,7 @@ function prepareGetAndPopulateThreadPortion()
 				scrollable = 0;
 			}
 			
-			$("div#words_div #main_div_" + currentURLhash).append(thread_div_string);
+			$("#main_div_" + currentURLhash).append(thread_div_string);
 
 			// deals with links within comments. 
 			/*$("a").click(function() {
@@ -521,14 +521,14 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 		//alert("parent_outer_container_div=" + parent_outer_container_div);
 		parent_comment_div = "comment_div_" + parent;
 		//alert("getting indent from parent_comment_div=" + parent_comment_div);
-		indent = ($("div#words_div #" + parent_comment_div).css("margin-left").replace("px", "")*1) + 25;
+		indent = ($("#" + parent_comment_div).css("margin-left").replace("px", "")*1) + 25;
 		//alert("indent=" + indent);
 	}	
 	// This is the main thread item (comment) structure. We have a blank container around the actual visible comment.
 	// That's so we can .after, .before, .append and .prepend to both the comment itself (replies) as well 
 	// as to the comment container (subsequent or previous comments of the same level)
 
-	if(!$("div#words_div #comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
+	if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
 		comment_div_string = comment_div_string + "<div class=\"comment-outer-container-div\" id=\"comment_outer_container_div_" + comment_id + "\">";
 	comment_div_string = comment_div_string + "		    <div class=\"complete-horiz-line-div\" id=\"complete_horiz_line_div_" + comment_id + "\"></div>";
 	comment_div_string = comment_div_string + "		    <div class=\"message-div\" id=\"message_div_" + comment_id + "\" style=\"display:none\"></div>";
@@ -536,22 +536,22 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 	comment_div_string = comment_div_string + "					<span style=\"padding:20px\">Loading a comment... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
 	//comment_div_string = comment_div_string + "			</div>";
 	comment_div_string = comment_div_string + "		</div>";
-	if(!$("div#words_div #comment_outer_container_div_" + comment_id).length)
+	if(!$("#comment_outer_container_div_" + comment_id).length)
 		comment_div_string = comment_div_string + "</div>"; // end container div
 
-	if(!$("div#words_div #comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
+	if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
 	{
 		if(commenttype === "initialpop") // .append to main_div
 		{
-			$("div#words_div #main_div_" + parent).append(comment_div_string);
+			$("#main_div_" + parent).append(comment_div_string);
 		}	
 		else if(commenttype === "newcomment") // .prepend to main_div
 		{
-			$("div#words_div #main_div_" + parent).prepend(comment_div_string);
+			$("#main_div_" + parent).prepend(comment_div_string);
 		}	
 		else if(commenttype == "reply") // .after parent comment
 		{
-			$("div#words_div #" + parent_outer_container_div).after(comment_div_string);
+			$("#" + parent_outer_container_div).after(comment_div_string);
 		}	
 		else
 		{
@@ -560,7 +560,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 	}
 	else // container already existed. Just insert the new stuff
 	{
-		$("div#words_div #comment_outer_container_div_" + comment_id).html(comment_div_string); // container_div already exists, rewrite it
+		$("#comment_outer_container_div_" + comment_id).html(comment_div_string); // container_div already exists, rewrite it
 	}	
 
 	$.ajax({
@@ -599,6 +599,16 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
         }
 	});
 }		
+
+
+function replaceURLWithHTMLLinks(text) {
+    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    var matchingurl = text.match(exp) + "";
+    if(matchingurl.length > 65)
+    	return text.replace(exp,"<a class='newtab' href='$1'>" + matchingurl.substring(0,65) + "...</a>");
+    else
+    	return text.replace(exp,"<a class='newtab' href='$1'>$1</a>");
+}
 
 function writeComment(feeditem_jo)
 {
@@ -715,14 +725,15 @@ function writeComment(feeditem_jo)
 		tempstr = tempstr + "				</tr>";
 		tempstr = tempstr + "				<tr>";
 		tempstr = tempstr + "					<td colspan=2 class=\"comment-text-td\"> ";
-	   		 
-	  	var text_with_links = replaceURLWithHTMLLinks(feeditem_jo.text);
+	   	var text_with_brs = feeditem_jo.text;
+	   	text_with_brs =	text_with_brs.replace(/\n/g, '<br />');
+	  	var text_with_links = replaceURLWithHTMLLinks(text_with_brs);
 	  	tempstr = tempstr + text_with_links;
 	  	tempstr = tempstr + "					</td>";
 	  	tempstr = tempstr + "				</tr>";
 
 	  	// show reply stuff // FIXME Using indent to indicate thread depth is hackish. 
-	  	if (tabmode === "thread" && (($("div#words_div #comment_div_" + feeditem_jo.id).css("margin-left").replace("px","")*1) < 125)) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
+	  	if (tabmode === "thread" && (($("#comment_div_" + feeditem_jo.id).css("margin-left").replace("px","")*1) < 125)) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
 	  	{
 	  		tempstr = tempstr + "				<tr>";
 	  		tempstr = tempstr + "					<td class=\"comment-reply-link-td\" colspan=2> ";
@@ -768,7 +779,7 @@ function writeComment(feeditem_jo)
 	
 	if (tabmode === "thread")
 	{
-		$("div#words_div #comment_div_" + feeditem_jo.id).html(tempstr);
+		$("#comment_div_" + feeditem_jo.id).html(tempstr);
 	}
 	else if (tabmode === "notifications")
 	{
@@ -791,20 +802,25 @@ function writeComment(feeditem_jo)
 	
 	if (tabmode === "thread")
 	{
-		$("div#words_div #reply_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+		$("#reply_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
 			if (bg.user_jo)
 			{
-				if(!$("div#words_div #reply_td_" + event.data.value).is(":visible"))
+				if(!$("#reply_td_" + event.data.value).is(":visible"))
 				{
-					$("div#words_div #reply_td_" + event.data.value).show();
-					var currtext = $("div#words_div #comment_textarea_" + event.data.value).val();
+					$("#reply_td_" + event.data.value).show();
+					var currtext = $("#comment_textarea_" + event.data.value).val();
 					if(currtext !== "Say something...")
 				 	{
-				 		$("div#words_div #comment_textarea_" + event.data.value).css("height", getTextAreaHeight($("div#words_div #comment_textarea_" + event.data.value).val().length) + "px");
+				 		//$("#comment_textarea_" + event.data.value).css("height", getTextAreaHeight($("#comment_textarea_" + event.data.value).val().length) + "px");
+						// textarea has a scrollbar due to previous text, grow it
+				 		 if(has_scrollbar("comment_textarea_" + event.data.value))
+						 {
+							 $("#comment_textarea_" + event.data.value).trigger("keyup");
+						 }
 				 	}
 				}
 				else
-					$("div#words_div #reply_td_" + event.data.value).hide();
+					$("#reply_td_" + event.data.value).hide();
 			}
 			else
 				displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
@@ -816,17 +832,17 @@ function writeComment(feeditem_jo)
 	 	createBlurEventForTextarea(feeditem_jo.id);
 	 	createKeyupEventForTextarea(feeditem_jo.id, 500);
 		
-		$("div#words_div #like_img_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+		$("#like_img_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
 			likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
 			return false;
 		});
 	 		 
-		$("div#words_div #dislike_img_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+		$("#dislike_img_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
 			likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
 			return false;
 		});
 	 		 
-		$("div#words_div #comment_delete_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+		$("#comment_delete_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
 			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
 			if (confirmbox === true)
 				hideComment(event.data.value);
@@ -843,7 +859,7 @@ function writeComment(feeditem_jo)
 
 function submitComment(parent) // submits comment and updates thread
 {
-	var text = $("div#words_div #comment_textarea_" + parent).val();
+	var text = $("#comment_textarea_" + parent).val();
 	//alert("submitting comment");
 	var email = docCookies.getItem("email");
 	var this_access_token = docCookies.getItem("this_access_token");
@@ -870,7 +886,7 @@ function submitComment(parent) // submits comment and updates thread
 	        	//if (parent_to_submit.indexOf(".") !== -1) // on server-fail of toplevel form comm submission, reenable submit button and remove spinner
 		    	//	displayMessage(data.message, "red", "message_div_" + currentURLhash);
 	        	//else
-	        	displayMessage(data.message, "red", "message_div_" + currentURLhash);
+	        	displayMessage(data.message, "red", "message_div_" + parent);
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
@@ -880,21 +896,21 @@ function submitComment(parent) // submits comment and updates thread
         			updateLogstat();
         		}
 	        	// on error, leave the comment box open with whatever was in there, char count the same. Just re-enable the submit button.
-	        	$("div#words_div #comment_submission_form_submit_button_" + parent).removeAttr('disabled');
-	        	$("div#words_div #comment_submission_progress_span_" + parent).hide();
+	        	$("#comment_submission_form_submit_button_" + parent).removeAttr('disabled');
+	        	$("#comment_submission_progress_span_" + parent).hide();
 	        } 
 	        else 
 	        {
 	        	if(parent.length !== 11) // toplevel
 		    	{
-		    		$("div#words_div #comment_submission_form_submit_button_" + parent).removeAttr("disabled");
-		    		$("div#words_div #comment_submission_progress_span_" + parent).hide();
+		    		$("#comment_submission_form_submit_button_" + parent).removeAttr("disabled");
+		    		$("#comment_submission_progress_span_" + parent).hide();
 		    		if(!thread_jo.children) // if the main thread jo was empty before, create it with one item, this new one and empty the main_div to receive it
 					{
 						var onechildarray = new Array();
 						onechildarray[0] = data.comment.id;
 						thread_jo.children = onechildarray; 
-						$("div#words_div #main_div_" + parent).html("");
+						$("#main_div_" + parent).html("");
 					}	
 		        	else
 		        	{
@@ -905,13 +921,13 @@ function submitComment(parent) // submits comment and updates thread
 		    	}
 	        	
 	        	// on success, reset the form stuff
-	        	$("div#words_div #comment_textarea_" + parent).css("height", "22px");			// set it back to normal height
-	        	$("div#words_div #comment_textarea_" + parent).val("Say something..."); // set the default wording
-	        	$("div#words_div #char_count_and_submit_button_div_" + parent).hide();			// hide the charcount and submit area
+	        	$("#comment_textarea_" + parent).css("height", "22px");			// set it back to normal height
+	        	$("#comment_textarea_" + parent).val("Say something..."); // set the default wording
+	        	$("#char_count_and_submit_button_div_" + parent).hide();			// hide the charcount and submit area
 	        	if(parent.length === 11) // not toplevel
-	        		$("div#words_div #reply_td_" + parent).hide();								// hide the reply area div
-	        	$("div#words_div #comment_textarea_" + parent).css("color", "#aaa");			// reset the text to gray
-	        	$("div#words_div #comment_submission_form_submit_button_" + parent).removeAttr('disabled');
+	        		$("#reply_td_" + parent).hide();								// hide the reply area div
+	        	$("#comment_textarea_" + parent).css("color", "#aaa");			// reset the text to gray
+	        	$("#comment_submission_form_submit_button_" + parent).removeAttr('disabled');
 		    	
 	        	docCookies.removeItem("saved_text");		// on success, removed the saved text cookies
 	        	docCookies.removeItem("saved_text_dom_id");
@@ -929,9 +945,9 @@ function submitComment(parent) // submits comment and updates thread
 	    },
 	    error: function (XMLHttpRequest, textStatus, errorThrown) {
 	    	displayMessage("Ajax error addComment: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + id);
-       	 	$("div#words_div #comment_submission_form_div_" + parent).hide();
-       	 	$("div#words_div #comment_submission_form_submit_button_" + parent).removeAttr("disabled");
-       	 	$("div#words_div #comment_submission_progress_span_" + parent).hide();
+       	 	$("#comment_submission_form_div_" + parent).hide();
+       	 	$("#comment_submission_form_submit_button_" + parent).removeAttr("disabled");
+       	 	$("#comment_submission_progress_span_" + parent).hide();
 	        console.log(textStatus, errorThrown);
 	    }
 	});

@@ -11,19 +11,19 @@
 function doTrendingTab()
 {
 	tabmode = "trending";
-	$("div#words_div #thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
-	$("div#words_div #trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_blue.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
+	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_blue.png") + "\"></img>");
 	updateNotificationTabLinkImage();
-	$("div#words_div #profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
+	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
 
 	
-	$("div#words_div #utility_div").show();
-	$("div#words_div #header_div_top").html("Activity across the Web (48 hrs)");
-	$("div#words_div #header_div_top").show();
-	$("div#words_div #comment_submission_form_div_" + currentURLhash).hide();
+	$("#utility_div").show();
+	$("#header_div_top").html("Activity across the Web (48 hrs)");
+	$("#header_div_top").show();
+	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var mds = "";  // main div string
 	mds = mds + "<div id=\"MAIN_trending_div\" style=\"padding:10px;\">Loading trending pages... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>";
-	$("div#words_div #main_div_" + currentURLhash).html(mds);
+	$("#main_div_" + currentURLhash).html(mds);
 	getTrendingActivity(48, [48]); // initial window, choices
 }
 
@@ -157,7 +157,7 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 		}	
 	}
 	mds = mds + "</table>";
-	$("div#words_div #" + dom_id).html(mds);
+	$("#" + dom_id).html(mds);
 	
 	if(choices.length > 1) // only need these click events if there are links to click (i.e. multiple time window options)
 	{
