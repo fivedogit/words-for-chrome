@@ -609,7 +609,7 @@ $(window).scroll(function() {
 				 {
 					 var currentheight = $("div#words_div #comment_textarea_" + event.data.id).css("height");
 					 currentheight = (currentheight.substring(0, currentheight.length - 2)*1) + 17;
-					 $("div#words_div #comment_textarea_" + event.data.id).css("height", getTextAreaHeight($("div#words_div #comment_textarea_" + event.data.id).val().length) + "px");
+					 $("div#words_div #comment_textarea_" + event.data.id).css("height", currentheight + "px");
 				 }
 				 if($("div#words_div #comment_textarea_" + event.data.id).val().length > 500)
 					 $("div#words_div #comment_textarea_" + event.data.id).val($("div#words_div #comment_textarea_" + event.data.id).val().substring(0,charlimit));
