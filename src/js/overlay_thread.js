@@ -93,6 +93,7 @@ function gotThread()
 		
 		$("#pagelike_img").click(
 	 			function () {
+	 				$("#pagelike_img").attr("src", "images/ajaxSnake.gif");
 	 				$.ajax({
     			        type: 'GET',
     			        url: endpoint,
@@ -808,6 +809,65 @@ function writeComment(feeditem_jo)
 		return false;
 	});
 	
+	if(bg.user_jo !== null)
+	{
+		$.ajax({
+			type: 'GET',
+	        url: endpoint,
+	        data: {
+	            method: "haveILikedThisComment",
+	            id: feeditem_jo.id,
+	            email: docCookies.getItem("email"),
+	            this_access_token: docCookies.getItem("this_access_token")
+	        },
+	        dataType: 'json',
+	        async: true,
+	        success: function (data, status) {
+	        	if (data.response_status === "error")
+	        	{
+	        		// fail silently
+	        	}
+	        	else if (data.response_status === "success")
+	        	{
+	        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
+	        			$("#like_img_" + feeditem_jo.id).attr("src", "images/like_arrow_liked.png");
+	        	}
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+	            console.log(textStatus, errorThrown);
+	        } 
+		});
+		
+		$.ajax({
+			type: 'GET',
+	        url: endpoint,
+	        data: {
+	            method: "haveIDislikedThisComment",
+	            id: feeditem_jo.id,
+	            email: docCookies.getItem("email"),
+	            this_access_token: docCookies.getItem("this_access_token")
+	        },
+	        dataType: 'json',
+	        async: true,
+	        success: function (data, status) {
+	        	if (data.response_status === "error")
+	        	{
+	        		// fail silently
+	        	}
+	        	else if (data.response_status === "success")
+	        	{
+	        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
+	        			$("#dislike_img_" + feeditem_jo.id).attr("src", "images/dislike_arrow_disliked.png");
+	        	}
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+	            console.log(textStatus, errorThrown);
+	        } 
+		});
+	}
+	
 	if (tabmode === "thread")
 	{
 		$("#reply_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
@@ -819,7 +879,6 @@ function writeComment(feeditem_jo)
 					var currtext = $("#comment_textarea_" + event.data.value).val();
 					if(currtext !== "Say something...")
 				 	{
-				 		//$("#comment_textarea_" + event.data.value).css("height", getTextAreaHeight($("#comment_textarea_" + event.data.value).val().length) + "px");
 						// textarea has a scrollbar due to previous text, grow it
 				 		 if(has_scrollbar("comment_textarea_" + event.data.value))
 						 {

@@ -1,8 +1,7 @@
-
-var devel = true;
+var devel = false; 
 var endpoint = "https://w.ords.co/endpoint";
-if (devel)
-	endpoint = "http://localhost:8080/words/endpoint"; 
+if(devel === true)
+	endpoint = "http://localhost:8080/words/endpoint";
 
 // functions found here must be loaded for the background page and the overlay. 
 

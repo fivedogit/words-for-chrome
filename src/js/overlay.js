@@ -388,7 +388,7 @@ $(window).scroll(function() {
  	 					//"https://www.facebook.com/dialog/apprequests?app_id=271212039709142&message=Words%20for%20Chrome%20is%20fixing%20web%20commenting.%20http%3A%2F%2Fw.ords.co&redirect_uri=http%3A%2F%2Fw.ords.co"
  	 					"https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fw.ords.co"
  	 					});
- 	 				noteUserPromo("facebook", "footer");
+ 	 				notePromo("facebook", "footer");
  	 				return false;
  	 			});
  	 	
@@ -397,7 +397,7 @@ $(window).scroll(function() {
  	 				chrome.tabs.create({url:
  	 					"https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fw.ords.co"
  	 					});
- 	 				noteUserPromo("twitter", "footer");
+ 	 				notePromo("twitter", "footer");
  	 				return false;
  	 			});
  	 	
@@ -406,7 +406,7 @@ $(window).scroll(function() {
  	 				chrome.tabs.create({url:
  	 					"https://plus.google.com/share?url=http%3A%2F%2Fw.ords.co"
  	 					});
- 	 				noteUserPromo("googleplus", "footer");
+ 	 				notePromo("googleplus", "footer");
  	 				return false;
  	 			});
  	 	
@@ -415,7 +415,7 @@ $(window).scroll(function() {
  	 				chrome.tabs.create({url:
  	 					"http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fw.ords.co&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting"
  	 					});
- 	 				noteUserPromo("tumblr", "footer");
+ 	 				notePromo("tumblr", "footer");
  	 				return false;
  	 			});
  	 	
@@ -424,7 +424,7 @@ $(window).scroll(function() {
  	 				chrome.tabs.create({url:
  	 					"https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fw.ords.co%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"
  	 					});
- 	 				noteUserPromo("gmail", "footer");
+ 	 				notePromo("gmail", "footer");
  	 				return false;
  	 			});
  	}
@@ -661,15 +661,13 @@ $(window).scroll(function() {
 	 });
  }
  
- function noteUserPromo(platform, source) //booleans or strings
+ function notePromo(platform, source) //booleans or strings
  {
  	$.ajax({
  		type: 'GET',
  		url: endpoint,
  		data: {
- 			method: "noteUserPromo",
- 			email: docCookies.getItem("email"),
- 			this_access_token: docCookies.getItem("this_access_token"),
+ 			method: "notePromo",
  			platform: platform,
  			source: source
  		},
@@ -691,18 +689,4 @@ $(window).scroll(function() {
  			displayMessage("AJAX error noting user promo", "red");
  		} 
  	}); 
- }
- 
- function getTextAreaHeight(numchars)
- {
-	 if(numchars < 100)
-		 return 60;
-	 else if(numchars < 200)
-		 return 100; 
-	 else if(numchars < 300)
-		 return 140; 
-	 else if(numchars < 400)
-		 return 180; 
-	 else if(numchars < 500)
-		 return 220; 
  }
