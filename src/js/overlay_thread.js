@@ -117,6 +117,7 @@ function gotThread()
     			        	}
     			        	else if(data.response_status === "error")
     			        	{
+    			        		$("#pagelike_img").attr("src", "images/star_grayscale_16x16.png");
     			        		displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
     			        		if(data.error_code && data.error_code === "0000")
     			        		{
@@ -129,6 +130,7 @@ function gotThread()
     			        	}	
     			        },
     			        error: function (XMLHttpRequest, textStatus, errorThrown) {
+    			        	$("#pagelike_img").attr("src", "images/star_grayscale_16x16.png");
     			        	displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
     			        	console.log(textStatus, errorThrown);
     			        }

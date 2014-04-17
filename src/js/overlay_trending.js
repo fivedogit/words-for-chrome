@@ -16,33 +16,31 @@ function doTrendingTab()
 	updateNotificationTabLinkImage();
 	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
 
-	
 	$("#utility_div").show();
-	$("#header_div_top").html("Activity across the Web (48 hrs)");
+	$("#header_div_top").html("Activity across the Web <span id=\"trending_activity_hours_span\">?</span>");
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var mds = "";  // main div string
 	mds = mds + "<div id=\"MAIN_trending_div\" style=\"padding:10px;\">Loading trending pages... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>";
 	$("#main_div_" + currentURLhash).html(mds);
-	getTrendingActivity(48, [48]); // initial window, choices
+	getTrendingActivity(); // initial window, choices
 }
 
-function getTrendingActivity(cutoff_in_hours, choices)
+function getTrendingActivity()
 {
-	
 	$.ajax({
 		type: 'GET',
 		url: endpoint,
 		data: {
 			method: "getTrendingActivity"
-				// for right now, backend is doing 6, 12, 24, 48, but frontend should specify what it wants, right?
 		},
 		dataType: 'json',
 		async: true,
 		success: function (data, status) {
 			if (data.response_status === "success") 
 			{
-				drawTrendingChart(cutoff_in_hours, choices, data, "MAIN_trending_div");
+				drawTrendingChart(data.num_hours, data, "MAIN_trending_div");
+				$("#trending_activity_hours_span").html("(" + data.num_hours + " hrs)");
 			}
 			else if (data.response_status === "error") 
 			{
@@ -63,11 +61,12 @@ function getTrendingActivity(cutoff_in_hours, choices)
 	});
 }
 
-function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
+function drawTrendingChart(hours_to_get, data, dom_id)
 {
+	var cutoff_in_hours = hours_to_get;
 	var mds = "";
 	// did the system find ANY activity at all? In any window? If not, say so.
-	if(typeof data.trendingactivity_jas === "undefined" || data.trendingactivity_jas === null)
+	if(typeof data.trendingactivity_ja === "undefined" || data.trendingactivity_ja === null)
 	{
 		mds = mds + "<table>";
 		mds = mds + "	<tr>";
@@ -77,36 +76,12 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 		mds = mds + "	</tr>";
 	}	
 	// what about for the window we want to see?
-	else if(typeof data.trendingactivity_jas[cutoff_in_hours] === "undefined" || data.trendingactivity_jas[cutoff_in_hours] === null || data.trendingactivity_jas[cutoff_in_hours].length === 0)
+	else if(typeof data.trendingactivity_ja === "undefined" || data.trendingactivity_ja === null || data.trendingactivity_ja.length === 0)
 	{
 		mds = mds + "<table>";
 		mds = mds + "	<tr>";
 		mds = mds + "		<td style=\"text-align:center;padding:8px;font-size:12px\">";
 		mds = mds + " 			No activity in the past " + cutoff_in_hours + " hours. ";
-		if(choices.length > 1)
-		{
-			mds = mds + "<span style=\"padding-left:10px\">";
-			var x = 0;
-			while(x < choices.length)
-			{
-				if(x == (choices.length-1))
-				{
-					if(choices[x] === cutoff_in_hours)
-						mds = mds + choices[x];
-					else
-						mds = mds + "<a href=\"#\" id=\"trending_choice_" + x + "\">" + choices[x] + "</a>";
-				}
-				else
-				{
-					if(choices[x] === cutoff_in_hours)
-						mds = mds + choices[x] + " | ";
-					else
-						mds = mds + "<a href=\"#\" id=\"trending_choice_" + x + "\">" + choices[x] + "</a> | ";
-				}
-				x++;
-			}	
-			mds = mds + "</span>";
-		}
 		mds = mds + "		</td>";
 		mds = mds + "	</tr>";
 	}	
@@ -114,42 +89,42 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 	else
 	{
 		var max = 0;
-		for(var x = 0; x < data.trendingactivity_jas[cutoff_in_hours].length; x++)
+		for(var x = 0; x < data.trendingactivity_ja.length; x++)
 		{
-			if(data.trendingactivity_jas[cutoff_in_hours][x].count > max)
-				max = data.trendingactivity_jas[cutoff_in_hours][x].count;
+			if(data.trendingactivity_ja[x].count > max)
+				max = data.trendingactivity_ja[x].count;
 		}
-		var trendingmap = data.trendingactivity_jas[cutoff_in_hours];
+		var trendingmap = data.trendingactivity_ja;
 		trendingmap.sort(function(a,b){
 			return b.count - a.count;
 		});
-		data.trendingactivity_jas[cutoff_in_hours] = trendingmap;
+		data.trendingactivity_ja = trendingmap;
 		mds = mds + "<table style=\"width:100%;\">";
-		for(var x = 0; x < data.trendingactivity_jas[cutoff_in_hours].length; x++)
+		for(var x = 0; x < data.trendingactivity_ja.length; x++)
 		{
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"text-align:left;padding-top:3px\">";http://www.google.com/s2/favicons?domain=
-			mds = mds + "<img src=\"http://www.google.com/s2/favicons?domain=" + data.trendingactivity_jas[cutoff_in_hours][x].hpqsp + "\" style=\"vertical-align:middle\"> ";	
-			mds = mds + data.trendingactivity_jas[cutoff_in_hours][x].page_title;
+			mds = mds + "<img src=\"http://www.google.com/s2/favicons?domain=" + data.trendingactivity_ja[x].hpqsp + "\" style=\"vertical-align:middle\"> ";	
+			mds = mds + data.trendingactivity_ja[x].page_title;
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"text-align:left;padding-bottom:2px\">";
-			var url_to_use = data.trendingactivity_jas[cutoff_in_hours][x].url_when_created;
+			var url_to_use = data.trendingactivity_ja[x].url_when_created;
 			if(url_to_use.length > 50)
 				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-			mds = mds + "<a class=\"newtab\" href=\"http://" + data.trendingactivity_jas[cutoff_in_hours][x].hpqsp + "\">" + url_to_use + "</a>";
+			mds = mds + "<a class=\"newtab\" href=\"http://" + data.trendingactivity_ja[x].hpqsp + "\">" + url_to_use + "</a>";
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"padding-bottom:5px\">";
 			mds = mds + "			<table>";
 			mds = mds + "				<tr>";
-			var left_percentage = data.trendingactivity_jas[cutoff_in_hours][x].count / max * 92;
+			var left_percentage = data.trendingactivity_ja[x].count / max * 92;
 			left_percentage = left_percentage|0;
 			var right_percentage = 92 - left_percentage;
 			mds = mds + "					<td style=\"height:10px;border:1px solid black;background-color:orange;width:" + left_percentage + "%\"></td>";
-			mds = mds + "					<td style=\"height:10px;text-align:left;padding-left:3px\"> " + data.trendingactivity_jas[cutoff_in_hours][x].count + "</td>";
+			mds = mds + "					<td style=\"height:10px;text-align:left;padding-left:3px\"> " + data.trendingactivity_ja[x].count + "</td>";
 			mds = mds + "				</tr>";
 			mds = mds + "			</table>";
 			mds = mds + "		</td>";
@@ -158,18 +133,6 @@ function drawTrendingChart(cutoff_in_hours, choices, data, dom_id)
 	}
 	mds = mds + "</table>";
 	$("#" + dom_id).html(mds);
-	
-	if(choices.length > 1) // only need these click events if there are links to click (i.e. multiple time window options)
-	{
-		var x = 0;
-		while(x < choices.length)
-		{
-			$("#trending_choice_" + x).click({value: x}, function(event) {
-				drawTrendingChart(choices[event.data.value], choices, data, "MAIN_trending_div");
-			});	
-			x++;
-		}
-	}
 	$("a").click(function() {
 		 var c = $(this).attr('class');
 		 if(c == "newtab")
