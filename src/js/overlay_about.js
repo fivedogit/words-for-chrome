@@ -23,43 +23,42 @@ function doAboutTab(message)
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var aboutmessage = "";
-	aboutmessage = aboutmessage + "<div style=\"text-align:left;font-size:12px;padding:20px\">";
+	aboutmessage = aboutmessage + "<div style=\"text-align:left;font-size:12px;padding:10px\">";
 	
 	aboutmessage = aboutmessage + "<p style=\"font-size:14px;font-weight:bold\">Better comments everywhere</p>";
-	aboutmessage = aboutmessage + "<p>Web commenting is broken. Too many logins, too much noise, too many trolls, not enough privacy, too much censorship.";
-	aboutmessage = aboutmessage + "<p>Words is an advanced, open-source web commenting utility that fixes these problems. It is built into the browser itself and has several advantages over page-embedded comments:</p>";
-	aboutmessage = aboutmessage + "<ol>";
-	aboutmessage = aboutmessage + "<li>Ubiquitous</li>";
-	aboutmessage = aboutmessage + "<li>Uniform</li>";
-	aboutmessage = aboutmessage + "<li>Centralized</li>";
-	aboutmessage = aboutmessage + "<li>Anonymous</li>";
-	aboutmessage = aboutmessage + "<li>Independent</li>";
-	aboutmessage = aboutmessage + "</ol>";
-	aboutmessage = aboutmessage + "<p>Words DOES NOT TRACK and is OPEN SOURCE for verification. The code is available here:</p>";
-
-	aboutmessage = aboutmessage + "<p>github.com/fivedogit/words-backend<br>";
-	aboutmessage = aboutmessage + "github.com/fivedogit/words-for-chrome</p>";
-	
-	aboutmessage = aboutmessage + "<p>More info here:</p>";
-	aboutmessage = aboutmessage + "<p>http://goo.gl/VNs0DP</p>";
-
-	aboutmessage = aboutmessage + "<p>Enjoy! Follow me on Twitter <a href=\"#\" id=\"at_twitter_link\">@fivedogit</a>. Feedback welcome!</p>";
+	aboutmessage = aboutmessage + "<p>Web commenting is broken. Too many different logins, too much noise, not enough privacy, too much censorship.</p>";
+	aboutmessage = aboutmessage + "<p>Together we can fix it.</p>";
 	aboutmessage = aboutmessage + "<hr>";
-	aboutmessage = aboutmessage + "Spread the Words! ";
+	aboutmessage = aboutmessage + "<p  style=\"font-size:14px;font-weight:bold\">Ways you can help:</p>";
+	aboutmessage = aboutmessage + "<ol>";
+	aboutmessage = aboutmessage + "<li>Write a comment. Seriously.</li>";
+	aboutmessage = aboutmessage + "<li>";
+	aboutmessage = aboutmessage + "Tell people about Words: ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
 		aboutmessage = aboutmessage + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
- 		
+	aboutmessage = aboutmessage + "</li>";
+	aboutmessage = aboutmessage + "<li>Report bugs to <a href=\"#\" id=\"at_twitter_link\">@fivedogit</a></li>";
+	aboutmessage = aboutmessage + "</ol>";
+	aboutmessage = aboutmessage + "<hr>";
+	aboutmessage = aboutmessage + "<p>Words DOES NOT TRACK and is OPEN SOURCE for verification. The code is available here:</p>";
+	aboutmessage = aboutmessage + "<p>github.com/fivedogit/words-backend<br>";
+	aboutmessage = aboutmessage + "github.com/fivedogit/words-for-chrome</p>";
+	aboutmessage = aboutmessage + "<p>More info here:</p>";
+	aboutmessage = aboutmessage + "<p>http://goo.gl/VNs0DP</p>";
+	aboutmessage = aboutmessage + "<p>Enjoy! Follow <a href=\"#\" id=\"at_words4chrome_link\">@words4chrome</a> or me, <a href=\"#\" id=\"at_fivedogit_link\">@fivedogit</a>. Feedback welcome!</p>";
 	aboutmessage = aboutmessage + "</div>";
 	$("#main_div_" + currentURLhash).html(aboutmessage);
 	
-	$("#at_twitter_link").click( function() {
+	$("#at_fivedogit_link").click( function() {
 		chrome.tabs.create({url:"http://www.twitter.com/fivedogit"});
 	});
-	
+	$("#at_words4chrome_link").click( function() {
+		chrome.tabs.create({url:"http://www.twitter.com/words4chrome"});
+	});
 	$("#share_to_facebook_link").click(
 	 			function () {
 	 				chrome.tabs.create({url:
