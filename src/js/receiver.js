@@ -259,10 +259,7 @@ function showRegistration(picture, login_type, email)
 	else
 	{
 		if(login_type === "google")
-		{
-			alert("lit google");
 			$("#use_facebook_tr").hide();
-		}
 		else if(login_type === "facebook")
 			$("#use_google_tr").hide();
 		
@@ -427,7 +424,8 @@ $("#registration_screenname_button").click(
 				}	
 				
 				var avatar_str = null;
-				var picture = null;
+				alert($("#avatar_img").attr("src"));
+				var picture = $("#avatar_img").attr("src");
 				
 				if($("#registration_country_select").val() === "")
 				{

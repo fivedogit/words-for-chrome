@@ -188,14 +188,7 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td id=\"logstat_logo_td\">";
 	welcomearea = welcomearea + "			<span id=\"logged_in_profile_image_span\">";
-	if(bg.user_jo.which_picture === "avatar_icon")
-		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\">";
-	else if(bg.user_jo.which_picture === "facebook_picture") // have to set a span, write the span with entire welcomearea (below), then asynchronously insert the facebook photo.
-		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"" + bg.user_jo.facebook_picture + "\">";
-	else if(bg.user_jo.which_picture === "google_picture")
-		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"" + bg.user_jo.google_picture + "\">";
-	else
-		welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"images/avatars/48avatar00.png\">";
+	welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"" + bg.user_jo.picture + "\">";
 	welcomearea = welcomearea + "			</span>";
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\">";

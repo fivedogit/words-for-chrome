@@ -34,6 +34,15 @@ function viewProfile(screenname)
 	}
 }
 
+function guid() {
+	  function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000)
+	               .toString(16)
+	               .substring(1);
+	  }
+	  return s4() + s4() + s4()+ s4() +
+	         s4() +s4() + s4() + s4();
+	}
 
 function getProfile(screenname)
 {
@@ -99,12 +108,7 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "			<tr>";
             	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right\" id=\"large_avatar_td\">";
             	
-            	if (target_user_jo.picture.lastIndexOf("avatar", 0) === 0)
-            		main_div_string = main_div_string + "					<img class=\"rounded\" src=\"images/avatars/128" + target_user_jo.picture + "\" style=\"width:128px;height:128px\">";
-            	else if (target_user_jo.which_picture === "google_picture")
-            		main_div_string = main_div_string + "					<img class=\"rounded\" src=\"" + target_user_jo.picture + "\" style=\"width:128px;height:128px\">";
-            	else if (target_user_jo.which_picture === "facebook_picture")
-            		main_div_string = main_div_string + "					<img class=\"rounded\" src=\"" + target_user_jo.picture + "?type=large\" style=\"height:128px;\">";
+            	main_div_string = main_div_string + "					<img class=\"rounded\" src=\"" + target_user_jo.picture + "\" style=\"height:128px;\">";
             	
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
@@ -218,17 +222,82 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";*/
 					main_div_string = main_div_string + "						<tr>"
-					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">Change avatar:";
-					main_div_string = main_div_string + "							<br><span style=\"font-weight:normal;font-style:italic\">(No custom avatars yet, sorry!)</span></td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">Change avatar:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
-					main_div_string = main_div_string + "									<table id=\"image_selection_table\">";
+					main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto\">";
+					main_div_string = main_div_string + "<tr id=\"use_google_tr\">";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_google_radio\" type=\"radio\" name=\"picture_type\" value=\"google\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_google_wording_td\">";
+					main_div_string = main_div_string + "		Google picture";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";
+					main_div_string = main_div_string + "<tr id=\"use_facebook_tr\">";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_facebook_radio\" type=\"radio\" name=\"picture_type\" value=\"facebook\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_facebook_wording_td\">";
+					main_div_string = main_div_string + "		Facebook picture";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";
+					main_div_string = main_div_string + "<tr>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_geometric_radio\" type=\"radio\" name=\"picture_type\" value=\"geometric\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_geometric_wording_td\">";
+					main_div_string = main_div_string + "		Geometric";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";
+					main_div_string = main_div_string + "<tr>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_monster_radio\" type=\"radio\" name=\"picture_type\" value=\"monster\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_monster_wording_td\">";
+					main_div_string = main_div_string + "		Monster";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";
+					main_div_string = main_div_string + "<tr>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_cartoonface_radio\" type=\"radio\" name=\"picture_type\" value=\"cartoonface\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_cartoonface_wording_td\">";
+					main_div_string = main_div_string + "		Cartoon face";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";
+					main_div_string = main_div_string + "<tr>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_retro_radio\" type=\"radio\" name=\"picture_type\" value=\"retro\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_retro_wording_td\">";
+					main_div_string = main_div_string + "		Retro";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";
+					main_div_string = main_div_string + "<tr>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_unicorn_radio\" type=\"radio\" name=\"picture_type\" value=\"unicorn\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_unicorn_wording_td\">";
+					main_div_string = main_div_string + "		Unicorn";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";
+					main_div_string = main_div_string + "<tr>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_silhouette_radio\" type=\"radio\" name=\"picture_type\" value=\"silhouette\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_silhouette_wording_td\">";
+					main_div_string = main_div_string + "		Silhouette";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";
+					main_div_string = main_div_string + "</table>";
+					/*main_div_string = main_div_string + "									<table id=\"image_selection_table\">";
 					main_div_string = main_div_string + "<tr id=\"google_radio_tr\"><td><input id=\"use_google_picture_radio\" type=\"radio\" name=\"picture_type\" value=\"google\"></td><td style=\"text-align:left\">Use my Google picture</td></tr>";
 					main_div_string = main_div_string + "<tr id=\"facebook_radio_tr\"><td><input id=\"use_facebook_picture_radio\" type=\"radio\" name=\"picture_type\" value=\"facebook\"></td><td style=\"text-align:left\">Use my Facebook picture</td></tr>";
 					main_div_string = main_div_string + "<tr id=\"words_radio_tr\"><td><input id=\"use_words_image_radio\" type=\"radio\" name=\"picture_type\" value=\"words\"></td><td style=\"text-align:left\">Use a Words image instead</td></tr>";
-					main_div_string = main_div_string + "									</table>";
+					main_div_string = main_div_string + "									</table>";*/
 					main_div_string = main_div_string + "								</div>";
-					main_div_string = main_div_string + "								<div id=\"picture_div\" style=\"text-align:center\"></div>";
+					
 					//main_div_string = main_div_string + "								<div id=\"facebook_picture_div\" style=\"text-align:center;display:none\"></div>";
 					//main_div_string = main_div_string + "								<div id=\"words_image_div\" style=\"display:none\">";
 					main_div_string = main_div_string + "									<table id=\"words_avatar_selector_table\" style=\"display:none;margin-right:auto;margin-left:auto\">";
@@ -241,7 +310,8 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "									</table>";
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"avatar_result_td\">";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "								<img class=\"rounded\" id=\"avatar_img\" src=\"" + bg.user_jo.picture + "\" style=\"width:48px;height:48px\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
@@ -400,31 +470,40 @@ function getProfile(screenname)
 					});
             	});
             	
-            	if(typeof bg.user_jo.google_picture !== "undefined" && bg.user_jo.google_picture !== null)
-            		$("#google_radio_tr").show();
-            	else
-            		$("#google_radio_tr").hide();
-            	if(typeof bg.user_jo.facebook_picture !== "undefined" && bg.user_jo.facebook_picture !== null)
-            		$("#facebook_radio_tr").show();
-            	else
-            		$("#facebook_radio_tr").hide();
-            	
-            	if(bg.user_jo.which_picture === "avatar_icon")
-            	{
-            		$("#words_avatar_selector_table").show();
-        			$("#use_words_image_radio").prop('checked', true);
-        			$("#picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
-            	}	
-            	else if (bg.user_jo.which_picture === "google_picture")
-        		{
-        			$("#use_google_picture_radio").prop('checked', true);
-        			$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
-        		}
-            	else if (bg.user_jo.which_picture === "facebook_picture")
-        		{
-        			$("#use_facebook_picture_radio").prop('checked', true);
-        			$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
-        		}	
+            	if(typeof bg.user_jo.google_picture === "undefined" || bg.user_jo.google_picture === null)
+            		$("#use_google_tr").hide();
+            	if(typeof bg.user_jo.facebook_picture === "undefined" || bg.user_jo.facebook_picture === null)
+            		$("#use_facebook_tr").hide();
+            	$("#use_google_radio").click(function () {
+            		$("#avatar_img").attr("src", picture);
+            	});
+            	$("#use_facebook_radio").click(function () {
+            		$("#avatar_img").attr("src", picture );
+            	});
+            	$("#use_geometric_radio").click(function () {
+            		var g = guid();
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon");
+            	});
+            	$("#use_monster_radio").click(function () {
+            		var g = guid();
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid");
+            	});
+            	$("#use_cartoonface_radio").click(function () {
+            		var g = guid();
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar");
+            	});
+            	$("#use_retro_radio").click(function () {
+            		var g = guid();
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro");
+            	});
+            	$("#use_unicorn_radio").click(function () {
+            		var g = guid();
+            		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=96");
+            	});
+            	$("#use_silhouette_radio").click(function () {
+            		var g = guid();
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm");
+            	});
             	
             	// TODO User should have the option of deleting social service access tokens, in addition to this_access_token
             	$("#logout_link").click(
@@ -542,7 +621,7 @@ function getProfile(screenname)
             				return;
             			});
             	
-            	
+            	/*
             	$("#use_google_picture_radio").click(function () {
             		$("#words_avatar_selector_table").hide();
             		$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
@@ -693,7 +772,7 @@ function getProfile(screenname)
         				        }
         					});
             	    }    
-            	});
+            	});*/
             	
             	if (bg.user_jo.overlay_size === 600)
             		$("#size_selector").val("wide");
