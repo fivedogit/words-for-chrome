@@ -236,36 +236,71 @@ else
 	docCookies.removeItem("facebook_access_token");
 }
 
+function guid() {
+	  function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000)
+	               .toString(16)
+	               .substring(1);
+	  }
+	  return s4() + s4() + s4()+ s4() +
+	         s4() +s4() + s4() + s4();
+	}
+
 function showRegistration(picture, login_type, email)
 {
-	
-	if(login_type === "native")
-	{
-		$("#password_tr").show();
-		$("#confirm_tr").show();
-	}
 	var mess = "";
 	mess = "<b>Welcome! Let's create a Words account for you.</b>";
 	$("#message_td").html(mess);
 	if(!picture)
 	{
-		// do nothing, the user will be shown the avatar selector and that's all
-		//picture = "images/avatars/48avatar00.png";
-		//$("#picture_div").html("<img src=\"" + picture + "\" style=\"width:48px;height:48px\">");
-		//$("#picture_div").show();
-		$("#words_image_div").show();
+		$("#use_google_tr").hide();
+		$("#use_facebook_tr").hide();
 	}
 	else
 	{
-		$("#picture_div").html("<img src=\"" + picture + "\" style=\"width:48px;height:48px\">");
-		$("#picture_type_div").show();
-		$("#use_picture_wording_td").html("Use " + login_type + " picture");
-		$("#use_picture_radio").trigger("click");
+		if(login_type === "google")
+		{
+			alert("lit google");
+			$("#use_facebook_tr").hide();
+		}
+		else if(login_type === "facebook")
+			$("#use_google_tr").hide();
+		
+		$("#avatar_img").attr("src", picture);
 	}
 	$("#registration_email_td").html(email);
 	$("#registration_form_td").show();
 	
-
+	$("#use_google_radio").click(function () {
+		$("#avatar_img").attr("src", picture);
+	});
+	$("#use_facebook_radio").click(function () {
+		$("#avatar_img").attr("src", picture );
+	});
+	$("#use_geometric_radio").click(function () {
+		var g = guid();
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon");
+	});
+	$("#use_monster_radio").click(function () {
+		var g = guid();
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid");
+	});
+	$("#use_cartoonface_radio").click(function () {
+		var g = guid();
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar");
+	});
+	$("#use_retro_radio").click(function () {
+		var g = guid();
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro");
+	});
+	$("#use_unicorn_radio").click(function () {
+		var g = guid();
+		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=96");
+	});
+	$("#use_silhouette_radio").click(function () {
+		var g = guid();
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm");
+	});
 	//EVENT HANDLERS
 
 	$("#not_you_link").click(function () {
@@ -286,7 +321,6 @@ function showRegistration(picture, login_type, email)
 		});
 	});
 
-	
 	$("#registration_country_select").change( function() {
 		if($("#registration_country_select").val() === "USA")
 			$("#registration_state_select_tr").show();
@@ -296,31 +330,9 @@ function showRegistration(picture, login_type, email)
 			$("#registration_state_select").val("");
 		}
 	});
-	
-	
-	$('#registration_avatar_selector').ddslick({
-		    data: avatarData,
-		    width: 200,
-		    imagePosition: "left",
-		    selectText: "Select your Avatar",
-		    onSelected: function(data){  
-		    	$('html, body').animate({ scrollTop: 0 }, 0);
-		    	$('#hidden_avatar_input').val(data.selectedData.imageSrc.substring(data.selectedData.imageSrc.lastIndexOf("/48") + 3));
-		    	$("#registration_submit_button").focus();
-		    }    
-	});
-	
 }
 
-$("#use_picture_radio").click(function () {
-	$("#picture_div").show();
-	$("#words_image_div").hide();
-});
 
-$("#use_words_image_radio").click(function () {
-	$("#picture_div").hide();
-	$("#words_image_div").show();
-});
 
 $("#registration_screenname_button").click(
 		function () 
@@ -415,21 +427,7 @@ $("#registration_screenname_button").click(
 				}	
 				
 				var avatar_str = null;
-				var which_picture = null;
-				if($("#use_picture_radio").is(':checked')) 
-				{
-					which_picture = login_type + "_picture";
-				}
-				else
-				{
-					if($("#hidden_avatar_input").val() === 0)
-					{
-						displayMessage("Select an avatar.", "red");
-						return false;
-					}
-					avatar_str = $("#hidden_avatar_input").val();
-					which_picture = "avatar_icon";
-				}
+				var picture = null;
 				
 				if($("#registration_country_select").val() === "")
 				{
@@ -459,10 +457,9 @@ $("#registration_screenname_button").click(
 				    	login_type: login_type,
 				    	social_access_token: local_a_t,
 				    	screenname: $("#registration_screenname_input").val(),
-				    	avatar_icon: avatar_str,
 				    	state: $("#registration_state_select").val(),
 				    	country: $("#registration_country_select").val(),
-				    	which_picture: which_picture,
+				    	picture: picture,
 				    	email: docCookies.getItem("email"),
 				    	password: $("#registration_password_input").val(),
 				    	confirm: $("#registration_confirm_input").val()

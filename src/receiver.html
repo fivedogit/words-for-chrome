@@ -394,41 +394,77 @@
 								 avatar
 							</td>
 							<td>
-								<div id="picture_type_div" style="display:none">
+								<div id="picture_type_div">
 									<table>
-									<tr>
+									<tr id="use_google_tr">
 										<td>
-											<input id="use_picture_radio" type="radio" name="picture_type" value="social">
+											<input id="use_google_radio" type="radio" name="picture_type" value="google">
 										</td>
-										<td id="use_picture_wording_td">
-											Use picture
+										<td id="use_google_wording_td">
+											Google picture
+										</td>
+									</tr>
+									<tr id="use_facebook_tr">
+										<td>
+											<input id="use_facebook_radio" type="radio" name="picture_type" value="facebook">
+										</td>
+										<td id="use_facebook_wording_td">
+											Facebook picture
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<input id="use_words_image_radio" type="radio" name="picture_type" value="words">
+											<input id="use_geometric_radio" type="radio" name="picture_type" value="geometric">
 										</td>
-										<td>
-											Use a Words image instead
+										<td id="use_geometric_wording_td">
+											Geometric
 										</td>
 									</tr>
-									</table>
-								</div>
-								<div id="picture_div" style="text-align:center;display:none">
-								</div>
-								<div id="words_image_div" style="display:none">
-									<table style="margin-right:auto;margin-left:auto">
 									<tr>
 										<td>
-											<div id="registration_avatar_selector">
-											</div>
-											<input type=hidden id="hidden_avatar_input" value="0"></input>
+											<input id="use_monster_radio" type="radio" name="picture_type" value="monster">
+										</td>
+										<td id="use_monster_wording_td">
+											Monster
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id="use_cartoonface_radio" type="radio" name="picture_type" value="cartoonface">
+										</td>
+										<td id="use_cartoonface_wording_td">
+											Cartoon face
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id="use_retro_radio" type="radio" name="picture_type" value="retro">
+										</td>
+										<td id="use_retro_wording_td">
+											Retro
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id="use_unicorn_radio" type="radio" name="picture_type" value="unicorn">
+										</td>
+										<td id="use_unicorn_wording_td">
+											Unicorn
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id="use_silhouette_radio" type="radio" name="picture_type" value="silhouette">
+										</td>
+										<td id="use_silhouette_wording_td">
+											Silhouette
 										</td>
 									</tr>
 									</table>
 								</div>
 							</td>
-							<td>
+							<td id="picture_td" style="text-align:center;vertical-align:top">
+								<img id="avatar_img" src="" style="width:96px;height:96px">
 							</td>
 						</tr>
 						<tr>
