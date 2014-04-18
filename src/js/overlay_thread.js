@@ -634,7 +634,7 @@ function writeComment(feeditem_jo)
 		tempstr = tempstr + "		<td class=\"comment-avatar-rating-td\">";
 		tempstr = tempstr + "			<table>";
 		tempstr = tempstr + "				<tr>";
-		tempstr = tempstr + "					<td><img class=\"userpic48 rounded\" src=\"images/avatars/48avatar_ghosted.png\"></td>";
+		tempstr = tempstr + "					<td><img class=\"userpic48 rounded\" src=\"images/48avatar_ghosted.png\"></td>";
 		tempstr = tempstr + "				</tr>";
 		tempstr = tempstr + "			</table>";
 		tempstr = tempstr + "		</td>";
