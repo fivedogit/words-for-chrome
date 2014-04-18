@@ -1187,5 +1187,5 @@ function gotThread_wedge_for_ntj(url_at_function_call)
 	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
 	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
 	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
-	{displayMessage("Thread retrieval error.", "red", "message_div_"+ currentURLhash);return;}},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);
+	{$("#main_div_" + currentURLhash).html("Unable to retrieve thread.");displayMessage("Thread retrieval error.", "red", "message_div_"+ currentURLhash);return;}},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);
 }

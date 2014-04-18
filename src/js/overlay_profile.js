@@ -223,7 +223,10 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";*/
 					main_div_string = main_div_string + "						<tr>"
-					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">Change avatar:</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
+					main_div_string = main_div_string + "								Change avatar:<br>";
+					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-size:10px;font-style:italic\"></span>";
+					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
 					main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto\">";
@@ -280,7 +283,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "		<input id=\"use_unicorn_radio\" type=\"radio\" name=\"picture_type\" value=\"unicorn\">";
 					main_div_string = main_div_string + "	</td>";
 					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_unicorn_wording_td\">";
-					main_div_string = main_div_string + "		Unicorn";
+					main_div_string = main_div_string + "		Unicorn <span id=\"unicorn_wait_span\" style=\"font-style:italic\"></span>";
 					main_div_string = main_div_string + "	</td>";
 					main_div_string = main_div_string + "</tr>";
 					main_div_string = main_div_string + "<tr>";
@@ -311,8 +314,10 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "									</table>";
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "							<td style=\"text-align:left;vertical-align:top\">";
 					main_div_string = main_div_string + "								<img class=\"rounded\" id=\"avatar_img\" src=\"" + bg.user_jo.picture + "\" style=\"width:48px;height:48px\">";
+					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\">Save</button>";
+					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
@@ -470,43 +475,232 @@ function getProfile(screenname)
 				        }
 					});
             	});
+
+            	// see if the user has social tokens which look valid...
+            	var google_access_token_expired_or_doesnt_exist = true;
+        		if(docCookies.getItem("google_access_token_expires") != null && docCookies.getItem("google_access_token") != null) // ok, the token/expires cookies exist
+        		{
+        			var ex = docCookies.getItem("google_access_token_expires");
+        			if(ex > bg.msfe_according_to_backend) 
+        				google_access_token_expired_or_doesnt_exist = false; // and it appears valid
+        			else 
+        			{												// it existed, but wasn't valid. Delete everything
+        				docCookies.removeItem("last_tab_id");
+        				docCookies.removeItem("google_access_token");
+        				docCookies.removeItem("google_access_token_expires");
+        				docCookies.removeItem("email");
+        				docCookies.removeItem("this_access_token");
+        				google_access_token_expired_or_doesnt_exist = true;
+        			}	
+        		}	
+        		var facebook_access_token_expired_or_doesnt_exist = true;
+        		if(docCookies.getItem("facebook_access_token_expires") != null && docCookies.getItem("facebook_access_token") != null) // ok, the token/expires cookies exist
+        		{
+        			var ex = docCookies.getItem("facebook_access_token_expires");
+        			if(ex > bg.msfe_according_to_backend) 
+        				facebook_access_token_expired_or_doesnt_exist = false; // and it appears valid
+        			else 
+        			{												// it existed, but wasn't valid. Delete everything
+        				docCookies.removeItem("last_tab_id");
+        				docCookies.removeItem("facebook_access_token");
+        				docCookies.removeItem("facebook_access_token_expires");
+        				docCookies.removeItem("email");
+        				docCookies.removeItem("this_access_token");
+        				facebook_access_token_expired_or_doesnt_exist = true;
+        			}	
+        		}	
+        		
+        		if(bg.user_jo.picture.indexOf("googleusercontent.com") != -1)
+        			$("#use_google_radio").prop('checked', true);
+        		else if(bg.user_jo.picture.indexOf("graph.facebook.com") != -1)
+        			$("#use_facebook_radio").prop('checked', true);
+        		if(bg.user_jo.picture.indexOf("unicornify.appspot.com") != -1)
+        			$("#use_unicorn_radio").prop('checked', true);
+        		else if(bg.user_jo.picture.indexOf("d=identicon") != -1)
+        			$("#use_geometric_radio").prop('checked', true);
+        		else if(bg.user_jo.picture.indexOf("d=mm") != -1)
+        			$("#use_silhouette_radio").prop('checked', true);
+        		else if(bg.user_jo.picture.indexOf("d=retro") != -1)
+        			$("#use_retro_radio").prop('checked', true);
+        		else if(bg.user_jo.picture.indexOf("d=wavatar") != -1)
+        			$("#use_cartoonface_radio").prop('checked', true);
+        		else if(bg.user_jo.picture.indexOf("d=monsterid") != -1)
+        			$("#use_monster_radio").prop('checked', true);
+        		
+        		// then show the appropriate trs and write the appropriate wording...
+        		if(facebook_access_token_expired_or_doesnt_exist && google_access_token_expired_or_doesnt_exist)
+        		{
+        			$("#use_google_tr").hide();
+        			$("#use_facebook_tr").hide();
+        			$("#social_wording_span").html("To use a FB or Google picture, log out and back in, then return here.");
+        		}
+        		else if(!facebook_access_token_expired_or_doesnt_exist && google_access_token_expired_or_doesnt_exist)
+        		{
+        			$("#use_google_tr").hide();
+        			$("#social_wording_span").html("To use a Google picture, log out (fully) and back in with Google, then return here.");
+        		}
+        		else if(facebook_access_token_expired_or_doesnt_exist && !google_access_token_expired_or_doesnt_exist)
+        		{
+        			$("#use_facebook_tr").hide();
+        			$("#social_wording_span").html("To use a FB picture, log out (fully) and back in with FB, then return here.");
+        		}
+        		else // both valid somehow, go off the picture hostname
+        		{
+        			if(bg.user_jo.picture.indexOf("graph.facebook.com") != -1)
+        			{
+        				$("#use_google_tr").hide();
+        				$("#social_wording_span").html("To use a Google picture, log out and back in with Google, then return here.");
+        			}
+        			else if(bg.user_jo.picture.indexOf("googleusercontent.com") != -1)
+        			{
+        				$("#use_facebook_tr").hide();
+        				$("#social_wording_span").html("To use a FB picture, log out and back in with FB, then return here.");
+        			}
+        			else // this is a bizarre situation where user has valid tokens for both social services but is using neither service's image
+        			{    // let's just force only google to be valid. hehe
+        				docCookies.removeItem("facebook_access_token");
+        				docCookies.removeItem("facebook_access_token_expires");
+        				$("#use_facebook_tr").hide();
+        				$("#social_wording_span").html("To use a FB picture, log out and back in with FB, then return here.");
+        			}	
+        		}	
             	
-            	if(typeof bg.user_jo.google_picture === "undefined" || bg.user_jo.google_picture === null)
-            		$("#use_google_tr").hide();
-            	if(typeof bg.user_jo.facebook_picture === "undefined" || bg.user_jo.facebook_picture === null)
-            		$("#use_facebook_tr").hide();
             	$("#use_google_radio").click(function () {
-            		$("#avatar_img").attr("src", picture);
+            		// go get Google picture
+            		$.ajax({
+            			type: 'GET',
+            			url: bg.endpoint,
+            			data: {
+            				method: "getSocialPicture",
+            				social_access_token: docCookies.getItem("google_access_token"),
+            				social_access_token_expires: docCookies.getItem("google_access_token_expires"),
+            				login_type: "google"
+            			},
+            			dataType: 'json',
+            			async: true,
+            			success: function (data, status) {
+            				if(data.response_status === "error")
+            				{
+            					if(data.error_code == "0000")
+            					{
+            						docCookies.removeItem("google_access_token");
+            						docCookies.removeItem("google_access_token_expires");
+            					}	
+            					displayMessage("Can't get Google picture as your token has expired. Please log out/in and try again.");
+            					return "error";
+            				}
+            				else if(data.response_status === "success")
+            				{
+            					$("#avatar_img").attr("src", data.picture);
+            				}	
+            			},
+            			error: function (XMLHttpRequest, textStatus, errorThrown) {
+            				console.log(textStatus, errorThrown);
+            				displayMessage("Couldn't retrieve picture. Network connection? (AJAX)", "red");
+            				return error;
+            			} 
+            		});  
             	});
+            	
             	$("#use_facebook_radio").click(function () {
-            		$("#avatar_img").attr("src", picture );
+            		// go get Google picture
+            		$.ajax({
+            			type: 'GET',
+            			url: bg.endpoint,
+            			data: {
+            				method: "getSocialPicture",
+            				social_access_token: docCookies.getItem("facebook_access_token"),
+            				social_access_token_expires: docCookies.getItem("facebook_access_token_expires"),
+            				login_type: "facebook"
+            			},
+            			dataType: 'json',
+            			async: true,
+            			success: function (data, status) {
+            				if(data.response_status === "error")
+            				{
+            					if(data.error_code == "0000")
+            					{
+            						docCookies.removeItem("facebook_access_token");
+            						docCookies.removeItem("facebook_access_token_expires");
+            					}	
+            					displayMessage("Can't get Facebook picture as your token has expired. Please log out/in and try again.");
+            					return "error";
+            				}
+            				else if(data.response_status === "success")
+            				{
+            					$("#avatar_img").attr("src", data.picture);
+            				}	
+            			},
+            			error: function (XMLHttpRequest, textStatus, errorThrown) {
+            				console.log(textStatus, errorThrown);
+            				displayMessage("Couldn't retrieve picture. Network connection? (AJAX)", "red");
+            				return error;
+            			} 
+            		});  
             	});
+            	
             	$("#use_geometric_radio").click(function () {
             		var g = guid();
-            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon");
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
             	});
             	$("#use_monster_radio").click(function () {
             		var g = guid();
-            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid");
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
             	});
             	$("#use_cartoonface_radio").click(function () {
             		var g = guid();
-            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar");
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
             	});
             	$("#use_retro_radio").click(function () {
             		var g = guid();
-            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro");
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
             	});
             	$("#use_unicorn_radio").click(function () {
             		var g = guid();
-            		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=96");
+            		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
+            		$("#unicorn_wait_span").html("Wait...");
+            		setTimeout(function() {$("#unicorn_wait_span").html("");}, 2000);
             	});
             	$("#use_silhouette_radio").click(function () {
             		var g = guid();
-            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm");
+            		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
             	});
             	
-            	// TODO User should have the option of deleting social service access tokens, in addition to this_access_token
+            	$("#avatar_save_button").click(function () {
+            		//alert("nyi image=" + $("#avatar_img").attr("src"));
+            		$.ajax({
+            			type: 'GET',
+            			url: bg.endpoint,
+            			data: {
+            				method: "savePicture",
+            				email: email,             
+				            this_access_token: this_access_token,  
+            				picture: $("#avatar_img").attr("src")
+            			},
+            			dataType: 'json',
+            			async: true,
+            			success: function (data, status) {
+            				if(data.response_status === "error")
+            				{
+            					$("#avatar_save_span").html(" error");
+            				}
+            				else if(data.response_status === "success")
+            				{
+            					bg.user_jo.picture = $("#avatar_img").attr("src");
+            					$("#large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.picture + "\" style=\"width:128px;height:128px\"></img>");
+				        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.picture + "\" style=\"width:32px;height:32px\"></img>");
+            					$("#avatar_save_span").html(" saved");
+            					setTimeout(function() {$("#avatar_save_span").html("");}, 2000);
+            				}	
+            			},
+            			error: function (XMLHttpRequest, textStatus, errorThrown) {
+            				console.log(textStatus, errorThrown);
+            				displayMessage("Couldn't save picture. Network connection? (AJAX)", "red");
+            				return error;
+            			} 
+            		});  
+            	});
+            	
             	$("#logout_link").click(
             			function () {
             				var google_access_token = docCookies.getItem("google_access_token");
@@ -586,12 +780,6 @@ function getProfile(screenname)
                         				}
                         				if($("#google_disconnect_checkbox").prop("checked"))
                         				{
-                        					/*chrome.identity.getAuthToken({ 'interactive': false },
-                        						      function(current_token) {
-                        						        if (!chrome.runtime.lastError) {
-                        						          chrome.identity.removeCachedAuthToken({ token: current_token }, function() {});
-                        						        }
-                        					});*/
                         					var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + docCookies.getItem("google_access_token");
 
                         					// Tell google to disconnect this user.
@@ -621,160 +809,7 @@ function getProfile(screenname)
                         			});
             				return;
             			});
-            	
-            	/*
-            	$("#use_google_picture_radio").click(function () {
-            		$("#words_avatar_selector_table").hide();
-            		$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:48px;height:48px\">");
-            		$.ajax({
-						type: 'GET',
-						url: endpoint,
-						data: {
-				            method: "setUserPreference",
-				            email: email,             
-				            this_access_token: this_access_token,  
-				            which: "which_picture",
-				            value: "google_picture" // will always have this as the radio button wouldn't even be visible without it, server will check too
-				        },
-				        dataType: 'json',
-				        async: true,
-				        success: function (data, status) {
-				        	if (data.response_status === "error")
-				        	{
-				        		$("#avatar_result_td").html("error");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
-				            	if(data.error_code && data.error_code === "0000")
-				        		{
-				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
-				        			updateLogstat();
-				        		}
-				        	}
-				        	else
-				        	{
-				        		$("#avatar_result_td").html("updated");
-				        		$("#large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:128px;height:128px\"></img>");
-				        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.google_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-				        		bg.user_jo.which_picture = "google_picture";
-				        	}
-				        }
-				        ,
-				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#avatar_result_td").html("error");
-				            console.log(textStatus, errorThrown);
-				        }
-					});
-            	});
-
-            	$("#use_facebook_picture_radio").click(function () {
-            		$("#words_avatar_selector_table").hide();
-            		$("#picture_div").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:48px;height:48px\">");
-            		$.ajax({
-						type: 'GET',
-						url: endpoint,
-						data: {
-				            method: "setUserPreference",
-				            email: email,             
-				            this_access_token: this_access_token,  
-				            which: "which_picture",
-				            value: "facebook_picture" // will always have this as the radio button wouldn't even be visible without it, server will check too
-				        },
-				        dataType: 'json',
-				        async: true,
-				        success: function (data, status) {
-				        	if (data.response_status === "error")
-				        	{
-				        		$("#avatar_result_td").html("error");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
-				            	if(data.error_code && data.error_code === "0000")
-				        		{
-				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
-				        			updateLogstat();
-				        		}
-				        	}
-				        	else
-				        	{
-				        		$("#avatar_result_td").html("updated");
-				        		$("#large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "?type=large\" style=\"height:128px;\"></img>");
-				        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.facebook_picture + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-				        		bg.user_jo.which_picture = "facebook_picture";
-				        	}
-				        }
-				        ,
-				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#avatar_result_td").html("error");
-				            console.log(textStatus, errorThrown);
-				        }
-					});
-            	});
-            	
-            	$("#use_words_image_radio").click(function () {
-            		$("#avatar_result_td").html("updated");
-            		$("#words_avatar_selector_table").show();
-            		$("#large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + bg.user_jo.avatar_icon + "\"></img>");
-	        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-            		$("#picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + bg.user_jo.avatar_icon + "\" style=\"width:48px;height:48px\">");
-            		bg.user_jo.which_picture = "avatar_icon";
-            	});
-            	
-            	$('#avatar_change_selector').ddslick({
-            	    data: avatarData,
-            	    width: 150,
-            	    imagePosition: "left",
-            	    selectText: "Select your Avatar",
-            	    onSelected: function(data){  
-            	            $('#hidden_avatar_change_input').val(data.selectedData.imageSrc.substring(data.selectedData.imageSrc.lastIndexOf("/48") + 3));
-            	            $('html, body').animate({ scrollTop: 0 }, 0);
-            	            $.ajax({
-        						type: 'GET',
-        						url: endpoint,
-        						data: {
-        				            method: "setUserPreference",
-        				            email: email,             
-        				            this_access_token: this_access_token,  
-        				            which: "avatar_icon",
-        				            value: $('#hidden_avatar_change_input').val()
-        				        },
-        				        dataType: 'json',
-        				        async: true,
-        				        success: function (data, status) {
-        				        	if (data.response_status === "error")
-        				        	{
-        				        		$("#avatar_result_td").html("error");
-        				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
-        				            	if(data.error_code && data.error_code === "0000")
-        				        		{
-        				        			displayMessage("Your login has expired. Please relog.", "red");
-        				        			docCookies.removeItem("email"); 
-        				        			docCookies.removeItem("this_access_token");
-        				        			bg.user_jo = null;
-        				        			updateLogstat();
-        				        		}
-        				        	}
-        				        	else
-        				        	{
-        				        		$("#avatar_result_td").html("updated");
-        				        		$("#large_avatar_td").html("<img class=\"rounded\" src=\"images/avatars/128" + $('#hidden_avatar_change_input').val() + "\"></img>");
-        				        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"images/avatars/48" + $('#hidden_avatar_change_input').val() + "\" style=\"width:32px;height:32px;border: 1px solid black;\"></img>");
-        				        		$("#picture_div").html("<img class=\"rounded\" src=\"images/avatars/48" + $('#hidden_avatar_change_input').val() + "\" style=\"width:48px;height:48px\">");
-        				        		bg.user_jo.avatar_icon = $('#hidden_avatar_change_input').val();
-        				        		bg.user_jo.which_picture = "avatar_icon";
-        				        	}
-        				        }
-        				        ,
-        				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-        				        	$("#avatar_result_td").html("error");
-        				            console.log(textStatus, errorThrown);
-        				        }
-        					});
-            	    }    
-            	});*/
-            	
+            
             	if (bg.user_jo.overlay_size === 600)
             		$("#size_selector").val("wide");
             	else if (bg.user_jo.overlay_size === 450)
@@ -1081,3 +1116,4 @@ function getProfile(screenname)
 	});
 	}
 }
+

@@ -47,6 +47,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function updateLogstat()
 {
+	var e = docCookies.getItem("email");
+	var tat = docCookies.getItem("this_access_token");
+	if(e === null || tat === null)
+	{
+		docCookies.removeItem("email"); 
+		docCookies.removeItem("this_access_token");
+		bg.user_jo = null;
+	}	
+	
 	if (bg.user_jo !== null)
 	{
 		if (typeof bg.user_jo.overlay_size !== "undefined" && bg.user_jo.overlay_size !== null)

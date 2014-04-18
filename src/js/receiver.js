@@ -74,7 +74,8 @@ function getParameterByName(name) {
 
 // here's how this flow works
 // if(there a "code" parameter)
-//		get it and poll the Words backend to exchange it for a real token
+//		get it and poll the Words backend to exchange it for a real token. Backend automatically takes the resulting code and gets a tat
+//		(in other words, this encapsulates login in addition to code-for-token)
 // else this a normal login attempt
 // 		if google
 //			check expiration
@@ -357,9 +358,15 @@ function showRegistration(picture, login_type, email)
 	else
 	{
 		if(login_type === "google")
+		{
 			$("#use_facebook_tr").hide();
+			$("#use_google_radio").prop('checked', true);
+		}
 		else if(login_type === "facebook")
+		{
 			$("#use_google_tr").hide();
+			$("#use_facebook_radio").prop('checked', true);
+		}
 		
 		$("#avatar_img").attr("src", picture);
 	}
@@ -374,27 +381,29 @@ function showRegistration(picture, login_type, email)
 	});
 	$("#use_geometric_radio").click(function () {
 		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon");
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
 	});
 	$("#use_monster_radio").click(function () {
 		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid");
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
 	});
 	$("#use_cartoonface_radio").click(function () {
 		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar");
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
 	});
 	$("#use_retro_radio").click(function () {
 		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro");
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
 	});
 	$("#use_unicorn_radio").click(function () {
 		var g = guid();
-		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=96");
+		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
+		$("#unicorn_wait_span").html("Wait...");
+		setTimeout(function() {$("#unicorn_wait_span").html("");}, 2000);
 	});
 	$("#use_silhouette_radio").click(function () {
 		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm");
+		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
 	});
 	//EVENT HANDLERS
 
@@ -536,7 +545,7 @@ $("#registration_screenname_button").click(
 					return false;
 				}
 				
-				displayMessage("Creating Words account...", "black");
+				displayMessage("Creating Words account... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
 				$("#registration_form_td").hide();
 
 				var local_a_t;
