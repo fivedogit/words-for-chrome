@@ -71,24 +71,40 @@ function getParameterByName(name) {
     if (results === null) return "";
     else return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-var login_type = getParameterByName("login_type");
-var capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
-if(login_type === "native")
-	displayMessage("Verifying your identity... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
-else
-	displayMessage("Verifying your identity with " + capitalized_login_type + "... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
 
-if(getParameterByName("social_access_token") != null && getParameterByName("social_access_token") !== "" && 
-		getParameterByName("social_access_token") !== "null" && getParameterByName("social_access_token") !== "undefined") // user is asserting an access token, try to login only (no registration)
+// here's how this flow works
+// if(there a "code" parameter)
+//		get it and poll the Words backend to exchange it for a real token
+// else this a normal login attempt
+// 		if google
+//			check expiration
+//			if expired
+//				redirect to google for re-auth
+//			else not expired
+//				use it and log the user in
+//		else if facebook
+//			check expiration
+//			if expired
+//				redirect to google for re-auth
+//			else not expired
+//				use it and log the user in
+
+var code = getParameterByName("code");
+var login_type = getParameterByName("login_type");
+var capitalized_login_type = "Unknown";
+if(login_type !== null && login_type.length > 1)
+	capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
+
+if(code !== null && code !== "")
 {
-	//alert("pure login");
-	// a social_access_token qsp is being asserted, try pure login
+	// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
+	displayMessage("Verifying your identity with " + capitalized_login_type + "... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
 	$.ajax({
-		type: 'GET',
+		type: 'get',
 		url: bg.endpoint,
 		data: {
-			method: "login",
-			social_access_token: getParameterByName("social_access_token"),
+			method: "getAccessTokenFromAuthorizationCode",
+			code: getParameterByName("code"),
 			login_type: login_type
 		},
 		dataType: 'json',
@@ -96,11 +112,162 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 		success: function (data, status) {
 			if(data.response_status === "error")
 			{
-				displayMessage(data.message, "red");
+				displayMessage("error getting access_token from " + login_type, "red");
+				if(data.error_code === "0000" && data.login_type === "facebook")
+				{
+					docCookies.removeItem("last_tab_id");
+					docCookies.removeItem("facebook_access_token");
+					docCookies.removeItem("facebook_access_token_expires");
+					docCookies.removeItem("email");
+					docCookies.removeItem("this_access_token");
+				}	
+				if(data.error_code === "0000" && data.login_type === "google")
+				{
+					docCookies.removeItem("last_tab_id");
+					docCookies.removeItem("google_access_token");
+					docCookies.removeItem("google_access_token_expires");
+					docCookies.removeItem("email");
+					docCookies.removeItem("this_access_token");
+				}	
+			}
+			else if(data.response_status === "success")
+			{
+				if(data.show_registration === "true" && data.login_type === "facebook")
+				{
+					//alert("getAccessTokenFromAuthorizationCode() show registration=true");
+					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
+					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
+					docCookies.setItem("email", data.email, 31536e3);
+					showRegistration(data.picture, data.login_type, data.email);
+				}
+				else if(data.show_registration === "false" && data.login_type === "facebook")
+				{
+					//alert("getAccessTokenFromAuthorizationCode() show registration=false");
+					docCookies.setItem("email", data.email, 31536e3);
+					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
+					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
+		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+		    		doFinished();
+				}	
+				if(data.show_registration === "true" && data.login_type === "google")
+				{
+					//alert("gATFAC: show registration=true\nexpires=" + data.google_access_token_expires + "\nrefresh=" + data.google_refresh_token);
+					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
+					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
+					docCookies.setItem("email", data.email, 31536e3);
+					showRegistration(data.picture, data.login_type, data.email);
+				}
+				else if(data.show_registration === "false" && data.login_type === "google")
+				{
+					//alert("getAccessTokenFromAuthorizationCode() show registration=false");
+					docCookies.setItem("email", data.email, 31536e3);
+					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
+					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
+		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+		    		doFinished();
+				}	
+			}	
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			console.log(textStatus, errorThrown);
+			displayMessage("Could not retrieve access token. Please try again through the Words extension. (AJAX)", "red");
+		} 
+	}); 
+}	
+else
+{
+	var capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
+	displayMessage("Verifying your identity with " + capitalized_login_type + "... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+	if(login_type === "google")
+	{
+		var access_token_expired_or_doesnt_exist = true;
+		if(docCookies.getItem("google_access_token_expires") != null && docCookies.getItem("google_access_token") != null) // ok, the token/expires cookies exist
+		{
+			var ex = docCookies.getItem("google_access_token_expires");
+			if(ex > bg.msfe_according_to_backend) 
+				access_token_expired_or_doesnt_exist = false; // and it appears valid
+			else 
+			{												// it existed, but wasn't valid. Delete everything
+				docCookies.removeItem("last_tab_id");
+				docCookies.removeItem("google_access_token");
+				docCookies.removeItem("google_access_token_expires");
+				docCookies.removeItem("email");
+				docCookies.removeItem("this_access_token");
+				access_token_expired_or_doesnt_exist = true;
+			}	
+		}	
+		if(access_token_expired_or_doesnt_exist)
+		{
+			//displayMessage("Didn't find valid google_access_token and google_access_token_expires cookies. Redirecting to google.", "black");
+			var google_url = 'https://accounts.google.com/o/oauth2/auth?' +
+		      'scope=profile email&' +
+		      'redirect_uri=urn:ietf:wg:oauth:2.0:oob&'+
+		      'response_type=code&' +
+		      'client_id=591907226969-rrjdbkf5ugett5nspi518gkh3qs0ghsj.apps.googleusercontent.com&' +
+		      'access_type=offline';
+			window.location = google_url;
+		}
+		else // use the apparently valid access token to log the user in.
+		{
+			displayMessage("Existing Google credentials appear valid. Logging you into Words... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+			login("google", docCookies.getItem("google_access_token"), docCookies.getItem("google_access_token_expires"));
+		}
+	}
+	else if(login_type === "facebook")
+	{
+		var access_token_expired_or_doesnt_exist = true;
+		if(docCookies.getItem("facebook_access_token_expires") != null && docCookies.getItem("facebook_access_token") != null) // ok, the token/expires cookies exist
+		{
+			var ex = docCookies.getItem("facebook_access_token_expires");
+			if(ex > bg.msfe_according_to_backend) 
+				access_token_expired_or_doesnt_exist = false; // and it appears valid
+			else 
+			{												// it existed, but wasn't valid. Delete everything
+				docCookies.removeItem("last_tab_id");
+				docCookies.removeItem("facebook_access_token");
+				docCookies.removeItem("facebook_access_token_expires");
+				docCookies.removeItem("email");
+				docCookies.removeItem("this_access_token");
+				access_token_expired_or_doesnt_exist = true;
+			}	
+		}	
+		if(access_token_expired_or_doesnt_exist)
+		{
+			//displayMessage("Didn't find valid facebook_access_token and facebook_access_token_expires cookies. Redirecting to google.", "black");
+			var facebook_url = "https://www.facebook.com/dialog/oauth?client_id=271212039709142&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=email";
+			window.location = facebook_url;
+		}
+		else // use the apparently valid access token to log the user in.
+		{
+			displayMessage("Existing Facebook credentials appear valid. Logging you into Words... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+			login("facebook", docCookies.getItem("facebook_access_token"), docCookies.getItem("facebook_access_token_expires"));
+		}
+	}	
+}	
+
+
+function login(login_type, social_access_token, social_access_token_expires)
+{
+	$.ajax({
+		type: 'GET',
+		url: bg.endpoint,
+		data: {
+			method: "login",
+			social_access_token: social_access_token,
+			social_access_token_expires: social_access_token_expires,
+			login_type: login_type
+		},
+		dataType: 'json',
+		async: true,
+		success: function (data, status) {
+			if(data.response_status === "error")
+			{
+				
 				if(data.error_code == "0000" && data.login_type === "facebook")
 				{
 					docCookies.removeItem("last_tab_id");
 					docCookies.removeItem("facebook_access_token");
+					docCookies.removeItem("facebook_access_token_expires");
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
 				}	
@@ -108,16 +275,27 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 				{
 					docCookies.removeItem("last_tab_id");
 					docCookies.removeItem("google_access_token");
+					docCookies.removeItem("google_access_token_expires");
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
 				}	
+				displayMessage(data.message, "red");
+				$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
+				$("#registration_form_td").show();
+				$("#close_this_tab_link").click( function () {
+					chrome.tabs.getSelected(null, function(tab) { 
+						chrome.tabs.remove(tab.id);
+					});
+				});
+				
 			}
 			else if(data.response_status === "success")
 			{
 				if(data.show_registration === "true" && data.login_type === "google")
 				{
-					//alert("login() show registration=true");
+					//alert("login: show registration=true\nexpires=" + data.google_access_token_expires + "\nrefresh=" + data.google_refresh_token);
 					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
+					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
 					docCookies.setItem("email", data.email, 31536e3);
 					showRegistration(data.picture, data.login_type, data.email);
 				}
@@ -126,13 +304,14 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 					//alert("login() show registration=false");
 					docCookies.setItem("email", data.email, 31536e3);
 					docCookies.setItem("google_access_token", data.facebook_access_token, 31536e3);
+					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 		    		doFinished();
 				}	
 				else if(data.show_registration === "true" && data.login_type === "facebook")
 				{
-					//alert("login() show registration=true");
 					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
+					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
 					docCookies.setItem("email", data.email, 31536e3);
 					showRegistration(data.picture, data.login_type, data.email);
 				}
@@ -141,6 +320,7 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 					//alert("login() show registration=false");
 					docCookies.setItem("email", data.email, 31536e3);
 					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
+					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 		    		doFinished();
 				}	
@@ -152,88 +332,6 @@ if(getParameterByName("social_access_token") != null && getParameterByName("soci
 			displayMessage("Could not log you in. Network connection? (AJAX)", "red");
 		} 
 	});  
-}
-else if(getParameterByName("social_access_token") === null || getParameterByName("social_access_token") === "") // user is claiming no access token, just register
-{	
-		//alert("polling backend for access token from auth code")
-		// get access token from code, with built-in login
-		$.ajax({
-			type: 'get',
-			url: bg.endpoint,
-			data: {
-				method: "getAccessTokenFromAuthorizationCode",
-				code: getParameterByName("code"),
-				login_type: login_type
-			},
-			dataType: 'json',
-			async: true,
-			success: function (data, status) {
-				if(data.response_status === "error")
-				{
-					if(data.error_code === "0000" && data.login_type === "facebook")
-					{
-						docCookies.removeItem("last_tab_id");
-						docCookies.removeItem("facebook_access_token");
-						docCookies.removeItem("email");
-						docCookies.removeItem("this_access_token");
-					}	
-					if(data.error_code === "0000" && data.login_type === "google")
-					{
-						docCookies.removeItem("last_tab_id");
-						docCookies.removeItem("google_access_token");
-						docCookies.removeItem("email");
-						docCookies.removeItem("this_access_token");
-					}	
-				}
-				else if(data.response_status === "success")
-				{
-					if(data.show_registration === "true" && data.login_type === "facebook")
-					{
-						//alert("getAccessTokenFromAuthorizationCode() show registration=true");
-						docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
-						docCookies.setItem("email", data.email, 31536e3);
-						showRegistration(data.picture, data.login_type, data.email);
-					}
-					else if(data.show_registration === "false" && data.login_type === "facebook")
-					{
-						//alert("getAccessTokenFromAuthorizationCode() show registration=false");
-						docCookies.setItem("email", data.email, 31536e3);
-						docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
-			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-			    		doFinished();
-					}	
-					if(data.show_registration === "true" && data.login_type === "google")
-					{
-						//alert("getAccessTokenFromAuthorizationCode() show registration=true");
-						docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-						docCookies.setItem("email", data.email, 31536e3);
-						showRegistration(data.picture, data.login_type, data.email);
-					}
-					else if(data.show_registration === "false" && data.login_type === "google")
-					{
-						//alert("getAccessTokenFromAuthorizationCode() show registration=false");
-						docCookies.setItem("email", data.email, 31536e3);
-						docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-			    		doFinished();
-					}	
-				}	
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				console.log(textStatus, errorThrown);
-				displayMessage("Could not retrieve access token. Please try again through the Words extension. (AJAX)", "red");
-			} 
-		}); 
-}
-else
-{
-	//weird state for social_access_token. nuke everything
-	displayMessage("Bad login state. Please start over. Sorry for the inconvenience.", "red");
-	docCookies.removeItem("email");
-	docCookies.removeItem("last_tab_id");
-	docCookies.removeItem("google_access_token");
-	docCookies.removeItem("this_access_token");
-	docCookies.removeItem("facebook_access_token");
 }
 
 function guid() {
@@ -424,7 +522,6 @@ $("#registration_screenname_button").click(
 				}	
 				
 				var avatar_str = null;
-				alert($("#avatar_img").attr("src"));
 				var picture = $("#avatar_img").attr("src");
 				
 				if($("#registration_country_select").val() === "")
@@ -547,41 +644,3 @@ function doFinished()
 	});
 	
 }
-
-/***
- *          __      __  _______       _____  
- *         /\ \    / /\|__   __|/\   |  __ \ 
- *        /  \ \  / /  \  | |  /  \  | |__) |
- *       / /\ \ \/ / /\ \ | | / /\ \ |  _  / 
- *      / ____ \  / ____ \| |/ ____ \| | \ \ 
- *     /_/    \_\/_/    \_\_/_/    \_\_|  \_\
- *                                           
- *                                           
- */
-
-//Dropdown plugin data
-var avatarData=[{text:"Avatar 0",value:0,selected:false,description:"Avatar 0",imageSrc:"images/avatars/48avatar00.png"},
-                {text:"Avatar 1",value:1,selected:false,description:"Avatar 1",imageSrc:"images/avatars/48avatar01.png"},
-                {text:"Avatar 2",value:2,selected:false,description:"Avatar 2",imageSrc:"images/avatars/48avatar02.png"},
-                {text:"Avatar 3",value:3,selected:false,description:"Avatar 3",imageSrc:"images/avatars/48avatar03.png"},
-                {text:"Avatar 4",value:4,selected:false,description:"Avatar 4",imageSrc:"images/avatars/48avatar04.png"},
-                {text:"Avatar 5",value:5,selected:false,description:"Avatar 5",imageSrc:"images/avatars/48avatar05.png"},
-                {text:"Avatar 6",value:6,selected:false,description:"Avatar 6",imageSrc:"images/avatars/48avatar06.png"},
-                {text:"Avatar 7",value:7,selected:false,description:"Avatar 7",imageSrc:"images/avatars/48avatar07.png"},
-                {text:"Avatar 8",value:8,selected:false,description:"Avatar 8",imageSrc:"images/avatars/48avatar08.png"},
-                {text:"Avatar 9",value:9,selected:false,description:"Avatar 9",imageSrc:"images/avatars/48avatar09.png"},
-                {text:"Avatar 10",value:10,selected:false,description:"Avatar 10",imageSrc:"images/avatars/48avatar10.png"},
-                {text:"Avatar 11",value:11,selected:false,description:"Avatar 11",imageSrc:"images/avatars/48avatar11.png"},
-                {text:"Avatar 12",value:12,selected:false,description:"Avatar 12",imageSrc:"images/avatars/48avatar12.png"},
-                {text:"Avatar 13",value:13,selected:false,description:"Avatar 13",imageSrc:"images/avatars/48avatar13.png"},
-                {text:"Avatar 14",value:14,selected:false,description:"Avatar 14",imageSrc:"images/avatars/48avatar14.png"},
-                {text:"Avatar 15",value:15,selected:false,description:"Avatar 15",imageSrc:"images/avatars/48avatar15.png"},
-                {text:"Avatar 16",value:16,selected:false,description:"Avatar 16",imageSrc:"images/avatars/48avatar16.png"},
-                {text:"Avatar 17",value:17,selected:false,description:"Avatar 17",imageSrc:"images/avatars/48avatar17.png"},
-                {text:"Avatar 18",value:18,selected:false,description:"Avatar 18",imageSrc:"images/avatars/48avatar18.png"},
-                {text:"Avatar 23",value:23,selected:false,description:"Avatar 23",imageSrc:"images/avatars/48avatar23.png"},
-                {text:"Avatar 20",value:20,selected:false,description:"Avatar 20",imageSrc:"images/avatars/48avatar20.png"},
-                {text:"Avatar 21",value:21,selected:false,description:"Avatar 21",imageSrc:"images/avatars/48avatar21.png"},
-                {text:"Avatar 22",value:22,selected:false,description:"Avatar 22",imageSrc:"images/avatars/48avatar22.png"},
-                {text:"Avatar 23",value:23,selected:false,description:"Avatar 23",imageSrc:"images/avatars/48avatar23.png"},
-                {text:"Avatar 24",value:24,selected:false,description:"Avatar 24",imageSrc:"images/avatars/48avatar24.png"}];

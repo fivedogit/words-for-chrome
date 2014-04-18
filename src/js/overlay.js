@@ -126,28 +126,6 @@ function displayLogstatAsLoggedOut() {
 			return false;
 	});
 	
-	$("#facebook_login_link").click(
-			function () {
-				var currenttabid;
-				chrome.tabs.getSelected(null, function(tab) { 
-					currenttabid = tab.id; 
-					docCookies.setItem("last_tab_id", currenttabid, 31536e3);
-					if(docCookies.getItem("facebook_access_token") == null)
-					{
-						//alert("click event, f_a_t is null");
-						//var randomnumber=Math.floor(Math.random()*1000000); // shouldn't really need a state value unless Facebook explicitly requires it.
-						//var state = randomnumber+""; // Extensions are not exposed to cross site attacks as the cookies needed to talk to w.ords.co live on ldcakhigmpnhajknihgiepmlahiibmlj hostname
-						var facebook_url = "https://www.facebook.com/dialog/oauth?client_id=271212039709142&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=email";
-						chrome.tabs.create({url: facebook_url});
-					}	
-					else
-					{
-						//alert("click event, f_a_t is not null, attempting to use it");
-						chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=facebook&social_access_token=" + docCookies.getItem("facebook_access_token")});
-					}
-				});
-			});
-	
 	
 	$("#google_login_link").click(
 			function () {
@@ -155,25 +133,29 @@ function displayLogstatAsLoggedOut() {
 				chrome.tabs.getSelected(null, function(tab) { 
 					currenttabid = tab.id; 
 					docCookies.setItem("last_tab_id", currenttabid, 31536e3);
-					if(docCookies.getItem("google_access_token") == null)
-					{
-						//alert("click event, g_a_t is null, opening permission page");
-						//var randomnumber=Math.floor(Math.random()*1000000); // shouldn't really need a state value unless Facebook explicitly requires it.
-						//var state = randomnumber+""; // Extensions are not exposed to cross site attacks as the cookies needed to talk to w.ords.co live on ldcakhigmpnhajknihgiepmlahiibmlj hostname
-						var google_url = 'https://accounts.google.com/o/oauth2/auth?' +
-					      'scope=profile email&' +
-					   //   'state="' + state + '&' +
-					      'redirect_uri=urn:ietf:wg:oauth:2.0:oob&'+
-					      'response_type=code&' +
-					      'client_id=591907226969-rrjdbkf5ugett5nspi518gkh3qs0ghsj.apps.googleusercontent.com&' +
-					      'access_type=offline';
-						chrome.tabs.create({url: google_url});
-					}	
-					else
-					{
-						//alert("click event, g_a_t is not null, opening receiver page with existing social access token");
-						chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=google&social_access_token=" + docCookies.getItem("google_access_token")});
-					}
+					// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
+					// (which is why the button was shown in the first place)
+					// Right now the user either has the social_access_token and it hasn't expired yet
+					// or they have it and it HAS expired
+					// or they don't have it at all.
+					// NEW: JUST SEND USER TO RECEIVER, NO MATTER WHAT. LET RECEIVER HANDLE ALL ACCESS TOKEN VALIDITY JUDGEMENT AND RETRIEVAL
+					chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=google"});
+				});
+			});
+	
+	$("#facebook_login_link").click(
+			function () {
+				var currenttabid;
+				chrome.tabs.getSelected(null, function(tab) { 
+					currenttabid = tab.id; 
+					docCookies.setItem("last_tab_id", currenttabid, 31536e3);
+					// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
+					// (which is why the button was shown in the first place)
+					// Right now the user either has the social_access_token and it hasn't expired yet
+					// or they have it and it HAS expired
+					// or they don't have it at all.
+					// NEW: JUST SEND USER TO RECEIVER, NO MATTER WHAT. LET RECEIVER HANDLE ALL ACCESS TOKEN VALIDITY JUDGEMENT AND RETRIEVAL
+					chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=facebook"});
 				});
 			});
 }
