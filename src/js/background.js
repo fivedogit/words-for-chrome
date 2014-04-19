@@ -1,3 +1,16 @@
+var style = document.createElement('style'); 
+var style_str =  "@font-face {";
+style_str = style_str + "font-family: \"Silkscreen\";";
+style_str = style_str + "src: url(\"type/slkscr.ttf\");";
+//style_str = style_str + "src: local(\"☺\"),";
+//style_str = style_str + "url(\"type/filename-ital.woff\") format(\"woff\"),";
+//style_str = style_str + "url(\"type/filename-ital.otf\") format(\"opentype\"),";
+//style_str = style_str + "url(\"type/filename-ital.svg#filename-ital\") format(\"svg\");";
+style_str = style_str + "}";
+style.innerHTML = style_str;
+document.documentElement.appendChild(style); 
+
+
 
 var currentURL = "";
 var currentTitle = "";
@@ -7,19 +20,6 @@ var threadstatus = 0;
 var top="???";
 var bottom="???";
 var msfe_according_to_backend = (new Date).getTime(); // set to local machine time to start... will be reset to backend time by first thread call.
-WebFontConfig = {
-		  custom: { families: ['Silkscreen'],
-		    urls: [ 'slkscr.css' ] }
-		};
-
-(function() {
-    var wf = document.createElement('script');
-    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-    wf.type = 'text/javascript';
-    wf.async = 'false';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(wf, s);
-})();
 
 (function() {
 	getUser(); // user_jo should always be null when this is called

@@ -1186,6 +1186,20 @@ function gotThread_wedge_for_ntj(url_at_function_call)
 	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
 	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
 	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
-	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
-	{$("#main_div_" + currentURLhash).html("Unable to retrieve thread.");displayMessage("Thread retrieval error.", "red", "message_div_"+ currentURLhash);return;}},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);
+	setTimeout(function(){
+		alert("final");
+		if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
+		{
+			if(url_at_function_call===currentURL)
+			{
+				thread_jo = bg.t_jo; gotThread();
+			}
+		}
+		else
+		{
+			$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Unable to retrieve thread.<br>Your internet connection may be down.</div>");
+			displayMessage("Thread retrieval error.", "red", "message_div_"+ currentURLhash);
+		}
+		return;
+	},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);
 }
