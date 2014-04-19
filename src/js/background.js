@@ -2,15 +2,9 @@ var style = document.createElement('style');
 var style_str =  "@font-face {";
 style_str = style_str + "font-family: \"Silkscreen\";";
 style_str = style_str + "src: url(\"type/slkscr.ttf\");";
-//style_str = style_str + "src: local(\"☺\"),";
-//style_str = style_str + "url(\"type/filename-ital.woff\") format(\"woff\"),";
-//style_str = style_str + "url(\"type/filename-ital.otf\") format(\"opentype\"),";
-//style_str = style_str + "url(\"type/filename-ital.svg#filename-ital\") format(\"svg\");";
 style_str = style_str + "}";
 style.innerHTML = style_str;
 document.documentElement.appendChild(style); 
-
-
 
 var currentURL = "";
 var currentTitle = "";

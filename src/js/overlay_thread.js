@@ -279,12 +279,6 @@ function gotThread()
 	 					$("#tab_tooltip_td").html("Profile/Settings");
 	 				return false;
 	 			});
-		
-	 
-	 	
-		if(currentURL.length > 255)
-			displayMessage("Can't comment here. Words does not support URLs > 255 chars. Sorry.", "red", "message_div_" + currentURLhash);
-		
 		beginindex = 0;
 		endindex = 8;
 		prepareGetAndPopulateThreadPortion();
