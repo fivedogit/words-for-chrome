@@ -94,6 +94,7 @@ function doButtonGen()
 {
 	var url_at_function_call = currentURL;	   // need to save the currentURL bc if it has changed by the time threads come back, they are irrelevant at that point
 	t_jo = null;
+	getUser(); // get user on every tab change. This updates notifications and logstat
 	// priority order: 
 	// 1. display a url error, if applicable
 	// 2. go get thread
@@ -106,8 +107,6 @@ function doButtonGen()
 	}	
 	else 
 	{
-		if(user_jo == null) // if typeof user_jo is "undefined", the getUser won't work anyway. user_jo is definitely defined by the time we call this
-			getUser();
 		url_at_function_call = currentURL;
 		getThread(url_at_function_call, true); // updatebutton = true
 	}
@@ -633,7 +632,7 @@ function getUser(retrieve_asynchronously)
 		async = false;
 	var email = docCookies.getItem("email");
 	var this_access_token = docCookies.getItem("this_access_token");
-	if(email !== null && email.length >=6 && this_access_token !== null && this_access_token.length == 36)// the shortest possible email length is x@b.co = 6.
+	if(email !== null && email.length >=6 && this_access_token !== null && this_access_token.length == 32)// the shortest possible email length is x@b.co = 6.
 	{
 		$.ajax({ 
 			type: 'GET', 
@@ -651,7 +650,7 @@ function getUser(retrieve_asynchronously)
             	{
             		if(data.error_code && data.error_code === "0000")
             		{
-            			displayMessage("Your login has expired. Please relog.", "red");
+            			//alert("getUser error 0000");
             			docCookies.removeItem("email"); 
             			docCookies.removeItem("this_access_token");
             			user_jo = null;
@@ -661,17 +660,10 @@ function getUser(retrieve_asynchronously)
             	{	if(data.user_jo) { 	user_jo = data.user_jo; }    }
             	else
             	{
-            		console.log("getUserSelf response not success or error. Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
-            		docCookies.removeItem("email"); 
-            		docCookies.removeItem("this_access_token");
-            		user_jo = null;
+            		alert("getUser problem. response_status neither success nor error");
             	}
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	if(errorThrown != null && errorThrown === "timeout")
-	        	{
-	        		displayMessage("getUserSelf (both) timeout", "red");
-	        	}	
 	            console.log(textStatus, errorThrown);
 	        } 
 		});

@@ -51,6 +51,7 @@ function updateLogstat()
 	var tat = docCookies.getItem("this_access_token");
 	if(e === null || tat === null)
 	{
+		//alert("e or tat was null");
 		docCookies.removeItem("email"); 
 		docCookies.removeItem("this_access_token");
 		bg.user_jo = null;
@@ -90,7 +91,7 @@ function displayLogstatAsLoggedOut() {
 	$("#google_login_img").mouseover( function() {
 		temphtml = $("#header_div_top").html();
 		$("#comment_submission_form_div_" + currentURLhash).hide();
-		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>Words cannot post on your behalf nor access any non-basic information.<br>Your Words screenname/pic are separate and anonymous.</span>");
+		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>Words cannot post on your behalf nor access any non-basic information.<br>Your Words identity is separate and anonymous.</span>");
 		$("#google_login_img").attr("src","images/google_button_24x24_mo.png");
 		$("#tab_tooltip_td").html("Login with Google");
 		return false;
@@ -114,7 +115,7 @@ function displayLogstatAsLoggedOut() {
 	$("#facebook_login_img").mouseover( function() {
 		temphtml = $("#header_div_top").html();
 		$("#comment_submission_form_div_" + currentURLhash).hide();
-		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>Words cannot post to Facebook nor access any non-basic information.<br>Your Words screenname/pic are separate and anonymous.</span>");
+		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>Words cannot post to Facebook nor access any non-basic information.<br>Your Words identity is separate and anonymous.</span>");
 		$("#facebook_login_img").attr("src","images/facebook_button_24x24_mo.png");
 		$("#tab_tooltip_td").html("Login with FB");
 		return false;
@@ -197,6 +198,7 @@ function displayLogstatAsLoggedIn() {
 	{
 		$("#alt_dropdown_img").click(
 				function () {
+					var prev = $("#header_div_top").html();
 					var alts_counter = 0;
 					var str = "";
 					while(alts_counter < bg.user_jo.alts.length)
@@ -209,8 +211,9 @@ function displayLogstatAsLoggedIn() {
 					alts_counter = 0;
 					while(alts_counter < bg.user_jo.alts.length)
 					{
-						$("#user_" + bg.user_jo.alts[alts_counter].screenname + "_link").click({altuser: bg.user_jo.alts[alts_counter]},
+						$("#user_" + bg.user_jo.alts[alts_counter].screenname + "_link").click({altuser: bg.user_jo.alts[alts_counter], prev: prev},
 								function (event) {
+									$("#header_div_top").html(event.data.prev);
 									//alert(event.data.altuser.email + " " + event.data.altuser.this_access_token);
 									docCookies.setItem("email", event.data.altuser.email, 31536e3);
 									docCookies.setItem("this_access_token", event.data.altuser.this_access_token, 31536e3);

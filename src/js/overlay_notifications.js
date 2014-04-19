@@ -198,20 +198,20 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	    		
 	        	if(data.response_status !== "error" && tabmode === "notifications")
 	        	{
-	        		var url_to_use = data.item.url_when_created;
+	        		var url_to_use = data.item.pseudo_url;
         			if(url_to_use.length > 50)
         				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
         			// Why? $("#header_div_" + activity_jo.id).css("text-align", "left");
 	        		if(activity_jo.id.endsWith("L"))
 	        		{
-	        			$("#header_td_" + activity_jo.id).html("<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> liked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.url_when_created + "\">" + url_to_use + "</a>");
+	        			$("#header_td_" + activity_jo.id).html("<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> liked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
 	        			$("#screenname_link_" + activity_jo.id).click(function() {
 	        		 		viewProfile(activity_jo.author_screenname);
 	        		 	});
 	        		}
 	        		else if(activity_jo.id.endsWith("D"))
 	        		{
-	        			$("#header_td_" + activity_jo.id).html("Someone disliked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.url_when_created + "\"  style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + activity_jo.url_when_created + "\">" + url_to_use + "</a>");
+	        			$("#header_td_" + activity_jo.id).html("Someone disliked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\"  style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
 	        		}	
 	        		else
 	        		{
@@ -382,13 +382,13 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		        	        		{	
 		        	        			$("#parent_tr").show();
 		        	        			current_user_authored_parent_comment = true;
-		        	        			var url_to_use = data.item.url_when_created;
+		        	        			var url_to_use = data.item.pseudo_url;
 			                			if(url_to_use.length > 50)
 			                				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
 			                			// Why? $("#header_div_" + activity_jo.id).css("text-align", "left");
 			                			$("#header_td_" + activity_jo.id).html(
 			                					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> replied to you" 
-			                					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.url_when_created + "\">" + url_to_use + "</a>");
+			                					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
 			                			$("#screenname_link_" + activity_jo.id).click(function() {
 			    	        		 		viewProfile(activity_jo.author_screenname);
 			    	        		 	});
@@ -405,13 +405,13 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        		}
 	        		else
 	        		{
-	        			var url_to_use = data.item.url_when_created;
+	        			var url_to_use = data.item.pseudo_url;
 	        			if(url_to_use.length > 50)
 	        				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
 	        			parent_is_a_comment = false;
 	        			$("#header_td_" + activity_jo.id).html(
             					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> mentioned you" 
-            					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.url_when_created + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.url_when_created + "\">" + url_to_use + "</a>");
+            					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
 	        			current_user_authored_parent_comment = false;
 	        		}	
 	        	}

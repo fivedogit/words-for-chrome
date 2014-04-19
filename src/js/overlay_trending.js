@@ -103,17 +103,17 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 		for(var x = 0; x < data.trendingactivity_ja.length; x++)
 		{
 			mds = mds + "	<tr>";
-			mds = mds + "		<td style=\"text-align:left;padding-top:3px\">";http://www.google.com/s2/favicons?domain=
-			mds = mds + "<img src=\"http://www.google.com/s2/favicons?domain=" + data.trendingactivity_ja[x].hpqsp + "\" style=\"vertical-align:middle\"> ";	
+			mds = mds + "		<td style=\"text-align:left;padding-top:3px\">";
+			mds = mds + "<img src=\"http://www.google.com/s2/favicons?domain=" + data.trendingactivity_ja[x].pseudo_url + "\" style=\"vertical-align:middle\"> ";	
 			mds = mds + data.trendingactivity_ja[x].page_title;
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"text-align:left;padding-bottom:2px\">";
-			var url_to_use = data.trendingactivity_ja[x].url_when_created;
+			var url_to_use = data.trendingactivity_ja[x].pseudo_url;
 			if(url_to_use.length > 50)
 				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-			mds = mds + "<a class=\"newtab\" href=\"http://" + data.trendingactivity_ja[x].hpqsp + "\">" + url_to_use + "</a>";
+			mds = mds + "<a class=\"newtab\" href=\"" + data.trendingactivity_ja[x].pseudo_url + "\">" + url_to_use + "</a>";
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
