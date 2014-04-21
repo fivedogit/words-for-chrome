@@ -13,10 +13,10 @@
 function doThreadTab() 
 {
 	tabmode = "thread";
-	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_blue.png") + "\"></img>");
-	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"images/chat_blue.png\"></img>");
+	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
 	updateNotificationTabLinkImage();
-	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
+	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
 	
 	$("#utility_div").show();
 	$("#header_div_top").html("Comment thread");
@@ -394,7 +394,7 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "		No comments for this page. Write one!";
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\"><img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (48 hrs)</div>";
-			main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px;display:none\" id=\"other_pages_on_this_site_div\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
+			main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px;display:none\" id=\"other_pages_on_this_site_div\"><img src=\"images/ajaxSnake.gif\"></div>";
 			$("#main_div_" + currentURLhash).html(main_div_string);
 
 			$.ajax({
@@ -538,7 +538,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 	comment_div_string = comment_div_string + "		    <div class=\"complete-horiz-line-div\" id=\"complete_horiz_line_div_" + comment_id + "\"></div>";
 	comment_div_string = comment_div_string + "		    <div class=\"message-div\" id=\"message_div_" + comment_id + "\" style=\"display:none\"></div>";
 	comment_div_string = comment_div_string + "				<div class=\"comment-div\" style=\"margin-left:" + indent + "px\" id=\"comment_div_" + comment_id + "\">";
-	comment_div_string = comment_div_string + "					<span style=\"padding:20px\">Loading a comment... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
+	comment_div_string = comment_div_string + "					<span style=\"padding:20px\">Loading a comment... <img src=\"images/ajaxSnake.gif\"></span>";
 	//comment_div_string = comment_div_string + "			</div>";
 	comment_div_string = comment_div_string + "		</div>";
 	if(!$("#comment_outer_container_div_" + comment_id).length)
@@ -767,7 +767,7 @@ function writeComment(feeditem_jo)
 	  			tempstr = tempstr + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + feeditem_jo.id + "\">Say something...</textarea>";
 	  			*/
 	  		tempstr = tempstr + "								<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + feeditem_jo.id + "\">";
-	  		tempstr = tempstr + "									<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + feeditem_jo.id + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
+	  		tempstr = tempstr + "									<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + feeditem_jo.id + "\"><img src=\"images/ajaxSnake.gif\"></span>";
 	  		tempstr = tempstr + "									<span id=\"charsleft_" + feeditem_jo.id + "\">" + charsleft + "</span>";
 	  		tempstr = tempstr + "									<span><input id=\"comment_submission_form_submit_button_" + feeditem_jo.id + "\" type=button value=\"Submit\"></input></span>";
 	  		tempstr = tempstr + "								</div>";

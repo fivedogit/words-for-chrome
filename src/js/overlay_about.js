@@ -13,10 +13,10 @@
 function doAboutTab(message) 
 {
 	tabmode = "about";
-	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
-	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
-	$("#notification_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
-	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
+	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
+	$("#notification_tab_link").html("<img src=\"images/flag_gray.png\"></img>");
+	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
 	var details = chrome.app.getDetails();
     var version = details.version;
 	$("#header_div_top").html("About Words (version " + version + ")");
@@ -41,23 +41,24 @@ function doAboutTab(message)
 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
 		aboutmessage = aboutmessage + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
 	aboutmessage = aboutmessage + "</li>";
+	aboutmessage = aboutmessage + "<li>Rate 5 stars <a href=\"https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews\">here</a></li>";
 	aboutmessage = aboutmessage + "<li>Report bugs to <a href=\"#\" id=\"at_twitter_link\">@fivedogit</a></li>";
 	aboutmessage = aboutmessage + "</ol>";
 	aboutmessage = aboutmessage + "<hr>";
-	aboutmessage = aboutmessage + "<p>Words DOES NOT TRACK and is OPEN SOURCE for verification. The code is available here:</p>";
+	aboutmessage = aboutmessage + "<p>Words DOES NOT TRACK and is open source for verification. The code is available here:</p>";
 	aboutmessage = aboutmessage + "<p>github.com/fivedogit/words-backend<br>";
 	aboutmessage = aboutmessage + "github.com/fivedogit/words-for-chrome</p>";
 	aboutmessage = aboutmessage + "<p>More info here:</p>";
 	aboutmessage = aboutmessage + "<p>http://goo.gl/VNs0DP</p>";
-	aboutmessage = aboutmessage + "<p>Enjoy! Follow <a href=\"#\" id=\"at_words4chrome_link\">@words4chrome</a> or me, <a href=\"#\" id=\"at_fivedogit_link\">@fivedogit</a>. Feedback welcome!</p>";
+	aboutmessage = aboutmessage + "<p>Enjoy! Follow <a href=\"#\" id=\"at_w_ords_co_link\">@w_ords_co</a> or me, <a href=\"#\" id=\"at_fivedogit_link\">@fivedogit</a>. Feedback welcome!</p>";
 	aboutmessage = aboutmessage + "</div>";
 	$("#main_div_" + currentURLhash).html(aboutmessage);
 	
 	$("#at_fivedogit_link").click( function() {
 		chrome.tabs.create({url:"http://www.twitter.com/fivedogit"});
 	});
-	$("#at_words4chrome_link").click( function() {
-		chrome.tabs.create({url:"http://www.twitter.com/words4chrome"});
+	$("#at_w_ords_co_link").click( function() {
+		chrome.tabs.create({url:"http://www.twitter.com/w_ords_co"});
 	});
 	$("#share_to_facebook_link").click(
 	 			function () {

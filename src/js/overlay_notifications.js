@@ -12,17 +12,17 @@
 function doNotificationsTab()
 {
 	tabmode = "notifications";
-	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
-	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
-	$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_blue.png") + "\"></img>");
-	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
+	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
+	$("#notifications_tab_link").html("<img src=\"images/flag_blue.png\"></img>");
+	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
 
 	
 	$("#header_div_top").html("Notification Feed");
 	$("#utility_div").show();
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
-	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading activity feed... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>");
+	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading activity feed... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></div>");
 	getNotifications();
 }
 
@@ -125,7 +125,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        	fids = fids + "<table style=\"width:100%\">";
 	    		fids = fids + "	<tr>";
 	    		fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + activity_jo.id + "\">";
-	        	fids = fids + "			<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+	        	fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
 	        	fids = fids + "		</td>";
 	        	fids = fids + "		<td style=\"text-align:right\"><a href=\"#\" id=\"notification_hide_link_" + activity_jo.id + "\">hide</a></td>";
 	        	fids = fids + "	</tr>";
@@ -137,7 +137,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	    		fids = fids + "			You wrote:";
 	    		fids = fids + "		</td>";
 	    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + activity_jo.parent + "\">";
-	    		fids = fids + "			<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+	    		fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
 	    		fids = fids + "		</td>";
 	    		fids = fids + "	</tr>";
 	    		fids = fids + "</table>";
@@ -274,7 +274,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        	fids = fids + "<table style=\"width:100%\">";
 	    		fids = fids + "	<tr>";
 	    		fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + activity_jo.id + "\">";
-	        	fids = fids + "			<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+	        	fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
 	        	fids = fids + "		</td>";
 	        	fids = fids + "		<td><a href=\"#\" id=\"notification_hide_link_" + activity_jo.id + "\" style=\"text-align:right\">hide</a></td>";
 	        	fids = fids + "	</tr>";
@@ -286,7 +286,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	    		fids = fids + "			You wrote:";
 	    		fids = fids + "		</td>";
 	    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + activity_jo.parent + "\">";
-	    		fids = fids + "			<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+	    		fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
 	    		fids = fids + "		</td>";
 	    		fids = fids + "	</tr>";
 	    		fids = fids + "</table>";
@@ -297,7 +297,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	    		fids = fids + "			They wrote:";
 	    		fids = fids + "		</td>";
 	    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + activity_jo.id + "\">";
-	    		fids = fids + "			<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+	    		fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
 	    		fids = fids + "		</td>";
 	    		fids = fids + "	</tr>";
 	    		fids = fids + "</table>";

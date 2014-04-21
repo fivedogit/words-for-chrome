@@ -99,7 +99,7 @@ if(login_type !== null && login_type.length > 1)
 if(code !== null && code !== "")
 {
 	// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
-	displayMessage("Verifying your identity with " + capitalized_login_type + "... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+	displayMessage("Verifying your identity with " + capitalized_login_type + "... <img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">", "black");
 	$.ajax({
 		type: 'get',
 		url: bg.endpoint,

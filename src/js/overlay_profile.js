@@ -13,10 +13,10 @@
 function viewProfile(screenname)
 {
 	tabmode = "profile";
-	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
-	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
+	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
 	updateNotificationTabLinkImage();
-	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_blue.png") + "\"></img>");
+	$("#profile_tab_link").html("<img src=\"images/user_blue.png\"></img>");
 
 	
 	$("#utility_div").show();
@@ -57,7 +57,7 @@ function getProfile(screenname)
 	}	
 	else
 	{
-		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading profile... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading profile... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></div>");
 		var email = docCookies.getItem("email");
 		var this_access_token = docCookies.getItem("this_access_token");
 		$.ajax({
@@ -328,7 +328,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "								<input type=text id=\"screenname_change_input\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td>";
-					main_div_string = main_div_string + "								<span style=\"margin-left:2px;border:0px black solid;display:none\" id=\"screenname_availability_span\"><img src=\"\" + chrome.extension.getURL(\"images/ajaxSnake.gif\") + \"\" style=\"width:16px;height16px;border:0px\"></span>";
+					main_div_string = main_div_string + "								<span style=\"margin-left:2px;border:0px black solid;display:none\" id=\"screenname_availability_span\"><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></span>";
 					main_div_string = main_div_string +	"							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
@@ -356,7 +356,6 @@ function getProfile(screenname)
             	$("#screenname_available_button").click(
             			function () 
             			{
-            					//$("#screenname_availability_span").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">");
             		         	$("#screenname_availability_span").show();
             					if ($("#screenname_change_input").val().length <= 0) 
             					{

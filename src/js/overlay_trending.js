@@ -11,17 +11,17 @@
 function doTrendingTab()
 {
 	tabmode = "trending";
-	$("#thread_tab_link").html("<img src=\"" + chrome.extension.getURL("images/chat_gray.png") + "\"></img>");
-	$("#trending_tab_link").html("<img src=\"" + chrome.extension.getURL("images/trending_blue.png") + "\"></img>");
+	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
+	$("#trending_tab_link").html("<img src=\"images/trending_blue.png\"></img>");
 	updateNotificationTabLinkImage();
-	$("#profile_tab_link").html("<img src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img>");
+	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
 
 	$("#utility_div").show();
 	$("#header_div_top").html("Activity across the Web <span id=\"trending_activity_hours_span\">?</span>");
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var mds = "";  // main div string
-	mds = mds + "<div id=\"MAIN_trending_div\" style=\"padding:10px;\">Loading trending pages... please wait.<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>";
+	mds = mds + "<div id=\"MAIN_trending_div\" style=\"padding:10px;\">Loading trending pages... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></div>";
 	$("#main_div_" + currentURLhash).html(mds);
 	getTrendingActivity(); // initial window, choices
 }

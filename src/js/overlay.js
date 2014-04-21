@@ -257,15 +257,15 @@ function has_scrollbar(elem_id)
 function updateNotificationTabLinkImage()
 {
 	if (tabmode === "notifications")
-		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_blue.png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"images/flag_blue.png\"></img>");
 	else if ((typeof bg.user_jo==="undefined") || bg.user_jo === null || bg.user_jo.notification_count === 0)
-		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"images/flag_gray.png\"></img>");
 	else if (bg.user_jo.notification_count <= 10)
-		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag" + bg.user_jo.notification_count + ".png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"images/flag" + bg.user_jo.notification_count + ".png\"></img>");
 	else if (bg.user_jo.notification_count > 10)
-		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag11plus.png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"images/flag11plus.png\"></img>");
 	else
-		$("#notifications_tab_link").html("<img src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img>");
+		$("#notifications_tab_link").html("<img src=\"images/flag_gray.png\"></img>");
 }
 
 function displayMessage(inc_message, inc_color, dom_id, s)
@@ -342,7 +342,7 @@ $(window).scroll(function() {
  		  		else	
  		  			bs = bs + "<textarea class=\"composition-textarea\" style=\"height:22px;color:#aaa\" id=\"comment_textarea_" + currentURLhash + "\">Say something...</textarea>";
  		  		bs = bs + "	<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + currentURLhash + "\">";
- 		  		bs = bs + "		<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
+ 		  		bs = bs + "		<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"images/ajaxSnake.gif\"></span>";
  		  		bs = bs + "		<span id=\"charsleft_" + currentURLhash + "\">" + charsleft + "</span> ";
  		  		bs = bs + "		<span><input id=\"comment_submission_form_submit_button_" + currentURLhash + "\" type=button value=\"Submit\"></input></span>";
  		  		bs = bs + "	</div>";
