@@ -22,7 +22,7 @@ var msfe_according_to_backend = (new Date).getTime(); // set to local machine ti
 		currentURL = tab.url;
 		currentTitle = tab.title;
 		currentId = tab.id;
-		setTimeout(function() {doButtonGen();},1000);
+		setTimeout(function() {doButtonGen();},2000);
 	});
 })();
 
@@ -116,14 +116,13 @@ function getThread(url_at_function_call, updatebutton)
 	t_jo = null;
 	var loc_thread_jo = null;
 	threadstatus = 1;
-	//alert("getting thread.");
+	//alert("getting thread. " + url_at_function_call);
 	$.ajax({ 
 		type: 'GET', 
 		url: endpoint, 
 		data: {
             method: "getThread",
-            url: url_at_function_call,
-            basic: "true",
+            url: url_at_function_call
         },
         dataType: 'json', 
         async: true, 

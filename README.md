@@ -1,5 +1,5 @@
      *** WORDS FOR CHROME ***
---- Better comments everywhere---
+** Better comments everywhere **
 
 Web commenting is broken. Too many accounts, too much noise, not enough privacy, too much censorship. 
 

@@ -1,4 +1,4 @@
-var devel = true; 
+var devel = false; 
 var endpoint = "https://w.ords.co/endpoint";
 if(devel === true)
 	endpoint = "http://localhost:8080/words/endpoint";
@@ -72,8 +72,8 @@ var docCookies = {
 		  },
 		};
 
+
 function hashFnv32a(str, asString, seed) {
-    /*jshint bitwise:false */
     var i, l,
         hval = (seed === undefined) ? 0x811c9dc5 : seed;
 
@@ -130,5 +130,4 @@ function isValidURLFormation(inc_url)
 	}
 	return validurl;
 }
-
 
