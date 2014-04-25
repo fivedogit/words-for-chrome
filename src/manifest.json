@@ -1,7 +1,7 @@
 {
     "name": "Words",
     "short_name": "Words",
-    "version": "0.125",
+    "version": "0.127",
     "manifest_version": 2,
     "description": "Better comments everywhere",
     "icons": {

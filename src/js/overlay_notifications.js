@@ -280,7 +280,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        	fids = fids + "	</tr>";
 	        	fids = fids + "</table>";
 	    		fids = fids + "<table>";
-	    		fids = fids + "	<tr id=\"parent_tr\" style=\"display:none\">";
+	    		fids = fids + "	<tr id=\"parent_tr_" + activity_jo.id + "\" style=\"display:none\">";
 	    		fids = fids + "		<td style=\"width:15px\"></td>";
 	    		fids = fids + "		<td class=\"rotated-who-wrote\">";
 	    		fids = fids + "			You wrote:";
@@ -361,6 +361,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        		writeComment(activity_jo);
 	        		var parent_is_a_comment = false;
 	        		var current_user_authored_parent_comment = false;
+	        		//alert(activity_jo.text + " " + activity_jo.parent);
 	        		if(activity_jo.parent.indexOf(".") == -1) // only retrieve and write the parent if the parent is a comment
 	        		{	
 	        			parent_is_a_comment = true;
@@ -380,7 +381,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		        	        	{
 		        	        		if(data.item.author_screenname === bg.user_jo.screenname)
 		        	        		{	
-		        	        			$("#parent_tr").show();
+		        	        			$("#parent_tr_" + activity_jo.id).show();
 		        	        			current_user_authored_parent_comment = true;
 		        	        			var url_to_use = data.item.pseudo_url;
 			                			if(url_to_use.length > 50)
@@ -405,6 +406,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        		}
 	        		else
 	        		{
+	        			$("#parent_tr_" + activity_jo.id).hide();
 	        			var url_to_use = data.item.pseudo_url;
 	        			if(url_to_use.length > 50)
 	        				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);

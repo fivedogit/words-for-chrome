@@ -611,6 +611,7 @@ function doFinished()
         success: function (data, status) {
         	if (data.response_status === "error") 
         	{
+        		displayMessage(data.message, "red");
         		if(data.error_code && data.error_code === "0000")
         		{
         			docCookies.removeItem("email"); 

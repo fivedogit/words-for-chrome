@@ -654,7 +654,8 @@ $(window).scroll(function() {
  		type: 'GET',
  		url: endpoint,
  		data: {
- 			method: "notePromo",
+ 			method: "noteConversion",
+ 			type: "promo",
  			platform: platform,
  			source: source
  		},
