@@ -479,16 +479,6 @@ function prepareGetAndPopulateThreadPortion()
 			
 			$("#main_div_" + currentURLhash).append(thread_div_string);
 
-			// deals with links within comments. 
-			/*$("a").click(function() {
-				 var c = $(this).attr('class');
-				 if(c == "newtab")
-				 {
-					 var h = $(this).attr('href');
-					 chrome.tabs.create({url:h});
-				 }
-			});*/
-			
 			noteThreadView(false, false); // (was_empty, showed_alternatives)
 		}
 		
@@ -717,12 +707,21 @@ function writeComment(feeditem_jo)
 			tempstr = tempstr + "	       <td class=\"comment-dislike-image-td\"><img src=\"images/dislike_arrow.png\" id=\"dislike_img_" + feeditem_jo.id + "\"></td>";
         }
 		tempstr = tempstr + "		   <td class=\"comment-dislikes-count-td\">" + feeditem_jo.dislikes.length + "</td>";
-		if ((tabmode === "thread") && (bg.user_jo && bg.user_jo.screenname === feeditem_jo.author_screenname)) // if no bg.user_jo or screennames don't match, hide
+		if ((tabmode === "thread") && (bg.user_jo !== null && bg.user_jo.screenname === feeditem_jo.author_screenname)) // if no bg.user_jo or screennames don't match, hide
 		{
 			tempstr = tempstr + "		   <td class=\"comment-delete-td\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + feeditem_jo.id + "\">X</a>";
 			tempstr = tempstr + "		   </td>";
 		}
+		if(bg.user_jo !== null && bg.user_jo.screenname === "fivedogit")
+		{
+			tempstr = tempstr + "		   <td class=\"comment-nuke-td\"> ";
+			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + feeditem_jo.id + "\">N!</a>";
+			tempstr = tempstr + "		   </td>";
+			tempstr = tempstr + "		   <td class=\"comment-megadownvote-td\"> ";
+			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + feeditem_jo.id + "\">D!</a>";
+			tempstr = tempstr + "		   </td>";
+		}	
 		
 		tempstr = tempstr + "		</tr>";
 		tempstr = tempstr + "  	</table>";
@@ -798,8 +797,17 @@ function writeComment(feeditem_jo)
 			var c = $(this).attr('class');
 			if(c == "newtab")
 			{
-				var h = $(this).attr('href');
-				chrome.tabs.create({url:h});
+				 var h = $(this).attr('href');
+				 var open_tab_id = null;
+				 chrome.tabs.query({url: h}, function(tabs) { 
+					 for (var i = 0; i < tabs.length; i++) {
+						 open_tab_id = tabs[i].id;
+					 }
+					 if(open_tab_id === null)
+						 chrome.tabs.create({url:h});
+					 else
+						 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
+				 });
 			}
 		}
 		return false;
@@ -909,6 +917,20 @@ function writeComment(feeditem_jo)
 			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
 			if (confirmbox === true)
 				hideComment(event.data.value);
+			return false;
+		});
+		
+		$("#comment_nuke_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+			var confirmbox = confirm("Nuke comment?\n(This action is permanent and risky.)");
+			if (confirmbox === true)
+				nukeComment(event.data.value);
+			return false;
+		});
+		
+		$("#comment_megadownvote_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+			var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
+			if (confirmbox === true)
+				megadownvoteComment(event.data.value);
 			return false;
 		});
 	}
@@ -1062,6 +1084,98 @@ function hideComment(inc_id) // submits comment and updates thread
 	});
 }
 
+function nukeComment(inc_id) // submits comment and updates thread
+{
+	var email = docCookies.getItem("email");
+	var this_access_token = docCookies.getItem("this_access_token");
+	$.ajax({
+	    type: 'GET',
+	    url: endpoint,
+	    data: {
+	        method: "nukeComment",
+	        id: inc_id,
+	        email: email, 
+            this_access_token: this_access_token
+	    },
+	    dataType: 'json',
+	    async: true,
+	    success: function (data, status) {
+
+	        if (data.response_status == "error") 
+	        {
+	        	displayMessage(data.message, "red", "message_div_" + inc_id);
+            	if(data.error_code && data.error_code === "0000")
+        		{
+        			displayMessage("Your login has expired. Please relog.", "red");
+        			docCookies.removeItem("email"); 
+        			docCookies.removeItem("this_access_token");
+        			bg.user_jo = null;
+        			updateLogstat();
+        		}
+	        }
+	        else if (data.response_status === "success")
+	        {
+	        	displayMessage("Nuke process underway.", "black", "message_div_" + inc_id);
+				doThreadItem(data.comment.id, data.comment.parent, "reply");
+	        }
+	        else
+	        {
+	        	//alert("weird");
+	        }
+	    },
+	    error: function (XMLHttpRequest, textStatus, errorThrown) {
+	    	displayMessage("Ajax error nukeComment: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + inc_id);
+	        console.log(textStatus, errorThrown);
+	    }
+	});
+}
+
+function megadownvoteComment(inc_id) // submits comment and updates thread
+{
+	var email = docCookies.getItem("email");
+	var this_access_token = docCookies.getItem("this_access_token");
+	$.ajax({
+	    type: 'GET',
+	    url: endpoint,
+	    data: {
+	        method: "megadownvoteComment",
+	        id: inc_id,
+	        email: email, 
+            this_access_token: this_access_token
+	    },
+	    dataType: 'json',
+	    async: true,
+	    success: function (data, status) {
+
+	        if (data.response_status == "error") 
+	        {
+	        	displayMessage(data.message, "red", "message_div_" + inc_id);
+            	if(data.error_code && data.error_code === "0000")
+        		{
+        			displayMessage("Your login has expired. Please relog.", "red");
+        			docCookies.removeItem("email"); 
+        			docCookies.removeItem("this_access_token");
+        			bg.user_jo = null;
+        			updateLogstat();
+        		}
+	        }
+	        else if (data.response_status === "success")
+	        {
+	        	displayMessage("megadownvoteComment process underway.", "black", "message_div_" + inc_id);
+				doThreadItem(data.comment.id, data.comment.parent, "reply");
+	        }
+	        else
+	        {
+	        	//alert("weird");
+	        }
+	    },
+	    error: function (XMLHttpRequest, textStatus, errorThrown) {
+	    	displayMessage("Ajax error megadownvoteComment: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + inc_id);
+	        console.log(textStatus, errorThrown);
+	    }
+	});
+}
+
 function likeOrDislikeComment(id, like_or_dislike)
 {
 	if(like_or_dislike === "like")
@@ -1181,7 +1295,7 @@ function gotThread_wedge_for_ntj(url_at_function_call)
 	setTimeout(function(){if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
 	{if(url_at_function_call===currentURL){thread_jo = bg.t_jo; gotThread();}return;}
 	setTimeout(function(){
-		alert("final");
+		//alert("final");
 		if(typeof bg.t_jo!=="undefined"&&bg.t_jo!==null)
 		{
 			if(url_at_function_call===currentURL)

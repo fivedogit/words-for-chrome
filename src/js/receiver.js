@@ -434,162 +434,162 @@ function showRegistration(picture, login_type, email)
 			$("#registration_state_select").val("");
 		}
 	});
+	
+	$("#registration_screenname_button").click(
+			function () 
+			{
+					$("#screenname_availability_span").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">");
+					if ($("#registration_screenname_input").val().length <= 0) 
+					{
+						$("#screenname_availability_span").css("color", "red");
+						$("#screenname_availability_span").html("Blank");
+						setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
+					} 
+					else if ($("#registration_screenname_input").val().length < 6) 
+					{
+						$("#screenname_availability_span").css("color", "red");
+						$("#screenname_availability_span").html("Too short");
+						setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
+					} 
+					else 
+					{
+						var response_object;
+						$.ajax({
+							type: 'GET',
+							url: bg.endpoint,
+							data: {
+								method: "isScreennameAvailable",
+								screenname: $("#registration_screenname_input").val()
+							},
+							dataType: 'json',
+							async: true,
+							success: function (data, status) 
+							{
+								response_object = data;
+								if (response_object.response_status === "error") 
+								{
+									$("#screenname_availability_span").css("color", "red");
+									$("#screenname_availability_span").html(data.message);
+									setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
+								} 
+								else if (response_object.response_status === "success") 
+								{
+									if (response_object.screenname_available === "true") 
+									{
+										$("#screenname_availability_span").css("color", "green");
+										$("#screenname_availability_span").html("Available");
+									}
+									else if (response_object.screenname_available === "false") 
+									{
+										$("#screenname_availability_span").css("color", "red");
+										$("#screenname_availability_span").html("Unavailable");
+									}
+									else
+									{
+										$("#screenname_availability_span").css("color", "red");
+										$("#screenname_availability_span").html("Error. Value !t/f.");
+									}
+									setTimeout(function() { $("#screenname_availability_span").html();}, 3000);
+								}
+								else
+								{
+									//alert("weird. response_status not error or success.");
+								}
+								return;
+							},
+							error: function (XMLHttpRequest, textStatus, errorThrown) 
+							{
+								console.log(textStatus, errorThrown);
+							}
+						});
+						return;
+					}
+				});					
+		
+		$("#registration_submit_button").click(
+				function () {
+					if($("#registration_screenname_input").val() === "")
+					{
+						displayMessage("Choose a screenname.", "red");
+						return false;
+					}	
+					
+					if($("#registration_screenname_input").val().length > 20)
+					{
+						displayMessage("Screennames must be less than 21 characters.", "red");
+						return false;
+					}	
+					
+					if($("#registration_screenname_input").val().length < 6)
+					{
+						displayMessage("Screennames must be at least 6 characters.", "red");
+						return false;
+					}	
+					
+					var avatar_str = null;
+					var picture = $("#avatar_img").attr("src");
+					
+					if($("#registration_country_select").val() === "")
+					{
+						displayMessage("Select a country.", "red");
+						return false;
+					}
+					
+					if($("#registration_country_select").val() === "USA" && $("#registration_state_select").val() === "")
+					{
+						displayMessage("When you select USA as your country, you must pick a state.", "red");
+						return false;
+					}
+					
+					displayMessage("Creating Words account... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+					$("#registration_form_td").hide();
+
+					var local_a_t;
+					if(login_type === "google")
+						local_a_t = docCookies.getItem("google_access_token");
+					else if(login_type === "facebook")
+						local_a_t = docCookies.getItem("facebook_access_token");
+					$.ajax({
+					    type: 'GET',
+					    url: bg.endpoint,
+					    data: {
+					    	method: "createUser",
+					    	login_type: login_type,
+					    	social_access_token: local_a_t,
+					    	screenname: $("#registration_screenname_input").val(),
+					    	state: $("#registration_state_select").val(),
+					    	country: $("#registration_country_select").val(),
+					    	picture: picture,
+					    	email: docCookies.getItem("email"),
+					    	useragent: navigator.userAgent
+					    },
+					    dataType: 'json',
+					    async: true,
+					    success: function (data, status) {
+					    	//alert("ajax success");
+					    	if(data.response_status === "error")
+					    	{
+					    		displayMessage(data.message, "red");
+					    		$("#registration_form_td").show();
+					    	}
+					    	else
+					    	{
+					    		docCookies.setItem("email", data.email, 31536e3);
+		    		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+		    		    		doFinished();
+					    	}
+					    },
+					    error: function (XMLHttpRequest, textStatus, errorThrown) {
+					        console.log(textStatus, errorThrown);
+					        displayMessage("Unable to create Words account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please email w at ords dot co.", "red");
+					    } 
+					});
+				});
 }
 
 
 
-$("#registration_screenname_button").click(
-		function () 
-		{
-				$("#screenname_availability_span").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">");
-				if ($("#registration_screenname_input").val().length <= 0) 
-				{
-					$("#screenname_availability_span").css("color", "red");
-					$("#screenname_availability_span").html("Blank");
-					setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
-				} 
-				else if ($("#registration_screenname_input").val().length < 6) 
-				{
-					$("#screenname_availability_span").css("color", "red");
-					$("#screenname_availability_span").html("Too short");
-					setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
-				} 
-				else 
-				{
-					var response_object;
-					$.ajax({
-						type: 'GET',
-						url: bg.endpoint,
-						data: {
-							method: "isScreennameAvailable",
-							screenname: $("#registration_screenname_input").val()
-						},
-						dataType: 'json',
-						async: true,
-						success: function (data, status) 
-						{
-							response_object = data;
-							if (response_object.response_status === "error") 
-							{
-								$("#screenname_availability_span").css("color", "red");
-								$("#screenname_availability_span").html(data.message);
-								setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
-							} 
-							else if (response_object.response_status === "success") 
-							{
-								if (response_object.screenname_available === "true") 
-								{
-									$("#screenname_availability_span").css("color", "green");
-									$("#screenname_availability_span").html("Available");
-								}
-								else if (response_object.screenname_available === "false") 
-								{
-									$("#screenname_availability_span").css("color", "red");
-									$("#screenname_availability_span").html("Unavailable");
-								}
-								else
-								{
-									$("#screenname_availability_span").css("color", "red");
-									$("#screenname_availability_span").html("Error. Value !t/f.");
-								}
-								setTimeout(function() { $("#screenname_availability_span").html();}, 3000);
-							}
-							else
-							{
-								//alert("weird. response_status not error or success.");
-							}
-							return;
-						},
-						error: function (XMLHttpRequest, textStatus, errorThrown) 
-						{
-							console.log(textStatus, errorThrown);
-						}
-					});
-					return;
-				}
-			});				
-	
-	$("#registration_submit_button").click(
 
-			function () {
-				if($("#registration_screenname_input").val() === "")
-				{
-					displayMessage("Choose a screenname.", "red");
-					return false;
-				}	
-				
-				if($("#registration_screenname_input").val().length > 15)
-				{
-					displayMessage("Screennames must be less than 15 characters.", "red");
-					return false;
-				}	
-				
-				if($("#registration_screenname_input").val().length < 6)
-				{
-					displayMessage("Screennames must be at least 6 characters.", "red");
-					return false;
-				}	
-				
-				var avatar_str = null;
-				var picture = $("#avatar_img").attr("src");
-				
-				if($("#registration_country_select").val() === "")
-				{
-					displayMessage("Select a country.", "red");
-					return false;
-				}
-				
-				if($("#registration_country_select").val() === "USA" && $("#registration_state_select").val() === "")
-				{
-					displayMessage("When you select USA as your country, you must pick a state.", "red");
-					return false;
-				}
-				
-				displayMessage("Creating Words account... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
-				$("#registration_form_td").hide();
-
-				var local_a_t;
-				if(login_type === "google")
-					local_a_t = docCookies.getItem("google_access_token");
-				else if(login_type === "facebook")
-					local_a_t = docCookies.getItem("facebook_access_token");
-				$.ajax({
-				    type: 'GET',
-				    url: bg.endpoint,
-				    data: {
-				    	method: "createUser",
-				    	login_type: login_type,
-				    	social_access_token: local_a_t,
-				    	screenname: $("#registration_screenname_input").val(),
-				    	state: $("#registration_state_select").val(),
-				    	country: $("#registration_country_select").val(),
-				    	picture: picture,
-				    	email: docCookies.getItem("email"),
-				    	password: $("#registration_password_input").val(),
-				    	confirm: $("#registration_confirm_input").val()
-				    },
-				    dataType: 'json',
-				    async: true,
-				    success: function (data, status) {
-				    	//alert("ajax success");
-				    	if(data.response_status === "error")
-				    	{
-				    		displayMessage(data.message, "red");
-				    		$("#registration_form_td").show();
-				    	}
-				    	else
-				    	{
-				    		docCookies.setItem("email", data.email, 31536e3);
-	    		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-	    		    		doFinished();
-				    	}
-				    },
-				    error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        console.log(textStatus, errorThrown);
-				        displayMessage("Unable to create Words account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please email w at ords dot co.", "red");
-				    } 
-				});
-			});
 
 
 

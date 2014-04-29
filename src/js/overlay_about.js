@@ -26,14 +26,14 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "<div style=\"text-align:left;font-size:12px;padding:10px\">";
 	
 	aboutmessage = aboutmessage + "<p style=\"font-size:14px;font-weight:bold\">Better comments everywhere</p>";
-	aboutmessage = aboutmessage + "<p>Web commenting is broken. Too many different logins, too much noise, not enough privacy, too much censorship.</p>";
+	aboutmessage = aboutmessage + "<p>Web commenting is broken. Too many accounts/logins, too much noise, not enough privacy, too much censorship.</p>";
 	aboutmessage = aboutmessage + "<p>Together we can fix it.</p>";
 	aboutmessage = aboutmessage + "<hr>";
 	aboutmessage = aboutmessage + "<p  style=\"font-size:14px;font-weight:bold\">Ways you can help:</p>";
 	aboutmessage = aboutmessage + "<ol>";
 	aboutmessage = aboutmessage + "<li>Write a comment. Seriously.</li>";
 	aboutmessage = aboutmessage + "<li>";
-	aboutmessage = aboutmessage + "Tell people about Words: ";
+	aboutmessage = aboutmessage + "Share Words: ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
@@ -50,15 +50,15 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "github.com/fivedogit/words-for-chrome</p>";
 	aboutmessage = aboutmessage + "<p>More info here:</p>";
 	aboutmessage = aboutmessage + "<p>http://goo.gl/VNs0DP</p>";
-	aboutmessage = aboutmessage + "<p>Enjoy! Follow <a href=\"#\" id=\"at_w_ords_co_link\">@w_ords_co</a> or me, <a href=\"#\" id=\"at_fivedogit_link\">@fivedogit</a>. Feedback welcome!</p>";
+	aboutmessage = aboutmessage + "<p>Enjoy! Follow <a href=\"#\" id=\"at_words_co_link\">@words_co</a> or me, <a href=\"#\" id=\"at_fivedogit_link\">@fivedogit</a>. Feedback welcome!</p>";
 	aboutmessage = aboutmessage + "</div>";
 	$("#main_div_" + currentURLhash).html(aboutmessage);
 	
 	$("#at_fivedogit_link").click( function() {
 		chrome.tabs.create({url:"http://www.twitter.com/fivedogit"});
 	});
-	$("#at_w_ords_co_link").click( function() {
-		chrome.tabs.create({url:"http://www.twitter.com/w_ords_co"});
+	$("#at_words_co_link").click( function() {
+		chrome.tabs.create({url:"http://www.twitter.com/words_co"});
 	});
 	$("#share_to_facebook_link").click(
 	 			function () {
