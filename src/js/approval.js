@@ -39,5 +39,6 @@ window.location = redirect + "?login_type=" + login_type + "&code=" + code;
 	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-	ga('create', 'UA-49477303-3', 'ords.co');
+	ga('create', 'UA-49477303-4', 'ords.co');
+	ga('require', 'displayfeatures');
 	ga('send', 'pageview');
