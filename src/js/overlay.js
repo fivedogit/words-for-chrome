@@ -372,8 +372,7 @@ $(window).scroll(function() {
  		$("#share_to_facebook_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
- 	 					//"https://www.facebook.com/dialog/apprequests?app_id=271212039709142&message=Words%20for%20Chrome%20is%20fixing%20web%20commenting.%20http%3A%2F%2Fw.ords.co&redirect_uri=http%3A%2F%2Fw.ords.co"
- 	 					"https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fw.ords.co"
+ 	 					"https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com"
  	 					});
  	 				notePromo("facebook", "footer");
  	 				return false;
@@ -382,7 +381,7 @@ $(window).scroll(function() {
  	 	$("#share_to_twitter_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
- 	 					"https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fw.ords.co"
+ 	 					"https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com"
  	 					});
  	 				notePromo("twitter", "footer");
  	 				return false;
@@ -391,7 +390,7 @@ $(window).scroll(function() {
  	 	$("#share_to_googleplus_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
- 	 					"https://plus.google.com/share?url=http%3A%2F%2Fw.ords.co"
+ 	 					"https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com"
  	 					});
  	 				notePromo("googleplus", "footer");
  	 				return false;
@@ -400,7 +399,7 @@ $(window).scroll(function() {
  	 	$("#share_to_tumblr_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
- 	 					"http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fw.ords.co&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting"
+ 	 					"http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting"
  	 					});
  	 				notePromo("tumblr", "footer");
  	 				return false;
@@ -409,7 +408,7 @@ $(window).scroll(function() {
  	 	$("#invite_with_gmail_link").click(
  	 			function () {
  	 				chrome.tabs.create({url:
- 	 					"https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fw.ords.co%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"
+ 	 					"https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"
  	 					});
  	 				notePromo("gmail", "footer");
  	 				return false;
@@ -679,11 +678,3 @@ $(window).scroll(function() {
  	}); 
  }
  
- (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
- 		ga('create', 'UA-49477303-4', 'ords.co');
-		ga('require', 'displayfeatures');
-		ga('send', 'pageview');
