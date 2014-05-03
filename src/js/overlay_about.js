@@ -16,6 +16,7 @@ function doAboutTab(message)
 	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
 	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
 	$("#notification_tab_link").html("<img src=\"images/flag_gray.png\"></img>");
+	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
 	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
 	var details = chrome.app.getDetails();
     var version = details.version;

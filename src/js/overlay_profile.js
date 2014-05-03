@@ -16,6 +16,7 @@ function viewProfile(screenname)
 	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
 	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
 	updateNotificationTabLinkImage();
+	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
 	$("#profile_tab_link").html("<img src=\"images/user_blue.png\"></img>");
 
 	

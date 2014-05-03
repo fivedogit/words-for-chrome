@@ -16,6 +16,7 @@ function doThreadTab()
 	$("#thread_tab_link").html("<img src=\"images/chat_blue.png\"></img>");
 	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
 	updateNotificationTabLinkImage();
+	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
 	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
 	
 	$("#utility_div").show();
@@ -376,16 +377,6 @@ function prepareGetAndPopulateThreadPortion()
 {
 	if (tabmode === "thread")
 	{
-		//alert("entering prepareGetAndPopulateThreadPortion");
-		/*if(thread_jo.combined_or_separated === "combined")
-		{
-			$("#header_div_top").html(t_jo.hostname + " (combined) - Like site");
-		}	
-		else
-		{
-			$("#header_div_top").html(t_jo.original_url + " (separated) - Like page");
-		}*/	
-		
 		if ((typeof thread_jo.children === "undefined" || thread_jo.children === null || thread_jo.children.length === 0) && threadstatus === 0)
 		{
 			//alert("Thread had no children");
@@ -394,7 +385,7 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "		No comments for this page. Write one!";
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\"><img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (48 hrs)</div>";
-			main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px;display:none\" id=\"other_pages_on_this_site_div\"><img src=\"images/ajaxSnake.gif\"></div>";
+			main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px\" id=\"other_pages_on_this_site_div\"><img src=\"images/ajaxSnake.gif\"></div>";
 			$("#main_div_" + currentURLhash).html(main_div_string);
 
 			$.ajax({
@@ -410,9 +401,10 @@ function prepareGetAndPopulateThreadPortion()
 				success: function (data, status) {
 					if (data.response_status === "success") 
 					{
-						if(typeof data.trendingactivity_jas == "undefined" || data.trendingactivity_jas == null)
+						if(typeof data.trendingactivity_ja == "undefined" || data.trendingactivity_ja == null)
 						{
 							noteThreadView(true, false); // (was_empty, showed_alternatives)
+							$("#other_pages_on_this_site_div").hide();
 						}
 						else
 						{
@@ -420,7 +412,7 @@ function prepareGetAndPopulateThreadPortion()
 							$("#other_pages_on_this_site_div").show();
 							var cutoff_in_hours = 48;
 							var choices = [48];
-							drawTrendingChart(cutoff_in_hours, choices, data, "other_pages_on_this_site_div");
+							drawTrendingChart(cutoff_in_hours, data, "other_pages_on_this_site_div");
 							noteThreadView(true, true); // (was_empty, showed_alternatives)
 						}
 					}
@@ -570,7 +562,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
         success: function (data, status) {
         	if(data.response_status !== "error" && tabmode === "thread")
         	{
-        		writeComment(data.item);
+        		writeComment(data.item, "comment_div_" + data.item.id);
         		if(data.item.children && data.item.children.length > 0)
         		{
         			var tempcomments = data.item.children;
@@ -605,7 +597,7 @@ function replaceURLWithHTMLLinks(text) {
     	return text.replace(exp,"<a class='newtab' href='$1'>$1</a>");
 }
 
-function writeComment(feeditem_jo)
+function writeComment(feeditem_jo, dom_id)
 {
 	var tempstr = "";
 	//var numvotes = 0;
@@ -707,19 +699,19 @@ function writeComment(feeditem_jo)
 			tempstr = tempstr + "	       <td class=\"comment-dislike-image-td\"><img src=\"images/dislike_arrow.png\" id=\"dislike_img_" + feeditem_jo.id + "\"></td>";
         }
 		tempstr = tempstr + "		   <td class=\"comment-dislikes-count-td\">" + feeditem_jo.dislikes.length + "</td>";
-		if ((tabmode === "thread") && (bg.user_jo !== null && bg.user_jo.screenname === feeditem_jo.author_screenname)) // if no bg.user_jo or screennames don't match, hide
+		if ((tabmode === "thread" || tabmode === "past") && (bg.user_jo !== null && bg.user_jo.screenname === feeditem_jo.author_screenname)) // if no bg.user_jo or screennames don't match, hide
 		{
 			tempstr = tempstr + "		   <td class=\"comment-delete-td\"> ";
-			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + feeditem_jo.id + "\">X</a>";
+			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + feeditem_jo.id + "\">X</a> ";
 			tempstr = tempstr + "		   </td>";
 		}
-		if(bg.user_jo !== null && bg.user_jo.screenname === "fivedogit")
+		if((tabmode === "thread") && (bg.user_jo !== null && bg.user_jo.screenname === "fivedogit"))
 		{
 			tempstr = tempstr + "		   <td class=\"comment-nuke-td\"> ";
-			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + feeditem_jo.id + "\">N!</a>";
+			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + feeditem_jo.id + "\">N!</a> ";
 			tempstr = tempstr + "		   </td>";
 			tempstr = tempstr + "		   <td class=\"comment-megadownvote-td\"> ";
-			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + feeditem_jo.id + "\">D!</a>";
+			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + feeditem_jo.id + "\">D!</a> ";
 			tempstr = tempstr + "		   </td>";
 		}	
 		
@@ -781,14 +773,7 @@ function writeComment(feeditem_jo)
 	  	tempstr = tempstr + "</table>"
 	}
 	
-	if (tabmode === "thread")
-	{
-		$("#comment_div_" + feeditem_jo.id).html(tempstr);
-	}
-	else if (tabmode === "notifications")
-	{
-		$("[id=notification_comment_td_" + feeditem_jo.id + "]").html(tempstr);
-	}
+	$("#" + dom_id).html(tempstr);
 	
 	$("a").click(function(event) {
 		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
@@ -912,13 +897,6 @@ function writeComment(feeditem_jo)
 			likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
 			return false;
 		});
-	 		 
-		$("#comment_delete_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
-			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
-			if (confirmbox === true)
-				hideComment(event.data.value);
-			return false;
-		});
 		
 		$("#comment_nuke_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
 			var confirmbox = confirm("Nuke comment?\n(This action is permanent and risky.)");
@@ -931,6 +909,16 @@ function writeComment(feeditem_jo)
 			var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
 			if (confirmbox === true)
 				megadownvoteComment(event.data.value);
+			return false;
+		});
+	}
+	
+	if (tabmode === "thread" || tabmode === "past")
+	{
+		$("#comment_delete_link_" + feeditem_jo.id).click({value: feeditem_jo.id}, function(event) {
+			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
+			if (confirmbox === true)
+				hideComment(event.data.value);
 			return false;
 		});
 	}
@@ -1070,7 +1058,10 @@ function hideComment(inc_id) // submits comment and updates thread
 	        else if (data.response_status === "success")
 	        {
 	        	displayMessage("Comment hidden.", "black", "message_div_" + inc_id);
-				doThreadItem(data.comment.id, data.comment.parent, "reply");
+	        	if(tabmode === "thread")
+	        		doThreadItem(data.comment.id, data.comment.parent, "reply");
+	        	if(tabmode === "past")
+	        		doPastTab();
 	        }
 	        else
 	        {

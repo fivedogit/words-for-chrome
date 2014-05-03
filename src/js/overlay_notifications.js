@@ -15,6 +15,7 @@ function doNotificationsTab()
 	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
 	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
 	$("#notifications_tab_link").html("<img src=\"images/flag_blue.png\"></img>");
+	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
 	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
 
 	
@@ -57,7 +58,7 @@ function getNotifications()
 		$("#main_div_" + currentURLhash).html(main_div_string);
 		for(var x=0; x < bg.user_jo.activity_ids.length; x++) 
 		{  
-			doNotificationItem(bg.user_jo.activity_ids[x], "feeditem_div_" + x, "notifications");
+			doNotificationItem(bg.user_jo.activity_ids[x], "feeditem_div_" + x);
 		} 
 
 		// now that the user has viewed this tab, reset activity count to 0
@@ -104,13 +105,26 @@ function getNotifications()
 	}
 }
 
-function doNotificationItem(item_id, dom_id, modewhencalled)
+function makeid()
 {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+// item ids are unique. There is only one specific like/dislike/comment in the person's notification array
+// parent ids are not. The same parent item can be replied to, liked, disliked, etc, so the reference has to be randomized
+function doNotificationItem(item_id, dom_id)
+{
+	var parent_random = makeid();
 	var fids = ""; // feed item div string
 	if(item_id.endsWith("L") || item_id.endsWith("D"))
 	{
 		// this call goes and gets the notification item -- the like, dislike or reply to a parent comment.
-		var activity_jo;
 		$.ajax({
 	        type: 'GET',
 	        url: endpoint,
@@ -121,13 +135,12 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        dataType: 'json',
 	        async: true,
 	        success: function (data, status) {
-	        	activity_jo = data.item;
 	        	fids = fids + "<table style=\"width:100%\">";
 	    		fids = fids + "	<tr>";
-	    		fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + activity_jo.id + "\">";
+	    		fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + data.item.id + "\">";
 	        	fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
 	        	fids = fids + "		</td>";
-	        	fids = fids + "		<td style=\"text-align:right\"><a href=\"#\" id=\"notification_hide_link_" + activity_jo.id + "\">hide</a></td>";
+	        	fids = fids + "		<td style=\"text-align:right\"><a href=\"#\" id=\"notification_hide_link_" + data.item.id + "\">hide</a></td>";
 	        	fids = fids + "	</tr>";
 	        	fids = fids + "</table>";
 	        	fids = fids + "<table style=\"width:100%\">";
@@ -136,7 +149,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	    		fids = fids + "		<td class=\"rotated-who-wrote\">";
 	    		fids = fids + "			You wrote:";
 	    		fids = fids + "		</td>";
-	    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + activity_jo.parent + "\">";
+	    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + parent_random + "\">";
 	    		fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
 	    		fids = fids + "		</td>";
 	    		fids = fids + "	</tr>";
@@ -145,7 +158,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        	
 	    		var email = docCookies.getItem("email");
 	    		var this_access_token = docCookies.getItem("this_access_token");
-	    		$("#notification_hide_link_" + activity_jo.id).click({value: activity_jo.id}, function(event) {
+	    		$("#notification_hide_link_" + data.item.id).click({value: data.item.id}, function(event) {
 	    			var removal_target = event.data.value;
     				$.ajax({
     			        type: 'GET',
@@ -201,21 +214,20 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        		var url_to_use = data.item.pseudo_url;
         			if(url_to_use.length > 50)
         				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-        			// Why? $("#header_div_" + activity_jo.id).css("text-align", "left");
-	        		if(activity_jo.id.endsWith("L"))
+	        		if(data.item.id.endsWith("L"))
 	        		{
-	        			$("#header_td_" + activity_jo.id).html("<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> liked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
-	        			$("#screenname_link_" + activity_jo.id).click(function() {
-	        		 		viewProfile(activity_jo.author_screenname);
+	        			$("#header_td_" + data.item.id).html("<a href=\"#\" id=\"screenname_link_" + data.item.id + "\">" + data.item.author_screenname + "</a> liked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
+	        			$("#screenname_link_" + data.item.id).click({value: data.item}, function(event) {
+	        		 		viewProfile(event.data.value.author_screenname);
 	        		 	});
 	        		}
-	        		else if(activity_jo.id.endsWith("D"))
+	        		else if(data.item.id.endsWith("D"))
 	        		{
-	        			$("#header_td_" + activity_jo.id).html("Someone disliked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\"  style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
+	        			$("#header_td_" + data.item.id).html("Someone disliked your comment: <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\"  style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
 	        		}	
 	        		else
 	        		{
-	        			$("#header_td_" + activity_jo.id).html("Error determining notification item type");
+	        			$("#header_td_" + data.item.id).html("Error determining notification item type");
 	        			return;
 	        		}
 	        		$.ajax({
@@ -223,7 +235,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		    	        url: endpoint,
 		    	        data: {
 		    	            method: "getFeedItem",
-		    	            id: activity_jo.parent
+		    	            id: data.item.parent
 		    	        },
 		    	        dataType: 'json',
 		    	        async: true,
@@ -231,7 +243,7 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 		    	        	// write the comment
 		    	        	if(data.response_status === "success" && tabmode === "notifications")
 		    	        	{
-		    	        		writeComment(data.item);
+		    	        		writeComment(data.item, "notification_comment_td_" + parent_random);
 		    	        	}
 		    	        	else if (data.response_status === "error")
 		    	        	{
@@ -270,156 +282,186 @@ function doNotificationItem(item_id, dom_id, modewhencalled)
 	        dataType: 'json',
 	        async: true,
 	        success: function (data, status) {
-	        	activity_jo = data.item;
-	        	fids = fids + "<table style=\"width:100%\">";
-	    		fids = fids + "	<tr>";
-	    		fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + activity_jo.id + "\">";
-	        	fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
-	        	fids = fids + "		</td>";
-	        	fids = fids + "		<td><a href=\"#\" id=\"notification_hide_link_" + activity_jo.id + "\" style=\"text-align:right\">hide</a></td>";
-	        	fids = fids + "	</tr>";
-	        	fids = fids + "</table>";
-	    		fids = fids + "<table>";
-	    		fids = fids + "	<tr id=\"parent_tr_" + activity_jo.id + "\" style=\"display:none\">";
-	    		fids = fids + "		<td style=\"width:15px\"></td>";
-	    		fids = fids + "		<td class=\"rotated-who-wrote\">";
-	    		fids = fids + "			You wrote:";
-	    		fids = fids + "		</td>";
-	    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + activity_jo.parent + "\">";
-	    		fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
-	    		fids = fids + "		</td>";
-	    		fids = fids + "	</tr>";
-	    		fids = fids + "</table>";
-	    		fids = fids + "<table>";
-	    		fids = fids + "	<tr>";
-	    		fids = fids + "		<td style=\"width:30px\"></td>";
-	    		fids = fids + "		<td class=\"rotated-who-wrote\">";
-	    		fids = fids + "			They wrote:";
-	    		fids = fids + "		</td>";
-	    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + activity_jo.id + "\">";
-	    		fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
-	    		fids = fids + "		</td>";
-	    		fids = fids + "	</tr>";
-	    		fids = fids + "</table>";
-	    		$("#" + dom_id).html(fids);
-	        	
-	    		var email = docCookies.getItem("email");
-	    		var this_access_token = docCookies.getItem("this_access_token");
-	    		$("#notification_hide_link_" + activity_jo.id).click({value: activity_jo.id}, function(event) {
-	    			var removal_target = event.data.value;
-	    			$.ajax({
-    			        type: 'GET',
-    			        url: endpoint,
-    			        data: {
-    			        	email: email,
-    			        	this_access_token: this_access_token,
-    			            method: "removeItemFromActivityIds",
-    			            id: removal_target
-    			        },
-    			        dataType: 'json',
-    			        async: true,
-    			        success: function (data, status) {
-    			        	if(data.response_status === "success")
-    			        	{
-    			        		// remove it locally, then repopulate the activity notifications page
-    			        		var temp_act_ids = bg.user_jo.activity_ids;
-    			        		for(var x = 0; x < temp_act_ids.length; x++)
-    			        		{
-    			        			if(temp_act_ids[x] === removal_target)
-    			        			{
-    			        				temp_act_ids.splice(x,1);
-    			        				break;
-    			        			}	
-    			        		}	
-    			        		bg.user_jo.activity_ids = temp_act_ids;
-    			        		doNotificationsTab();
-    			        	}
-    			        	else if(data.response_status === "error")
-    			        	{
-    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
-    			            	if(data.error_code && data.error_code === "0000")
-    			        		{
-    			        			displayMessage("Your login has expired. Please relog.", "red");
-    			        			docCookies.removeItem("email"); 
-    			        			docCookies.removeItem("this_access_token");
-    			        			bg.user_jo = null;
-    			        			updateLogstat();
-    			        		}
-    			        	}	
-    			        },
-    			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-    			        	$("#header_td_" + removal_target).html("Unable to retrieve item. (network error)");
-    			        	console.log(textStatus, errorThrown);
-    			        }
-    				});
-    				return false;
-    			});	
-	    		
-	        	if(data.response_status === "success" && tabmode === "notifications")
-	        	{
-	        		// write the comment
-	        		writeComment(activity_jo);
-	        		var parent_is_a_comment = false;
-	        		var current_user_authored_parent_comment = false;
-	        		//alert(activity_jo.text + " " + activity_jo.parent);
-	        		if(activity_jo.parent.indexOf(".") == -1) // only retrieve and write the parent if the parent is a comment
-	        		{	
-	        			parent_is_a_comment = true;
-	        			// get the parent
-		        		$.ajax({
-		        	        type: 'GET',
-		        	        url: endpoint,
-		        	        data: {
-		        	            method: "getFeedItem",
-		        	            id: activity_jo.parent
-		        	        },
-		        	        dataType: 'json',
-		        	        async: true,
-		        	        success: function (data, status) {
-		        	        	// write header
-		        	        	if(data.response_status === "success" && tabmode === "notifications")
-		        	        	{
-		        	        		if(data.item.author_screenname === bg.user_jo.screenname)
-		        	        		{	
-		        	        			$("#parent_tr_" + activity_jo.id).show();
-		        	        			current_user_authored_parent_comment = true;
-		        	        			var url_to_use = data.item.pseudo_url;
-			                			if(url_to_use.length > 50)
-			                				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-			                			// Why? $("#header_div_" + activity_jo.id).css("text-align", "left");
-			                			$("#header_td_" + activity_jo.id).html(
-			                					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> replied to you" 
-			                					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
-			                			$("#screenname_link_" + activity_jo.id).click(function() {
-			    	        		 		viewProfile(activity_jo.author_screenname);
-			    	        		 	});
-			        	        		writeComment(data.item);
-		        	        		}
-		        	        	}
-		        	        },
-		        	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-		        	        	$("#header_td_" + activity_jo.id).html("Unable to retreive parent comment and write header. (network error)");
-		        	        	$("#notification_comment_td_" + activity_jo.id).html("Unable to retreive parent comment. (network error)");
-		        	        	console.log(textStatus, errorThrown);
-		        	        } 
-		        		});
-	        		}
-	        		else
-	        		{
-	        			$("#parent_tr_" + activity_jo.id).hide();
-	        			var url_to_use = data.item.pseudo_url;
-	        			if(url_to_use.length > 50)
-	        				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-	        			parent_is_a_comment = false;
-	        			$("#header_td_" + activity_jo.id).html(
-            					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> mentioned you" 
-            					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
-	        			current_user_authored_parent_comment = false;
-	        		}	
-	        	}
-	        	else
-	        	{
-	        		//alert("error child id=" + item_id + " message=" + data.message);
+	        	if(data.item.hidden === false) // skip entirely if hidden === true
+	        	{	
+	        		activity_jo = data.item;
+		        	fids = fids + "<table style=\"width:100%\">";
+		    		fids = fids + "	<tr>";
+		    		fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + activity_jo.id + "\">";
+		        	fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
+		        	fids = fids + "		</td>";
+		        	fids = fids + "		<td><a href=\"#\" id=\"notification_hide_link_" + activity_jo.id + "\" style=\"text-align:right\">hide</a></td>";
+		        	fids = fids + "	</tr>";
+		        	fids = fids + "</table>";
+		    		fids = fids + "<table>";
+		    		fids = fids + "	<tr id=\"parent_tr_" + activity_jo.id + "\" style=\"display:none\">";
+		    		fids = fids + "		<td style=\"width:15px\"></td>";
+		    		fids = fids + "		<td class=\"rotated-who-wrote\">";
+		    		fids = fids + "			You wrote:";
+		    		fids = fids + "		</td>";
+		    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + parent_random + "\">";
+		    		fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
+		    		fids = fids + "		</td>";
+		    		fids = fids + "	</tr>";
+		    		fids = fids + "</table>";
+		    		fids = fids + "<table>";
+		    		fids = fids + "	<tr>";
+		    		fids = fids + "		<td style=\"width:30px\"></td>";
+		    		fids = fids + "		<td class=\"rotated-who-wrote\">";
+		    		fids = fids + "			They wrote:";
+		    		fids = fids + "		</td>";
+		    		fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + activity_jo.id + "\">";
+		    		fids = fids + "			<img src=\"images/ajaxSnake.gif\">";
+		    		fids = fids + "		</td>";
+		    		fids = fids + "	</tr>";
+		    		fids = fids + "</table>";
+		    		$("#" + dom_id).html(fids);
+		        	
+		    		var email = docCookies.getItem("email");
+		    		var this_access_token = docCookies.getItem("this_access_token");
+		    		$("#notification_hide_link_" + activity_jo.id).click({value: activity_jo.id}, function(event) {
+		    			var removal_target = event.data.value;
+		    			$.ajax({
+	    			        type: 'GET',
+	    			        url: endpoint,
+	    			        data: {
+	    			        	email: email,
+	    			        	this_access_token: this_access_token,
+	    			            method: "removeItemFromActivityIds",
+	    			            id: removal_target
+	    			        },
+	    			        dataType: 'json',
+	    			        async: true,
+	    			        success: function (data, status) {
+	    			        	if(data.response_status === "success")
+	    			        	{
+	    			        		// remove it locally, then repopulate the activity notifications page
+	    			        		var temp_act_ids = bg.user_jo.activity_ids;
+	    			        		for(var x = 0; x < temp_act_ids.length; x++)
+	    			        		{
+	    			        			if(temp_act_ids[x] === removal_target)
+	    			        			{
+	    			        				temp_act_ids.splice(x,1);
+	    			        				break;
+	    			        			}	
+	    			        		}	
+	    			        		bg.user_jo.activity_ids = temp_act_ids;
+	    			        		doNotificationsTab();
+	    			        	}
+	    			        	else if(data.response_status === "error")
+	    			        	{
+	    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+	    			            	if(data.error_code && data.error_code === "0000")
+	    			        		{
+	    			        			displayMessage("Your login has expired. Please relog.", "red");
+	    			        			docCookies.removeItem("email"); 
+	    			        			docCookies.removeItem("this_access_token");
+	    			        			bg.user_jo = null;
+	    			        			updateLogstat();
+	    			        		}
+	    			        	}	
+	    			        },
+	    			        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	    			        	$("#header_td_" + removal_target).html("Unable to retrieve item. (network error)");
+	    			        	console.log(textStatus, errorThrown);
+	    			        }
+	    				});
+	    				return false;
+	    			});	
+		    		
+		        	if(data.response_status === "success" && tabmode === "notifications")
+		        	{
+		        		// write the comment
+		        		writeComment(activity_jo, "notification_comment_td_" + activity_jo.id);
+		        		var parent_is_a_comment = false;
+		        		var current_user_authored_parent_comment = false;
+		        		if(activity_jo.parent.indexOf(".") == -1) // only retrieve and write the parent if the parent is a comment
+		        		{	
+		        			parent_is_a_comment = true;
+		        			// get the parent
+			        		$.ajax({
+			        	        type: 'GET',
+			        	        url: endpoint,
+			        	        data: {
+			        	            method: "getFeedItem",
+			        	            id: activity_jo.parent
+			        	        },
+			        	        dataType: 'json',
+			        	        async: true,
+			        	        success: function (data, status) {
+			        	        	if(data.response_status === "success" && tabmode === "notifications")
+			        	        	{
+			        	        		// if the parent is hidden, we don't know if this is a reply or mention. Must check text of child for mention
+			        	        		var reply_or_mention = "reply"; //default to reply
+			        	        		if(data.item.hidden === true)
+			        	        		{
+			        	        			if(activity_jo.text.indexOf("@" + bg.user_jo.screenname) !== -1)
+			        	        				reply_or_mention = "mention"; // we don't know for sure this wasn't a reply... but we at least know it's a mention
+			        	        		}
+			        	        		else
+			        	        		{
+			        	        			if(data.item.author_screenname === bg.user_jo.screenname)
+			        	        				reply_or_mention = "reply"; // current user wrote the parent... this is a reply. may also be a mention, but we default to reply here.
+			        	        		}	
+			        	        		
+			        	        		// this check is meant to determine whether this reply is a reply to the current user or a reply that mentioned the current user.
+			        	        		if(reply_or_mention === "reply")
+			        	        		{	
+			        	        			$("#parent_tr_" + activity_jo.id).show();
+			        	        			current_user_authored_parent_comment = true;
+			        	        			var url_to_use = data.item.pseudo_url;
+				                			if(url_to_use.length > 50)
+				                				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
+				                			$("#header_td_" + activity_jo.id).html(
+				                					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> replied to you" 
+				                					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
+				                			$("#screenname_link_" + activity_jo.id).click(function() {
+				    	        		 		viewProfile(activity_jo.author_screenname);
+				    	        		 	});
+				        	        		writeComment(data.item, "notification_comment_td_" + parent_random);
+			        	        		}
+			        	        		else
+			        	        		{
+			        	        			$("#parent_tr_" + activity_jo.id).hide();
+			        	        			var url_to_use = data.item.pseudo_url;
+			        	        			if(url_to_use.length > 50)
+			        	        				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
+			        	        			parent_is_a_comment = false;
+			        	        			$("#header_td_" + activity_jo.id).html(
+			                    					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> mentioned you" 
+			                    					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
+			        	        			current_user_authored_parent_comment = false;
+			        	        		}
+			        	        	}
+			        	        	else
+			        	        	{
+			        	        		//alert("did not get parent item successfully");
+			        	        	}	
+			        	        },
+			        	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+			        	        	$("#header_td_" + activity_jo.id).html("Unable to retreive parent comment and write header. (network error)");
+			        	        	$("#notification_comment_td_" + activity_jo.id).html("Unable to retreive parent comment. (network error)");
+			        	        	console.log(textStatus, errorThrown);
+			        	        } 
+			        		});
+		        		}
+		        		else // if the comment was toplevel, then this is obviously a mention and not a reply
+		        		{
+		        			$("#parent_tr_" + activity_jo.id).hide();
+		        			var url_to_use = data.item.pseudo_url;
+		        			if(url_to_use.length > 50)
+		        				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
+		        			parent_is_a_comment = false;
+		        			$("#header_td_" + activity_jo.id).html(
+	            					"<a href=\"#\" id=\"screenname_link_" + activity_jo.id + "\">" + activity_jo.author_screenname + "</a> mentioned you" 
+	            					+ " - <img src=\"http://www.google.com/s2/favicons?domain=" + data.item.pseudo_url + "\" style=\"vertical-align:middle\"> <a class=\"newtab\" href=\"" + data.item.pseudo_url + "\">" + url_to_use + "</a>");
+		        			current_user_authored_parent_comment = false;
+		        		}	
+		        	}
+		        	else
+		        	{
+		        		//alert("error child id=" + item_id + " message=" + data.message);
+		        	}
 	        	}
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {

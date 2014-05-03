@@ -14,6 +14,7 @@ function doTrendingTab()
 	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
 	$("#trending_tab_link").html("<img src=\"images/trending_blue.png\"></img>");
 	updateNotificationTabLinkImage();
+	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
 	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
 
 	$("#utility_div").show();
@@ -63,6 +64,7 @@ function getTrendingActivity()
 
 function drawTrendingChart(hours_to_get, data, dom_id)
 {
+	
 	var cutoff_in_hours = hours_to_get;
 	var mds = "";
 	// did the system find ANY activity at all? In any window? If not, say so.

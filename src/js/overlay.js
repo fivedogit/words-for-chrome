@@ -107,6 +107,8 @@ function displayLogstatAsLoggedOut() {
 				$("#tab_tooltip_td").html("Trending");
 			else if(tabmode === "notifications")
 				$("#tab_tooltip_td").html("Notifications");
+			else if(tabmode === "past")
+				$("#tab_tooltip_td").html("Your past comments");
 			else if(tabmode === "profile")
 				$("#tab_tooltip_td").html("Profile/Settings");
 		return false;
@@ -131,6 +133,8 @@ function displayLogstatAsLoggedOut() {
 				$("#tab_tooltip_td").html("Trending");
 			else if(tabmode === "notifications")
 				$("#tab_tooltip_td").html("Notifications");
+			else if(tabmode === "past")
+				$("#tab_tooltip_td").html("Your past comments");
 			else if(tabmode === "profile")
 				$("#tab_tooltip_td").html("Profile/Settings");
 			return false;
@@ -287,15 +291,18 @@ function displayMessage(inc_message, inc_color, dom_id, s)
 
 
 $(window).scroll(function() {
-	   if ($(window).scrollTop() + $(window).height() === $(document).height()) {
-	       if (scrollable === 1)
-	       {
-	    	  // $("#loading_more_comments_div").show();
-	    	   beginindex = beginindex + 8; 
-	    	   endindex = endindex + 8;
-	    	   prepareGetAndPopulateThreadPortion();
-	       }
-	   }
+		if ($(window).scrollTop() + $(window).height() === $(document).height()) {
+			if (scrollable === 1)
+			{
+				scrollable = 0;
+				beginindex = beginindex + 8; 
+				endindex = endindex + 8;
+				if(tabmode === "thread")
+					prepareGetAndPopulateThreadPortion();
+				else if(tabmode === "past")
+					getPastComments();
+			}
+		}
  });
 
  
@@ -316,10 +323,11 @@ $(window).scroll(function() {
  						bs = bs + "<td><a href=\"#\" id=\"thread_tab_link\"><img src=\"images/chat_blue.png\"></img></a></td>";
  					    bs = bs + "<td><a href=\"#\" id=\"trending_tab_link\"><img src=\"images/trending_gray.png\"></img></a></td>"; 
  						bs = bs + "<td><a href=\"#\" id=\"notifications_tab_link\"><img src=\"images/flag_gray.png\"></img></a></td>";
+ 						bs = bs + "<td><a href=\"#\" id=\"past_tab_link\"><img src=\"images/clock_gray.png\"></img></a></td>";
  						bs = bs + "<td><a href=\"#\" id=\"profile_tab_link\"><img src=\"images/user_gray.png\"></img></a></td>";
  					bs = bs + "</tr>";
  					bs = bs + "<tr>";
- 						bs = bs + "<td colspan=4 id=\"tab_tooltip_td\">Comments</td>";
+ 						bs = bs + "<td colspan=5 id=\"tab_tooltip_td\">Comments</td>";
  					bs = bs + "</tr>";
  					bs = bs + "</table>";
  			bs = bs + "</td>";
@@ -434,6 +442,8 @@ $(window).scroll(function() {
  					$("#tab_tooltip_td").html("Trending");
  				else if(tabmode === "notifications")
  					$("#tab_tooltip_td").html("Notifications");
+ 				else if(tabmode === "past")
+ 					$("#tab_tooltip_td").html("Your past comments");
  				else if(tabmode === "profile")
  					$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
@@ -459,6 +469,8 @@ $(window).scroll(function() {
  					$("#tab_tooltip_td").html("Trending");
  				else if(tabmode === "notifications")
  					$("#tab_tooltip_td").html("Notifications");
+ 				else if(tabmode === "past")
+ 					$("#tab_tooltip_td").html("Your past comments");
  				else if(tabmode === "profile")
  					$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
@@ -484,6 +496,8 @@ $(window).scroll(function() {
  					$("#tab_tooltip_td").html("Trending");
  				else if(tabmode === "notifications")
  					$("#tab_tooltip_td").html("Notifications");
+ 				else if(tabmode === "past")
+ 					$("#tab_tooltip_td").html("Your past comments");
  				else if(tabmode === "profile")
  					$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
@@ -495,6 +509,36 @@ $(window).scroll(function() {
  				return false;
  			});
 
+	$("#past_tab_link").mouseover(
+ 			function () {
+ 				$("#tab_tooltip_td").html("Your past comments");
+ 				return false;
+ 			});
+
+ 	$("#past_tab_link").mouseout(
+ 			function () {
+ 				if(tabmode === "thread")
+ 					$("#tab_tooltip_td").html("Comments");
+ 				else if(tabmode === "trending")
+ 					$("#tab_tooltip_td").html("Trending");
+ 				else if(tabmode === "notifications")
+ 					$("#tab_tooltip_td").html("Notifications");
+ 				else if(tabmode === "past")
+ 					$("#tab_tooltip_td").html("Your past comments");
+ 				else if(tabmode === "profile")
+ 					$("#tab_tooltip_td").html("Profile/Settings");
+ 				return false;
+ 			});
+
+ 	$("#past_tab_link").click(
+ 			function () {
+ 				if(bg.user_jo == null || bg.user_jo.screenname == null)
+ 					doPastTab();
+ 				else
+ 					doPastTab(bg.user_jo.screenname);
+ 				return false;
+ 			});
+ 	
  	$("#profile_tab_link").mouseover(
  			function () {
  				$("#tab_tooltip_td").html("Profile/Settings");
@@ -509,6 +553,8 @@ $(window).scroll(function() {
  					$("#tab_tooltip_td").html("Trending");
  				else if(tabmode === "notifications")
  					$("#tab_tooltip_td").html("Notifications");
+ 				else if(tabmode === "past")
+ 					$("#tab_tooltip_td").html("Your past comments");
  				else if(tabmode === "profile")
  					$("#tab_tooltip_td").html("Profile/Settings");
  				return false;
