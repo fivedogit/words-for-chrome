@@ -58,9 +58,9 @@ function getPastComments()
 	            }
 	            else
 	            { 
-	            	$("#loading_past_comments_div").hide();
 	            	if(typeof data.comments_ja !== "undefined" && data.comments_ja !== null && data.comments_ja.length > 0)
 	            	{
+	            		$("#loading_past_comments_div").hide();
 	            		var sorted_comments_ja = data.comments_ja;
 	            		sorted_comments_ja.sort(function(a,b){
 	        				a = fromOtherBaseToDecimal(62, a.substring(0,7));
@@ -88,6 +88,10 @@ function getPastComments()
 	            			doPastCommentItem(data.comments_ja[x], "pastcomment_div_" + x);
 	            		}
 	            		
+	            	}
+	            	else
+	            	{
+	            		$("#loading_past_comments_div").html("No past comments.");
 	            	}
 	            }
 	        },
