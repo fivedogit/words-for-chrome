@@ -58,22 +58,14 @@ function gotThread()
 	$("#main_div_" + currentURLhash).html("");
 	if (tabmode === "thread")
 	{
-		//alert("gotThread and thread_jo=" + JSON.stringify(thread_jo));
-		var url_to_use = thread_jo.significant_designation;
-		if(url_to_use.endsWith("?"))
-			url_to_use = url_to_use.substring(0,url_to_use.length-1);
-		if(url_to_use.length > 50 && thread_jo.hostname.length < 50)
-			url_to_use = thread_jo.hostname + "/..." + url_to_use.substring(url_to_use.length - (47 - thread_jo.hostname.length));
-		else if(url_to_use.length > 50 && thread_jo.hostname.length >= 50)
-			url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-			
+		var url_to_use = getSmartCutURL(thread_jo.significant_designation, thread_jo.hostname, 60);
 		var happy = "";
 		happy = happy + "<img src=\"http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation + "\"> "
 		if(thread_jo.combined_or_separated === "combined")
 			happy = happy + "<img id=\"combined_img\" src=\"images/combined_icon.png\"> ";
 		else
 			happy = happy + "<img id=\"separated_img\" src=\"images/separated_icon.png\"> ";
-		happy = happy + url_to_use + " ";
+		happy = happy + "<span style=\"font-family:'Arial Narrow'arial;font-size:12px\">" +  url_to_use + "</span> ";
 		happy = happy + "<span id=\"has_user_liked_span\"><img id=\"pagelike_img\" src=\"images/star_grayscale_16x16.png\"></span> <span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
 		
 		
