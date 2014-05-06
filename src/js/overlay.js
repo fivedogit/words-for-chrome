@@ -724,10 +724,17 @@ $(window).scroll(function() {
  	}); 
  }
  
- function getSmartCutURL(url_to_use, hostname, limit) // cut as www.hostname.com/.../filename.html whenever possible for max readability
+ function getSmartCutURL(url_to_use_inc, limit) // cut as www.hostname.com/.../filename.html whenever possible for max readability
  {
-	 if(url_to_use.endsWith("?"))
-			url_to_use = url_to_use.substring(0,url_to_use.length-1);
+	 var url_to_use_loc = url_to_use_inc;
+	 //alert("smart cutting with " + url_to_use_loc);
+	 if(url_to_use_loc.indexOf("https://") == 0 || url_to_use_loc.indexOf("http://") == 0)
+		 url_to_use_loc = url_to_use_loc.substring(url_to_use_loc.indexOf("://")+ 3);
+		
+	 var hostname = url_to_use_loc.substring(0,url_to_use_loc.indexOf("/")); // pages will always have a slash after the hostname, even if it's just www.hostname.com/
+	 
+	 if(url_to_use_loc.endsWith("?"))
+			url_to_use_loc = url_to_use_loc.substring(0,url_to_use_loc.length-1);
 		
 		// url cases:
 		// 1. is less than limit. use as-is
@@ -738,30 +745,30 @@ $(window).scroll(function() {
 		// 6. hostname is shorter than limit, url is longer than limit, url has exactly 1 slash, (www.acceptable.com/waytoolong_...) -> use default method
 		// 7. hostname is longer than limit -> use default method
 		
-		if(url_to_use.length > limit && hostname.length < limit) 
+		if(url_to_use_loc.length > limit && hostname.length < limit) 
 		{
 			var use_default_method = false;
 			
-			if((url_to_use.split("/").length - 1) > 2) //case 2/3: has at least 3 forward slashes
+			if((url_to_use_loc.split("/").length - 1) > 2) //case 2/3: has at least 3 forward slashes
 			{
 				var has_trailing_slash = false;
-				if(url_to_use.substr(url_to_use.length - 1) == "/") //case 2: has trailing slash
+				if(url_to_use_loc.substr(url_to_use_loc.length - 1) == "/") //case 2: has trailing slash
 				{
 					//alert("case 2, hostname ok, >3 slashes with trailing");
 					has_trailing_slash = true;
-					url_to_use = url_to_use.substring(0,url_to_use.length - 1); // temporarily remove trailing slash
+					url_to_use_loc = url_to_use_loc.substring(0,url_to_use_loc.length - 1); // temporarily remove trailing slash
 				}
 				else
 				{
 					//alert("case 3, hostname ok, >3 slashes, none trailing");
 				}	
-				var trythis = hostname + "/.../" + url_to_use.substring(url_to_use.lastIndexOf("/") + 1);
+				var trythis = hostname + "/.../" + url_to_use_loc.substring(url_to_use_loc.lastIndexOf("/") + 1);
 				if(trythis.length <= limit) //case 2/3: is the "smart" cut acceptable? if so, use it
 				{
 					//alert("case 2/3, smart cut worked!");
-					url_to_use = trythis;
+					url_to_use_loc = trythis;
 					if(has_trailing_slash)
-						url_to_use = url_to_use + "/";
+						url_to_use_loc = url_to_use_loc + "/";
 				}
 				else						//case 2/3: is the "smart" cut still too long? use default
 				{
@@ -770,9 +777,9 @@ $(window).scroll(function() {
 				}
 				
 			}
-			else if((url_to_use.split("/").length - 1) == 2) // has exactly 2 forward slashes
+			else if((url_to_use_loc.split("/").length - 1) == 2) // has exactly 2 forward slashes
 			{
-				if(url_to_use.substr(url_to_use.length - 1) == "/") //case 4: has trailing slash, this means the url has only one effective slash and is too big, even for hostname + "/..." + file form.
+				if(url_to_use_loc.substr(url_to_use_loc.length - 1) == "/") //case 4: has trailing slash, this means the url has only one effective slash and is too big, even for hostname + "/..." + file form.
 				{
 					//alert("case 4: exactly 2 slashes, one trailing, use default method");
 					use_default_method = true;
@@ -780,11 +787,11 @@ $(window).scroll(function() {
 				else //case 5: 2 slashes, no trailing slash
 				{	
 					//alert("case 5: exactly 2 slashes, none trailing, try smart cut");
-					var trythis = hostname + "/.../" + url_to_use.substring(url_to_use.lastIndexOf("/") + 1);
+					var trythis = hostname + "/.../" + url_to_use_loc.substring(url_to_use_loc.lastIndexOf("/") + 1);
 					if(trythis.length <= limit) // case 5: is the "smart" cut acceptable? if so, use it
 					{
 						//alert("case 5: exactly 2 slashes, none trailing, smart cut worked!");
-						url_to_use = trythis;
+						url_to_use_loc = trythis;
 					}
 					else					    // case 5: is the "smart" cut still too long? if so, use default
 					{
@@ -801,20 +808,19 @@ $(window).scroll(function() {
 
 			if(use_default_method === true)
 			{
-				var url_to_use = thread_jo.significant_designation;
-				url_to_use = hostname + "/..." + url_to_use.substring(url_to_use.length - ((limit-3) - hostname.length)); 
+				url_to_use_loc = hostname + "/..." + url_to_use_inc.substring(url_to_use_inc.length - ((limit-3) - hostname.length)); 
 			}
 		}
-		else if(url_to_use.length > limit && hostname.length >= limit) //case 7: special case super long hostname... simply split in half
+		else if(url_to_use_loc.length > limit && hostname.length >= limit) //case 7: special case super long hostname... simply split in half
 		{
 			//alert("case 7: hostname > limit. Use special chop-in-half method.");
-			url_to_use = url_to_use.substring(0,Math.floor(limit/2)) + "..." + url_to_use.substring(url_to_use.length-(Math.floor(limit/2)-3));
+			url_to_use_loc = url_to_use_loc.substring(0,Math.floor(limit/2)) + "..." + url_to_use_loc.substring(url_to_use_loc.length-(Math.floor(limit/2)-3));
 		}
 		else
 		{// case 1
 			//alert("case 1, url less than limit");
 			// do-nothing case, use url as-is
 		}
-		return url_to_use;
+		return url_to_use_loc;
  }
  

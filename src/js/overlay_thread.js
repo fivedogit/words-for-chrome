@@ -58,7 +58,7 @@ function gotThread()
 	$("#main_div_" + currentURLhash).html("");
 	if (tabmode === "thread")
 	{
-		var url_to_use = getSmartCutURL(thread_jo.significant_designation, thread_jo.hostname, 60);
+		var url_to_use = getSmartCutURL(thread_jo.significant_designation, 60);
 		var happy = "";
 		happy = happy + "<img src=\"http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation + "\"> "
 		if(thread_jo.combined_or_separated === "combined")
@@ -307,7 +307,7 @@ function getPageLikes(which)
 	});
 }
 
-function noteThreadView(was_empty, showed_alternatives) //booleans or strings
+function noteThreadView(was_empty) //booleans or strings
 {
 	// function is called in 3 instances after user has clicked button:
 	// 1. There were no normal results and getTrendingActivity for the hostname returned nothing
@@ -341,8 +341,7 @@ function noteThreadView(was_empty, showed_alternatives) //booleans or strings
 			email: docCookies.getItem("email"),
 			this_access_token: docCookies.getItem("this_access_token"),
 			url: currentURL,
-			was_empty: was_empty,
-			showed_alternatives: showed_alternatives
+			was_empty: was_empty
 		},
 		dataType: 'json',
 		async: true,
@@ -377,15 +376,33 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "		No comments for this page. Write one!";
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\"><img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (48 hrs)</div>";
-			main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px\" id=\"other_pages_on_this_site_div\"><img src=\"images/ajaxSnake.gif\"></div>";
+			main_div_string = main_div_string + "<table id=\"trending_for_this_site_table\" style=\"display:none\">";
+			main_div_string = main_div_string + "	<tr>";
+			main_div_string = main_div_string + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
+			main_div_string = main_div_string + "Most active pages";
+			main_div_string = main_div_string + "		</td>";
+			main_div_string = main_div_string + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
+			main_div_string = main_div_string + "Most liked pages";
+			main_div_string = main_div_string + "		</td>";
+			main_div_string = main_div_string + "	</tr>";
+			main_div_string = main_div_string + "	<tr>";
+			main_div_string = main_div_string + "		<td id=\"most_active_pages_on_this_site_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
+			main_div_string = main_div_string + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+			main_div_string = main_div_string + "		</td>";
+			main_div_string = main_div_string + "		<td id=\"most_liked_pages_on_this_site_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
+			main_div_string = main_div_string + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+			main_div_string = main_div_string + "		</td>";
+			main_div_string = main_div_string + "	</tr>";
+			main_div_string = main_div_string + "</table>";
+			//main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px\" id=\"other_pages_on_this_site_div\"><img src=\"images/ajaxSnake.gif\"></div>";
 			$("#main_div_" + currentURLhash).html(main_div_string);
-
+			
 			$.ajax({
 				type: 'GET',
 				url: endpoint,
 				data: {
-					method: "getTrendingActivity",
-					url: currentURL
+					method: "getMostActivePagesForThisHostname",
+					url: currentURL // let the backend figure out the hostname, authoritatively
 						// for right now, backend is doing 6, 12, 24, 48, but frontend should specify what it wants, right?
 				},
 				dataType: 'json',
@@ -395,39 +412,74 @@ function prepareGetAndPopulateThreadPortion()
 					{
 						if(typeof data.trendingactivity_ja == "undefined" || data.trendingactivity_ja == null)
 						{
-							noteThreadView(true, false); // (was_empty, showed_alternatives)
 							$("#other_pages_on_this_site_div").hide();
 						}
 						else
 						{
 							$("#trending_on_this_site_div").show();
-							$("#other_pages_on_this_site_div").show();
+							$("#trending_for_this_site_table").show();
 							var cutoff_in_hours = 48;
 							var choices = [48];
-							drawTrendingChart(cutoff_in_hours, data, "other_pages_on_this_site_div");
-							noteThreadView(true, true); // (was_empty, showed_alternatives)
+							drawTrendingChart(cutoff_in_hours, data, "most_active_pages_on_this_site_td");
 						}
 					}
 					else if (data.response_status === "error") 
 					{
 						displayMessage(data.message, "red", "message_div_" + currentURLhash);
-						return;
 					}
 					else
 					{
-						displayMessage("getTrendingActivity invalid response", "red", "message_div_" + currentURLhash);
-						return;
+						displayMessage("getMostActivePagesForThisHostname invalid response", "red", "message_div_" + currentURLhash);
 					}
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 					displayMessage("AJAX error getting trending info.", "red", "message_div_" + currentURLhash);
 					console.log(textStatus, errorThrown);
-					return;
 				} 
 			});
 			
+			$.ajax({
+				type: 'GET',
+				url: endpoint,
+				data: {
+					method: "getMostLikedPagesForThisHostname",
+					url: currentURL // let the backend figure out the hostname, authoritatively
+						// for right now, backend is doing 6, 12, 24, 48, but frontend should specify what it wants, right?
+				},
+				dataType: 'json',
+				async: true,
+				success: function (data, status) {
+					if (data.response_status === "success") 
+					{
+						if(typeof data.trendingactivity_ja == "undefined" || data.trendingactivity_ja == null)
+						{
+							$("#other_pages_on_this_site_div").hide();
+						}
+						else
+						{
+							$("#trending_on_this_site_div").show();
+							$("#trending_for_this_site_table").show();
+							var cutoff_in_hours = 48;
+							var choices = [48];
+							drawTrendingChart(cutoff_in_hours, data, "most_liked_pages_on_this_site_td");
+						}
+					}
+					else if (data.response_status === "error") 
+					{
+						displayMessage(data.message, "red", "message_div_" + currentURLhash);
+					}
+					else
+					{
+						displayMessage("getMostLikedPagesForThisHostname invalid response", "red", "message_div_" + currentURLhash);
+					}
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					displayMessage("AJAX error getting trending info.", "red", "message_div_" + currentURLhash);
+					console.log(textStatus, errorThrown);
+				} 
+			});
 			
-			return;
+			noteThreadView(true); // was empty
 		}
 		else if (threadstatus === 0) // the last thread has come in (with children), now populate
 		{
@@ -463,9 +515,8 @@ function prepareGetAndPopulateThreadPortion()
 			
 			$("#main_div_" + currentURLhash).append(thread_div_string);
 
-			noteThreadView(false, false); // (was_empty, showed_alternatives)
+			noteThreadView(false); // was_empty
 		}
-		
 	}
 	else
 	{

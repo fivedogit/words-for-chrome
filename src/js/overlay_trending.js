@@ -22,7 +22,33 @@ function doTrendingTab()
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var mds = "";  // main div string
-	mds = mds + "<div id=\"MAIN_trending_div\" style=\"padding:10px;\">Loading trending pages... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></div>";
+	mds = mds + "<table>";
+	mds = mds + "	<tr>";
+	mds = mds + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
+	mds = mds + "Most active pages";
+	mds = mds + "		</td>";
+	mds = mds + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
+	mds = mds + "Most liked pages";
+	mds = mds + "		</td>";
+	mds = mds + "	</tr>";
+	mds = mds + "	<tr>";
+	mds = mds + "		<td id=\"most_active_pages_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
+	mds = mds + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+	mds = mds + "		</td>";
+	mds = mds + "		<td id=\"most_liked_pages_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
+	mds = mds + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+	mds = mds + "		</td>";
+	mds = mds + "	</tr>";
+	/*mds = mds + "	<tr>";
+	mds = mds + "		<td id=\"most_active_sites_td\" style=\"padding:10px;vertical-align:top\">";
+	mds = mds + "Loading most active sites... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+	mds = mds + "		</td>";
+	mds = mds + "		<td id=\"most_liked_sites_td\" style=\"padding:10px;vertical-align:top\">";
+	mds = mds + "Loading most liked sites... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+	mds = mds + "		</td>";
+	mds = mds + "	</tr>";*/
+	mds = mds + "</table>";
+	
 	$("#main_div_" + currentURLhash).html(mds);
 	getTrendingActivity(); // initial window, choices
 }
@@ -33,14 +59,14 @@ function getTrendingActivity()
 		type: 'GET',
 		url: endpoint,
 		data: {
-			method: "getTrendingActivity"
+			method: "getMostActivePages"
 		},
 		dataType: 'json',
 		async: true,
 		success: function (data, status) {
 			if (data.response_status === "success") 
 			{
-				drawTrendingChart(data.num_hours, data, "MAIN_trending_div");
+				drawTrendingChart(data.num_hours, data, "most_active_pages_td");
 				$("#trending_activity_hours_span").html("(" + data.num_hours + " hrs)");
 			}
 			else if (data.response_status === "error") 
@@ -55,7 +81,39 @@ function getTrendingActivity()
 			}
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown) {
-			displayMessage("AJAX error getting trending info.", "red", "message_div_" + currentURLhash);
+			displayMessage("AJAX error getting most active pages info.", "red", "message_div_" + currentURLhash);
+			console.log(textStatus, errorThrown);
+			return;
+		} 
+	});
+	
+	$.ajax({
+		type: 'GET',
+		url: endpoint,
+		data: {
+			method: "getMostLikedPages"
+		},
+		dataType: 'json',
+		async: true,
+		success: function (data, status) {
+			if (data.response_status === "success") 
+			{
+				drawTrendingChart(data.num_hours, data, "most_liked_pages_td");
+				$("#trending_activity_hours_span").html("(" + data.num_hours + " hrs)");
+			}
+			else if (data.response_status === "error") 
+			{
+				displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				return;
+			}
+			else
+			{
+				//alert("nonajax error");
+				return;
+			}
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			displayMessage("AJAX error getting most liked pages info.", "red", "message_div_" + currentURLhash);
 			console.log(textStatus, errorThrown);
 			return;
 		} 
@@ -73,7 +131,7 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 		mds = mds + "<table>";
 		mds = mds + "	<tr>";
 		mds = mds + "		<td style=\"text-align:center;padding:8px;font-size:12px\">";
-		mds = mds + " No activity.";
+		mds = mds + " No data.";
 		mds = mds + "		</td>";
 		mds = mds + "	</tr>";
 	}	
@@ -83,7 +141,7 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 		mds = mds + "<table>";
 		mds = mds + "	<tr>";
 		mds = mds + "		<td style=\"text-align:center;padding:8px;font-size:12px\">";
-		mds = mds + " 			No activity in the past " + cutoff_in_hours + " hours. ";
+		mds = mds + " 			No data in the past " + cutoff_in_hours + " hours. ";
 		mds = mds + "		</td>";
 		mds = mds + "	</tr>";
 	}	
@@ -111,11 +169,9 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
-			mds = mds + "		<td style=\"text-align:left;padding-bottom:2px\">";
-			var url_to_use = data.trendingactivity_ja[x].pseudo_url;
-			if(url_to_use.length > 50)
-				url_to_use = url_to_use.substring(0,25) + "..." + url_to_use.substring(url_to_use.length-22);
-			mds = mds + "<a class=\"newtab\" href=\"" + data.trendingactivity_ja[x].pseudo_url + "\">" + url_to_use + "</a>";
+			mds = mds + "		<td style=\"text-align:left;padding-bottom:2px;font-family:'Arial'\">";
+			var url_to_use_loc = getSmartCutURL(data.trendingactivity_ja[x].pseudo_url, 36);
+			mds = mds + "<a class=\"newtab\" href=\"" + data.trendingactivity_ja[x].pseudo_url + "\">" + url_to_use_loc + "</a>";
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
