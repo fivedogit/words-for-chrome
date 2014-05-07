@@ -239,20 +239,34 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 		 if(c == "newtab")
 		 {
 			 var h = $(this).attr('href');
+			 var haswwwdot = false;
+			 if(h.indexOf("://www.") != -1)
+			 {
+				 haswwwdot = true;
+			 }
 			 var open_tab_id = null;
 			 chrome.tabs.query({url: h}, function(tabs) { 
 				 for (var i = 0; i < tabs.length; i++) {
 					 open_tab_id = tabs[i].id;
 				 }
 				 if(open_tab_id === null)
-					 chrome.tabs.create({url:h});
+				 {
+					 // try without www.
+					 h = h.replace("://www.", "://");
+					 chrome.tabs.query({url: h}, function(tabs) { 
+						 for (var i = 0; i < tabs.length; i++) {
+							 open_tab_id = tabs[i].id;
+						 }
+						 if(open_tab_id === null)
+							 chrome.tabs.create({url:h});
+						 else
+							 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
+					 });
+				 }
 				 else
 					 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
 			 });
-			
 		 }
-		
-		
 	});
 	return;
 }

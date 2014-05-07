@@ -549,12 +549,12 @@ function drawTTUButton(top, bottom) {
  var top_bg_r = "0x" + top_color.substring(0,2);
  var top_bg_g = "0x" + top_color.substring(2,4);
  var top_bg_b = "0x" + top_color.substring(4,6);
- /*if (devel === true) 
+ if (devel === true) 
  {
  	top_bg_r = 0x55;
      top_bg_g = 0x55;
      top_bg_b = 0x55;
- }*/
+ }
            
  var bottom_bg_r = "0x00"; 
  var bottom_bg_g = "0x00";

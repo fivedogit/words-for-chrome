@@ -818,27 +818,39 @@ function writeComment(feeditem_jo, dom_id)
 	
 	$("#" + dom_id).html(tempstr);
 	
-	$("a").click(function(event) {
-		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
-		{
-			event.processed = true;
-			var c = $(this).attr('class');
-			if(c == "newtab")
-			{
-				 var h = $(this).attr('href');
-				 var open_tab_id = null;
-				 chrome.tabs.query({url: h}, function(tabs) { 
-					 for (var i = 0; i < tabs.length; i++) {
-						 open_tab_id = tabs[i].id;
-					 }
-					 if(open_tab_id === null)
-						 chrome.tabs.create({url:h});
-					 else
-						 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
-				 });
-			}
-		}
-		return false;
+	$("a").click(function() {
+		 var c = $(this).attr('class');
+		 if(c == "newtab")
+		 {
+			 var h = $(this).attr('href');
+			 var haswwwdot = false;
+			 if(h.indexOf("://www.") != -1)
+			 {
+				 haswwwdot = true;
+			 }
+			 var open_tab_id = null;
+			 chrome.tabs.query({url: h}, function(tabs) { 
+				 for (var i = 0; i < tabs.length; i++) {
+					 open_tab_id = tabs[i].id;
+				 }
+				 if(open_tab_id === null)
+				 {
+					 // try without www.
+					 h = h.replace("://www.", "://");
+					 chrome.tabs.query({url: h}, function(tabs) { 
+						 for (var i = 0; i < tabs.length; i++) {
+							 open_tab_id = tabs[i].id;
+						 }
+						 if(open_tab_id === null)
+							 chrome.tabs.create({url:h});
+						 else
+							 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
+					 });
+				 }
+				 else
+					 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
+			 });
+		 }
 	});
 	
 	if(bg.user_jo !== null)
