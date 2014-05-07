@@ -22,6 +22,12 @@ var msfe_according_to_backend = (new Date).getTime(); // set to local machine ti
 		currentURL = tab.url;
 		currentTitle = tab.title;
 		currentId = tab.id;
+		
+		var canvas = document.getElementById("button_canvas");
+		var context = canvas.getContext("2d");
+		context.fillStyle = "#ffffff";
+		context.font = "8px Silkscreen";
+		context.fillText("PRIMER",0,0);
 		setTimeout(function() {doButtonGen();},2000);
 	});
 })();
@@ -538,17 +544,17 @@ function drawTTUButton(top, bottom) {
  // Specify a 2d drawing context.
  var context = canvas.getContext("2d");
  
- var top_color = "29abe2";
+ var top_color = "4c7dd0";//<-- chrome blue   "29abe2"; <-- original teal-ish color
  
  var top_bg_r = "0x" + top_color.substring(0,2);
  var top_bg_g = "0x" + top_color.substring(2,4);
  var top_bg_b = "0x" + top_color.substring(4,6);
- if (devel === true) 
+ /*if (devel === true) 
  {
  	top_bg_r = 0x55;
      top_bg_g = 0x55;
      top_bg_b = 0x55;
- }
+ }*/
            
  var bottom_bg_r = "0x00"; 
  var bottom_bg_g = "0x00";

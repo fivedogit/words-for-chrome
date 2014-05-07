@@ -5,12 +5,12 @@
     "manifest_version": 2,
     "description": "Better comments everywhere",
     "icons": {
-        "16": "images/words_logo3_16x16.png",
+        "16": "images/words_logo4_16.png",
         "48": "images/words_logo4_48.png",
         "128": "images/words_logo4_128.png"
     },
     "browser_action": {
-        "default_icon": "images/words_logo3_19x19.png",
+        "default_icon": "images/words_logo4_19_bubble.png",
         "default_title": "View comments for this page",
         "default_popup": "overlay.html"
     },
