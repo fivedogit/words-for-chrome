@@ -13,14 +13,14 @@
 function doAboutTab(message) 
 {
 	tabmode = "about";
-	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
-	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
-	$("#notification_tab_link").html("<img src=\"images/flag_gray.png\"></img>");
-	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
-	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
+	$("#thread_tab_img").attr("src", "images/chat_gray.png");
+	$("#trending_tab_img").attr("src", "images/trending_gray.png");
+	$("#notifications_tab_img").attr("src", "images/flag_gray.png");
+	$("#past_tab_img").attr("src", "images/clock_gray.png");
+	$("#profile_tab_img").attr("src", "images/user_gray.png");
 	var details = chrome.app.getDetails();
     var version = details.version;
-	$("#header_div_top").html("About Words (version " + version + ")");
+	$("#header_div_top").text("About Words (version " + version + ")");
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var aboutmessage = "";
@@ -53,7 +53,7 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "<p>http://goo.gl/VNs0DP</p>";
 	aboutmessage = aboutmessage + "<p>Enjoy! Follow <a href=\"#\" id=\"at_words4chrome_link\">@words4chrome</a> or me, <a href=\"#\" id=\"at_fivedogit_link\">@fivedogit</a>. Feedback welcome!</p>";
 	aboutmessage = aboutmessage + "</div>";
-	$("#main_div_" + currentURLhash).html(aboutmessage);
+	$("#main_div_" + currentURLhash).html(aboutmessage); //OK
 	
 	$("#at_fivedogit_link").click( function() {
 		chrome.tabs.create({url:"http://www.twitter.com/fivedogit"});

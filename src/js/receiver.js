@@ -57,7 +57,7 @@ function displayMessage(inc_message, inc_color, dom_id, s)
 	if (typeof inc_color === "undefined" || inc_color === null)
 		inc_color = "red";
 	$("#" + dom_id).css("color", inc_color);
-	$("#" + dom_id).html(inc_message);
+	$("#" + dom_id).text(inc_message);
 	$("#" + dom_id).show();
 	//setTimeout(function() { $("#" + dom_id).hide();}, ms);
 }
@@ -99,7 +99,7 @@ if(login_type !== null && login_type.length > 1)
 if(code !== null && code !== "")
 {
 	// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
-	displayMessage("Verifying your identity with " + capitalized_login_type + "... <img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">", "black");
+	displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
 	$.ajax({
 		type: 'get',
 		url: bg.endpoint,
@@ -178,7 +178,7 @@ if(code !== null && code !== "")
 else
 {
 	var capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
-	displayMessage("Verifying your identity with " + capitalized_login_type + "... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+	displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
 	if(login_type === "google")
 	{
 		var access_token_expired_or_doesnt_exist = true;
@@ -210,7 +210,7 @@ else
 		}
 		else // use the apparently valid access token to log the user in.
 		{
-			displayMessage("Existing Google credentials appear valid. Logging you into Words... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+			displayMessage("Existing Google credentials appear valid. Logging you into Words... ", "black");
 			login("google", docCookies.getItem("google_access_token"), docCookies.getItem("google_access_token_expires"));
 		}
 	}
@@ -281,7 +281,7 @@ function login(login_type, social_access_token, social_access_token_expires)
 					docCookies.removeItem("this_access_token");
 				}	
 				displayMessage(data.message, "red");
-				$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
+				$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
 				$("#registration_form_td").show();
 				$("#close_this_tab_link").click( function () {
 					chrome.tabs.getSelected(null, function(tab) { 
@@ -347,9 +347,8 @@ function guid() {
 
 function showRegistration(picture, login_type, email)
 {
-	var mess = "";
-	mess = "<b>Welcome! Let's create a Words account for you.</b>";
-	$("#message_td").html(mess);
+	$("#message_td").css("font-weight", "bold");
+	$("#message_td").text("Welcome! Let's create a Words account for you.");
 	if(!picture)
 	{
 		$("#use_google_tr").hide();
@@ -370,7 +369,7 @@ function showRegistration(picture, login_type, email)
 		
 		$("#avatar_img").attr("src", picture);
 	}
-	$("#registration_email_td").html(email);
+	$("#registration_email_td").text(email);
 	$("#registration_form_td").show();
 	
 	$("#use_google_radio").click(function () {
@@ -398,8 +397,8 @@ function showRegistration(picture, login_type, email)
 	$("#use_unicorn_radio").click(function () {
 		var g = guid();
 		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
-		$("#unicorn_wait_span").html("Wait...");
-		setTimeout(function() {$("#unicorn_wait_span").html("");}, 2000);
+		$("#unicorn_wait_span").text("Wait...");
+		setTimeout(function() {$("#unicorn_wait_span").text("");}, 2000);
 	});
 	$("#use_silhouette_radio").click(function () {
 		var g = guid();
@@ -413,10 +412,9 @@ function showRegistration(picture, login_type, email)
 		docCookies.removeItem("google_access_token");
 		docCookies.removeItem("this_access_token");
 		docCookies.removeItem("facebook_access_token");
-		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
+		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
 		$("#registration_form_td").show();
-		var finmess = "<div style=\"font-weight:bold;margin-right:auto;margin-left:auto\">The existing user information has been removed. Please start the login process again.</div>";
-		$("#message_td").html(finmess);
+		$("#message_td").text("The existing user information has been removed. Please start the login process again.");
 		
 		$("#close_this_tab_link").click( function () {
 			chrome.tabs.getSelected(null, function(tab) { 
@@ -438,18 +436,18 @@ function showRegistration(picture, login_type, email)
 	$("#registration_screenname_button").click(
 			function () 
 			{
-					$("#screenname_availability_span").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">");
+					$("#screenname_availability_span").text("Checking...");
 					if ($("#registration_screenname_input").val().length <= 0) 
 					{
 						$("#screenname_availability_span").css("color", "red");
-						$("#screenname_availability_span").html("Blank");
-						setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
+						$("#screenname_availability_span").text("Blank");
+						setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
 					} 
 					else if ($("#registration_screenname_input").val().length < 6) 
 					{
 						$("#screenname_availability_span").css("color", "red");
-						$("#screenname_availability_span").html("Too short");
-						setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
+						$("#screenname_availability_span").text("Too short");
+						setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
 					} 
 					else 
 					{
@@ -469,27 +467,27 @@ function showRegistration(picture, login_type, email)
 								if (response_object.response_status === "error") 
 								{
 									$("#screenname_availability_span").css("color", "red");
-									$("#screenname_availability_span").html(data.message);
-									setTimeout(function() { $("#screenname_availability_span").html("");}, 3000);
+									$("#screenname_availability_span").text(data.message);
+									setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
 								} 
 								else if (response_object.response_status === "success") 
 								{
 									if (response_object.screenname_available === "true") 
 									{
 										$("#screenname_availability_span").css("color", "green");
-										$("#screenname_availability_span").html("Available");
+										$("#screenname_availability_span").text("Available");
 									}
 									else if (response_object.screenname_available === "false") 
 									{
 										$("#screenname_availability_span").css("color", "red");
-										$("#screenname_availability_span").html("Unavailable");
+										$("#screenname_availability_span").text("Unavailable");
 									}
 									else
 									{
 										$("#screenname_availability_span").css("color", "red");
-										$("#screenname_availability_span").html("Error. Value !t/f.");
+										$("#screenname_availability_span").text("Error. Value !t/f.");
 									}
-									setTimeout(function() { $("#screenname_availability_span").html();}, 3000);
+									setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
 								}
 								else
 								{
@@ -541,7 +539,7 @@ function showRegistration(picture, login_type, email)
 						return false;
 					}
 					
-					displayMessage("Creating Words account... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+					displayMessage("Creating Words account... ", "black");
 					$("#registration_form_td").hide();
 
 					var local_a_t;
@@ -581,7 +579,7 @@ function showRegistration(picture, login_type, email)
 					    },
 					    error: function (XMLHttpRequest, textStatus, errorThrown) {
 					        console.log(textStatus, errorThrown);
-					        displayMessage("Unable to create Words account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please email w at ords dot co.", "red");
+					        displayMessage("Unable to create Words account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please contact us.", "red");
 					    } 
 					});
 				});
@@ -596,7 +594,7 @@ function showRegistration(picture, login_type, email)
 function doFinished()
 {
 	// we've gotten the login return, now we need to get the user before we can safely say, 
-	displayMessage("Identify verified. Loading Words user info... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+	displayMessage("Identify verified. Loading Words user info... ", "black");
 	$.ajax({ 
 		type: 'GET', 
 		url: bg.endpoint, 
@@ -622,9 +620,8 @@ function doFinished()
         	else if (data.response_status === "success") 
         	{	
         		if(data.user_jo) { 	bg.user_jo = data.user_jo; }
-        		var finmess = "<div style=\"font-weight:bold;margin-right:auto;margin-left:auto\">You are now logged in.</div>";
-        		$("#message_td").html(finmess);
-        		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");
+        		$("#message_td").text("You are now logged in.");
+        		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
         		$("#registration_form_td").show();
         		
         		$("#close_this_tab_link").click( function () {

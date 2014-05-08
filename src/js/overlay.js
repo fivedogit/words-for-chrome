@@ -85,58 +85,58 @@ function displayLogstatAsLoggedOut() {
 	welcomearea = welcomearea + "		<td style=\"width:24px\"><a href=\"#\" id=\"facebook_login_link\"><img id=\"facebook_login_img\" src=\"images/facebook_button_24x24.png\"></a></td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
-	$("#logstat_td").html(welcomearea);
+	$("#logstat_td").html(welcomearea); //OK
 
 	var temphtml = "";
 	$("#google_login_img").mouseover( function() {
-		temphtml = $("#header_div_top").html();
+		temphtml = $("#header_div_top").html();//OK (getter)
 		$("#comment_submission_form_div_" + currentURLhash).hide();
-		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>Words cannot post on your behalf nor access any non-basic information.<br>Your Words identity is separate and anonymous.</span>");
+		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>Words cannot post on your behalf nor access any non-basic information.<br>Your Words identity is separate and anonymous.</span>");//OK
 		$("#google_login_img").attr("src","images/google_button_24x24_mo.png");
-		$("#tab_tooltip_td").html("Login with Google");
+		$("#tab_tooltip_td").text("Login with Google");
 		return false;
 	});
 	$("#google_login_img").mouseout( function() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
-		$("#header_div_top").html(temphtml);
+		$("#header_div_top").html(temphtml);//OK
 		$("#comment_submission_form_div_" + currentURLhash).show();
 		$("#google_login_img").attr("src","images/google_button_24x24.png");
 		if(tabmode === "thread")
-				$("#tab_tooltip_td").html("Comments");
+				$("#tab_tooltip_td").text("Comments");
 			else if(tabmode === "trending")
-				$("#tab_tooltip_td").html("Trending");
+				$("#tab_tooltip_td").text("Trending");
 			else if(tabmode === "notifications")
-				$("#tab_tooltip_td").html("Notifications");
+				$("#tab_tooltip_td").text("Notifications");
 			else if(tabmode === "past")
-				$("#tab_tooltip_td").html("Your past comments");
+				$("#tab_tooltip_td").text("Your past comments");
 			else if(tabmode === "profile")
-				$("#tab_tooltip_td").html("Profile/Settings");
+				$("#tab_tooltip_td").text("Profile/Settings");
 		return false;
 	});
 	
 	$("#facebook_login_img").mouseover( function() {
-		temphtml = $("#header_div_top").html();
+		temphtml = $("#header_div_top").html();//OK (getter)
 		$("#comment_submission_form_div_" + currentURLhash).hide();
-		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>Words cannot post to Facebook nor access any non-basic information.<br>Your Words identity is separate and anonymous.</span>");
+		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>Words cannot post to Facebook nor access any non-basic information.<br>Your Words identity is separate and anonymous.</span>");//OK
 		$("#facebook_login_img").attr("src","images/facebook_button_24x24_mo.png");
-		$("#tab_tooltip_td").html("Login with FB");
+		$("#tab_tooltip_td").text("Login with FB");
 		return false;
 	});
 	$("#facebook_login_img").mouseout( function() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
-		$("#header_div_top").html(temphtml);
+		$("#header_div_top").html(temphtml);//OK
 		$("#comment_submission_form_div_" + currentURLhash).show();
 		$("#facebook_login_img").attr("src","images/facebook_button_24x24.png");
 		if(tabmode === "thread")
-				$("#tab_tooltip_td").html("Comments");
+				$("#tab_tooltip_td").text("Comments");
 			else if(tabmode === "trending")
-				$("#tab_tooltip_td").html("Trending");
+				$("#tab_tooltip_td").text("Trending");
 			else if(tabmode === "notifications")
-				$("#tab_tooltip_td").html("Notifications");
+				$("#tab_tooltip_td").text("Notifications");
 			else if(tabmode === "past")
-				$("#tab_tooltip_td").html("Your past comments");
+				$("#tab_tooltip_td").text("Your past comments");
 			else if(tabmode === "profile")
-				$("#tab_tooltip_td").html("Profile/Settings");
+				$("#tab_tooltip_td").text("Profile/Settings");
 			return false;
 	});
 	
@@ -184,7 +184,7 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td id=\"logstat_logo_td\">";
 	welcomearea = welcomearea + "			<span id=\"logged_in_profile_image_span\">";
-	welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" src=\"" + bg.user_jo.picture + "\">";
+	welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" id=\"logged_in_profile_img\" src=\"" + bg.user_jo.picture + "\">";
 	welcomearea = welcomearea + "			</span>";
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\">";
@@ -196,13 +196,13 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
-	$("#logstat_td").html(welcomearea);
+	$("#logstat_td").html(welcomearea);//FIXME
 	
 	if(typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
 	{
 		$("#alt_dropdown_img").click(
 				function () {
-					var prev = $("#header_div_top").html();
+					var prev = $("#header_div_top").html();//OK (getter)
 					var alts_counter = 0;
 					var str = "";
 					while(alts_counter < bg.user_jo.alts.length)
@@ -211,13 +211,13 @@ function displayLogstatAsLoggedIn() {
 						alts_counter++;
 					}	
 					str = str.substring(0, str.length - 2);
-					$("#header_div_top").html(str);
+					$("#header_div_top").html(str);//FIXME
 					alts_counter = 0;
 					while(alts_counter < bg.user_jo.alts.length)
 					{
 						$("#user_" + bg.user_jo.alts[alts_counter].screenname + "_link").click({altuser: bg.user_jo.alts[alts_counter], prev: prev},
 								function (event) {
-									$("#header_div_top").html(event.data.prev);
+									$("#header_div_top").html(event.data.prev);//OK
 									//alert(event.data.altuser.email + " " + event.data.altuser.this_access_token);
 									docCookies.setItem("email", event.data.altuser.email, 31536e3);
 									docCookies.setItem("this_access_token", event.data.altuser.this_access_token, 31536e3);
@@ -261,15 +261,15 @@ function has_scrollbar(elem_id)
 function updateNotificationTabLinkImage()
 {
 	if (tabmode === "notifications")
-		$("#notifications_tab_link").html("<img src=\"images/flag_blue.png\"></img>");
+		$("#notifications_tab_img").attr("src","images/flag_blue.png"); 
 	else if ((typeof bg.user_jo==="undefined") || bg.user_jo === null || bg.user_jo.notification_count === 0)
-		$("#notifications_tab_link").html("<img src=\"images/flag_gray.png\"></img>");
+		$("#notifications_tab_img").attr("src","images/flag_gray.png"); 
 	else if (bg.user_jo.notification_count <= 10)
-		$("#notifications_tab_link").html("<img src=\"images/flag" + bg.user_jo.notification_count + ".png\"></img>");
+		$("#notifications_tab_img").attr("src","images/flag" + bg.user_jo.notification_count + ".png");
 	else if (bg.user_jo.notification_count > 10)
-		$("#notifications_tab_link").html("<img src=\"images/flag11plus.png\"></img>");
+		$("#notifications_tab_img").attr("src","images/flag11plus.png"); 
 	else
-		$("#notifications_tab_link").html("<img src=\"images/flag_gray.png\"></img>");
+		$("#notifications_tab_img").attr("src","images/flag_gray.png"); 
 }
 
 function displayMessage(inc_message, inc_color, dom_id, s)
@@ -284,7 +284,7 @@ function displayMessage(inc_message, inc_color, dom_id, s)
 	if (typeof inc_color === "undefined" || inc_color === null)
 		inc_color = "red";
 	$("#" + dom_id).css("color", inc_color);
-	$("#" + dom_id).html(inc_message);
+	$("#" + dom_id).text(inc_message);
 	$("#" + dom_id).show();
 	setTimeout(function() { $("#" + dom_id).hide();}, ms);
 }
@@ -320,11 +320,11 @@ $(window).scroll(function() {
  			bs = bs + "<td id=\"tabs_td\">";
  				bs = bs + "<table id=\"tabs_table\">";
  					bs = bs + "<tr>";
- 						bs = bs + "<td><a href=\"#\" id=\"thread_tab_link\"><img src=\"images/chat_blue.png\"></img></a></td>";
- 					    bs = bs + "<td><a href=\"#\" id=\"trending_tab_link\"><img src=\"images/trending_gray.png\"></img></a></td>"; 
- 						bs = bs + "<td><a href=\"#\" id=\"notifications_tab_link\"><img src=\"images/flag_gray.png\"></img></a></td>";
- 						bs = bs + "<td><a href=\"#\" id=\"past_tab_link\"><img src=\"images/clock_gray.png\"></img></a></td>";
- 						bs = bs + "<td><a href=\"#\" id=\"profile_tab_link\"><img src=\"images/user_gray.png\"></img></a></td>";
+ 						bs = bs + "<td><a href=\"#\" id=\"thread_tab_link\"><img id=\"thread_tab_img\" src=\"images/chat_blue.png\"></img></a></td>";
+ 					    bs = bs + "<td><a href=\"#\" id=\"trending_tab_link\"><img id=\"trending_tab_img\" src=\"images/trending_gray.png\"></img></a></td>"; 
+ 						bs = bs + "<td><a href=\"#\" id=\"notifications_tab_link\"><img id=\"notifications_tab_img\" src=\"images/flag_gray.png\"></img></a></td>";
+ 						bs = bs + "<td><a href=\"#\" id=\"past_tab_link\"><img id=\"past_tab_img\" src=\"images/clock_gray.png\"></img></a></td>";
+ 						bs = bs + "<td><a href=\"#\" id=\"profile_tab_link\"><img id=\"profile_tab_img\" src=\"images/user_gray.png\"></img></a></td>";
  					bs = bs + "</tr>";
  					bs = bs + "<tr>";
  						bs = bs + "<td colspan=5 id=\"tab_tooltip_td\">Comments</td>";
@@ -372,7 +372,7 @@ $(window).scroll(function() {
  	 		bs = bs + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
  	}
  	bs = bs + "</div>";
- 	$("#words_div").html(bs);
+ 	$("#words_div").html(bs);//OK
  	
  	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && //thread_jo.children > 5 && 
  			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/10 threadviews
@@ -430,22 +430,22 @@ $(window).scroll(function() {
 
  	$("#thread_tab_link").mouseover(
  			function () {
- 				$("#tab_tooltip_td").html("Comments");
+ 				$("#tab_tooltip_td").text("Comments");
  				return false;
  			});
 
  	$("#thread_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("#tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").text("Comments");
  				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").text("Trending");
  				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").text("Notifications");
  				else if(tabmode === "past")
- 					$("#tab_tooltip_td").html("Your past comments");
+ 					$("#tab_tooltip_td").text("Your past comments");
  				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").text("Profile/Settings");
  				return false;
  			});
 
@@ -457,22 +457,22 @@ $(window).scroll(function() {
 
  	$("#trending_tab_link").mouseover(
  			function () {
- 				$("#tab_tooltip_td").html("Trending");
+ 				$("#tab_tooltip_td").text("Trending");
  				return false;
  			});
 
  	$("#trending_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("#tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").text("Comments");
  				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").text("Trending");
  				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").text("Notifications");
  				else if(tabmode === "past")
- 					$("#tab_tooltip_td").html("Your past comments");
+ 					$("#tab_tooltip_td").text("Your past comments");
  				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").text("Profile/Settings");
  				return false;
  			});
 
@@ -484,22 +484,22 @@ $(window).scroll(function() {
 
  	$("#notifications_tab_link").mouseover(
  			function () {
- 				$("#tab_tooltip_td").html("Notifications");
+ 				$("#tab_tooltip_td").text("Notifications");
  				return false;
  			});
 
  	$("#notifications_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("#tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").text("Comments");
  				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").text("Trending");
  				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").text("Notifications");
  				else if(tabmode === "past")
- 					$("#tab_tooltip_td").html("Your past comments");
+ 					$("#tab_tooltip_td").text("Your past comments");
  				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").text("Profile/Settings");
  				return false;
  			});
 
@@ -511,22 +511,22 @@ $(window).scroll(function() {
 
 	$("#past_tab_link").mouseover(
  			function () {
- 				$("#tab_tooltip_td").html("Your past comments");
+ 				$("#tab_tooltip_td").text("Your past comments");
  				return false;
  			});
 
  	$("#past_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("#tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").text("Comments");
  				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").text("Trending");
  				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").text("Notifications");
  				else if(tabmode === "past")
- 					$("#tab_tooltip_td").html("Your past comments");
+ 					$("#tab_tooltip_td").text("Your past comments");
  				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").text("Profile/Settings");
  				return false;
  			});
 
@@ -541,22 +541,22 @@ $(window).scroll(function() {
  	
  	$("#profile_tab_link").mouseover(
  			function () {
- 				$("#tab_tooltip_td").html("Profile/Settings");
+ 				$("#tab_tooltip_td").text("Profile/Settings");
  				return false;
  			});
 
  	$("#profile_tab_link").mouseout(
  			function () {
  				if(tabmode === "thread")
- 					$("#tab_tooltip_td").html("Comments");
+ 					$("#tab_tooltip_td").text("Comments");
  				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").html("Trending");
+ 					$("#tab_tooltip_td").text("Trending");
  				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").html("Notifications");
+ 					$("#tab_tooltip_td").text("Notifications");
  				else if(tabmode === "past")
- 					$("#tab_tooltip_td").html("Your past comments");
+ 					$("#tab_tooltip_td").text("Your past comments");
  				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").html("Profile/Settings");
+ 					$("#tab_tooltip_td").text("Profile/Settings");
  				return false;
  			});
 
@@ -638,7 +638,7 @@ $(window).scroll(function() {
 				 }
 				 if($("#comment_textarea_" + event.data.id).val().length > 500)
 					 $("#comment_textarea_" + event.data.id).val($("#comment_textarea_" + event.data.id).val().substring(0,charlimit));
-				 $("#charsleft_" + event.data.id).html(charlimit - $("#comment_textarea_" + event.data.id).val().length);
+				 $("#charsleft_" + event.data.id).text(charlimit - $("#comment_textarea_" + event.data.id).val().length);
 				 docCookies.setItem("saved_text", $("#comment_textarea_" + event.data.id).val(), 31536e3);
 				 docCookies.setItem("saved_text_dom_id", "comment_textarea_" + event.data.id, 31536e3);
 			 }

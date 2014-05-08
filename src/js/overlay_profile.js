@@ -13,15 +13,15 @@
 function viewProfile(screenname)
 {
 	tabmode = "profile";
-	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
-	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
-	updateNotificationTabLinkImage();
-	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
-	$("#profile_tab_link").html("<img src=\"images/user_blue.png\"></img>");
-
+	//updateNotificationTabLinkImage();
+	$("#thread_tab_img").attr("src", "images/chat_gray.png");
+	$("#trending_tab_img").attr("src", "images/trending_gray.png");
+	$("#notifications_tab_img").attr("src", "images/flag_gray.png");
+	$("#past_tab_img").attr("src", "images/clock_gray.png");
+	$("#profile_tab_img").attr("src", "images/user_blue.png");
 	
 	$("#utility_div").show();
-	$("#header_div_top").html("Profile");
+	$("#header_div_top").text("Profile");
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	if (bg.user_jo != null)
@@ -30,7 +30,8 @@ function viewProfile(screenname)
 	}
 	else
 	{
-		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");
+		$("#main_div_" + currentURLhash).css("padding", "20px");
+		$("#main_div_" + currentURLhash).text("Log in to see user profiles.");
 	}
 }
 
@@ -49,16 +50,19 @@ function getProfile(screenname)
 	var main_div_string = "";
 	var target_user_jo;
 	if (typeof bg.user_jo ==="undefined" || bg.user_jo === null) // not logged in nor was a target specified, 
-	{																			
-		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");
+	{									
+		$("#main_div_" + currentURLhash).css("padding", "20px");
+		$("#main_div_" + currentURLhash).text("Log in to see user profiles.");
 	}
 	else if(typeof screenname === "undefined" || screenname === null)
 	{
-		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">No target screenname provided. Check the link and try again.</div>");
+		$("#main_div_" + currentURLhash).css("padding", "20px");
+		$("#main_div_" + currentURLhash).text("No target screenname provided. Check the link and try again.");
 	}	
 	else
 	{
-		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading profile... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></div>");
+		$("#main_div_" + currentURLhash).css("padding", "20px");
+		$("#main_div_" + currentURLhash).text("Loading profile... please wait.");//OK
 		var email = docCookies.getItem("email");
 		var this_access_token = docCookies.getItem("this_access_token");
 		$.ajax({
@@ -76,7 +80,8 @@ function getProfile(screenname)
             if (data.response_status === "error")
             {
             	displayMessage(data.message, "red", "message_div_" + currentURLhash);
-            	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Unable to retrieve profile.</div>");
+            	$("#main_div_" + currentURLhash).css("padding", "20px");
+            	$("#main_div_" + currentURLhash).text("Unable to retrieve profile.");
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
@@ -110,7 +115,7 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "			<tr>";
             	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right\" id=\"large_avatar_td\">";
             	
-            	main_div_string = main_div_string + "					<img class=\"rounded\" src=\"" + target_user_jo.picture + "\" style=\"height:128px;\">";
+            	main_div_string = main_div_string + "					<img class=\"rounded\" id=\"large_avatar_img\" src=\"" + target_user_jo.picture + "\" style=\"height:128px;\">";
             	
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
@@ -351,7 +356,8 @@ function getProfile(screenname)
             	}
             	main_div_string = main_div_string + "</table>";
             	main_div_string = main_div_string + "</div>";
-            	$("#main_div_" + currentURLhash).html(main_div_string);
+            	$("#main_div_" + currentURLhash).css("padding", "0px");
+            	$("#main_div_" + currentURLhash).html(main_div_string); //FIXME
             	
             	
             	$("#screenname_available_button").click(
@@ -360,12 +366,14 @@ function getProfile(screenname)
             		         	$("#screenname_availability_span").show();
             					if ($("#screenname_change_input").val().length <= 0) 
             					{
-            						$("#screenname_availability_span").html("<font color=red>Blank</font>");
+            						$("#screenname_availability_span").css("color","red");
+            						$("#screenname_availability_span").text("Blank");
             						return;
             					} 
             					else if ($("#screenname_change_input").val().length < 6) 
             					{
-            						$("#screenname_availability_span").html("<font color=red>Too short</font>");
+            						$("#screenname_availability_span").css("color","red");
+            						$("#screenname_availability_span").text("Too short");
             						return;
             					} 
             					else 
@@ -385,32 +393,36 @@ function getProfile(screenname)
             								response_object = data;
             								if (response_object.response_status === "error") 
             								{
-            									$("#screenname_availability_span").html("<font color=red>Error</font>");
+            									$("#screenname_availability_span").css("color","red");
+            									$("#screenname_availability_span").text("Error");
             									setTimeout( function () { 
-        											$("#screenname_availability_span").html("");
+        											$("#screenname_availability_span").text("");
         										}, 3000);
             								} 
             								else if (response_object.response_status === "success") 
             								{
             									if (response_object.screenname_available === "true") 
             									{
-            										$("#screenname_availability_span").html("<font color=green>Available</font>");
+            										$("#screenname_availability_span").css("color","green");
+            										$("#screenname_availability_span").text("Available");
             										setTimeout( function () { 
-            											$("#screenname_availability_span").html("");
+            											$("#screenname_availability_span").text("");
             										}, 3000);
             									}
             									else if (response_object.screenname_available === "false") 
             									{
-            										$("#screenname_availability_span").html("<font color=red>Unavailable</font>");
+            										$("#screenname_availability_span").css("color","red");
+            										$("#screenname_availability_span").text("Unavailable");
             										setTimeout( function () { 
-            											$("#screenname_availability_span").html("");
+            											$("#screenname_availability_span").text("");
             										}, 3000);
             									}
             									else
             									{
-            										$("#screenname_availability_span").html("<font color=red>Error. Value !t/f.</font>");
+            										$("#screenname_availability_span").css("color","red");
+            										$("#screenname_availability_span").text("Error. Value !t/f.");
             										setTimeout( function () { 
-            											$("#screenname_availability_span").html("");
+            											$("#screenname_availability_span").text("");
             										}, 3000);
             									}
             								}
@@ -445,7 +457,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#screenname_result_td").html("error");
+				        		$("#screenname_result_td").text("error");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -458,9 +470,9 @@ function getProfile(screenname)
 				        	}
 				        	else
 				        	{
-				        		$("#screenname_result_td").html("updated");
+				        		$("#screenname_result_td").text("updated");
 				        		setTimeout( function () { 
-									$("#screenname_result_td").html("");
+									$("#screenname_result_td").text("");
 								}, 3000);
 				        		bg.user_jo.screenname = $("#screenname_change_input").val();
 				        		displayLogstatAsLoggedIn(); //updateLogstat();
@@ -470,7 +482,7 @@ function getProfile(screenname)
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#screenname_result_td").html("error");
+				        	$("#screenname_result_td").text("error");
 				            console.log(textStatus, errorThrown);
 				        }
 					});
@@ -532,36 +544,36 @@ function getProfile(screenname)
         		{
         			$("#use_google_tr").hide();
         			$("#use_facebook_tr").hide();
-        			$("#social_wording_span").html("To use a FB or Google picture, log out and back in, then return here.");
+        			$("#social_wording_span").text("To use a FB or Google picture, log out and back in, then return here.");
         		}
         		else if(!facebook_access_token_expired_or_doesnt_exist && google_access_token_expired_or_doesnt_exist)
         		{
         			$("#use_google_tr").hide();
-        			$("#social_wording_span").html("To use a Google picture, log out (fully) and back in with Google, then return here.");
+        			$("#social_wording_span").text("To use a Google picture, log out (fully) and back in with Google, then return here.");
         		}
         		else if(facebook_access_token_expired_or_doesnt_exist && !google_access_token_expired_or_doesnt_exist)
         		{
         			$("#use_facebook_tr").hide();
-        			$("#social_wording_span").html("To use a FB picture, log out (fully) and back in with FB, then return here.");
+        			$("#social_wording_span").text("To use a FB picture, log out (fully) and back in with FB, then return here.");
         		}
         		else // both valid somehow, go off the picture hostname
         		{
         			if(bg.user_jo.picture.indexOf("graph.facebook.com") != -1)
         			{
         				$("#use_google_tr").hide();
-        				$("#social_wording_span").html("To use a Google picture, log out and back in with Google, then return here.");
+        				$("#social_wording_span").text("To use a Google picture, log out and back in with Google, then return here.");
         			}
         			else if(bg.user_jo.picture.indexOf("googleusercontent.com") != -1)
         			{
         				$("#use_facebook_tr").hide();
-        				$("#social_wording_span").html("To use a FB picture, log out and back in with FB, then return here.");
+        				$("#social_wording_span").text("To use a FB picture, log out and back in with FB, then return here.");
         			}
         			else // this is a bizarre situation where user has valid tokens for both social services but is using neither service's image
         			{    // let's just force only google to be valid. hehe
         				docCookies.removeItem("facebook_access_token");
         				docCookies.removeItem("facebook_access_token_expires");
         				$("#use_facebook_tr").hide();
-        				$("#social_wording_span").html("To use a FB picture, log out and back in with FB, then return here.");
+        				$("#social_wording_span").text("To use a FB picture, log out and back in with FB, then return here.");
         			}	
         		}	
             	
@@ -658,8 +670,8 @@ function getProfile(screenname)
             	$("#use_unicorn_radio").click(function () {
             		var g = guid();
             		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
-            		$("#unicorn_wait_span").html("Wait...");
-            		setTimeout(function() {$("#unicorn_wait_span").html("");}, 2000);
+            		$("#unicorn_wait_span").text("Wait...");
+            		setTimeout(function() {$("#unicorn_wait_span").text("");}, 2000);
             	});
             	$("#use_silhouette_radio").click(function () {
             		var g = guid();
@@ -682,15 +694,15 @@ function getProfile(screenname)
             			success: function (data, status) {
             				if(data.response_status === "error")
             				{
-            					$("#avatar_save_span").html(" error");
+            					$("#avatar_save_span").text(" error");
             				}
             				else if(data.response_status === "success")
             				{
             					bg.user_jo.picture = $("#avatar_img").attr("src");
-            					$("#large_avatar_td").html("<img class=\"rounded\" src=\"" + bg.user_jo.picture + "\" style=\"width:128px;height:128px\"></img>");
-				        		$("#logged_in_profile_image_span").html("<img class=\"rounded\" src=\"" + bg.user_jo.picture + "\" style=\"width:32px;height:32px\"></img>");
-            					$("#avatar_save_span").html(" saved");
-            					setTimeout(function() {$("#avatar_save_span").html("");}, 2000);
+            					$("#large_avatar_img").attr("src", bg.user_jo.picture);
+				        		$("#logged_in_profile_img").attr("src", bg.user_jo.picture);
+            					$("#avatar_save_span").text(" saved");
+            					setTimeout(function() {$("#avatar_save_span").text("");}, 2000);
             				}	
             			},
             			error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -750,7 +762,7 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "	</tr>";
             				logoutmessage = logoutmessage + "</table>";
             				logoutmessage = logoutmessage + "</div>";
-            				$("#main_div_" + currentURLhash).html(logoutmessage);
+            				$("#main_div_" + currentURLhash).html(logoutmessage);//OK
             				
             				$("#logout_confirmation_button").click(
                         			function () {
@@ -856,7 +868,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#size_result_td").html("Error: " + data.message);
+				        		$("#size_result_td").text("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.overlay_size === 600)
 				            		$("#size_selector").val("wide");
@@ -876,7 +888,7 @@ function getProfile(screenname)
 				        	}
 				        	else
 				        	{
-				        		$("#size_result_td").html("updated");
+				        		$("#size_result_td").text("updated");
 				        		if($("#size_selector").val() === "wide")
 				        			bg.user_jo.overlay_size = 600;
 				        		else if($("#size_selector").val() === "medium")
@@ -885,12 +897,12 @@ function getProfile(screenname)
 				        			bg.user_jo.overlay_size = 450;
 				        		$("body").css("width", bg.user_jo.overlay_size + "px");
 				        	}
-				        	setTimeout(function(){$("#size_result_td").html("");},3000);
+				        	setTimeout(function(){$("#size_result_td").text("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#size_result_td").html("ajax error");
-				        	setTimeout(function(){$("#size_result_td").html("");},3000);
+				        	$("#size_result_td").text("ajax error");
+				        	setTimeout(function(){$("#size_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
@@ -912,7 +924,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#onlike_result_td").html("Error: " + data.message);
+				        		$("#onlike_result_td").text("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.onlike === "email")
 				            		$("#onlike_selector").val("email");
@@ -929,13 +941,13 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("#onlike_result_td").html("updated");
-				        	setTimeout(function(){$("#onlike_result_td").html("");},3000);
+				        		$("#onlike_result_td").text("updated");
+				        	setTimeout(function(){$("#onlike_result_td").text("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#onlike_result_td").html("ajax error");
-				        	setTimeout(function(){$("#onlike_result_td").html("");},3000);
+				        	$("#onlike_result_td").text("ajax error");
+				        	setTimeout(function(){$("#onlike_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
@@ -958,7 +970,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#ondislike_result_td").html("Error: " + data.message);
+				        		$("#ondislike_result_td").text("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.ondislike === "email")
 				            		$("#ondislike_selector").val("email");
@@ -975,13 +987,13 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("#ondislike_result_td").html("updated");
-				        	setTimeout(function(){$("#ondislike_result_td").html("");},3000);
+				        		$("#ondislike_result_td").text("updated");
+				        	setTimeout(function(){$("#ondislike_result_td").text("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#ondislike_result_td").html("ajax error");
-				        	setTimeout(function(){$("#ondislike_result_td").html("");},3000);
+				        	$("#ondislike_result_td").text("ajax error");
+				        	setTimeout(function(){$("#ondislike_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
@@ -1003,7 +1015,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#onreply_result_td").html("Error: " + data.message);
+				        		$("#onreply_result_td").text("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.onreply === "email")
 				            		$("#onreply_selector").val("email");
@@ -1020,13 +1032,13 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("#onreply_result_td").html("updated");
-				        	setTimeout(function(){$("#onreply_result_td").html("");},3000);
+				        		$("#onreply_result_td").text("updated");
+				        	setTimeout(function(){$("#onreply_result_td").text("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#onreply_result_td").html("ajax error");
-				        	setTimeout(function(){$("#onreply_result_td").html("");},3000);
+				        	$("#onreply_result_td").text("ajax error");
+				        	setTimeout(function(){$("#onreply_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
@@ -1048,7 +1060,7 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#onmention_result_td").html("Error: " + data.message);
+				        		$("#onmention_result_td").text("Error: " + data.message);
 				        		// on error, reset the selector to the bg.user_jo value
 				        		if (bg.user_jo.onmention === "email")
 				            		$("#onmention_selector").val("email");
@@ -1065,47 +1077,17 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("#onmention_result_td").html("updated");
-				        	setTimeout(function(){$("#onmention_result_td").html("");},3000);
+				        		$("#onmention_result_td").text("updated");
+				        	setTimeout(function(){$("#onmention_result_td").text("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#onmention_result_td").html("ajax error");
-				        	setTimeout(function(){$("#onmention_result_td").html("");},3000);
+				        	$("#onmention_result_td").text("ajax error");
+				        	setTimeout(function(){$("#onmention_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
             	});
-            	
-            	/*$("#emailpromos_selector").change(function () {
-					$.ajax({
-						type: 'GET',
-						url: endpoint,
-						data: {
-				            method: "setUserPreference",
-				            email: email,             
-				            this_access_token: this_access_token,  
-				            which: "emailpromos",
-				            value: $("#emailpromos_selector").val() 
-				        },
-				        dataType: 'json',
-				        async: true,
-				        success: function (data, status) {
-				        	if (data.response_status === "error")
-				        		$("#emailpromos_result_td").html("Error: " + data.message);
-				        	else
-				        		$("#emailpromos_result_td").html("updated");
-				        	setTimeout(function(){$("#emailpromos_result_td").html("");},3000);
-				        }
-				        ,
-				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#emailpromos_result_td").html("ajax error");
-				        	setTimeout(function(){$("#emailpromos_result_td").html("");},3000);
-				            console.log(textStatus, errorThrown);
-				        }
-					});
-					$("#emailpromos_result_td").html("updated");
-            	});*/
             }
         
         },

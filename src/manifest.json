@@ -1,9 +1,9 @@
 {
     "name": "Words",
     "short_name": "Words",
-    "version": "0.136",
+    "version": "0.137",
     "manifest_version": 2,
-    "description": "Better comments everywhere",
+    "description": "Better, safer comments everywhere",
     "icons": {
         "16": "images/words_logo4_16.png",
         "48": "images/words_logo4_48.png",

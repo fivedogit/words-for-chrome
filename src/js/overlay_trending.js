@@ -11,14 +11,15 @@
 function doTrendingTab()
 {
 	tabmode = "trending";
-	$("#thread_tab_link").html("<img src=\"images/chat_gray.png\"></img>");
-	$("#trending_tab_link").html("<img src=\"images/trending_blue.png\"></img>");
-	updateNotificationTabLinkImage();
-	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
-	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
+	$("#thread_tab_img").attr("src", "images/chat_gray.png");
+	$("#trending_tab_img").attr("src", "images/trending_blue.png");
+	$("#notifications_tab_img").attr("src", "images/flag_gray.png");
+	$("#past_tab_img").attr("src", "images/clock_gray.png");
+	$("#profile_tab_img").attr("src", "images/user_gray.png");
+	//updateNotificationTabLinkImage();
 
 	$("#utility_div").show();
-	$("#header_div_top").html("Activity across the Web <span id=\"trending_activity_hours_span\">?</span>");
+	$("#header_div_top").html("Activity across the Web <span id=\"trending_activity_hours_span\"></span>"); //OK
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var mds = "";  // main div string
@@ -32,24 +33,16 @@ function doTrendingTab()
 	mds = mds + "		</td>";
 	mds = mds + "	</tr>";
 	mds = mds + "	<tr>";
-	mds = mds + "		<td id=\"most_active_pages_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
+	mds = mds + "		<td id=\"most_active_pages_td\" style=\"width:50%;vertical-align:top\">";
 	mds = mds + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
 	mds = mds + "		</td>";
-	mds = mds + "		<td id=\"most_liked_pages_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
+	mds = mds + "		<td id=\"most_liked_pages_td\" style=\"width:50%;vertical-align:top\">";
 	mds = mds + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
 	mds = mds + "		</td>";
 	mds = mds + "	</tr>";
-	/*mds = mds + "	<tr>";
-	mds = mds + "		<td id=\"most_active_sites_td\" style=\"padding:10px;vertical-align:top\">";
-	mds = mds + "Loading most active sites... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
-	mds = mds + "		</td>";
-	mds = mds + "		<td id=\"most_liked_sites_td\" style=\"padding:10px;vertical-align:top\">";
-	mds = mds + "Loading most liked sites... please wait.<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
-	mds = mds + "		</td>";
-	mds = mds + "	</tr>";*/
 	mds = mds + "</table>";
-	
-	$("#main_div_" + currentURLhash).html(mds);
+	$("#main_div_" + currentURLhash).css("padding", "10px");
+	$("#main_div_" + currentURLhash).html(mds); //OK
 	getTrendingActivity(); // initial window, choices
 }
 
@@ -67,7 +60,7 @@ function getTrendingActivity()
 			if (data.response_status === "success") 
 			{
 				drawTrendingChart(data.num_hours, data, "most_active_pages_td");
-				$("#trending_activity_hours_span").html("(" + data.num_hours + " hrs)");
+				$("#trending_activity_hours_span").text("(" + data.num_hours + " hrs)");
 			}
 			else if (data.response_status === "error") 
 			{
@@ -99,7 +92,7 @@ function getTrendingActivity()
 			if (data.response_status === "success") 
 			{
 				drawTrendingChart(data.num_hours, data, "most_liked_pages_td");
-				$("#trending_activity_hours_span").html("(" + data.num_hours + " hrs)");
+				$("#trending_activity_hours_span").text("(" + data.num_hours + " hrs)");
 			}
 			else if (data.response_status === "error") 
 			{
@@ -233,7 +226,7 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 		}	
 	}
 	mds = mds + "</table>";
-	$("#" + dom_id).html(mds);
+	$("#" + dom_id).html(mds);//FIXME
 	$("a").click(function() {
 		 var c = $(this).attr('class');
 		 if(c == "newtab")

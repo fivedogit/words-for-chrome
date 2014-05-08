@@ -13,18 +13,20 @@
 function doThreadTab() 
 {
 	tabmode = "thread";
-	$("#thread_tab_link").html("<img src=\"images/chat_blue.png\"></img>");
-	$("#trending_tab_link").html("<img src=\"images/trending_gray.png\"></img>");
-	updateNotificationTabLinkImage();
-	$("#past_tab_link").html("<img src=\"images/clock_gray.png\"></img>");
-	$("#profile_tab_link").html("<img src=\"images/user_gray.png\"></img>");
+	$("#thread_tab_img").attr("src", "images/chat_blue.png");
+	$("#trending_tab_img").attr("src", "images/trending_gray.png");
+	$("#notifications_tab_img").attr("src", "images/flag_gray.png");
+	$("#past_tab_img").attr("src", "images/clock_gray.png");
+	$("#profile_tab_img").attr("src", "images/user_gray.png");
+	//updateNotificationTabLinkImage();
+	
 	
 	$("#utility_div").show();
-	$("#header_div_top").html("Comment thread");
+	$("#header_div_top").text("Comment thread");
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).show();
 	
-	$("#main_div_" + currentURLhash).html("");
+	$("#main_div_" + currentURLhash).text("");
 	
 	if(isValidURLFormation(currentURL))
 	{
@@ -32,7 +34,8 @@ function doThreadTab()
 		{
 			var url_at_function_call = currentURL;
 			// wait for thread to load
-			$("#main_div_" + currentURLhash).html("Retrieving thread... <img style=\"padding:10px;vertical-align:middle\" src=\"images/ajaxSnake.gif\">");
+			$("#main_div_" + currentURLhash).css("padding", "20px");
+			$("#main_div_" + currentURLhash).text("Retrieving thread... ");
 			gotThread_wedge_for_ntj(url_at_function_call);
 			// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
 		}
@@ -45,17 +48,16 @@ function doThreadTab()
 	{
 		beginindex = 0;
 		$("#comment_submission_form_div_" + currentURLhash).hide();
-		var main_div_string = "<div class=\"no-comments-div\">Commenting for non-websites is currently disabled.<br>";
+		var main_div_string = "Commenting for non-websites is currently disabled.<br>";
 		main_div_string = main_div_string + "		(URL must start with \"http\".)"; // , hostname must contain a \".\" and lack a \":\".
-		main_div_string = main_div_string + "</div>";
-		$("#main_div_" + currentURLhash).html(main_div_string);
+		$("#main_div_" + currentURLhash).text(main_div_string);
 	}
 }
 
 // this function says "We finally received the thread from the backend. Is the tabmode still "thread"? If so, show the thread. If not, do nothing (i.e. stop)."
 function gotThread()
 {
-	$("#main_div_" + currentURLhash).html("");
+	$("#main_div_" + currentURLhash).text("");
 	if (tabmode === "thread")
 	{
 		var url_to_use = getSmartCutURL(thread_jo.significant_designation, 60);
@@ -65,12 +67,12 @@ function gotThread()
 			happy = happy + "<img id=\"combined_img\" src=\"images/combined_icon.png\"> ";
 		else
 			happy = happy + "<img id=\"separated_img\" src=\"images/separated_icon.png\"> ";
-		happy = happy + "<span style=\"font-family:'Arial Narrow'arial;font-size:12px\">" +  url_to_use + "</span> ";
+		happy = happy + "<span style=\"font-family:arial;font-size:12px\">" +  url_to_use + "</span> ";
 		happy = happy + "<span id=\"has_user_liked_span\"><img id=\"pagelike_img\" src=\"images/star_grayscale_16x16.png\"></span> <span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
 		
 		
 		// like/dislike indicator here
-		$("#header_div_top").html(happy);
+		$("#header_div_top").html(happy);//FIXME
 		
 		var likepage_method = "likeHostname";
 		var haveilikedpage_method = "haveILikedThisHostname";
@@ -147,7 +149,7 @@ function gotThread()
 		        success: function (data, status) {
 		        	if (data.response_status === "error")
 		        	{
-		        		$("#has_user_liked_span").html("err");
+		        		$("#has_user_liked_span").text("err");
 		        	}
 		        	else if (data.response_status === "success")
 		        	{
@@ -165,22 +167,22 @@ function gotThread()
 	 	$("#pagelike_img").mouseover(
 	 			function () {
 	 				if($("#pagelike_img").attr("src").indexOf("grayscale") == -1) // this is the yellow star, not the grayscale one
-	 					$("#tab_tooltip_td").html("You've liked this");
+	 					$("#tab_tooltip_td").text("You've liked this");
 	 				else
-	 					$("#tab_tooltip_td").html("Like this page");
+	 					$("#tab_tooltip_td").text("Like this page");
 	 				return false;
 	 			});
 
 	 	$("#pagelike_img").mouseout(
 	 			function () {
 	 				if(tabmode === "thread")
-	 					$("#tab_tooltip_td").html("Comments");
+	 					$("#tab_tooltip_td").text("Comments");
 	 				else if(tabmode === "trending")
-	 					$("#tab_tooltip_td").html("Trending");
+	 					$("#tab_tooltip_td").text("Trending");
 	 				else if(tabmode === "notifications")
-	 					$("#tab_tooltip_td").html("Notifications");
+	 					$("#tab_tooltip_td").text("Notifications");
 	 				else if(tabmode === "profile")
-	 					$("#tab_tooltip_td").html("Profile/Settings");
+	 					$("#tab_tooltip_td").text("Profile/Settings");
 	 				return false;
 	 			});
 		
@@ -207,23 +209,23 @@ function gotThread()
 				        		displayMessage("hostname separated", "red", "message_div_" + currentURLhash);
 				        		
 				        		// when separated for the first time, the significant designation becomes the thread's hp
-				        		$("#header_div_top").html(thread_jo.hp + " <img id=\"separated_img\" src=\"images/separated_icon.png\">");
+				        		$("#header_div_top").html(thread_jo.hp + " <img id=\"separated_img\" src=\"images/separated_icon.png\">");//FIXME
 				        		$("#separated_img").mouseover(
 				        	 			function () {
-				        	 				$("#tab_tooltip_td").html("Separated threads");
+				        	 				$("#tab_tooltip_td").text("Separated threads");
 				        	 				return false;
 				        	 			});
 
 				        	 	$("#separated_img").mouseout(
 				        	 			function () {
 				        	 				if(tabmode === "thread")
-				        	 					$("#tab_tooltip_td").html("Comments");
+				        	 					$("#tab_tooltip_td").text("Comments");
 				        	 				else if(tabmode === "trending")
-				        	 					$("#tab_tooltip_td").html("Trending");
+				        	 					$("#tab_tooltip_td").text("Trending");
 				        	 				else if(tabmode === "notifications")
-				        	 					$("#tab_tooltip_td").html("Notifications");
+				        	 					$("#tab_tooltip_td").text("Notifications");
 				        	 				else if(tabmode === "profile")
-				        	 					$("#tab_tooltip_td").html("Profile/Settings");
+				        	 					$("#tab_tooltip_td").text("Profile/Settings");
 				        	 				return false;
 				        	 			});
 				        	}
@@ -237,39 +239,39 @@ function gotThread()
 		
 		$("#combined_img").mouseover(
 	 			function () {
-	 				$("#tab_tooltip_td").html("Combined threads");
+	 				$("#tab_tooltip_td").text("Combined threads");
 	 				return false;
 	 			});
 
 	 	$("#combined_img").mouseout(
 	 			function () {
 	 				if(tabmode === "thread")
-	 					$("#tab_tooltip_td").html("Comments");
+	 					$("#tab_tooltip_td").text("Comments");
 	 				else if(tabmode === "trending")
-	 					$("#tab_tooltip_td").html("Trending");
+	 					$("#tab_tooltip_td").text("Trending");
 	 				else if(tabmode === "notifications")
-	 					$("#tab_tooltip_td").html("Notifications");
+	 					$("#tab_tooltip_td").text("Notifications");
 	 				else if(tabmode === "profile")
-	 					$("#tab_tooltip_td").html("Profile/Settings");
+	 					$("#tab_tooltip_td").text("Profile/Settings");
 	 				return false;
 	 			});
 	 	
 	 	$("#separated_img").mouseover(
 	 			function () {
-	 				$("#tab_tooltip_td").html("Separated threads");
+	 				$("#tab_tooltip_td").text("Separated threads");
 	 				return false;
 	 			});
 
 	 	$("#separated_img").mouseout(
 	 			function () {
 	 				if(tabmode === "thread")
-	 					$("#tab_tooltip_td").html("Comments");
+	 					$("#tab_tooltip_td").text("Comments");
 	 				else if(tabmode === "trending")
-	 					$("#tab_tooltip_td").html("Trending");
+	 					$("#tab_tooltip_td").text("Trending");
 	 				else if(tabmode === "notifications")
-	 					$("#tab_tooltip_td").html("Notifications");
+	 					$("#tab_tooltip_td").text("Notifications");
 	 				else if(tabmode === "profile")
-	 					$("#tab_tooltip_td").html("Profile/Settings");
+	 					$("#tab_tooltip_td").text("Profile/Settings");
 	 				return false;
 	 			});
 		beginindex = 0;
@@ -293,11 +295,11 @@ function getPageLikes(which)
         success: function (data, status) {
         	if (data.response_status === "error")
         	{
-        		$("#has_user_liked_span").html("err");
+        		$("#has_user_liked_span").text("err");
         	}
         	else if (data.response_status === "success")
         	{
-        		$("#num_pagelikes_span").html(data.count);
+        		$("#num_pagelikes_span").html(data.count);//FIXME
         	}
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -394,8 +396,7 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "		</td>";
 			main_div_string = main_div_string + "	</tr>";
 			main_div_string = main_div_string + "</table>";
-			//main_div_string = main_div_string + "<div style=\"padding-bottom:10px;padding-left:10px;padding-right:10px\" id=\"other_pages_on_this_site_div\"><img src=\"images/ajaxSnake.gif\"></div>";
-			$("#main_div_" + currentURLhash).html(main_div_string);
+			$("#main_div_" + currentURLhash).html(main_div_string);//OK
 			
 			$.ajax({
 				type: 'GET',
@@ -590,7 +591,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 	}
 	else // container already existed. Just insert the new stuff
 	{
-		$("#comment_outer_container_div_" + comment_id).html(comment_div_string); // container_div already exists, rewrite it
+		$("#comment_outer_container_div_" + comment_id).html(comment_div_string); // container_div already exists, rewrite it //FIXME
 	}	
 
 	$.ajax({
@@ -816,7 +817,7 @@ function writeComment(feeditem_jo, dom_id)
 	  	tempstr = tempstr + "</table>"
 	}
 	
-	$("#" + dom_id).html(tempstr);
+	$("#" + dom_id).html(tempstr);//FIXME
 	
 	$("a").click(function() {
 		 var c = $(this).attr('class');
@@ -1038,7 +1039,7 @@ function submitComment(parent) // submits comment and updates thread
 						var onechildarray = new Array();
 						onechildarray[0] = data.comment.id;
 						thread_jo.children = onechildarray; 
-						$("#main_div_" + parent).html("");
+						$("#main_div_" + parent).text("");
 					}	
 		        	else
 		        	{
@@ -1351,7 +1352,8 @@ function gotThread_wedge_for_ntj(url_at_function_call)
 		}
 		else
 		{
-			$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Unable to retrieve thread.<br>Your internet connection may be down.</div>");
+			$("#main_div_" + currentURLhash).css("padding", "20px");
+			$("#main_div_" + currentURLhash).text("Unable to retrieve thread. Your internet connection may be down.");
 			displayMessage("Thread retrieval error.", "red", "message_div_"+ currentURLhash);
 		}
 		return;
