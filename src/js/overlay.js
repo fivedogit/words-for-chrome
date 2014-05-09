@@ -184,11 +184,11 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td id=\"logstat_logo_td\">";
 	welcomearea = welcomearea + "			<span id=\"logged_in_profile_image_span\">";
-	welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" id=\"logged_in_profile_img\" src=\"" + bg.user_jo.picture + "\">";
+	welcomearea = welcomearea + "				<img class=\"userpic32 rounded\" id=\"logged_in_profile_img\" src=\"images/ajaxSnake.gif\">";
 	welcomearea = welcomearea + "			</span>";
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\">";
-	welcomearea = welcomearea + "			<a href=\"#\" id=\"screenname_link\">" + bg.user_jo.screenname + "</a>";
+	welcomearea = welcomearea + "			<a href=\"#\" id=\"screenname_link\"></a>";
 	if(typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
 	{
 		welcomearea = welcomearea + " <img id=\"alt_dropdown_img\" src=\"images/dropdown_triangle.png\">";
@@ -196,7 +196,9 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
-	$("#logstat_td").html(welcomearea);//FIXME
+	$("#logstat_td").html(welcomearea);//OK
+	$("#screenname_link").text(bg.user_jo.screenname);
+	$("#logged_in_profile_img").attr("src", bg.user_jo.picture);
 	
 	if(typeof bg.user_jo.alts !== "undefined" && bg.user_jo.alts != null)
 	{
@@ -207,15 +209,16 @@ function displayLogstatAsLoggedIn() {
 					var str = "";
 					while(alts_counter < bg.user_jo.alts.length)
 					{
-						str = str + "<a href=\"#\" id=\"user_" + bg.user_jo.alts[alts_counter].screenname + "_link\">" + bg.user_jo.alts[alts_counter].screenname + "</a> - ";
+						str = str + "<a href=\"#\" id=\"user_" + alts_counter + "_link\"></a> - ";
 						alts_counter++;
 					}	
 					str = str.substring(0, str.length - 2);
-					$("#header_div_top").html(str);//FIXME
+					$("#header_div_top").html(str);//OK
 					alts_counter = 0;
 					while(alts_counter < bg.user_jo.alts.length)
 					{
-						$("#user_" + bg.user_jo.alts[alts_counter].screenname + "_link").click({altuser: bg.user_jo.alts[alts_counter], prev: prev},
+						$("#user_" + alts_counter + "_link").text(bg.user_jo.alts[alts_counter].screenname);
+						$("#user_" + alts_counter + "_link").click({altuser: bg.user_jo.alts[alts_counter], prev: prev},
 								function (event) {
 									$("#header_div_top").html(event.data.prev);//OK
 									//alert(event.data.altuser.email + " " + event.data.altuser.this_access_token);
@@ -822,5 +825,46 @@ $(window).scroll(function() {
 			// do-nothing case, use url as-is
 		}
 		return url_to_use_loc;
+ }
+ 
+ function doNewtabClick(h)
+ {
+	 // 	try to find h
+	 // 	if(successful)
+	 //			open it
+	 //		else if(unsuccessful)
+	 //			try with newh
+	 //			if(unsuccessful)
+	 //			{
+	 //				open new tab with original url
+	 //			}
+	 //		}
+	 var newh = "";
+	 if(h.indexOf("://www.") != -1)
+		 newh = h.replace("://www.", "://");
+	 else
+		 newh = h.replace("://", "://www.");
+	 
+	 //alert("h=" + h + " and newh=" + newh);
+	 var open_tab_id = null;
+	 chrome.tabs.query({url: h}, function(tabs) { 
+		 for (var i = 0; i < tabs.length; i++) { // try to find h
+			 open_tab_id = tabs[i].id;
+		 }
+		 if(open_tab_id !== null) // found it
+			 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {}); // open the existing tab
+		 else // if(open_tab_id === null)  // didn't find h
+		 {
+			 chrome.tabs.query({url: newh}, function(tabs) {  // try to find newh
+				 for (var i = 0; i < tabs.length; i++) {
+					 open_tab_id = tabs[i].id;
+				 }
+				 if((open_tab_id !== null)) // found it
+					 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {}); // open the existing tab
+				 else // if(open_tab_id === null)
+					 chrome.tabs.create({url:h}); // all else fails, open new tab
+			 });
+		 }
+	 });
  }
  

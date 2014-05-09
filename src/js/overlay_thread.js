@@ -15,11 +15,9 @@ function doThreadTab()
 	tabmode = "thread";
 	$("#thread_tab_img").attr("src", "images/chat_blue.png");
 	$("#trending_tab_img").attr("src", "images/trending_gray.png");
-	$("#notifications_tab_img").attr("src", "images/flag_gray.png");
+	updateNotificationTabLinkImage();
 	$("#past_tab_img").attr("src", "images/clock_gray.png");
 	$("#profile_tab_img").attr("src", "images/user_gray.png");
-	//updateNotificationTabLinkImage();
-	
 	
 	$("#utility_div").show();
 	$("#header_div_top").text("Comment thread");
@@ -34,8 +32,7 @@ function doThreadTab()
 		{
 			var url_at_function_call = currentURL;
 			// wait for thread to load
-			$("#main_div_" + currentURLhash).css("padding", "20px");
-			$("#main_div_" + currentURLhash).text("Retrieving thread... ");
+			$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Retrieving thread...</div>");//OK
 			gotThread_wedge_for_ntj(url_at_function_call);
 			// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
 		}
@@ -62,17 +59,19 @@ function gotThread()
 	{
 		var url_to_use = getSmartCutURL(thread_jo.significant_designation, 60);
 		var happy = "";
-		happy = happy + "<img src=\"http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation + "\"> "
+		happy = happy + "<img id=\"google_favicon_img_" + currentURLhash + "\" src=\"images/ajaxSnake.gif\"> "
 		if(thread_jo.combined_or_separated === "combined")
 			happy = happy + "<img id=\"combined_img\" src=\"images/combined_icon.png\"> ";
 		else
 			happy = happy + "<img id=\"separated_img\" src=\"images/separated_icon.png\"> ";
-		happy = happy + "<span style=\"font-family:arial;font-size:12px\">" +  url_to_use + "</span> ";
+		happy = happy + "<span id=\"url_span_" + currentURLhash + "\" style=\"font-family:arial;font-size:12px\"></span> ";
 		happy = happy + "<span id=\"has_user_liked_span\"><img id=\"pagelike_img\" src=\"images/star_grayscale_16x16.png\"></span> <span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
 		
 		
 		// like/dislike indicator here
-		$("#header_div_top").html(happy);//FIXME
+		$("#header_div_top").html(happy);//OK
+		$("#google_favicon_img_" + currentURLhash).attr("src", "http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation);
+		$("#url_span_" + currentURLhash).text(url_to_use);
 		
 		var likepage_method = "likeHostname";
 		var haveilikedpage_method = "haveILikedThisHostname";
@@ -207,27 +206,6 @@ function gotThread()
 				        	else if (data.response_status === "success")
 				        	{
 				        		displayMessage("hostname separated", "red", "message_div_" + currentURLhash);
-				        		
-				        		// when separated for the first time, the significant designation becomes the thread's hp
-				        		$("#header_div_top").html(thread_jo.hp + " <img id=\"separated_img\" src=\"images/separated_icon.png\">");//FIXME
-				        		$("#separated_img").mouseover(
-				        	 			function () {
-				        	 				$("#tab_tooltip_td").text("Separated threads");
-				        	 				return false;
-				        	 			});
-
-				        	 	$("#separated_img").mouseout(
-				        	 			function () {
-				        	 				if(tabmode === "thread")
-				        	 					$("#tab_tooltip_td").text("Comments");
-				        	 				else if(tabmode === "trending")
-				        	 					$("#tab_tooltip_td").text("Trending");
-				        	 				else if(tabmode === "notifications")
-				        	 					$("#tab_tooltip_td").text("Notifications");
-				        	 				else if(tabmode === "profile")
-				        	 					$("#tab_tooltip_td").text("Profile/Settings");
-				        	 				return false;
-				        	 			});
 				        	}
 				        },
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -299,7 +277,7 @@ function getPageLikes(which)
         	}
         	else if (data.response_status === "success")
         	{
-        		$("#num_pagelikes_span").html(data.count);//FIXME
+        		$("#num_pagelikes_span").text(data.count);
         	}
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -525,110 +503,120 @@ function prepareGetAndPopulateThreadPortion()
 	}
 }
 
+function isValidThreadItemId(inc_id)
+{
+	// before innerHTML, make sure this is a harmless 11-char string of letters and numbers ending with the letter C (for "comment").
+	if(inc_id.length === 11 && /^[A-Za-z0-9]+C$/.test(inc_id))
+		return true;
+	return false;
+}
+
 function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "newcomment", "reply"
 {
 	//alert("doing threaditem2 for comment_id=" + comment_id + " and parent=" + parent);
-	var comment_div_string = "";
-	var indent = 0;
-	var parent_outer_container_div = "main_div_" + parent;
-	var parent_comment_div = "";
-	
-	if(typeof commenttype === "undefined" || commenttype === null || !(commenttype === "initialpop" || commenttype === "newcomment" || commenttype === "reply"))
-	{
-		if(parent.length != 11) // toplevel "parent" is a 8-length hash of the currentURL set by overlay.js
-			commenttype = "newcomment";
-		else
-			commenttype = "reply";
-	}
-	
-	if(parent.length !== 11) // toplevel "parent" is a 8-length hash of the currentURL set by overlay.js
-	{
-		indent = 0;
-	}
-	else 
-	{
-		//alert("parent=" + parent);
-		parent_outer_container_div = "comment_outer_container_div_" + parent;
-		//alert("parent_outer_container_div=" + parent_outer_container_div);
-		parent_comment_div = "comment_div_" + parent;
-		//alert("getting indent from parent_comment_div=" + parent_comment_div);
-		indent = ($("#" + parent_comment_div).css("margin-left").replace("px", "")*1) + 25;
-		//alert("indent=" + indent);
-	}	
-	// This is the main thread item (comment) structure. We have a blank container around the actual visible comment.
-	// That's so we can .after, .before, .append and .prepend to both the comment itself (replies) as well 
-	// as to the comment container (subsequent or previous comments of the same level)
-
-	if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
-		comment_div_string = comment_div_string + "<div class=\"comment-outer-container-div\" id=\"comment_outer_container_div_" + comment_id + "\">";
-	comment_div_string = comment_div_string + "		    <div class=\"complete-horiz-line-div\" id=\"complete_horiz_line_div_" + comment_id + "\"></div>";
-	comment_div_string = comment_div_string + "		    <div class=\"message-div\" id=\"message_div_" + comment_id + "\" style=\"display:none\"></div>";
-	comment_div_string = comment_div_string + "				<div class=\"comment-div\" style=\"margin-left:" + indent + "px\" id=\"comment_div_" + comment_id + "\">";
-	comment_div_string = comment_div_string + "					<span style=\"padding:20px\">Loading a comment... <img src=\"images/ajaxSnake.gif\"></span>";
-	//comment_div_string = comment_div_string + "			</div>";
-	comment_div_string = comment_div_string + "		</div>";
-	if(!$("#comment_outer_container_div_" + comment_id).length)
-		comment_div_string = comment_div_string + "</div>"; // end container div
-
-	if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
-	{
-		if(commenttype === "initialpop") // .append to main_div
+	if(isValidThreadItemId(comment_id)) // before innerHTMl below, make sure this is a harmless 11-char string of letters and numbers.
+	{	
+		var comment_div_string = "";
+		var indent = 0;
+		var parent_outer_container_div = "main_div_" + parent;
+		var parent_comment_div = "";
+		
+		if(typeof commenttype === "undefined" || commenttype === null || !(commenttype === "initialpop" || commenttype === "newcomment" || commenttype === "reply"))
 		{
-			$("#main_div_" + parent).append(comment_div_string);
-		}	
-		else if(commenttype === "newcomment") // .prepend to main_div
-		{
-			$("#main_div_" + parent).prepend(comment_div_string);
-		}	
-		else if(commenttype == "reply") // .after parent comment
-		{
-			$("#" + parent_outer_container_div).after(comment_div_string);
-		}	
-		else
-		{
-			alert("invalid commenttype");
+			if(parent.length != 11) // toplevel "parent" is a 8-length hash of the currentURL set by overlay.js
+				commenttype = "newcomment";
+			else
+				commenttype = "reply";
 		}
-	}
-	else // container already existed. Just insert the new stuff
-	{
-		$("#comment_outer_container_div_" + comment_id).html(comment_div_string); // container_div already exists, rewrite it //FIXME
-	}	
+		
+		if(parent.length !== 11) // toplevel "parent" is a 8-length hash of the currentURL set by overlay.js
+		{
+			indent = 0;
+		}
+		else 
+		{
+			//alert("parent=" + parent);
+			parent_outer_container_div = "comment_outer_container_div_" + parent;
+			//alert("parent_outer_container_div=" + parent_outer_container_div);
+			parent_comment_div = "comment_div_" + parent;
+			//alert("getting indent from parent_comment_div=" + parent_comment_div);
+			indent = ($("#" + parent_comment_div).css("margin-left").replace("px", "")*1) + 25;
+			//alert("indent=" + indent);
+		}	
+		// This is the main thread item (comment) structure. We have a blank container around the actual visible comment.
+		// That's so we can .after, .before, .append and .prepend to both the comment itself (replies) as well 
+		// as to the comment container (subsequent or previous comments of the same level)
 
-	$.ajax({
-        type: 'GET',
-        url: endpoint,
-        data: {
-            method: "getFeedItem",
-            id: comment_id
-        },
-        dataType: 'json',
-        async: true,
-        success: function (data, status) {
-        	if(data.response_status !== "error" && tabmode === "thread")
-        	{
-        		writeComment(data.item, "comment_div_" + data.item.id);
-        		if(data.item.children && data.item.children.length > 0)
-        		{
-        			var tempcomments = data.item.children;
-					tempcomments.sort(function(a,b){
-						var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
-						var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
-						return tsa - tsb;
-					});
-					data.item.children = tempcomments;
-					for(var y=0; y < data.item.children.length; y++) 
-		    		{  
-						//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
-						doThreadItem(data.item.children[y], comment_id, "reply");
-		    		}
-        		}
-        	}
-        },
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-        	displayMessage("Unable to retrieve feed item. (ajax)", "red", "message_div_" + comment_id);
-        	console.log(textStatus, errorThrown);
-        }
-	});
+		if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
+			comment_div_string = comment_div_string + "<div class=\"comment-outer-container-div\" id=\"comment_outer_container_div_" + comment_id + "\">";
+		comment_div_string = comment_div_string + "		    <div class=\"complete-horiz-line-div\" id=\"complete_horiz_line_div_" + comment_id + "\"></div>";
+		comment_div_string = comment_div_string + "		    <div class=\"message-div\" id=\"message_div_" + comment_id + "\" style=\"display:none\"></div>";
+		comment_div_string = comment_div_string + "				<div class=\"comment-div\" style=\"margin-left:" + indent + "px\" id=\"comment_div_" + comment_id + "\">";
+		comment_div_string = comment_div_string + "					<span style=\"padding:20px\"><img src=\"images/ajaxSnake.gif\"></span>";
+		comment_div_string = comment_div_string + "				</div>";
+		if(!$("#comment_outer_container_div_" + comment_id).length)
+			comment_div_string = comment_div_string + "</div>"; // end container div
+
+		if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
+		{
+			if(commenttype === "initialpop") // .append to main_div
+			{
+				$("#main_div_" + parent).append(comment_div_string);//OK
+			}	
+			else if(commenttype === "newcomment") // .prepend to main_div
+			{
+				$("#main_div_" + parent).prepend(comment_div_string);//OK
+			}	
+			else if(commenttype == "reply") // .after parent comment
+			{
+				$("#" + parent_outer_container_div).after(comment_div_string);//OK
+			}	
+			else
+			{
+				alert("invalid commenttype");
+			}
+		}
+		else // container already existed. Just insert the new stuff
+		{
+			$("#comment_outer_container_div_" + comment_id).html(comment_div_string); // container_div already exists, rewrite it //OK
+		}	
+
+		$.ajax({
+	        type: 'GET',
+	        url: endpoint,
+	        data: {
+	            method: "getFeedItem",
+	            id: comment_id
+	        },
+	        dataType: 'json',
+	        async: true,
+	        success: function (data, status) {
+	        	if(data.response_status !== "error" && tabmode === "thread")
+	        	{
+	        		writeComment(data.item, "comment_div_" + data.item.id);
+	        		if(data.item.children && data.item.children.length > 0)
+	        		{
+	        			var tempcomments = data.item.children;
+						tempcomments.sort(function(a,b){
+							var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
+							var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
+							return tsa - tsb;
+						});
+						data.item.children = tempcomments;
+						for(var y=0; y < data.item.children.length; y++) 
+			    		{  
+							//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
+							doThreadItem(data.item.children[y], comment_id, "reply");
+			    		}
+	        		}
+	        	}
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	        	displayMessage("Unable to retrieve feed item. (ajax)", "red", "message_div_" + comment_id);
+	        	console.log(textStatus, errorThrown);
+	        }
+		});
+	}
 }		
 
 
@@ -819,39 +807,17 @@ function writeComment(feeditem_jo, dom_id)
 	
 	$("#" + dom_id).html(tempstr);//FIXME
 	
-	$("a").click(function() {
-		 var c = $(this).attr('class');
-		 if(c == "newtab")
-		 {
-			 var h = $(this).attr('href');
-			 var haswwwdot = false;
-			 if(h.indexOf("://www.") != -1)
-			 {
-				 haswwwdot = true;
-			 }
-			 var open_tab_id = null;
-			 chrome.tabs.query({url: h}, function(tabs) { 
-				 for (var i = 0; i < tabs.length; i++) {
-					 open_tab_id = tabs[i].id;
-				 }
-				 if(open_tab_id === null)
-				 {
-					 // try without www.
-					 h = h.replace("://www.", "://");
-					 chrome.tabs.query({url: h}, function(tabs) { 
-						 for (var i = 0; i < tabs.length; i++) {
-							 open_tab_id = tabs[i].id;
-						 }
-						 if(open_tab_id === null)
-							 chrome.tabs.create({url:h});
-						 else
-							 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
-					 });
-				 }
-				 else
-					 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
-			 });
-		 }
+	$("a").click(function(event) {
+		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
+		{
+			event.processed = true;
+			var c = $(this).attr('class');
+			if(c == "newtab")
+			{
+				var h = $(this).attr('href');
+				doNewtabClick(h);
+			}
+		}
 	});
 	
 	if(bg.user_jo !== null)
@@ -1352,9 +1318,11 @@ function gotThread_wedge_for_ntj(url_at_function_call)
 		}
 		else
 		{
-			$("#main_div_" + currentURLhash).css("padding", "20px");
-			$("#main_div_" + currentURLhash).text("Unable to retrieve thread. Your internet connection may be down.");
-			displayMessage("Thread retrieval error.", "red", "message_div_"+ currentURLhash);
+			if(tabmode === "thread")
+			{
+				$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Unable to retrieve thread. Your internet connection may be down.</div>");//OK
+				displayMessage("Thread retrieval error.", "red", "message_div_"+ currentURLhash);
+			}
 		}
 		return;
 	},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);},333);

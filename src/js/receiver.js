@@ -240,7 +240,7 @@ else
 		}
 		else // use the apparently valid access token to log the user in.
 		{
-			displayMessage("Existing Facebook credentials appear valid. Logging you into Words... <img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">", "black");
+			displayMessage("Existing Facebook credentials appear valid. Logging you into Words... ", "black");
 			login("facebook", docCookies.getItem("facebook_access_token"), docCookies.getItem("facebook_access_token_expires"));
 		}
 	}	

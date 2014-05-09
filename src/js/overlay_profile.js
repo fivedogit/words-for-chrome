@@ -16,7 +16,7 @@ function viewProfile(screenname)
 	//updateNotificationTabLinkImage();
 	$("#thread_tab_img").attr("src", "images/chat_gray.png");
 	$("#trending_tab_img").attr("src", "images/trending_gray.png");
-	$("#notifications_tab_img").attr("src", "images/flag_gray.png");
+	updateNotificationTabLinkImage();
 	$("#past_tab_img").attr("src", "images/clock_gray.png");
 	$("#profile_tab_img").attr("src", "images/user_blue.png");
 	
@@ -30,8 +30,7 @@ function viewProfile(screenname)
 	}
 	else
 	{
-		$("#main_div_" + currentURLhash).css("padding", "20px");
-		$("#main_div_" + currentURLhash).text("Log in to see user profiles.");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");//OK
 	}
 }
 
@@ -51,18 +50,15 @@ function getProfile(screenname)
 	var target_user_jo;
 	if (typeof bg.user_jo ==="undefined" || bg.user_jo === null) // not logged in nor was a target specified, 
 	{									
-		$("#main_div_" + currentURLhash).css("padding", "20px");
-		$("#main_div_" + currentURLhash).text("Log in to see user profiles.");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");//OK
 	}
 	else if(typeof screenname === "undefined" || screenname === null)
 	{
-		$("#main_div_" + currentURLhash).css("padding", "20px");
-		$("#main_div_" + currentURLhash).text("No target screenname provided. Check the link and try again.");
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">No target screenname provided. Check the link and try again.</div>");//OK
 	}	
 	else
 	{
-		$("#main_div_" + currentURLhash).css("padding", "20px");
-		$("#main_div_" + currentURLhash).text("Loading profile... please wait.");//OK
+		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading profile... please wait.</div>");//OK
 		var email = docCookies.getItem("email");
 		var this_access_token = docCookies.getItem("this_access_token");
 		$.ajax({
@@ -80,8 +76,7 @@ function getProfile(screenname)
             if (data.response_status === "error")
             {
             	displayMessage(data.message, "red", "message_div_" + currentURLhash);
-            	$("#main_div_" + currentURLhash).css("padding", "20px");
-            	$("#main_div_" + currentURLhash).text("Unable to retrieve profile.");
+            	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Unable to retrieve profile.</div>");//OK
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
@@ -95,66 +90,38 @@ function getProfile(screenname)
             {
             	target_user_jo = data.target_user_jo; // backend will provide something that looks like this:
             	
-            	//{
-    			//	"elapsed": 197,
-    			//	"target_user_jo": {
-            	//			...
-        		//		}
-				//  }
-            	
             	main_div_string = main_div_string + "<div style=\"padding:5px;text-align:center\">";
             	main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto;width:400px\">";
             	main_div_string = main_div_string + "<tr>";
             	main_div_string = main_div_string + "	<td>";
             	main_div_string = main_div_string + "		<table style=\"width:100%;\">";
-            	//main_div_string = main_div_string + "			<tr>";
-            	//main_div_string = main_div_string + "				<td colspan=2 style=\"font-size:20px;font-weight:bold\">";
-            	//main_div_string = main_div_string + "					BIO";
-            	//main_div_string = main_div_string + "				</td>";
-            	//main_div_string = main_div_string + "			</tr>";
             	main_div_string = main_div_string + "			<tr>";
             	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right\" id=\"large_avatar_td\">";
-            	
-            	main_div_string = main_div_string + "					<img class=\"rounded\" id=\"large_avatar_img\" src=\"" + target_user_jo.picture + "\" style=\"height:128px;\">";
-            	
+            	main_div_string = main_div_string + "					<img class=\"rounded\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"height:128px;\">";
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
             	main_div_string = main_div_string + "					<table style=\"margin-right:auto;border-spacing:5px;\">";
             	if (target_user_jo.email)
-            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\">" + target_user_jo.screenname + " <a href=\"#\" id=\"logout_link\">Log out</a></td></tr>";
+            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span> <a href=\"#\" id=\"logout_link\">Log out</a></td></tr>";
             	else
-            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\">" + target_user_jo.screenname + "</td></tr>";
-            	// email
-            	if (target_user_jo.email)
-            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Email:</td><td style=\"text-align:left\">" + target_user_jo.email + " (private)</td></tr>";
-            	else
-            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Email:</td><td style=\"text-align:left;font-style:italic\">hidden</td></tr>";
-            	// since
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Since:</td><td style=\"text-align:left\">" + target_user_jo.since + "</td></tr>";
-            	// seen
-            	if (target_user_jo.seen)
-            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left\">" + target_user_jo.seen + "</td></tr>";
-            	else
-            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left;font-style:italic\">hidden</td></tr>";
-            	
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments:</td><td style=\"text-align:left\">" + target_user_jo.num_comments_authored + "</td></tr>";
-            	
-      	   	main_div_string = main_div_string + "						<tr>";
-        	main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold\">";
-        	main_div_string = main_div_string + "							Location:";
-        	main_div_string = main_div_string + "							</td>";
-        	main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-        	 if (target_user_jo.country === "USA")
-        		 main_div_string = main_div_string + target_user_jo.state + ", ";
-        	 main_div_string = main_div_string + target_user_jo.country;
-        	 main_div_string = main_div_string + "							</td>";
-        	 main_div_string = main_div_string + "						</tr>";
-        	 main_div_string = main_div_string + "					</table>";
-        	 main_div_string = main_div_string + "				</td>";
-        	 main_div_string = main_div_string + "			</tr>";
-        	 main_div_string = main_div_string + "		</table>";
-        	 main_div_string = main_div_string + "	</td>";
-        	 main_div_string = main_div_string + "</tr>";
+            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Email:</td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Since:</td><td style=\"text-align:left\" id=\"profile_page_since_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left\" id=\"profile_page_seen_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments:</td><td style=\"text-align:left\" id=\"profile_page_numcomments_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr>";
+            	main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold\">";
+            	main_div_string = main_div_string + "							Location:";
+            	main_div_string = main_div_string + "							</td>";
+            	main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"state_country_td\">";
+            	main_div_string = main_div_string + "							</td>";
+            	main_div_string = main_div_string + "						</tr>";
+            	main_div_string = main_div_string + "					</table>";
+            	main_div_string = main_div_string + "				</td>";
+            	main_div_string = main_div_string + "			</tr>";
+            	main_div_string = main_div_string + "		</table>";
+            	main_div_string = main_div_string + "	</td>";
+            	main_div_string = main_div_string + "</tr>";
             	if (target_user_jo.email) // this is a self user
             	{
             		main_div_string = main_div_string + "<tr>";
@@ -218,20 +185,10 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onmention_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
-					/*main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Words promo emails:</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "							<select id=\"emailpromos_selector\">";
-					main_div_string = main_div_string + "							  <option value=\"Yes\">Yes</option>";
-					main_div_string = main_div_string + "							  <option value=\"No\">No</option>";
-					main_div_string = main_div_string + "							</select>";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"emailpromos_result_td\">";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "						</tr>";*/
 					main_div_string = main_div_string + "						<tr>"
 					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
 					main_div_string = main_div_string + "								Change avatar:<br>";
-					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-size:10px;font-style:italic\"></span>";
+					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-size:10px;font-style:italic;font-weight:normal\"></span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
@@ -301,15 +258,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "	</td>";
 					main_div_string = main_div_string + "</tr>";
 					main_div_string = main_div_string + "</table>";
-					/*main_div_string = main_div_string + "									<table id=\"image_selection_table\">";
-					main_div_string = main_div_string + "<tr id=\"google_radio_tr\"><td><input id=\"use_google_picture_radio\" type=\"radio\" name=\"picture_type\" value=\"google\"></td><td style=\"text-align:left\">Use my Google picture</td></tr>";
-					main_div_string = main_div_string + "<tr id=\"facebook_radio_tr\"><td><input id=\"use_facebook_picture_radio\" type=\"radio\" name=\"picture_type\" value=\"facebook\"></td><td style=\"text-align:left\">Use my Facebook picture</td></tr>";
-					main_div_string = main_div_string + "<tr id=\"words_radio_tr\"><td><input id=\"use_words_image_radio\" type=\"radio\" name=\"picture_type\" value=\"words\"></td><td style=\"text-align:left\">Use a Words image instead</td></tr>";
-					main_div_string = main_div_string + "									</table>";*/
 					main_div_string = main_div_string + "								</div>";
-					
-					//main_div_string = main_div_string + "								<div id=\"facebook_picture_div\" style=\"text-align:center;display:none\"></div>";
-					//main_div_string = main_div_string + "								<div id=\"words_image_div\" style=\"display:none\">";
 					main_div_string = main_div_string + "									<table id=\"words_avatar_selector_table\" style=\"display:none;margin-right:auto;margin-left:auto\">";
 					main_div_string = main_div_string + "										<tr>";
 					main_div_string = main_div_string + "											<td>";
@@ -321,7 +270,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left;vertical-align:top\">";
-					main_div_string = main_div_string + "								<img class=\"rounded\" id=\"avatar_img\" src=\"" + bg.user_jo.picture + "\" style=\"width:48px;height:48px\">";
+					main_div_string = main_div_string + "								<img class=\"rounded\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
 					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\">Save</button>";
 					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "							</td>";
@@ -356,9 +305,31 @@ function getProfile(screenname)
             	}
             	main_div_string = main_div_string + "</table>";
             	main_div_string = main_div_string + "</div>";
-            	$("#main_div_" + currentURLhash).css("padding", "0px");
-            	$("#main_div_" + currentURLhash).html(main_div_string); //FIXME
+            	$("#main_div_" + currentURLhash).html(main_div_string); //OK
+            	$("#large_avatar_img").attr("src", target_user_jo.picture);
+            	$("#profile_page_screenname_span").text(target_user_jo.screenname);
+            	$("#profile_page_since_td").text(target_user_jo.since);
+            	$("#profile_page_numcomments_td").text(target_user_jo.num_comments_authored);
+            	if(target_user_jo.email)
+            		$("#profile_page_email_td").text(target_user_jo.email + " (private)");
+            	else
+            	{
+            		$("#profile_page_email_td").css("font-style", "italic");
+            		$("#profile_page_email_td").text("hidden");
+            	}	
+            	if(target_user_jo.seen)
+            		$("#profile_page_seen_td").text(target_user_jo.seen);
+            	else
+            	{
+            		$("#profile_page_seen_td").css("font-style", "italic");
+            		$("#profile_page_seen_td").text("hidden");
+            	}	
+            	if (target_user_jo.country === "USA")
+            		$("#state_country_td").text(target_user_jo.state + ", " + target_user_jo.country);
+            	else
+            		$("#state_country_td").text(target_user_jo.country);
             	
+            	$("#avatar_img").attr("src", bg.user_jo.picture);
             	
             	$("#screenname_available_button").click(
             			function () 
@@ -544,36 +515,36 @@ function getProfile(screenname)
         		{
         			$("#use_google_tr").hide();
         			$("#use_facebook_tr").hide();
-        			$("#social_wording_span").text("To use a FB or Google picture, log out and back in, then return here.");
+        			$("#social_wording_span").text("To use a FB or Google picture, log out and back in, then return here. (Email must match.)");
         		}
         		else if(!facebook_access_token_expired_or_doesnt_exist && google_access_token_expired_or_doesnt_exist)
         		{
         			$("#use_google_tr").hide();
-        			$("#social_wording_span").text("To use a Google picture, log out (fully) and back in with Google, then return here.");
+        			$("#social_wording_span").text("To use a Google picture, log out (fully) and back in with Google, then return here. (Email must match.)");
         		}
         		else if(facebook_access_token_expired_or_doesnt_exist && !google_access_token_expired_or_doesnt_exist)
         		{
         			$("#use_facebook_tr").hide();
-        			$("#social_wording_span").text("To use a FB picture, log out (fully) and back in with FB, then return here.");
+        			$("#social_wording_span").text("To use a FB picture, log out (fully) and back in with FB, then return here. (Email must match.)");
         		}
         		else // both valid somehow, go off the picture hostname
         		{
         			if(bg.user_jo.picture.indexOf("graph.facebook.com") != -1)
         			{
         				$("#use_google_tr").hide();
-        				$("#social_wording_span").text("To use a Google picture, log out and back in with Google, then return here.");
+        				$("#social_wording_span").text("To use a Google picture, log out and back in with Google, then return here. (Email must match.)");
         			}
         			else if(bg.user_jo.picture.indexOf("googleusercontent.com") != -1)
         			{
         				$("#use_facebook_tr").hide();
-        				$("#social_wording_span").text("To use a FB picture, log out and back in with FB, then return here.");
+        				$("#social_wording_span").text("To use a FB picture, log out (fully) and back in with FB, then return here. (Email must match.)");
         			}
         			else // this is a bizarre situation where user has valid tokens for both social services but is using neither service's image
         			{    // let's just force only google to be valid. hehe
         				docCookies.removeItem("facebook_access_token");
         				docCookies.removeItem("facebook_access_token_expires");
         				$("#use_facebook_tr").hide();
-        				$("#social_wording_span").text("To use a FB picture, log out and back in with FB, then return here.");
+        				$("#social_wording_span").text("To use a FB picture, log out (fully) and back in with FB, then return here. (Email must match.)");
         			}	
         		}	
             	

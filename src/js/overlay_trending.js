@@ -13,7 +13,7 @@ function doTrendingTab()
 	tabmode = "trending";
 	$("#thread_tab_img").attr("src", "images/chat_gray.png");
 	$("#trending_tab_img").attr("src", "images/trending_blue.png");
-	$("#notifications_tab_img").attr("src", "images/flag_gray.png");
+	updateNotificationTabLinkImage();
 	$("#past_tab_img").attr("src", "images/clock_gray.png");
 	$("#profile_tab_img").attr("src", "images/user_gray.png");
 	//updateNotificationTabLinkImage();
@@ -23,7 +23,7 @@ function doTrendingTab()
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var mds = "";  // main div string
-	mds = mds + "<table>";
+	mds = mds + "<table style=\"padding:10px\">";
 	mds = mds + "	<tr>";
 	mds = mds + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
 	mds = mds + "Most active pages";
@@ -41,7 +41,6 @@ function doTrendingTab()
 	mds = mds + "		</td>";
 	mds = mds + "	</tr>";
 	mds = mds + "</table>";
-	$("#main_div_" + currentURLhash).css("padding", "10px");
 	$("#main_div_" + currentURLhash).html(mds); //OK
 	getTrendingActivity(); // initial window, choices
 }
@@ -227,39 +226,17 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 	}
 	mds = mds + "</table>";
 	$("#" + dom_id).html(mds);//FIXME
-	$("a").click(function() {
-		 var c = $(this).attr('class');
-		 if(c == "newtab")
-		 {
-			 var h = $(this).attr('href');
-			 var haswwwdot = false;
-			 if(h.indexOf("://www.") != -1)
-			 {
-				 haswwwdot = true;
-			 }
-			 var open_tab_id = null;
-			 chrome.tabs.query({url: h}, function(tabs) { 
-				 for (var i = 0; i < tabs.length; i++) {
-					 open_tab_id = tabs[i].id;
-				 }
-				 if(open_tab_id === null)
-				 {
-					 // try without www.
-					 h = h.replace("://www.", "://");
-					 chrome.tabs.query({url: h}, function(tabs) { 
-						 for (var i = 0; i < tabs.length; i++) {
-							 open_tab_id = tabs[i].id;
-						 }
-						 if(open_tab_id === null)
-							 chrome.tabs.create({url:h});
-						 else
-							 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
-					 });
-				 }
-				 else
-					 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {});
-			 });
-		 }
+	$("a").click(function(event) {
+		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
+		{
+			event.processed = true;
+			var c = $(this).attr('class');
+			if(c == "newtab")
+			{
+				var h = $(this).attr('href');
+				doNewtabClick(h);
+			}
+		}
 	});
 	return;
 }

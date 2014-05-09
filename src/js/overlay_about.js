@@ -15,7 +15,7 @@ function doAboutTab(message)
 	tabmode = "about";
 	$("#thread_tab_img").attr("src", "images/chat_gray.png");
 	$("#trending_tab_img").attr("src", "images/trending_gray.png");
-	$("#notifications_tab_img").attr("src", "images/flag_gray.png");
+	updateNotificationTabLinkImage();
 	$("#past_tab_img").attr("src", "images/clock_gray.png");
 	$("#profile_tab_img").attr("src", "images/user_gray.png");
 	var details = chrome.app.getDetails();
