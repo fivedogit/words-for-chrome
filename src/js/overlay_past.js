@@ -120,7 +120,7 @@ function doPastCommentItem(item_id, dom_id)
         	item_jo = data.item;
         	fids = fids + "<table style=\"width:100%\">";
     		fids = fids + "	<tr>";
-    		fids = fids + "		<td style=\"text-align:left\" id=\"pastcomment_header_td_" + item_random + "\">";
+    		fids = fids + "		<td style=\"text-align:left;padding-bottom:5px\" id=\"pastcomment_header_td_" + item_random + "\">";
     		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"images/ajaxSnake.gif\">";
         	fids = fids + "		</td>";
         	fids = fids + "	</tr>";
