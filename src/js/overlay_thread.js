@@ -45,9 +45,9 @@ function doThreadTab()
 	{
 		beginindex = 0;
 		$("#comment_submission_form_div_" + currentURLhash).hide();
-		var main_div_string = "Commenting for non-websites is currently disabled.<br>";
-		main_div_string = main_div_string + "		(URL must start with \"http\".)"; // , hostname must contain a \".\" and lack a \":\".
-		$("#main_div_" + currentURLhash).text(main_div_string);
+		var main_div_string = "<div style=\"padding:20px\">Commenting for non-websites is currently disabled.<br>";
+		main_div_string = main_div_string + "		(URL must start with \"http\".)</div>"; // , hostname must contain a \".\" and lack a \":\".
+		$("#main_div_" + currentURLhash).html(main_div_string);//OK
 	}
 }
 

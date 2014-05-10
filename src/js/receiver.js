@@ -631,8 +631,46 @@ function doFinished()
         	{	
         		$("#progress_tr").hide();
         		if(data.user_jo) { 	bg.user_jo = data.user_jo; }
-        		$("#message_td").text("You are now logged in.");
-        		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
+        		$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You are now logged in.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
+        		
+        		// tips html formation
+        		var str = "";
+        		str = str + "<div style=\"width:360px;padding:15px;border-top:1px solid black\">";
+        		str = str + "<p style=\"font-weight:bold;text-align:left\">RULES:</p><p style=\"text-align:left\">Downvote the following: name-calling, racism, ALL CAPS, trolling, comments that should be upvotes instead (e.g. \"I love this site\", \"Me too!\"), out-of-place political talk, profanity aimed at another user, lolspeak and aggressively shoddy spelling/punctuation.</p>";
+        		str = str + "<p style=\"font-weight:bold;text-align:center\">HAVE FUN!</p></div>";
+        	/*	var random = Math.floor(Math.random() * 14);
+        		if(random === 0)
+        			str = str + "<br><br>Tip: If you @screenname mention another user, they will be notified.";
+        		else if(random === 1)
+        			str = str + "<br><br>Tip: Users with too many downvotes will be silenced for 7 days and have all their past comments deleted.";
+        		else if(random === 2)
+        			str = str + "<br><br>Tip: You can change your picture and screenname under the <img src=\"images/user_blue.png\"> profile tab.";
+        		else if(random === 3)
+        			str = str + "<br><br>Tip: You can change your email preferences under the <img src=\"images/user_blue.png\"> profile tab.";
+        		else if(random === 4)
+        			str = str + "<br><br>Tip: You can view/delete your past comments under the <img src=\"images/clock_blue.png\"> past comments tab.";
+        		else if(random === 5)
+        			str = str + "<br><br>Rule #1: If you see misbehavior, please downvote it. Words depends on you to weed out crazy/hateful/ignorant users.";
+        		else if(random === 6)
+        			str = str + "<br><br>Rule #2: Downvote racists.";
+        		else if(random === 7)
+        			str = str + "<br><br>Rule #3: Downvote name-calling. Disagreement is fine, but only with respect.";
+        		else if(random === 8)
+        			str = str + "<br><br>Rule #4: Downvote inappropriate, unrelated political discussion.";
+        		else if(random === 9)
+        			str = str + "<br><br>Rule #5: Downvote trolls.";
+        		else if(random === 10)
+        			str = str + "<br><br>Rule #6: DOWNVOTE ALL CAPS.";
+        		else if(random === 11)
+        			str = str + "<br><br>Rule #7: Downvote spammers.";
+        		else if(random === 12)
+        			str = str + "<br><br>Rule #8: Downvote simple comments such as \"I like this page!\" that add nothing to the discussion.";
+        		else if(random === 13)
+        			str = str + "<br><br>Rule #9: Profanity is ok, unless it's aimed at another user. Downvote such abuse.";*/
+        		
+        		// end tips html formation
+        		
+        		$("#registration_form_td").html(str);//OK
         		$("#registration_form_td").show();
         		
         		$("#close_this_tab_link").click( function () {

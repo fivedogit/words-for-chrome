@@ -79,6 +79,7 @@ function getProfile(screenname)
             	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Unable to retrieve profile.</div>");//OK
             	if(data.error_code && data.error_code === "0000")
         		{
+            		alert("getUserByScreenname returned code 0000");
         			displayMessage("Your login has expired. Please relog.", "red");
         			docCookies.removeItem("email"); 
         			docCookies.removeItem("this_access_token");
@@ -91,7 +92,7 @@ function getProfile(screenname)
             	target_user_jo = data.target_user_jo; // backend will provide something that looks like this:
             	
             	main_div_string = main_div_string + "<div style=\"padding:5px;text-align:center\">";
-            	main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto;width:400px\">";
+            	main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto;width:430px\">";
             	main_div_string = main_div_string + "<tr>";
             	main_div_string = main_div_string + "	<td>";
             	main_div_string = main_div_string + "		<table style=\"width:100%;\">";
@@ -108,7 +109,17 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Email:</td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Since:</td><td style=\"text-align:left\" id=\"profile_page_since_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left\" id=\"profile_page_seen_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments:</td><td style=\"text-align:left\" id=\"profile_page_numcomments_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments authored:</td><td style=\"text-align:left\" id=\"profile_page_numcommentsauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Likes authored:</td><td style=\"text-align:left\" id=\"profile_page_numlikesauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Dislikes authored:</td><td style=\"text-align:left\" id=\"profile_page_numdislikesauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Rating <span id=\"rating_window_span\"></span>:</td>";
+            	main_div_string = main_div_string + "						<td style=\"text-align:left\" id=\"profile_page_rating_td\">";
+            	main_div_string = main_div_string + "						<span id=\"up_span\" style=\"color:green\"></span> up, ";
+            	main_div_string = main_div_string + "						<span id=\"down_span\" style=\"color:red\"></span> down, ";
+            	main_div_string = main_div_string + "						<span id=\"percent_up_span\" style=\"color:blue\"></span> % up, ";
+            	main_div_string = main_div_string + "						<span id=\"rating_span\" style=\"color:blue\"></span> rating";
+            	main_div_string = main_div_string + "						</td>";
+            	main_div_string = main_div_string + "						</tr>";
             	main_div_string = main_div_string + "						<tr>";
             	main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold\">";
             	main_div_string = main_div_string + "							Location:";
@@ -183,6 +194,16 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onmention_result_td\">";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "						</tr>";
+					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">News/info emails:</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "							<select id=\"emailpromos_selector\">";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
+					main_div_string = main_div_string + "							</select>";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"emailpromos_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>"
@@ -290,8 +311,8 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "								<input type=button id=\"screenname_available_button\" value=\"available?\" style=\"width:85px\">";
-					main_div_string = main_div_string + "								<input type=button id=\"screenname_submit_button\" value=\"submit\" style=\"width:85px\">";
+					main_div_string = main_div_string + "								<input type=button id=\"screenname_available_button\" value=\"available?\" style=\"width:78px\">";
+					main_div_string = main_div_string + "								<input type=button id=\"screenname_submit_button\" value=\"submit\" style=\"width:78px\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"screenname_result_td\">";
 					main_div_string = main_div_string + "							</td>";
@@ -309,7 +330,20 @@ function getProfile(screenname)
             	$("#large_avatar_img").attr("src", target_user_jo.picture);
             	$("#profile_page_screenname_span").text(target_user_jo.screenname);
             	$("#profile_page_since_td").text(target_user_jo.since);
-            	$("#profile_page_numcomments_td").text(target_user_jo.num_comments_authored);
+            	$("#profile_page_numcommentsauthored_td").text(target_user_jo.num_comments_authored);
+            	$("#profile_page_numlikesauthored_td").text(target_user_jo.num_likes_authored);
+            	$("#profile_page_numdislikesauthored_td").text(target_user_jo.num_dislikes_authored);
+            	$("#up_span").text(target_user_jo.up);
+            	$("#down_span").text(target_user_jo.down);
+            	if(target_user_jo.up === 0 && target_user_jo.down === 0)
+            		$("#percent_up_span").text("0");
+            	else if(target_user_jo.up > 0 && target_user_jo.down === 0)
+            		$("#percent_up_span").text("100");
+            	else
+            		$("#percent_up_span").text(Math.floor(target_user_jo.up / (target_user_jo.up + target_user_jo.down) * 100));
+            	$("#rating_span").text(target_user_jo.rating);
+            	$("#rating_window_span").text("(" + (target_user_jo.rating_window_mins/1440) + "d)");
+            	
             	if(target_user_jo.email)
             		$("#profile_page_email_td").text(target_user_jo.email + " (private)");
             	else
@@ -432,6 +466,7 @@ function getProfile(screenname)
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
+				            		alert("setUserPreference:screenname returned code 0000");
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
@@ -471,8 +506,6 @@ function getProfile(screenname)
         				docCookies.removeItem("last_tab_id");
         				docCookies.removeItem("google_access_token");
         				docCookies.removeItem("google_access_token_expires");
-        				docCookies.removeItem("email");
-        				docCookies.removeItem("this_access_token");
         				google_access_token_expired_or_doesnt_exist = true;
         			}	
         		}	
@@ -488,8 +521,6 @@ function getProfile(screenname)
         				docCookies.removeItem("last_tab_id");
         				docCookies.removeItem("facebook_access_token");
         				docCookies.removeItem("facebook_access_token_expires");
-        				docCookies.removeItem("email");
-        				docCookies.removeItem("this_access_token");
         				facebook_access_token_expired_or_doesnt_exist = true;
         			}	
         		}	
@@ -515,16 +546,12 @@ function getProfile(screenname)
         		if(bg.user_jo.last_login_type === "facebook")
 				{
 					//alert("llt == facebook");
-					docCookies.removeItem("google_access_token");
-    				docCookies.removeItem("google_access_token_expires");
     				$("#use_google_tr").hide();
     				$("#social_wording_span").text("To use a Google picture, log in with Google, then return here. (Emails must match.)");
 				}	
 				else if(bg.user_jo.last_login_type === "google")
 				{
 					//alert("llt == google");
-					docCookies.removeItem("facebook_access_token");
-    				docCookies.removeItem("facebook_access_token_expires");
     				$("#use_facebook_tr").hide();
     				$("#social_wording_span").text("To use a FB picture, log in with FB, then return here. (Emails must match.)");
 				}	
@@ -694,20 +721,23 @@ function getProfile(screenname)
                 				logoutmessage = logoutmessage + "		</td>";
                 				logoutmessage = logoutmessage + "	</tr>";
             				}
-            				logoutmessage = logoutmessage + "	<tr>";
-            				logoutmessage = logoutmessage + "		<td style=\"text-align:center\">";
-            				logoutmessage = logoutmessage + "			<table style=\"width:210px;margin-right:auto;margin-left:auto;\">";
-            				logoutmessage = logoutmessage + "				<tr>";
-            				logoutmessage = logoutmessage + "					<td style=\"width:25px\">";
-            				logoutmessage = logoutmessage + "<input type=\"checkbox\" id=\"google_disconnect_checkbox\" style=\"margin-left:auto;width:25px\">";
-            				logoutmessage = logoutmessage + "					</td>";
-            				logoutmessage = logoutmessage + "					<td>";
-            				logoutmessage = logoutmessage + "remove Google authorization (if any)"; // FIXME, should check users's current google login state. Not sure how, actually.
-            				logoutmessage = logoutmessage + "					</td>";
-            				logoutmessage = logoutmessage + "				</tr>";
-            				logoutmessage = logoutmessage + "			</table>";
-            				logoutmessage = logoutmessage + "		</td>";
-            				logoutmessage = logoutmessage + "	</tr>";
+            				if(google_access_token != null)
+            				{
+            					logoutmessage = logoutmessage + "	<tr>";
+                				logoutmessage = logoutmessage + "		<td style=\"text-align:center\">";
+                				logoutmessage = logoutmessage + "			<table style=\"width:210px;margin-right:auto;margin-left:auto;\">";
+                				logoutmessage = logoutmessage + "				<tr>";
+                				logoutmessage = logoutmessage + "					<td style=\"width:25px\">";
+                				logoutmessage = logoutmessage + "<input type=\"checkbox\" id=\"google_disconnect_checkbox\" style=\"margin-left:auto;width:25px\">";
+                				logoutmessage = logoutmessage + "					</td>";
+                				logoutmessage = logoutmessage + "					<td>";
+                				logoutmessage = logoutmessage + "remove Google authorization"; 
+                				logoutmessage = logoutmessage + "					</td>";
+                				logoutmessage = logoutmessage + "				</tr>";
+                				logoutmessage = logoutmessage + "			</table>";
+                				logoutmessage = logoutmessage + "		</td>";
+                				logoutmessage = logoutmessage + "	</tr>";
+            				}
             				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:15px\">";
             				logoutmessage = logoutmessage + "			<button id=\"logout_confirmation_button\">LOGOUT</button>";
@@ -737,6 +767,8 @@ function getProfile(screenname)
                         							docCookies.removeItem("facebook_access_token_expires");
                         						},
                         						error: function(e) {
+                        							docCookies.removeItem("facebook_access_token");
+                        							docCookies.removeItem("facebook_access_token_expires");
                         							console.log(e);
                         							displayMessage("Sorry. Disconnection didn't work. You may already be disconnected. If not, you can disconnect manually in your Facebook settings", "red", null, 7);
                         						}
@@ -745,7 +777,8 @@ function getProfile(screenname)
                         				if($("#google_disconnect_checkbox").prop("checked"))
                         				{
                         					var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + docCookies.getItem("google_access_token");
-
+                        					docCookies.removeItem("google_access_token");
+                							docCookies.removeItem("google_access_token_expires");
                         					// Tell google to disconnect this user.
                         					//alert("telling google to disconnect user");
                         					$.ajax({
@@ -756,8 +789,6 @@ function getProfile(screenname)
                         						dataType: 'jsonp',
                         						success: function(nullResponse) { // on successful disconnection, also delete google_access_token. It isn't valid anymore anyway.
                         							//alert("success");
-                        							docCookies.removeItem("google_access_token");
-                        							docCookies.removeItem("google_access_token_expires");
                         						},
                         						error: function(e) {
                         							console.log(e);
@@ -800,10 +831,10 @@ function getProfile(screenname)
             	else if (bg.user_jo.onmention === "do nothing")
             		$("#onmention_selector").val("do nothing");
             	
-            	/*if (bg.user_jo.emailpromos === "yes")
-            		$("#emailpromos_selector").val("yes");
-            	else if (bg.user_jo.emailpromos === "no")
-            		$("#emailpromos_selector").val("no");*/
+            	if (bg.user_jo.emailpromos === "email")
+            		$("#emailpromos_selector").val("email");
+            	else if (bg.user_jo.emailpromos === "do nothing")
+            		$("#emailpromos_selector").val("do nothing");
             	
             	$("#size_selector").change(function () {
 					$.ajax({
@@ -1041,6 +1072,52 @@ function getProfile(screenname)
 				        }
 					});
             	});
+            	
+            	$("#emailpromos_selector").change(function () {
+					$.ajax({
+						type: 'GET',
+						url: endpoint,
+						data: {
+				            method: "setUserPreference",
+				            email: email,             
+				            this_access_token: this_access_token,  
+				            which: "emailpromos",
+				            value: $("#emailpromos_selector").val() 
+				        },
+				        dataType: 'json',
+				        async: true,
+				        success: function (data, status) {
+				        	if (data.response_status === "error")
+				        	{
+				        		$("#emailpromos_result_td").text("Error: " + data.message);
+				        		// on error, reset the selector to the bg.user_jo value
+				        		if (bg.user_jo.emailpromos === "email")
+				            		$("#emailpromos_selector").val("email");
+				            	else if (bg.user_jo.emailpromos === "do nothing")
+				            		$("#emailpromos_selector").val("do nothing");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
+				        	else
+				        		$("#emailpromos_result_td").text("updated");
+				        	setTimeout(function(){$("#emailpromos_result_td").text("");},3000);
+				        }
+				        ,
+				        error: function (XMLHttpRequest, textStatus, errorThrown) {
+				        	$("#emailpromos_result_td").text("ajax error");
+				        	setTimeout(function(){$("#emailpromos_result_td").text("");},3000);
+				            console.log(textStatus, errorThrown);
+				        }
+					});
+            	});
+            	
             }
         
         },
