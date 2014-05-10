@@ -477,13 +477,14 @@ function getProfile(screenname)
         			}	
         		}	
         		var facebook_access_token_expired_or_doesnt_exist = true;
-        		if(docCookies.getItem("facebook_access_token_expires") != null && docCookies.getItem("facebook_access_token") != null) // ok, the token/expires cookies exist
+        		if(docCookies.getItem("facebook_access_token_expires") !== null && docCookies.getItem("facebook_access_token") !== null) // ok, the token/expires cookies exist
         		{
         			var ex = docCookies.getItem("facebook_access_token_expires");
         			if(ex > bg.msfe_according_to_backend) 
         				facebook_access_token_expired_or_doesnt_exist = false; // and it appears valid
         			else 
         			{												// it existed, but wasn't valid. Delete everything
+        				//alert('deleting fb access token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend');
         				docCookies.removeItem("last_tab_id");
         				docCookies.removeItem("facebook_access_token");
         				docCookies.removeItem("facebook_access_token_expires");
@@ -511,42 +512,22 @@ function getProfile(screenname)
         			$("#use_monster_radio").prop('checked', true);
         		
         		// then show the appropriate trs and write the appropriate wording...
-        		if(facebook_access_token_expired_or_doesnt_exist && google_access_token_expired_or_doesnt_exist)
-        		{
-        			$("#use_google_tr").hide();
-        			$("#use_facebook_tr").hide();
-        			$("#social_wording_span").text("To use a FB or Google picture, log out and back in, then return here. (Email must match.)");
-        		}
-        		else if(!facebook_access_token_expired_or_doesnt_exist && google_access_token_expired_or_doesnt_exist)
-        		{
-        			$("#use_google_tr").hide();
-        			$("#social_wording_span").text("To use a Google picture, log out (fully) and back in with Google, then return here. (Email must match.)");
-        		}
-        		else if(facebook_access_token_expired_or_doesnt_exist && !google_access_token_expired_or_doesnt_exist)
-        		{
-        			$("#use_facebook_tr").hide();
-        			$("#social_wording_span").text("To use a FB picture, log out (fully) and back in with FB, then return here. (Email must match.)");
-        		}
-        		else // both valid somehow, go off the picture hostname
-        		{
-        			if(bg.user_jo.picture.indexOf("graph.facebook.com") != -1)
-        			{
-        				$("#use_google_tr").hide();
-        				$("#social_wording_span").text("To use a Google picture, log out and back in with Google, then return here. (Email must match.)");
-        			}
-        			else if(bg.user_jo.picture.indexOf("googleusercontent.com") != -1)
-        			{
-        				$("#use_facebook_tr").hide();
-        				$("#social_wording_span").text("To use a FB picture, log out (fully) and back in with FB, then return here. (Email must match.)");
-        			}
-        			else // this is a bizarre situation where user has valid tokens for both social services but is using neither service's image
-        			{    // let's just force only google to be valid. hehe
-        				docCookies.removeItem("facebook_access_token");
-        				docCookies.removeItem("facebook_access_token_expires");
-        				$("#use_facebook_tr").hide();
-        				$("#social_wording_span").text("To use a FB picture, log out (fully) and back in with FB, then return here. (Email must match.)");
-        			}	
-        		}	
+        		if(bg.user_jo.last_login_type === "facebook")
+				{
+					//alert("llt == facebook");
+					docCookies.removeItem("google_access_token");
+    				docCookies.removeItem("google_access_token_expires");
+    				$("#use_google_tr").hide();
+    				$("#social_wording_span").text("To use a Google picture, log in with Google, then return here. (Emails must match.)");
+				}	
+				else if(bg.user_jo.last_login_type === "google")
+				{
+					//alert("llt == google");
+					docCookies.removeItem("facebook_access_token");
+    				docCookies.removeItem("facebook_access_token_expires");
+    				$("#use_facebook_tr").hide();
+    				$("#social_wording_span").text("To use a FB picture, log in with FB, then return here. (Emails must match.)");
+				}	
             	
             	$("#use_google_radio").click(function () {
             		// go get Google picture
@@ -603,6 +584,7 @@ function getProfile(screenname)
             				{
             					if(data.error_code == "0000")
             					{
+            						alert('use facebook radio returned 0000, deleting FB tokens');
             						docCookies.removeItem("facebook_access_token");
             						docCookies.removeItem("facebook_access_token_expires");
             					}	
@@ -749,17 +731,16 @@ function getProfile(screenname)
                         						async: true,
                         						contentType: "application/json",
                         						dataType: 'json',
-                        						success: function(nullResponse) { // on successful disconnection, also delete google_access_token. It isn't valid anymore anyway.
-                        							//alert("success");
+                        						success: function(nullResponse) { // on successful disconnection, also delete facebook_access_token. It isn't valid anymore anyway.
+                        							//alert("deleting facebook access token and expires because person chose to log out and remove facebook authorization");
                         							docCookies.removeItem("facebook_access_token");
+                        							docCookies.removeItem("facebook_access_token_expires");
                         						},
                         						error: function(e) {
                         							console.log(e);
-                        							//alert("ajax error");
                         							displayMessage("Sorry. Disconnection didn't work. You may already be disconnected. If not, you can disconnect manually in your Facebook settings", "red", null, 7);
                         						}
                         					});	 
-                        					docCookies.removeItem("facebook_access_token");
                         				}
                         				if($("#google_disconnect_checkbox").prop("checked"))
                         				{
@@ -776,6 +757,7 @@ function getProfile(screenname)
                         						success: function(nullResponse) { // on successful disconnection, also delete google_access_token. It isn't valid anymore anyway.
                         							//alert("success");
                         							docCookies.removeItem("google_access_token");
+                        							docCookies.removeItem("google_access_token_expires");
                         						},
                         						error: function(e) {
                         							console.log(e);

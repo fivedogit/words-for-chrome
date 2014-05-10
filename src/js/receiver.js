@@ -100,6 +100,7 @@ if(code !== null && code !== "")
 {
 	// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
 	displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
+	$("#progress_tr").show();
 	$.ajax({
 		type: 'get',
 		url: bg.endpoint,
@@ -114,6 +115,7 @@ if(code !== null && code !== "")
 			if(data.response_status === "error")
 			{
 				displayMessage("error getting access_token from " + login_type, "red");
+				$("#progress_tr").hide();
 				if(data.error_code === "0000" && data.login_type === "facebook")
 				{
 					docCookies.removeItem("last_tab_id");
@@ -133,6 +135,7 @@ if(code !== null && code !== "")
 			}
 			else if(data.response_status === "success")
 			{
+				$("#progress_tr").hide();
 				if(data.show_registration === "true" && data.login_type === "facebook")
 				{
 					//alert("getAccessTokenFromAuthorizationCode() show registration=true");
@@ -249,6 +252,7 @@ else
 
 function login(login_type, social_access_token, social_access_token_expires)
 {
+	$("#progress_tr").show();
 	$.ajax({
 		type: 'GET',
 		url: bg.endpoint,
@@ -263,7 +267,7 @@ function login(login_type, social_access_token, social_access_token_expires)
 		success: function (data, status) {
 			if(data.response_status === "error")
 			{
-				
+				$("#progress_tr").hide();
 				if(data.error_code == "0000" && data.login_type === "facebook")
 				{
 					docCookies.removeItem("last_tab_id");
@@ -292,6 +296,7 @@ function login(login_type, social_access_token, social_access_token_expires)
 			}
 			else if(data.response_status === "success")
 			{
+				$("#progress_tr").hide();
 				if(data.show_registration === "true" && data.login_type === "google")
 				{
 					//alert("login: show registration=true\nexpires=" + data.google_access_token_expires + "\nrefresh=" + data.google_refresh_token);
@@ -540,6 +545,7 @@ function showRegistration(picture, login_type, email)
 					}
 					
 					displayMessage("Creating Words account... ", "black");
+					$("#progress_tr").show();
 					$("#registration_form_td").hide();
 
 					var local_a_t;
@@ -567,11 +573,13 @@ function showRegistration(picture, login_type, email)
 					    	//alert("ajax success");
 					    	if(data.response_status === "error")
 					    	{
+					    		$("#progress_tr").hide();
 					    		displayMessage(data.message, "red");
 					    		$("#registration_form_td").show();
 					    	}
 					    	else
 					    	{
+					    		$("#progress_tr").hide();
 					    		docCookies.setItem("email", data.email, 31536e3);
 		    		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 		    		    		doFinished();
@@ -595,6 +603,7 @@ function doFinished()
 {
 	// we've gotten the login return, now we need to get the user before we can safely say, 
 	displayMessage("Identify verified. Loading Words user info... ", "black");
+	$("#progress_tr").show();
 	$.ajax({ 
 		type: 'GET', 
 		url: bg.endpoint, 
@@ -609,6 +618,7 @@ function doFinished()
         success: function (data, status) {
         	if (data.response_status === "error") 
         	{
+        		$("#progress_tr").hide();
         		displayMessage(data.message, "red");
         		if(data.error_code && data.error_code === "0000")
         		{
@@ -619,6 +629,7 @@ function doFinished()
         	} 
         	else if (data.response_status === "success") 
         	{	
+        		$("#progress_tr").hide();
         		if(data.user_jo) { 	bg.user_jo = data.user_jo; }
         		$("#message_td").text("You are now logged in.");
         		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
