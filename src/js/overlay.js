@@ -9,7 +9,6 @@ var beginindex;
 var endindex;
 var email;
 var this_access_token;
-var threadstatus = 0; // notloading, loading
 var tabmode = "thread";
 
 //when the overlay's html page has loaded, do this
@@ -144,6 +143,7 @@ function displayLogstatAsLoggedOut() {
 	$("#google_login_link").click(
 			function () {
 				// user has chosen to log in with google, get rid of any existing FB login info to prevent confusing overlaps
+				alert("deleting facebook_access_token bc google login was clicked");
 				docCookies.removeItem("facebook_access_token");
 				docCookies.removeItem("facebook_access_token_expires");
 				var currenttabid;
@@ -163,6 +163,7 @@ function displayLogstatAsLoggedOut() {
 	$("#facebook_login_link").click(
 			function () {
 				// user has chosen to log in with facebook, get rid of any existing Google login info to prevent confusing overlaps
+				alert("deleting google_access_token bc google login was clicked");
 				docCookies.removeItem("google_access_token");
 				docCookies.removeItem("google_access_token_expires");
 				var currenttabid;

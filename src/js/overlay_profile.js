@@ -504,6 +504,7 @@ function getProfile(screenname)
         			else 
         			{												// it existed, but wasn't valid. Delete everything
         				docCookies.removeItem("last_tab_id");
+        				alert("deleting google_access_token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend");
         				docCookies.removeItem("google_access_token");
         				docCookies.removeItem("google_access_token_expires");
         				google_access_token_expired_or_doesnt_exist = true;
@@ -517,8 +518,8 @@ function getProfile(screenname)
         				facebook_access_token_expired_or_doesnt_exist = false; // and it appears valid
         			else 
         			{												// it existed, but wasn't valid. Delete everything
-        				//alert('deleting fb access token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend');
         				docCookies.removeItem("last_tab_id");
+        				alert("deleting facebook_access_token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend");
         				docCookies.removeItem("facebook_access_token");
         				docCookies.removeItem("facebook_access_token_expires");
         				facebook_access_token_expired_or_doesnt_exist = true;
@@ -763,20 +764,20 @@ function getProfile(screenname)
                         						dataType: 'json',
                         						success: function(nullResponse) { // on successful disconnection, also delete facebook_access_token. It isn't valid anymore anyway.
                         							//alert("deleting facebook access token and expires because person chose to log out and remove facebook authorization");
-                        							docCookies.removeItem("facebook_access_token");
-                        							docCookies.removeItem("facebook_access_token_expires");
                         						},
                         						error: function(e) {
-                        							docCookies.removeItem("facebook_access_token");
-                        							docCookies.removeItem("facebook_access_token_expires");
                         							console.log(e);
                         							displayMessage("Sorry. Disconnection didn't work. You may already be disconnected. If not, you can disconnect manually in your Facebook settings", "red", null, 7);
                         						}
                         					});	 
+                        					alert("deleting facebook_access_token after logout conf button");
+                        					docCookies.removeItem("facebook_access_token");
+                							docCookies.removeItem("facebook_access_token_expires");
                         				}
                         				if($("#google_disconnect_checkbox").prop("checked"))
                         				{
                         					var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + docCookies.getItem("google_access_token");
+                        					alert("deleting google_access_token after logout conf button");
                         					docCookies.removeItem("google_access_token");
                 							docCookies.removeItem("google_access_token_expires");
                         					// Tell google to disconnect this user.

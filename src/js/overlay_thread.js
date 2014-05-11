@@ -28,7 +28,7 @@ function doThreadTab()
 	
 	if(isValidURLFormation(currentURL))
 	{
-		if(typeof thread_jo === "undefined" || thread_jo === null)
+		if((typeof thread_jo === "undefined" || thread_jo === null) && bg.threadstatus !== 0) // overlay has been loaded, but thread is still being retrieved
 		{
 			var url_at_function_call = currentURL;
 			// wait for thread to load
@@ -36,7 +36,13 @@ function doThreadTab()
 			gotThread_wedge_for_ntj(url_at_function_call);
 			// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
 		}
-		else 
+		else if(thread_jo === null && bg.threadstatus === 0) // overlay has loaded but thread_jo is null -- this happens when using the inspector, and possibly other scenarios
+		{
+			var main_div_string = "<div style=\"padding:20px\">Could not display thread.<br>";
+			main_div_string = main_div_string + "		Try switching tabs or reloading the page, then clicking the Words button again.</div>"; // , hostname must contain a \".\" and lack a \":\".
+			$("#main_div_" + currentURLhash).html(main_div_string);//OK
+		}
+		else if(thread_jo !== null && bg.threadstatus === 0) 
 		{
 			gotThread();
 		}
@@ -348,7 +354,7 @@ function prepareGetAndPopulateThreadPortion()
 {
 	if (tabmode === "thread")
 	{
-		if ((typeof thread_jo.children === "undefined" || thread_jo.children === null || thread_jo.children.length === 0) && threadstatus === 0)
+		if ((typeof thread_jo.children === "undefined" || thread_jo.children === null || thread_jo.children.length === 0) && bg.threadstatus === 0)
 		{
 			//alert("Thread had no children");
 			var main_div_string = "";
@@ -460,7 +466,7 @@ function prepareGetAndPopulateThreadPortion()
 			
 			noteThreadView(true); // was empty
 		}
-		else if (threadstatus === 0) // the last thread has come in (with children), now populate
+		else if (bg.threadstatus === 0) // the last thread has come in (with children), now populate
 		{
 			//alert("Thread had children");
 			var thread_div_string = "";

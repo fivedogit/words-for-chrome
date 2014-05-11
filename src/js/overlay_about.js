@@ -44,7 +44,14 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "</li>";
 	aboutmessage = aboutmessage + "<li>Rate 5 stars <a href=\"https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews\">here</a></li>";
 	aboutmessage = aboutmessage + "<li>Report bugs to <a href=\"#\" id=\"at_twitter_link\">@fivedogit</a></li>";
-	aboutmessage = aboutmessage + "<li><a class=\"newtab\" href=\"https://coinbase.com/checkouts/60199bf8c30fc013dd5ec8f2e39bb566\">Donate Bitcoins</a> to keep the servers running</li>";
+	aboutmessage = aboutmessage + "<li>Donate Bitcoins to keep the servers running ";
+	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/60199bf8c30fc013dd5ec8f2e39bb566\">$2.50</a> - ";
+	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41\">$5</a> - ";
+	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca\">$10</a> - ";
+	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895\">$20</a> - ";
+	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529\">$50</a> - ";
+	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a\">$100</a>";
+	aboutmessage = aboutmessage + "</li>";
 	aboutmessage = aboutmessage + "</ol>";
 	aboutmessage = aboutmessage + "<hr>";
 	aboutmessage = aboutmessage + "<p>Words DOES NOT TRACK and is open source for verification. The code is available here:</p>";
