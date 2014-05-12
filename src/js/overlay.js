@@ -98,7 +98,8 @@ function displayLogstatAsLoggedOut() {
 	$("#google_login_img").mouseout( function() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
 		$("#header_div_top").html(temphtml);//OK
-		$("#comment_submission_form_div_" + currentURLhash).show();
+		if(tabmode === "thread")
+			$("#comment_submission_form_div_" + currentURLhash).show();
 		$("#google_login_img").attr("src","images/google_button_24x24.png");
 		if(tabmode === "thread")
 				$("#tab_tooltip_td").text("Comments");
@@ -124,7 +125,8 @@ function displayLogstatAsLoggedOut() {
 	$("#facebook_login_img").mouseout( function() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
 		$("#header_div_top").html(temphtml);//OK
-		$("#comment_submission_form_div_" + currentURLhash).show();
+		if(tabmode === "thread")
+			$("#comment_submission_form_div_" + currentURLhash).show();
 		$("#facebook_login_img").attr("src","images/facebook_button_24x24.png");
 		if(tabmode === "thread")
 				$("#tab_tooltip_td").text("Comments");

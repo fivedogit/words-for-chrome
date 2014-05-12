@@ -163,8 +163,9 @@ function getThread(url_at_function_call, updatebutton)
 	
 	// the following ugly piece of code waits for up to 7 seconds for the thread to finish. Checking every .333 seconds, exiting upon completion
 	// as ugly as this is, there really isn't a better, more robust way to do animations in a chrome extension. Loops with setTimeout get really hairy. Don't judge.
+	// if there is a better way, please submit a bug report on Github or notify me on twitter
 	setTimeout(function () {
-	    if (updatebutton) {
+	    if (updatebutton && (url_at_function_call === currentURL)) {
 	        drawTTUButton("-  ", "-  ")
 	    }
 	    if (threadstatus === 0 && loc_thread_jo != null) {
@@ -175,7 +176,7 @@ function getThread(url_at_function_call, updatebutton)
 	        return;
 	    }
 	    setTimeout(function () {
-	        if (updatebutton) {
+	        if (updatebutton && (url_at_function_call === currentURL)) {
 	            drawTTUButton("-- ", "-- ")
 	        }
 	        if (threadstatus === 0 && loc_thread_jo != null) {
@@ -186,7 +187,7 @@ function getThread(url_at_function_call, updatebutton)
 	            return;
 	        }
 	        setTimeout(function () {
-	            if (updatebutton) {
+	            if (updatebutton && (url_at_function_call === currentURL)) {
 	                drawTTUButton(" --", " --")
 	            }
 	            if (threadstatus === 0 && loc_thread_jo != null) {
@@ -197,7 +198,7 @@ function getThread(url_at_function_call, updatebutton)
 	                return;
 	            }
 	            setTimeout(function () {
-	                if (updatebutton) {
+	                if (updatebutton && (url_at_function_call === currentURL)) {
 	                    drawTTUButton("  -", "  -")
 	                }
 	                if (threadstatus === 0 && loc_thread_jo != null) {
@@ -208,7 +209,7 @@ function getThread(url_at_function_call, updatebutton)
 	                    return;
 	                }
 	                setTimeout(function () {
-	                    if (updatebutton) {
+	                    if (updatebutton && (url_at_function_call === currentURL)) {
 	                        drawTTUButton("   ", "   ")
 	                    }
 	                    if (threadstatus === 0 && loc_thread_jo != null) {
@@ -219,7 +220,7 @@ function getThread(url_at_function_call, updatebutton)
 	                        return;
 	                    }
 	                    setTimeout(function () {
-	                        if (updatebutton) {
+	                        if (updatebutton && (url_at_function_call === currentURL)) {
 	                            drawTTUButton("-  ", "-  ")
 	                        }
 	                        if (threadstatus === 0 && loc_thread_jo != null) {
@@ -230,7 +231,7 @@ function getThread(url_at_function_call, updatebutton)
 	                            return;
 	                        }
 	                        setTimeout(function () {
-	                            if (updatebutton) {
+	                            if (updatebutton && (url_at_function_call === currentURL)) {
 	                                drawTTUButton("-- ", "-- ")
 	                            }
 	                            if (threadstatus === 0 && loc_thread_jo != null) {
@@ -241,7 +242,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                return;
 	                            }
 	                            setTimeout(function () {
-	                                if (updatebutton) {
+	                                if (updatebutton && (url_at_function_call === currentURL)) {
 	                                    drawTTUButton(" --", " --")
 	                                }
 	                                if (threadstatus === 0 && loc_thread_jo != null) {
@@ -252,7 +253,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                    return;
 	                                }
 	                                setTimeout(function () {
-	                                    if (updatebutton) {
+	                                    if (updatebutton && (url_at_function_call === currentURL)) {
 	                                        drawTTUButton("  -", "  -")
 	                                    }
 	                                    if (threadstatus === 0 && loc_thread_jo != null) {
@@ -263,7 +264,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                        return;
 	                                    }
 	                                    setTimeout(function () {
-	                                        if (updatebutton) {
+	                                        if (updatebutton && (url_at_function_call === currentURL)) {
 	                                            drawTTUButton("   ", "   ")
 	                                        }
 	                                        if (threadstatus === 0 && loc_thread_jo != null) {
@@ -274,7 +275,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                            return;
 	                                        }
 	                                        setTimeout(function () {
-	                                            if (updatebutton) {
+	                                            if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                drawTTUButton("-  ", "-  ")
 	                                            }
 	                                            if (threadstatus === 0 && loc_thread_jo != null) {
@@ -285,7 +286,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                return;
 	                                            }
 	                                            setTimeout(function () {
-	                                                if (updatebutton) {
+	                                                if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                    drawTTUButton("-- ", "-- ")
 	                                                }
 	                                                if (threadstatus === 0 && loc_thread_jo != null) {
@@ -296,7 +297,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                    return;
 	                                                }
 	                                                setTimeout(function () {
-	                                                    if (updatebutton) {
+	                                                    if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                        drawTTUButton(" --", " --")
 	                                                    }
 	                                                    if (threadstatus === 0 && loc_thread_jo != null) {
@@ -307,7 +308,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                        return;
 	                                                    }
 	                                                    setTimeout(function () {
-	                                                        if (updatebutton) {
+	                                                        if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                            drawTTUButton("  -", "  -")
 	                                                        }
 	                                                        if (threadstatus === 0 && loc_thread_jo != null) {
@@ -318,7 +319,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                            return;
 	                                                        }
 	                                                        setTimeout(function () {
-	                                                            if (updatebutton) {
+	                                                            if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                                drawTTUButton("   ", "   ")
 	                                                            }
 	                                                            if (threadstatus === 0 && loc_thread_jo != null) {
@@ -329,7 +330,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                                return;
 	                                                            }
 	                                                            setTimeout(function () {
-	                                                                if (updatebutton) {
+	                                                                if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                                    drawTTUButton("-  ", "-  ")
 	                                                                }
 	                                                                if (threadstatus === 0 && loc_thread_jo != null) {
@@ -340,7 +341,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                                    return;
 	                                                                }
 	                                                                setTimeout(function () {
-	                                                                    if (updatebutton) {
+	                                                                    if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                                        drawTTUButton("-- ", "-- ")
 	                                                                    }
 	                                                                    if (threadstatus === 0 && loc_thread_jo != null) {
@@ -351,7 +352,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                                        return;
 	                                                                    }
 	                                                                    setTimeout(function () {
-	                                                                        if (updatebutton) {
+	                                                                        if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                                            drawTTUButton(" --", " --")
 	                                                                        }
 	                                                                        if (threadstatus === 0 && loc_thread_jo != null) {
@@ -362,7 +363,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                                            return;
 	                                                                        }
 	                                                                        setTimeout(function () {
-	                                                                            if (updatebutton) {
+	                                                                            if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                                                drawTTUButton("  -", "  -")
 	                                                                            }
 	                                                                            if (threadstatus === 0 && loc_thread_jo != null) {
@@ -373,7 +374,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                                                return;
 	                                                                            }
 	                                                                            setTimeout(function () {
-	                                                                                if (updatebutton) {
+	                                                                                if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                                                    drawTTUButton("   ", "   ")
 	                                                                                }
 	                                                                                if (threadstatus === 0 && loc_thread_jo != null) {
@@ -384,7 +385,7 @@ function getThread(url_at_function_call, updatebutton)
 	                                                                                    return;
 	                                                                                }
 	                                                                                setTimeout(function () {
-	                                                                                    if (updatebutton) {
+	                                                                                    if (updatebutton && (url_at_function_call === currentURL)) {
 	                                                                                        drawTTUButton("---", "---");
 	                                                                                        threadstatus = 0;
 	                                                                                    }
@@ -441,6 +442,10 @@ function finishThread(inc_thread_jo, updatebutton, url_at_function_call)
 			}
 		}	
 	}
+	else
+	{
+		// do nothing. Let whichever thread is in control now handle the button
+	}	
 }
 
 function getTopAndBottom(inc_stripped)
