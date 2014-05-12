@@ -579,7 +579,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 			}	
 			else
 			{
-				alert("invalid commenttype");
+				//alert("invalid commenttype");
 			}
 		}
 		else // container already existed. Just insert the new stuff

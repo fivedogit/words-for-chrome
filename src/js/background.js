@@ -659,7 +659,7 @@ function getUser(retrieve_asynchronously)
             	{	if(data.user_jo) { 	user_jo = data.user_jo; }    }
             	else
             	{
-            		alert("getUser problem. response_status neither success nor error");
+            		//alert("getUser problem. response_status neither success nor error");
             	}
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {

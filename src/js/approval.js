@@ -23,7 +23,7 @@ else if (document.URL.indexOf("google") != -1)
 }
 else
 {
-	alert("error. Unknown login type.");
+	//alert("error. Unknown login type.");
 }
 
 var redirect = chrome.extension.getURL('receiver.html');

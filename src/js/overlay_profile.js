@@ -79,7 +79,7 @@ function getProfile(screenname)
             	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Unable to retrieve profile.</div>");//OK
             	if(data.error_code && data.error_code === "0000")
         		{
-            		alert("getUserByScreenname returned code 0000");
+            		//alert("getUserByScreenname returned code 0000");
         			displayMessage("Your login has expired. Please relog.", "red");
         			docCookies.removeItem("email"); 
         			docCookies.removeItem("this_access_token");
@@ -298,7 +298,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
 					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold\">";
-					main_div_string = main_div_string + "							 Change screenname:";
+					main_div_string = main_div_string + "							 Change screenname:<br><span style=\"font-weight:normal\">Letters and numbers only,<br>starting with a letter</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<input type=text id=\"screenname_change_input\">";
@@ -462,11 +462,15 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#screenname_result_td").text("error");
+				        		$("#screenname_result_td").css("color","red");
+								$("#screenname_result_td").text("error");
+								setTimeout( function () { 
+									$("#screenname_result_td").text("");
+								}, 3000);
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
-				            		alert("setUserPreference:screenname returned code 0000");
+				            		//alert("setUserPreference:screenname returned code 0000");
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
@@ -612,7 +616,6 @@ function getProfile(screenname)
             				{
             					if(data.error_code == "0000")
             					{
-            						alert('use facebook radio returned 0000, deleting FB tokens');
             						docCookies.removeItem("facebook_access_token");
             						docCookies.removeItem("facebook_access_token_expires");
             					}	
@@ -702,7 +705,11 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "<table style=\"margin-right:auto;margin-left:auto;border-spacing:20px\">";
             				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:14px\">";
-            				logoutmessage = logoutmessage + "You have chosen to log out of Words.<br>Also disconnect your 3rd party login?";
+            				logoutmessage = logoutmessage + "You have chosen to log out of Words.";
+            				if(facebook_access_token != null || google_access_token != null)
+            					logoutmessage = logoutmessage + "<br>Also disconnect your 3rd party login?";
+            				else
+            					logoutmessage = logoutmessage + "<br>Please confirm.";
             				logoutmessage = logoutmessage + "		</td>";
             				logoutmessage = logoutmessage + "	</tr>";
             				if(facebook_access_token != null)
@@ -770,14 +777,14 @@ function getProfile(screenname)
                         							displayMessage("Sorry. Disconnection didn't work. You may already be disconnected. If not, you can disconnect manually in your Facebook settings", "red", null, 7);
                         						}
                         					});	 
-                        					alert("deleting facebook_access_token after logout conf button");
+                        					//alert("deleting facebook_access_token after logout conf button");
                         					docCookies.removeItem("facebook_access_token");
                 							docCookies.removeItem("facebook_access_token_expires");
                         				}
                         				if($("#google_disconnect_checkbox").prop("checked"))
                         				{
                         					var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + docCookies.getItem("google_access_token");
-                        					alert("deleting google_access_token after logout conf button");
+                        					//alert("deleting google_access_token after logout conf button");
                         					docCookies.removeItem("google_access_token");
                 							docCookies.removeItem("google_access_token_expires");
                         					// Tell google to disconnect this user.

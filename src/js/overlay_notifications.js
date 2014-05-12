@@ -324,7 +324,7 @@ function doNotificationItem(item_id, dom_id)
         	        		}
         	        		else if(item_id.endsWith("C"))
         	        		{
-        	        			alert("past valid C options");
+        	        			//alert("past valid C options");
         	        		}
         	        		else // this is a like or dislike, show parent
         	        		{
