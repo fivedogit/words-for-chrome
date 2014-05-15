@@ -603,6 +603,14 @@ function doFinished()
 {
 	// we've gotten the login return, now we need to get the user before we can safely say, 
 	displayMessage("Identify verified. Loading Words user info... ", "black");
+	
+	// the only reason we MIGHT need these again is for changing images
+	// there is probably a better way, meaning these can be deleted immediately upon login
+	//docCookies.removeItem("google_access_token"); 
+	//docCookies.removeItem("google_access_token_expires");
+	//docCookies.removeItem("facebook_access_token"); 
+	//docCookies.removeItem("facebook_access_token_expires");
+	
 	$("#progress_tr").show();
 	$.ajax({ 
 		type: 'GET', 

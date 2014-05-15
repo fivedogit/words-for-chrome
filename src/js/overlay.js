@@ -375,6 +375,11 @@ $(window).scroll(function() {
  	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null && //thread_jo.children > 5 && 
  			typeof bg.user_jo !== undefined && bg.user_jo !== null && randomint === 1) // if there are more than 5 comments on this page, user is logged in, show this 1/10 threadviews
  	{	
+ 		
+ 		// "Are you a tech influencer? Tell your followers about Words."
+ 		// "Words soft-launch is Sunday, 6+8=14. Help out by rating 5 stars."
+ 		// "Soft Launch day! Please upvote us on hacker news and reddit."
+ 		
  		bs = bs + "SPREAD THE WORDS! ";
  	 	bs = bs + "<a style=\"margin-left:5px\" href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
  	 	bs = bs + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";

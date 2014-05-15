@@ -25,6 +25,10 @@
         "matches": ["https://www.facebook.com/connect/login_success.html*"],
         "js": ["/js/jquery-1.8.2.js", "/js/approval.js"],
         "run_at": "document_end"
+    }, {
+        "matches": ["http://www.words4chrome.com/*"],
+        "js": ["/js/already_installed.js"],
+        "run_at": "document_end"
     }],
     "permissions": [
         "tabs"
