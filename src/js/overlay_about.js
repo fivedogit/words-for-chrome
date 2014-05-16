@@ -85,7 +85,7 @@ function doAboutTab(message)
 	 				chrome.tabs.create({url:
 	 					"https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com"
 	 					});
-	 				notePromo("facebook", "about");
+	 				noteConversion("facebook", "about");
 	 				return false;
 	 			});
 	 	
@@ -94,7 +94,7 @@ function doAboutTab(message)
  				chrome.tabs.create({url:
  					"https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com"
  					});
- 				notePromo("twitter", "about");
+ 				noteConversion("twitter", "about");
  				return false;
  			});
  	
@@ -103,7 +103,7 @@ function doAboutTab(message)
  				chrome.tabs.create({url:
  					"https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com"
  					});
- 				notePromo("googleplus", "about");
+ 				noteConversion("googleplus", "about");
  				return false;
  			});
  	
@@ -112,7 +112,7 @@ function doAboutTab(message)
  				chrome.tabs.create({url:
  					"http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting"
  					});
- 				notePromo("tumblr", "about");
+ 				noteConversion("tumblr", "about");
  				return false;
  			});
  	
@@ -121,7 +121,7 @@ function doAboutTab(message)
  				chrome.tabs.create({url:
  					"https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"
  					});
- 				notePromo("gmail", "about");
+ 				noteConversion("gmail", "about");
  				return false;
  			});
 	

@@ -508,7 +508,7 @@ function getProfile(screenname)
         			else 
         			{												// it existed, but wasn't valid. Delete everything
         				docCookies.removeItem("last_tab_id");
-        				alert("deleting google_access_token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend");
+        				//alert("deleting google_access_token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend");
         				docCookies.removeItem("google_access_token");
         				docCookies.removeItem("google_access_token_expires");
         				google_access_token_expired_or_doesnt_exist = true;
@@ -523,7 +523,7 @@ function getProfile(screenname)
         			else 
         			{												// it existed, but wasn't valid. Delete everything
         				docCookies.removeItem("last_tab_id");
-        				alert("deleting facebook_access_token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend");
+        				//alert("deleting facebook_access_token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend");
         				docCookies.removeItem("facebook_access_token");
         				docCookies.removeItem("facebook_access_token_expires");
         				facebook_access_token_expired_or_doesnt_exist = true;

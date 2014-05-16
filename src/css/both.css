@@ -299,7 +299,10 @@ div#words_div .footer_div {
 	width:100%;
 	background-image: url('/images/outlets2X.png');
 	text-align: center;
-	padding:10px;
+	padding-left:5px;
+	padding-right:5px;
+	padding-top:13px;
+	padding-bottom:13px;
 	color:white;
 	
 }

@@ -3,7 +3,7 @@
     "short_name": "Words",
     "version": "0.139",
     "manifest_version": 2,
-    "description": "Better, safer comments everywhere",
+    "description": "Smarter, safer web comments",
     "icons": {
         "16": "images/words_logo4_16.png",
         "48": "images/words_logo4_48.png",
