@@ -381,7 +381,7 @@ $(window).scroll(function() {
  	 	var footerstr = "";
  	 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null)
  	 	{
- 	 		if(false) // bg.msfe_according_to_backend < 1402232400000) // before June 8th, 9pm est
+ 	 		if(bg.msfe_according_to_backend < 1402232400000) // before June 8th, 9pm est
  	 		{
  	 			if(randomint < 8) // 2/3 of the time
  	 			{
@@ -399,7 +399,7 @@ $(window).scroll(function() {
  	 				}	
  	 			}
  	 		}	
- 	 		else if(false) // bg.msfe_according_to_backend >= 1402232400000 && bg.msfe_according_to_backend < 1402318800000) // June 8th 9pm - June 9th 9pm est
+ 	 		else if(bg.msfe_according_to_backend >= 1402232400000 && bg.msfe_according_to_backend < 1402318800000) // June 8th 9pm - June 9th 9pm est
  	 		{
  	 			if(randomint < 6)
  	 			{
@@ -416,7 +416,7 @@ $(window).scroll(function() {
  	 				createRedditHandler(id);
  	 			}
  	 		}
- 	 		else if(false) // bg.msfe_according_to_backend >= 1402318800000 && bg.msfe_according_to_backend < 1402837200000) // June 9th 9pm - June 15th, 9pm est
+ 	 		else if(bg.msfe_according_to_backend >= 1402318800000 && bg.msfe_according_to_backend < 1402837200000) // June 9th 9pm - June 15th, 9pm est
  	 		{
  	 			if(randomint < 4) // 1/3
  	 			{
@@ -464,7 +464,7 @@ $(window).scroll(function() {
 	 	 	 	 	}
  	 			}
  	 		}	
- 	 		else if(false)//bg.msfe_according_to_backend >= 1402837200000 && bg.msfe_according_to_backend < 1403442000000) // before june 22nd, 9pm est
+ 	 		else if(bg.msfe_according_to_backend >= 1402837200000 && bg.msfe_according_to_backend < 1403442000000) // before june 22nd, 9pm est
  	 		{
  	 			if(randomint < 3)
  	 			{

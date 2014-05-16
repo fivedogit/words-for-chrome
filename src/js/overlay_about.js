@@ -42,8 +42,8 @@ function doAboutTab(message)
 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
 		aboutmessage = aboutmessage + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
 	aboutmessage = aboutmessage + "</li>";
-	aboutmessage = aboutmessage + "<li>Rate 5 stars <a href=\"https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews\">here</a></li>";
-	aboutmessage = aboutmessage + "<li>Report bugs to <a href=\"#\" id=\"at_twitter_link\">@fivedogit</a></li>";
+	aboutmessage = aboutmessage + "<li>Rate 5 stars <a href=\"#\" id=\"rate_5_stars_link\">here</a></li>";
+	aboutmessage = aboutmessage + "<li>Report bugs to <a href=\"#\" id=\"at_fivedogit_link\">@fivedogit</a></li>";
 	aboutmessage = aboutmessage + "<li>Donate Bitcoins to keep the servers running ";
 	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/60199bf8c30fc013dd5ec8f2e39bb566\">$2.50</a> - ";
 	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41\">$5</a> - ";
@@ -74,57 +74,40 @@ function doAboutTab(message)
 		}
 	});
 	
+	if(navigator.userAgent.indexOf("OPR/") !== -1)
+	{
+		var id = noteImpression("operastore", "about_maintext", "about");
+		createOperaStoreHandler(id);
+	}
+	else
+	{
+		var id = noteImpression("cws", "about_maintext", "about");
+		createCWSHandler(id);
+	}	
+	var id = noteImpression("facebook", "about_maintext", "about");
+	createFacebookHandler(id);
+	id = noteImpression("twitter", "about_maintext", "about");
+	createTwitterHandler(id);
+	id = noteImpression("googleplus", "about_maintext", "about");
+	createGooglePlusHandler(id);
+	id = noteImpression("tumblr", "about_maintext", "about");
+	createTumblrHandler(id);
+	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null)
+	{
+		if(bg.user_jo.email.endsWith("@gmail.com"))
+		{
+			id = noteImpression("gmail", "about_maintext", "about");
+			createGmailHandler(id);
+		}
+	}
+	
+	
 	$("#at_fivedogit_link").click( function() {
 		chrome.tabs.create({url:"http://www.twitter.com/fivedogit"});
 	});
 	$("#at_words4chrome_link").click( function() {
 		chrome.tabs.create({url:"http://www.twitter.com/words4chrome"});
 	});
-	$("#share_to_facebook_link").click(
-	 			function () {
-	 				chrome.tabs.create({url:
-	 					"https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com"
-	 					});
-	 				noteConversion("facebook", "about");
-	 				return false;
-	 			});
-	 	
-	$("#share_to_twitter_link").click(
- 			function () {
- 				chrome.tabs.create({url:
- 					"https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com"
- 					});
- 				noteConversion("twitter", "about");
- 				return false;
- 			});
- 	
- 	$("#share_to_googleplus_link").click(
- 			function () {
- 				chrome.tabs.create({url:
- 					"https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com"
- 					});
- 				noteConversion("googleplus", "about");
- 				return false;
- 			});
- 	
- 	$("#share_to_tumblr_link").click(
- 			function () {
- 				chrome.tabs.create({url:
- 					"http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting"
- 					});
- 				noteConversion("tumblr", "about");
- 				return false;
- 			});
- 	
- 	$("#invite_with_gmail_link").click(
- 			function () {
- 				chrome.tabs.create({url:
- 					"https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"
- 					});
- 				noteConversion("gmail", "about");
- 				return false;
- 			});
-	
 	
 }
 
