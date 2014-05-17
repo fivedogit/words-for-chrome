@@ -75,31 +75,15 @@ function doAboutTab(message)
 	});
 	
 	if(navigator.userAgent.indexOf("OPR/") !== -1)
-	{
-		var id = noteImpression("operastore", "about_maintext", "about");
-		createOperaStoreHandler(id);
-	}
+		noteImpressionAndCreateHandler("operastore", "about_maintext", "about", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
 	else
-	{
-		var id = noteImpression("cws", "about_maintext", "about");
-		createCWSHandler(id);
-	}	
-	var id = noteImpression("facebook", "about_maintext", "about");
-	createFacebookHandler(id);
-	id = noteImpression("twitter", "about_maintext", "about");
-	createTwitterHandler(id);
-	id = noteImpression("googleplus", "about_maintext", "about");
-	createGooglePlusHandler(id);
-	id = noteImpression("tumblr", "about_maintext", "about");
-	createTumblrHandler(id);
-	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null)
-	{
-		if(bg.user_jo.email.endsWith("@gmail.com"))
-		{
-			id = noteImpression("gmail", "about_maintext", "about");
-			createGmailHandler(id);
-		}
-	}
+		noteImpressionAndCreateHandler("cws", "about_maintext", "about", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+	noteImpressionAndCreateHandler("facebook", "about_maintext", "about", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+	noteImpressionAndCreateHandler("twitter", "about_maintext", "about", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com");
+ 	noteImpressionAndCreateHandler("googleplus", "about_maintext", "about", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+ 	noteImpressionAndCreateHandler("tumblr", "about_maintext", "about", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting");
+ 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
+ 			noteImpressionAndCreateHandler("gmail", "about_maintext", "about", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
 	
 	
 	$("#at_fivedogit_link").click( function() {

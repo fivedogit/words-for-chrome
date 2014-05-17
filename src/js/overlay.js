@@ -381,57 +381,93 @@ $(window).scroll(function() {
  	 	var footerstr = "";
  	 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null)
  	 	{
- 	 		if(bg.msfe_according_to_backend < 1402232400000) // before June 8th, 9pm est
+ 	 		if(false) // bg.msfe_according_to_backend < 1402232400000) // before June 8th, 9pm est
  	 		{
  	 			if(randomint < 8) // 2/3 of the time
  	 			{
  	 				footerstr = footerstr + "Soft launch is Sunday, 6/8/14. Please <a href=\"#\" id=\"rate_5_stars_link\">give Words a 5-star rating</a> before then.";
  	 				$("#footer_div").html(footerstr);
  	 				if(navigator.userAgent.indexOf("OPR/") !== -1)
- 	 				{
- 	 					var id = noteImpression("operastore", "footer_presoft", "footer");
- 	 					createOperaStoreHandler(id);
- 	 				}
+ 	 					noteImpressionAndCreateHandler("operastore", "footer_presoft", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
  	 				else
- 	 				{
- 	 					var id = noteImpression("cws", "footer_presoft", "footer");
- 	 					createCWSHandler(id);
- 	 				}	
+ 	 					noteImpressionAndCreateHandler("cws", "footer_presoft", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
  	 			}
  	 		}	
- 	 		else if(bg.msfe_according_to_backend >= 1402232400000 && bg.msfe_according_to_backend < 1402318800000) // June 8th 9pm - June 9th 9pm est
+ 	 		else if(false) // bg.msfe_according_to_backend >= 1402232400000 && bg.msfe_according_to_backend < 1402318800000) // June 8th 9pm - June 9th 9pm est
  	 		{
  	 			if(randomint < 6)
  	 			{
  	 				footerstr = footerstr + "It's soft launch day! Please upvote Words on <a href=\"#\" id=\"hn_link\">Hacker News</a>.";
  	 				$("#footer_div").html(footerstr);
- 	 				var id = noteImpression("hn", "footer_softday", "footer");
- 	 				createHNHandler(id);
+ 	 				var hn_url = "http://news.ycombinator.com";
+ 	 				$.ajax({
+	 	 			 		type: 'GET',
+	 	 			 		url: endpoint,
+	 	 			 		data: {
+	 	 			 			method: "getHNURL",
+	 	 			 		},
+	 	 			 		dataType: 'json',
+	 	 			 		async: false,
+	 	 			 		timeout: 2000,
+	 	 			 		success: function (data, status) {
+	 	 			 			if(data.response_status === "error")
+	 	 			 			{
+	 	 			 				// fail silently and use default url
+	 	 			 			}
+	 	 			 			else if(data.response_status === "success")
+	 	 			 			{
+	 	 			 				hn_url = data.url;
+	 	 			 			}	
+	 	 			 		},
+	 	 			 		error: function (XMLHttpRequest, textStatus, errorThrown) {
+	 	 			 			console.log(textStatus, errorThrown);
+	 	 			 			displayMessage("AJAX error getting HN url", "red");
+	 	 			 		} 
+ 	 				}); 			
+ 	 				noteImpressionAndCreateHandler("hn", "footer_softday", "footer", "hn_link", hn_url);
  	 			}
  	 			else if (randomint < 12) 
  	 			{
  	 				footerstr = footerstr + "It's soft launch day! Please upvote Words on <a href=\"#\" id=\"reddit_link\">Reddit</a>!";
  	 				$("#footer_div").html(footerstr);
- 	 				var id = noteImpression("reddit", "footer_softday", "footer");
- 	 				createRedditHandler(id);
+ 	 				var reddit_url = "http://reddit.com";
+ 	 				$.ajax({
+	 	 			 		type: 'GET',
+	 	 			 		url: endpoint,
+	 	 			 		data: {
+	 	 			 			method: "getRURL",
+	 	 			 		},
+	 	 			 		dataType: 'json',
+	 	 			 		async: false,
+	 	 			 		timeout: 2000,
+	 	 			 		success: function (data, status) {
+	 	 			 			if(data.response_status === "error")
+	 	 			 			{
+	 	 			 				// fail silently and use default url
+	 	 			 			}
+	 	 			 			else if(data.response_status === "success")
+	 	 			 			{
+	 	 			 				reddit_url = data.url;
+	 	 			 			}	
+	 	 			 		},
+	 	 			 		error: function (XMLHttpRequest, textStatus, errorThrown) {
+	 	 			 			console.log(textStatus, errorThrown);
+	 	 			 			displayMessage("AJAX error getting R url", "red");
+	 	 			 		} 
+ 	 				}); 			
+ 	 				noteImpressionAndCreateHandler("reddit", "footer_softday", "footer", "reddit_link", reddit_url);
  	 			}
  	 		}
- 	 		else if(bg.msfe_according_to_backend >= 1402318800000 && bg.msfe_according_to_backend < 1402837200000) // June 9th 9pm - June 15th, 9pm est
+ 	 		else if(false) // bg.msfe_according_to_backend >= 1402318800000 && bg.msfe_according_to_backend < 1402837200000) // June 9th 9pm - June 15th, 9pm est
  	 		{
  	 			if(randomint < 4) // 1/3
  	 			{
  	 				footerstr = footerstr + "It's soft launch week! Enjoying Words? Please <a href=\"#\" id=\"rate_5_stars_link\">give a 5-star rating</a>.";
  	 				$("#footer_div").html(footerstr);
  	 				if(navigator.userAgent.indexOf("OPR/") !== -1)
- 	 				{
- 	 					var id = noteImpression("operastore", "footer_softweek", "footer");
- 	 					createOperaStoreHandler(id);
- 	 				}
+ 	 					noteImpressionAndCreateHandler("operastore", "footer_softweek", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
  	 				else
- 	 				{
- 	 					var id = noteImpression("cws", "footer_softweek", "footer");
- 	 					createCWSHandler(id);
- 	 				}	
+ 	 					noteImpressionAndCreateHandler("cws", "footer_softweek", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
  	 			}
  	 			else if(randomint < 8) //1/3
  	 			{
@@ -440,28 +476,15 @@ $(window).scroll(function() {
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
- 	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null)
- 	 		 	 	{
- 	 		 	 		if(bg.user_jo.email.endsWith("@gmail.com"))
+ 	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
  	 		 	 			footerstr = footerstr + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
- 	 		 	 	}	
  	 		 	 	$("#footer_div").html(footerstr);
- 	 		 	 	var id = noteImpression("facebook", "footer_softweek", "footer");
- 	 		 	 	createFacebookHandler(id);
- 	 		 	 	id = noteImpression("twitter", "footer_softweek", "footer");
- 	 		 	 	createTwitterHandler(id);
- 	 		 	 	id = noteImpression("googleplus", "footer_softweek", "footer");
- 	 		 	 	createGooglePlusHandler(id);
- 	 		 	 	id = noteImpression("tumblr", "footer_softweek", "footer");
- 	 		 	 	createTumblrHandler(id);
- 	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null)
-	 	 	 	 	{
-	 	 	 	 		if(bg.user_jo.email.endsWith("@gmail.com"))
-	 	 	 	 		{
-	 	 	 	 			id = noteImpression("gmail", "footer_softweek", "footer");
-	 	 	 	 			createGmailHandler(id);
-	 	 	 	 		}
-	 	 	 	 	}
+ 	 		 	 	noteImpressionAndCreateHandler("facebook", "footer_softweek", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+ 	 		 	 	noteImpressionAndCreateHandler("twitter", "footer_softweek", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com");
+ 	 		 	 	noteImpressionAndCreateHandler("googleplus", "footer_softweek", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+ 	 		 	 	noteImpressionAndCreateHandler("tumblr", "footer_softweek", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting");
+ 	 		 		if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
+	 	 	 	 			noteImpressionAndCreateHandler("gmail", "footer_softweek", "footer", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
  	 			}
  	 		}	
  	 		else if(bg.msfe_according_to_backend >= 1402837200000 && bg.msfe_according_to_backend < 1403442000000) // before june 22nd, 9pm est
@@ -473,33 +496,20 @@ $(window).scroll(function() {
  	 			}
  	 			else if(randomint < 6)
  	 			{
- 	 				footerstr = footerstr + "Launch Day is Sunday 6/22. Share now! ";
+ 	 				footerstr = footerstr + "Launch Day is Sunday 6/22, but you can share Words right now! ";
  	 				footerstr = footerstr + "<a style=\"margin-left:5px\" href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
- 	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null)
- 	 		 	 	{
- 	 		 	 		if(bg.user_jo.email.endsWith("@gmail.com"))
+ 	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
  	 		 	 			footerstr = footerstr + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
- 	 		 	 	}	
  	 		 	 	$("#footer_div").html(footerstr);
-	 		 	 	var id = noteImpression("facebook", "footer_prelaunch", "footer");
-	 		 	 	createFacebookHandler(id);
-	 		 	 	id = noteImpression("twitter", "footer_prelaunch", "footer");
-	 		 	 	createTwitterHandler(id);
-	 		 	 	id = noteImpression("googleplus", "footer_prelaunch", "footer");
-	 		 	 	createGooglePlusHandler(id);
-	 		 	 	id = noteImpression("tumblr", "footer_prelaunch", "footer");
-	 		 	 	createTumblrHandler(id);
-	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null)
-	 	 	 	 	{
-	 	 	 	 		if(bg.user_jo.email.endsWith("@gmail.com"))
-	 	 	 	 		{
-	 	 	 	 			id = noteImpression("gmail", "footer_prelaunch", "footer");
-	 	 	 	 			createGmailHandler(id);
-	 	 	 	 		}
-	 	 	 	 	}
+	 		 	 	noteImpressionAndCreateHandler("facebook", "footer_prelaunch", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+	 		 	 	noteImpressionAndCreateHandler("twitter", "footer_prelaunch", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com");
+	 		 	 	noteImpressionAndCreateHandler("googleplus", "footer_prelaunch", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+	 		 	 	noteImpressionAndCreateHandler("tumblr", "footer_prelaunch", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting");
+	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
+	 	 	 	 			noteImpressionAndCreateHandler("gmail", "footer_prelaunch", "footer", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
  	 			}
  	 			else if(randomint < 9)
  	 			{
@@ -507,15 +517,9 @@ $(window).scroll(function() {
  	 				footerstr = footerstr + "Launch Day is Sunday night 6/22.  Please <a href=\"#\" id=\"rate_5_stars_link\">give Words a 5-star rating</a> before then.";
  	 				$("#footer_div").html(footerstr);
  	 				if(navigator.userAgent.indexOf("OPR/") !== -1)
- 	 				{
- 	 					var id = noteImpression("operastore", "footer_prelaunch", "footer");
- 	 					createOperaStoreHandler(id);
- 	 				}
+ 	 					noteImpressionAndCreateHandler("operastore", "footer_prelaunch", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
  	 				else
- 	 				{
- 	 					var id = noteImpression("cws", "footer_prelaunch", "footer");
- 	 					createCWSHandler(id);
- 	 				}	
+ 	 					noteImpressionAndCreateHandler("cws", "footer_prelaunch", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
  	 			}
  	 		}	
  	 		else // after june 22nd, 9pm est
@@ -533,37 +537,21 @@ $(window).scroll(function() {
  	 	 	 	 			footerstr = footerstr + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
  	 	 	 	 	}	
  	 	 	 	 	$("#footer_div").html(footerstr);
- 	 	 	 	 	var id = noteImpression("facebook", "footer_postlaunch", "footer");
- 	 	 	 	 	createFacebookHandler(id);
- 	 	 	 	 	id = noteImpression("twitter", "footer_postlaunch", "footer");
- 	 	 	 	 	createTwitterHandler(id);
- 	 	 	 	 	id = noteImpression("googleplus", "footer_postlaunch", "footer");
- 	 	 	 	 	createGooglePlusHandler(id);
- 	 	 	 	 	id = noteImpression("tumblr", "footer_postlaunch", "footer");
- 	 	 	 	 	createTumblrHandler(id);
- 	 	 	 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null)
- 	 	 	 	 	{
- 	 	 	 	 		if(bg.user_jo.email.endsWith("@gmail.com"))
- 	 	 	 	 		{
- 	 	 	 	 			id = noteImpression("gmail", "footer_postlaunch", "footer");
- 	 	 	 	 			createGmailHandler(id);
- 	 	 	 	 		}
- 	 	 	 	 	}
+ 	 	 	 	 	noteImpressionAndCreateHandler("facebook", "footer_postlaunch", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+ 	 	 	 	 	noteImpressionAndCreateHandler("twitter", "footer_postlaunch", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com");
+ 	 	 	 	 	noteImpressionAndCreateHandler("googleplus", "footer_postlaunch", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+ 	 	 	 	 	noteImpressionAndCreateHandler("tumblr", "footer_postlaunch", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting");
+ 	 	 	 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
+ 	 	 	 	 			noteImpressionAndCreateHandler("gmail", "footer_postlaunch", "footer", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
  	 			}
  	 			else if(randomint < 6)
  	 			{
  	 				footerstr = footerstr + "Please <a href=\"#\" id=\"rate_5_stars_link\">give Words a 5-star rating</a>.";
  	 				$("#footer_div").html(footerstr);
  	 				if(navigator.userAgent.indexOf("OPR/") !== -1)
- 	 				{
- 	 					var id = noteImpression("operastore", "footer_postlaunch", "footer");
- 	 					createOperaStoreHandler(id);
- 	 				}
+ 	 					noteImpressionAndCreateHandler("operastore", "footer_postlaunch", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
  	 				else
- 	 				{
- 	 					var id = noteImpression("cws", "footer_postlaunch", "footer");
- 	 					createCWSHandler(id);
- 	 				}	
+ 	 					noteImpressionAndCreateHandler("cws", "footer_postlaunch", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
  	 			}
  	 		}	
  	 	}
@@ -981,41 +969,39 @@ $(window).scroll(function() {
 		 }
 	 });
  }
- 
- function noteImpression(target, source, source_category)
- {
-	// alert("noting impression");
-	 var id = null;
-	 $.ajax({
-	 		type: 'GET',
-	 		url: endpoint,
-	 		data: {
-	 			method: "noteImpression",
-	 			target: target,
-	 			source: source,
-	 			source_category: source_category
-	 		},
-	 		dataType: 'json',
-	 		async: false,
-	 		success: function (data, status) {
-	 			if(data.response_status === "error")
-	 			{
-	 				id = null;
-	 			}
-	 			else if(data.response_status === "success")
-	 			{
-	 				id = data.id;
-	 			}	
-	 		},
-	 		error: function (XMLHttpRequest, textStatus, errorThrown) {
-	 			console.log(textStatus, errorThrown);
-	 			return null;
-	 		} 
-	 	}); 
-	 return id;
- }
- 
- 
+
+function noteImpressionAndCreateHandler(target, source, source_category, dom_id, inc_url)
+{	
+	//alert("noting impression");
+	var id = null;
+	$.ajax({
+		type: 'GET',
+		url: endpoint,
+		data: {
+			method: "noteImpression",
+			target: target,
+			source: source,
+			source_category: source_category
+		},
+		dataType: 'json',
+		async: true,
+		success: function (data, status) {
+			if(data.response_status === "error")
+			{
+				id = null;
+			}
+			else if(data.response_status === "success")
+			{
+				id = data.id;
+				createHandler(id, dom_id, inc_url);
+			}	
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			console.log(textStatus, errorThrown);
+		} 
+	}); 
+}	
+	
  function noteConversion(id) //booleans or strings
  {
  	$.ajax({
@@ -1044,158 +1030,13 @@ $(window).scroll(function() {
  	}); 
  }
  
- // handlers
- 
- function createOperaStoreHandler(id)
+ function createHandler(id, dom_id, inc_url)
  {
-	 $("#rate_5_stars_link").click(
+	// alert("creating handler with id=" + id + " and dom_id=" + dom_id + " and inc_url=" + inc_url);
+	 $("#" + dom_id).click(
 			 function () {
-				 chrome.tabs.create({url:
-						"https://addons.opera.com/en/extensions/details/words/"
-						});
+				 chrome.tabs.create({url:inc_url});
 				 noteConversion(id);
 				 return false;
 			 });
  }
- 
- function createCWSHandler(id)
- {
-	 $("#rate_5_stars_link").click(
-			 function () {
-				 chrome.tabs.create({url:
-					 "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews"
-				 });
-				 noteConversion(id);
-				 return false;
-			 });
- }
- 
- function createFacebookHandler(id)
- {
-	 $("#share_to_facebook_link").click(
-			 function () {
-				 chrome.tabs.create({url:
-					 "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com"
-				 });
-				 noteConversion(id);
-				 return false;
-			 });
- }
- 
- function createTwitterHandler(id)
- {
-	 $("#share_to_twitter_link").click(
-			 function () {
-				 chrome.tabs.create({url:
-					 "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com"
-				 });
-				 noteConversion(id);
-				 return false;
-			 });
- }
- 
- function createGooglePlusHandler(id)
- {
-	 $("#share_to_googleplus_link").click(
-			 function () {
-				 chrome.tabs.create({url:
-					 "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com"
-				 });
-				 noteConversion(id);
-				 return false;
-			 });
- }
- 
- function createTumblrHandler(id)
- {
-	 $("#share_to_tumblr_link").click(
-			 function () {
-				 chrome.tabs.create({url:
-					 "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting"
-				 });
-				 noteConversion(id);
-				 return false;
-			 });
- }
- 
- function createGmailHandler(id)
- {
-	 $("#invite_with_gmail_link").click(
-			 function () {
-				 chrome.tabs.create({url:
-					 "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!"
-				 });
-				 noteConversion(id);
-				 return false;
-			 });
- }
- 
- function createHNHandler(id)
- {
-	 $("#hn_link").click(
- 	 			function () {
- 	 				$.ajax({
- 	 			 		type: 'GET',
- 	 			 		url: endpoint,
- 	 			 		data: {
- 	 			 			method: "getHNURL",
- 	 			 		},
- 	 			 		dataType: 'json',
- 	 			 		async: true,
- 	 			 		success: function (data, status) {
- 	 			 			if(data.response_status === "error")
- 	 			 			{
- 	 			 				chrome.tabs.create({url:
- 	 		 	 					"http://news.ycombinator.com"
- 	 		 	 				});
- 	 			 			}
- 	 			 			else if(data.response_status === "success")
- 	 			 			{
- 	 			 				chrome.tabs.create({url: data.url});
- 	 			 				noteConversion(id);
- 	 			 			}	
- 	 			 		},
- 	 			 		error: function (XMLHttpRequest, textStatus, errorThrown) {
- 	 			 			console.log(textStatus, errorThrown);
- 	 			 			displayMessage("AJAX error getting HN url", "red");
- 	 			 		} 
- 	 			 	}); 
- 	 				return false;
- 	 			});
- }
- 
- function createRedditHandler(id)
- {
-	 $("#reddit_link").click(
- 	 			function () {
- 	 				$.ajax({
- 	 			 		type: 'GET',
- 	 			 		url: endpoint,
- 	 			 		data: {
- 	 			 			method: "getRURL",
- 	 			 		},
- 	 			 		dataType: 'json',
- 	 			 		async: true,
- 	 			 		success: function (data, status) {
- 	 			 			if(data.response_status === "error")
- 	 			 			{
- 	 			 				chrome.tabs.create({url:
- 	 		 	 					"http://www.reddit.com"
- 	 		 	 				});
- 	 			 			}
- 	 			 			else if(data.response_status === "success")
- 	 			 			{
- 	 			 				chrome.tabs.create({url: data.url});
- 	 			 				noteConversion(id);
- 	 			 			}	
- 	 			 		},
- 	 			 		error: function (XMLHttpRequest, textStatus, errorThrown) {
- 	 			 			console.log(textStatus, errorThrown);
- 	 			 			displayMessage("AJAX error getting Reddit url", "red");
- 	 			 		} 
- 	 			 	}); 
- 	 				
- 	 				return false;
- 	 			});
- }
- 
