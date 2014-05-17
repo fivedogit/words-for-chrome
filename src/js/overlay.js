@@ -377,23 +377,23 @@ $(window).scroll(function() {
  	// this block needs to be asynchronous
  	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null)
  	{
- 		var randomint = Math.floor(Math.random() * 12);
+ 		var randomint = Math.floor(Math.random() * bg.footer_random_pool);
  	 	var footerstr = "";
  	 	if(typeof thread_jo !== undefined && thread_jo !== null && typeof thread_jo.children !== "undefined" && thread_jo.children !== null)
  	 	{
- 	 		if(false) // bg.msfe_according_to_backend < 1402232400000) // before June 8th, 9pm est
+ 	 		if(bg.msfe_according_to_backend < 1402232400000) // before June 8th, 9pm est
  	 		{
  	 			if(randomint < 8) // 2/3 of the time
  	 			{
  	 				footerstr = footerstr + "Soft launch is Sunday, 6/8/14. Please <a href=\"#\" id=\"rate_5_stars_link\">give Words a 5-star rating</a> before then.";
  	 				$("#footer_div").html(footerstr);
  	 				if(navigator.userAgent.indexOf("OPR/") !== -1)
- 	 					noteImpressionAndCreateHandler("operastore", "footer_presoft", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
+ 	 					noteImpressionAndCreateHandler("operastore", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
  	 				else
- 	 					noteImpressionAndCreateHandler("cws", "footer_presoft", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+ 	 					noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
  	 			}
  	 		}	
- 	 		else if(false) // bg.msfe_according_to_backend >= 1402232400000 && bg.msfe_according_to_backend < 1402318800000) // June 8th 9pm - June 9th 9pm est
+ 	 		else if(bg.msfe_according_to_backend >= 1402232400000 && bg.msfe_according_to_backend < 1402318800000) // June 8th 9pm - June 9th 9pm est
  	 		{
  	 			if(randomint < 6)
  	 			{
@@ -424,7 +424,7 @@ $(window).scroll(function() {
 	 	 			 			displayMessage("AJAX error getting HN url", "red");
 	 	 			 		} 
  	 				}); 			
- 	 				noteImpressionAndCreateHandler("hn", "footer_softday", "footer", "hn_link", hn_url);
+ 	 				noteImpressionAndCreateHandler("hn", "footer", "hn_link", hn_url);
  	 			}
  	 			else if (randomint < 12) 
  	 			{
@@ -455,19 +455,19 @@ $(window).scroll(function() {
 	 	 			 			displayMessage("AJAX error getting R url", "red");
 	 	 			 		} 
  	 				}); 			
- 	 				noteImpressionAndCreateHandler("reddit", "footer_softday", "footer", "reddit_link", reddit_url);
+ 	 				noteImpressionAndCreateHandler("reddit", "footer", "reddit_link", reddit_url);
  	 			}
  	 		}
- 	 		else if(false) // bg.msfe_according_to_backend >= 1402318800000 && bg.msfe_according_to_backend < 1402837200000) // June 9th 9pm - June 15th, 9pm est
+ 	 		else if(bg.msfe_according_to_backend >= 1402318800000 && bg.msfe_according_to_backend < 1402837200000) // June 9th 9pm - June 15th, 9pm est
  	 		{
  	 			if(randomint < 4) // 1/3
  	 			{
  	 				footerstr = footerstr + "It's soft launch week! Enjoying Words? Please <a href=\"#\" id=\"rate_5_stars_link\">give a 5-star rating</a>.";
  	 				$("#footer_div").html(footerstr);
  	 				if(navigator.userAgent.indexOf("OPR/") !== -1)
- 	 					noteImpressionAndCreateHandler("operastore", "footer_softweek", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
+ 	 					noteImpressionAndCreateHandler("operastore", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
  	 				else
- 	 					noteImpressionAndCreateHandler("cws", "footer_softweek", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+ 	 					noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
  	 			}
  	 			else if(randomint < 8) //1/3
  	 			{
@@ -477,14 +477,14 @@ $(window).scroll(function() {
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
  	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
- 	 		 	 			footerstr = footerstr + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
+ 	 		 	 			footerstr = footerstr + " - <a href=\"#\" id=\"share_on_gmail_link\">Gmail</a> ";
  	 		 	 	$("#footer_div").html(footerstr);
- 	 		 	 	noteImpressionAndCreateHandler("facebook", "footer_softweek", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
- 	 		 	 	noteImpressionAndCreateHandler("twitter", "footer_softweek", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%3A%20Smarter%2C%20safer%20web%20comments&url=http%3A%2F%2Fwww.words4chrome.com");
- 	 		 	 	noteImpressionAndCreateHandler("googleplus", "footer_softweek", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
- 	 		 	 	noteImpressionAndCreateHandler("tumblr", "footer_softweek", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%3A%20Smarter%2C%20safer%20web%20comments");
+ 	 		 	 	noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+ 	 		 	 	noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
+ 	 		 	 	noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+ 	 		 	 	noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
  	 		 		if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
-	 	 	 	 			noteImpressionAndCreateHandler("gmail", "footer_softweek", "footer", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
+	 	 	 	 			noteImpressionAndCreateHandler("gmailshare", "footer", "share_on_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
  	 			}
  	 		}	
  	 		else if(bg.msfe_according_to_backend >= 1402837200000 && bg.msfe_according_to_backend < 1403442000000) // before june 22nd, 9pm est
@@ -502,14 +502,14 @@ $(window).scroll(function() {
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
  	 		 	 	footerstr = footerstr + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
  	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
- 	 		 	 			footerstr = footerstr + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
+ 	 		 	 			footerstr = footerstr + " - <a href=\"#\" id=\"share_on_gmail_link\">Gmail</a> ";
  	 		 	 	$("#footer_div").html(footerstr);
-	 		 	 	noteImpressionAndCreateHandler("facebook", "footer_prelaunch", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
-	 		 	 	noteImpressionAndCreateHandler("twitter", "footer_prelaunch", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%3A%20Smarter%2C%20safer%20web%20comments&url=http%3A%2F%2Fwww.words4chrome.com");
-	 		 	 	noteImpressionAndCreateHandler("googleplus", "footer_prelaunch", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
-	 		 	 	noteImpressionAndCreateHandler("tumblr", "footer_prelaunch", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%3A%20Smarter%2C%20safer%20web%20comments");
+	 		 	 	noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+	 		 	 	noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
+	 		 	 	noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+	 		 	 	noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
 	 		 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
-	 	 	 	 			noteImpressionAndCreateHandler("gmail", "footer_prelaunch", "footer", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
+	 	 	 	 			noteImpressionAndCreateHandler("gmailshare", "footer", "share_on_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
  	 			}
  	 			else if(randomint < 9)
  	 			{
@@ -517,9 +517,9 @@ $(window).scroll(function() {
  	 				footerstr = footerstr + "Launch Day is Sunday night 6/22.  Please <a href=\"#\" id=\"rate_5_stars_link\">give Words a 5-star rating</a> before then.";
  	 				$("#footer_div").html(footerstr);
  	 				if(navigator.userAgent.indexOf("OPR/") !== -1)
- 	 					noteImpressionAndCreateHandler("operastore", "footer_prelaunch", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
+ 	 					noteImpressionAndCreateHandler("operastore", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
  	 				else
- 	 					noteImpressionAndCreateHandler("cws", "footer_prelaunch", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+ 	 					noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
  	 			}
  	 		}	
  	 		else // after june 22nd, 9pm est
@@ -534,24 +534,24 @@ $(window).scroll(function() {
  	 	 	 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null)
  	 	 	 	 	{
  	 	 	 	 		if(bg.user_jo.email.endsWith("@gmail.com"))
- 	 	 	 	 			footerstr = footerstr + " - <a href=\"#\" id=\"invite_with_gmail_link\">Gmail</a> ";
+ 	 	 	 	 			footerstr = footerstr + " - <a href=\"#\" id=\"share_on_gmail_link\">Gmail</a> ";
  	 	 	 	 	}	
  	 	 	 	 	$("#footer_div").html(footerstr);
- 	 	 	 	 	noteImpressionAndCreateHandler("facebook", "footer_postlaunch", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
- 	 	 	 	 	noteImpressionAndCreateHandler("twitter", "footer_postlaunch", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%3A%20Smarter%2C%20safer%20web%20comments&url=http%3A%2F%2Fwww.words4chrome.com");
- 	 	 	 	 	noteImpressionAndCreateHandler("googleplus", "footer_postlaunch", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
- 	 	 	 	 	noteImpressionAndCreateHandler("tumblr", "footer_postlaunch", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%3A%20Smarter%2C%20safer%20web%20comments");
+ 	 	 	 	 	noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+ 	 	 	 	 	noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
+ 	 	 	 	 	noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+ 	 	 	 	 	noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
  	 	 	 	 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
- 	 	 	 	 			noteImpressionAndCreateHandler("gmail", "footer_postlaunch", "footer", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
+ 	 	 	 	 			noteImpressionAndCreateHandler("gmailshare", "footer", "share_on_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
  	 			}
  	 			else if(randomint < 6)
  	 			{
  	 				footerstr = footerstr + "Please <a href=\"#\" id=\"rate_5_stars_link\">give Words a 5-star rating</a>.";
  	 				$("#footer_div").html(footerstr);
  	 				if(navigator.userAgent.indexOf("OPR/") !== -1)
- 	 					noteImpressionAndCreateHandler("operastore", "footer_postlaunch", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
+ 	 					noteImpressionAndCreateHandler("operastore", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
  	 				else
- 	 					noteImpressionAndCreateHandler("cws", "footer_postlaunch", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+ 	 					noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
  	 			}
  	 		}	
  	 	}
@@ -970,7 +970,7 @@ $(window).scroll(function() {
 	 });
  }
 
-function noteImpressionAndCreateHandler(target, source, source_category, dom_id, inc_url)
+function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url)
 {	
 	//alert("noting impression");
 	var id = null;
@@ -980,7 +980,6 @@ function noteImpressionAndCreateHandler(target, source, source_category, dom_id,
 		data: {
 			method: "noteImpression",
 			target: target,
-			source: source,
 			source_category: source_category
 		},
 		dataType: 'json',

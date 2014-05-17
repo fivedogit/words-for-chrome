@@ -14,6 +14,7 @@ var threadstatus = 0;
 var top="???";
 var bottom="???";
 var msfe_according_to_backend = (new Date).getTime(); // set to local machine time to start... will be reset to backend time by first thread call.
+var footer_random_pool = 12; // start at 12, let backend change
 
 (function() {
 	getUser(); // user_jo should always be null when this is called
@@ -145,6 +146,10 @@ function getThread(url_at_function_call, updatebutton)
             	else  // ajax success, url still correct, no error from server...
             	{
             		msfe_according_to_backend = data.msfe;
+            		if(typeof data.footer_random_pool !== "undefined" && data.footer_random_pool !== null && $.isNumeric(data.footer_random_pool) && (data.footer_random_pool%1 === 0))
+            		{
+            			footer_random_pool = data.footer_random_pool;
+            		}
             		loc_thread_jo = data.thread_jo;
             		threadstatus=0;
             	}
