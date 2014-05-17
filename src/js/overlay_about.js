@@ -79,11 +79,11 @@ function doAboutTab(message)
 	else
 		noteImpressionAndCreateHandler("cws", "about_maintext", "about", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
 	noteImpressionAndCreateHandler("facebook", "about_maintext", "about", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
-	noteImpressionAndCreateHandler("twitter", "about_maintext", "about", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%20is%20fixing%20web%20commenting&url=http%3A%2F%2Fwww.words4chrome.com");
+	noteImpressionAndCreateHandler("twitter", "about_maintext", "about", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=Words%20for%20Chrome%3A%20Smarter%2C%20safer%20web%20comments&url=http%3A%2F%2Fwww.words4chrome.com");
  	noteImpressionAndCreateHandler("googleplus", "about_maintext", "about", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
- 	noteImpressionAndCreateHandler("tumblr", "about_maintext", "about", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%20is%20fixing%20web%20commenting");
+ 	noteImpressionAndCreateHandler("tumblr", "about_maintext", "about", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=Words%20for%20Chrome%3A%20Smarter%2C%20safer%20web%20comments");
  	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
- 			noteImpressionAndCreateHandler("gmail", "about_maintext", "about", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20found%20this%20interesting%20commenting%20system%20I%20think%20you%20should%20try.%20You%20can%20get%20it%20here%3A%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20also%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
+ 			noteImpressionAndCreateHandler("gmail", "about_maintext", "about", "invite_with_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
 	
 	
 	$("#at_fivedogit_link").click( function() {
