@@ -450,10 +450,54 @@ $(window).scroll(function() {
  			doFirstrunFooterMsg(firstrun_msg_index*1);
  		else
  		{
- 			var randomint = 50;
+ 			var randomint = -1;
  			if(typeof bg.footer_random_pool !== "undefined" && bg.footer_random_pool !== null && bg.footer_random_pool > 0)
  				randomint = Math.floor(Math.random() * bg.footer_random_pool);
- 			 
+ 			else
+ 				randomint = Math.floor(Math.random() * 50);
+ 			if(randomint === 0)
+ 			{
+ 				var footerstr = "";
+ 				footerstr = footerstr + "If you get a moment, a <a href=\"#\" id=\"rate_5_stars_link\" style=\"color:#baff00\">five star rating</a> would be greatly appreciated.";
+ 				$("#footer_div").html(footerstr);
+ 				if(navigator.userAgent.indexOf("OPR/") !== -1)
+ 					noteImpressionAndCreateHandler("operastore", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
+ 				else
+ 					noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+ 			}	
+ 			else if(randomint === 1)
+ 			{
+ 				var footerstr = "";
+ 				footerstr = footerstr + "Follow WORDS on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
+ 				$("#footer_div").html(footerstr);
+ 				noteImpressionAndCreateHandler("facebook_apppage", "footer", "follow_on_facebook_link", "https://www.facebook.com/pages/WORDS/232380660289924");
+ 				noteImpressionAndCreateHandler("twitter_mainacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/words4chrome");
+ 			}
+ 			else if(randomint === 2)
+ 			{
+ 				var footerstr = "";
+ 				footerstr = footerstr + "Spread the WORDS! ";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_googleplus_link\" >G+</a>";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_tumblr_link\" >Tumblr</a>";
+ 				if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
+ 					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_gmail_link\" >Gmail</a>";
+ 				$("#footer_div").html(footerstr);
+ 				
+ 				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+ 				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
+ 				noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+ 				noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
+ 				if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
+ 					noteImpressionAndCreateHandler("gmailshare", "footer", "share_to_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
+ 			}
+ 			else if(randomint === 3)
+ 			{
+ 				var footerstr = "";
+ 				footerstr = footerstr + "Remember: Appropriate downvoting isn't \"mean\" -- <span style=\"color:#ffde00\">it's necessary</span>.";
+ 				$("#footer_div").html(footerstr);
+ 			}
  		}
  	}
  	
@@ -955,14 +999,14 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 	 else if(firstrun_msg_index === 1)
 	 {
 		 docCookies.setItem("firstrun_msg_index", 2, 31536e3);
-		 footerstr = footerstr + "First, thank you for trying WORDS. Together, we can make <b>civilized comments</b> a reality.<span style=\"font-size:9px;margin-left:10px\">(2/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
+		 footerstr = footerstr + "First, thank you for trying WORDS. Together, we can make <span style=\"color:#47dfff\">civilized comments</span> a reality.<span style=\"font-size:9px;margin-left:10px\">(2/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
 		 $("#footer_div").html(footerstr);
 		 $("#next_link").click(function(event){ doFirstrunFooterMsg(2); });
 	 }	
 	 else if(firstrun_msg_index === 2)
 	 {
 		 docCookies.setItem("firstrun_msg_index", 3, 31536e3);
-		 footerstr = footerstr + "Second, for this to work, we’re going to need more <b>smart, non-crazy</b> people like us.<span style=\"font-size:9px;margin-left:10px\">(3/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
+		 footerstr = footerstr + "But for WORDS to reach its potential, we’re going to need more <span style=\"color:#ffde00\">intelligent people</span> to join us.<span style=\"font-size:9px;margin-left:10px\">(3/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
 		 $("#footer_div").html(footerstr);
 		 $("#next_link").click(function(event){ doFirstrunFooterMsg(3); });
 	 }	
