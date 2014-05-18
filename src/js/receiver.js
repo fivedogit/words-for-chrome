@@ -74,7 +74,7 @@ function getParameterByName(name) {
 
 // here's how this flow works
 // if(there a "code" parameter)
-//		get it and poll the Words backend to exchange it for a real token. Backend automatically takes the resulting code and gets a tat
+//		get it and poll the WORDS backend to exchange it for a real token. Backend automatically takes the resulting code and gets a tat
 //		(in other words, this encapsulates login in addition to code-for-token)
 // else this a normal login attempt
 // 		if google
@@ -174,7 +174,7 @@ if(code !== null && code !== "")
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown) {
 			console.log(textStatus, errorThrown);
-			displayMessage("Could not retrieve access token. Please try again through the Words extension. (AJAX)", "red");
+			displayMessage("Could not retrieve access token. Please try again through the WORDS extension. (AJAX)", "red");
 		} 
 	}); 
 }	
@@ -213,7 +213,7 @@ else
 		}
 		else // use the apparently valid access token to log the user in.
 		{
-			displayMessage("Existing Google credentials appear valid. Logging you into Words... ", "black");
+			displayMessage("Existing Google credentials appear valid. Logging you into WORDS... ", "black");
 			login("google", docCookies.getItem("google_access_token"), docCookies.getItem("google_access_token_expires"));
 		}
 	}
@@ -243,7 +243,7 @@ else
 		}
 		else // use the apparently valid access token to log the user in.
 		{
-			displayMessage("Existing Facebook credentials appear valid. Logging you into Words... ", "black");
+			displayMessage("Existing Facebook credentials appear valid. Logging you into WORDS... ", "black");
 			login("facebook", docCookies.getItem("facebook_access_token"), docCookies.getItem("facebook_access_token_expires"));
 		}
 	}	
@@ -353,7 +353,7 @@ function guid() {
 function showRegistration(picture, login_type, email)
 {
 	$("#message_td").css("font-weight", "bold");
-	$("#message_td").text("Welcome! Let's create a Words account for you.");
+	$("#message_td").text("Welcome! Let's create a WORDS account for you.");
 	if(!picture)
 	{
 		$("#use_google_tr").hide();
@@ -544,7 +544,7 @@ function showRegistration(picture, login_type, email)
 						return false;
 					}
 					
-					displayMessage("Creating Words account... ", "black");
+					displayMessage("Creating WORDS account... ", "black");
 					$("#progress_tr").show();
 					$("#registration_form_td").hide();
 
@@ -587,7 +587,7 @@ function showRegistration(picture, login_type, email)
 					    },
 					    error: function (XMLHttpRequest, textStatus, errorThrown) {
 					        console.log(textStatus, errorThrown);
-					        displayMessage("Unable to create Words account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please contact us.", "red");
+					        displayMessage("Unable to create WORDS account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please contact us.", "red");
 					    } 
 					});
 				});
@@ -602,7 +602,7 @@ function showRegistration(picture, login_type, email)
 function doFinished()
 {
 	// we've gotten the login return, now we need to get the user before we can safely say, 
-	displayMessage("Identify verified. Loading Words user info... ", "black");
+	displayMessage("Identify verified. Loading WORDS user info... ", "black");
 	
 	// the only reason we MIGHT need these again is for changing images
 	// there is probably a better way, meaning these can be deleted immediately upon login
@@ -673,7 +673,7 @@ function doFinished()
         error: function (XMLHttpRequest, textStatus, errorThrown) {
         	if(errorThrown != null && errorThrown === "timeout")
         	{
-        		displayMessage("Timeout retrieving Words user info.", "red");
+        		displayMessage("Timeout retrieving WORDS user info.", "red");
         	}	
             console.log(textStatus, errorThrown);
         } 

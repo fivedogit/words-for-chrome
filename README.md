@@ -5,7 +5,7 @@ Web commenting is broken. Too many accounts, too much noise, not enough privacy,
 
 Together we can fix it. 
 
-Words DOES NOT TRACK and is open source for verification. 
+WORDS DOES NOT TRACK and is open source for verification. 
   github.com/fivedogit/words-backend
   github.com/fivedogit/words-for-chrome
 More info: 

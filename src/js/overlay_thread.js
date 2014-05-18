@@ -39,7 +39,7 @@ function doThreadTab()
 		else if(thread_jo === null && bg.threadstatus === 0) // overlay has loaded but thread_jo is null -- this happens when using the inspector, and possibly other scenarios
 		{
 			var main_div_string = "<div style=\"padding:20px\">Could not display thread.<br>";
-			main_div_string = main_div_string + "		Try switching tabs or reloading the page, then clicking the Words button again.</div>"; // , hostname must contain a \".\" and lack a \":\".
+			main_div_string = main_div_string + "		Try switching tabs or reloading the page, then clicking the WORDS button again.</div>"; // , hostname must contain a \".\" and lack a \":\".
 			$("#main_div_" + currentURLhash).html(main_div_string);//OK
 		}
 		else if(thread_jo !== null && bg.threadstatus === 0) 
@@ -305,7 +305,7 @@ function noteThreadView(was_empty) //booleans or strings
 	// you'll see that the user info is used to increment the user's threadview count only and the URL is not saved in the database. 
 	// Only 5 items are recorded: 1. Was the thread empty? 2. Was the user logged in at the time of threadview? 
 	// 3. Was the hostname combined or separated? 4. Did the hostname/path have an significant QSPs (like youtube) 5. Were we able to show link alternatives?
-	// This information will help us make Words better, cus it sucks to, for instance, show empty threads when someone clicks the button.
+	// This information will help us make WORDS better, cus it sucks to, for instance, show empty threads when someone clicks the button.
 	// We want to know how often that's happening.
 	
 	if(typeof was_empty === "boolean" && was_empty === true)

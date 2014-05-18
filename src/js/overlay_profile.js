@@ -705,7 +705,7 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "<table style=\"margin-right:auto;margin-left:auto;border-spacing:20px\">";
             				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:14px\">";
-            				logoutmessage = logoutmessage + "You have chosen to log out of Words.";
+            				logoutmessage = logoutmessage + "You have chosen to log out of WORDS.";
             				if(facebook_access_token != null || google_access_token != null)
             					logoutmessage = logoutmessage + "<br>Also disconnect your 3rd party login?";
             				else

@@ -693,7 +693,7 @@ function getUser(retrieve_asynchronously)
 
 chrome.runtime.onInstalled.addListener(function(details){
     if(details.reason == "install"){
-    	chrome.tabs.create({url:"http://www.words4chrome.com/firstrun.html"});
+    //	chrome.tabs.create({url:"http://www.words4chrome.com/firstrun.html"});
     }else if(details.reason == "update"){
       //  var thisVersion = chrome.runtime.getManifest().version;
       //  alert("Updated from " + details.previousVersion + " to " + thisVersion + "!");
