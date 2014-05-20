@@ -209,27 +209,11 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "						<tr>"
 					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
 					main_div_string = main_div_string + "								Change avatar:<br>";
-					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-size:10px;font-style:italic;font-weight:normal\"></span>";
+					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-size:10px;font-style:italic;font-weight:normal\">To use a Google/FB profile pic, log out and back in.</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
 					main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto\">";
-					main_div_string = main_div_string + "<tr id=\"use_google_tr\">";
-					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "		<input id=\"use_google_radio\" type=\"radio\" name=\"picture_type\" value=\"google\">";
-					main_div_string = main_div_string + "	</td>";
-					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_google_wording_td\">";
-					main_div_string = main_div_string + "		Google picture";
-					main_div_string = main_div_string + "	</td>";
-					main_div_string = main_div_string + "</tr>";
-					main_div_string = main_div_string + "<tr id=\"use_facebook_tr\">";
-					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "		<input id=\"use_facebook_radio\" type=\"radio\" name=\"picture_type\" value=\"facebook\">";
-					main_div_string = main_div_string + "	</td>";
-					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_facebook_wording_td\">";
-					main_div_string = main_div_string + "		Facebook picture";
-					main_div_string = main_div_string + "	</td>";
-					main_div_string = main_div_string + "</tr>";
 					main_div_string = main_div_string + "<tr>";
 					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "		<input id=\"use_geometric_radio\" type=\"radio\" name=\"picture_type\" value=\"geometric\">";
@@ -498,42 +482,6 @@ function getProfile(screenname)
 					});
             	});
 
-            	// see if the user has social tokens which look valid...
-            	var google_access_token_expired_or_doesnt_exist = true;
-        		if(docCookies.getItem("google_access_token_expires") != null && docCookies.getItem("google_access_token") != null) // ok, the token/expires cookies exist
-        		{
-        			var ex = docCookies.getItem("google_access_token_expires");
-        			if(ex > bg.msfe_according_to_backend) 
-        				google_access_token_expired_or_doesnt_exist = false; // and it appears valid
-        			else 
-        			{												// it existed, but wasn't valid. Delete everything
-        				docCookies.removeItem("last_tab_id");
-        				//alert("deleting google_access_token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend");
-        				docCookies.removeItem("google_access_token");
-        				docCookies.removeItem("google_access_token_expires");
-        				google_access_token_expired_or_doesnt_exist = true;
-        			}	
-        		}	
-        		var facebook_access_token_expired_or_doesnt_exist = true;
-        		if(docCookies.getItem("facebook_access_token_expires") !== null && docCookies.getItem("facebook_access_token") !== null) // ok, the token/expires cookies exist
-        		{
-        			var ex = docCookies.getItem("facebook_access_token_expires");
-        			if(ex > bg.msfe_according_to_backend) 
-        				facebook_access_token_expired_or_doesnt_exist = false; // and it appears valid
-        			else 
-        			{												// it existed, but wasn't valid. Delete everything
-        				docCookies.removeItem("last_tab_id");
-        				//alert("deleting facebook_access_token in getUserByScreenname success because facebook_access_token_expires appeared less than bg.msfe_according_to_backend");
-        				docCookies.removeItem("facebook_access_token");
-        				docCookies.removeItem("facebook_access_token_expires");
-        				facebook_access_token_expired_or_doesnt_exist = true;
-        			}	
-        		}	
-        		
-        		if(bg.user_jo.picture.indexOf("googleusercontent.com") != -1)
-        			$("#use_google_radio").prop('checked', true);
-        		else if(bg.user_jo.picture.indexOf("graph.facebook.com") != -1)
-        			$("#use_facebook_radio").prop('checked', true);
         		if(bg.user_jo.picture.indexOf("unicornify.appspot.com") != -1)
         			$("#use_unicorn_radio").prop('checked', true);
         		else if(bg.user_jo.picture.indexOf("d=identicon") != -1)
@@ -547,93 +495,6 @@ function getProfile(screenname)
         		else if(bg.user_jo.picture.indexOf("d=monsterid") != -1)
         			$("#use_monster_radio").prop('checked', true);
         		
-        		// then show the appropriate trs and write the appropriate wording...
-        		if(bg.user_jo.last_login_type === "facebook")
-				{
-					//alert("llt == facebook");
-    				$("#use_google_tr").hide();
-    				$("#social_wording_span").text("To use a Google picture, log in with Google, then return here. (Emails must match.)");
-				}	
-				else if(bg.user_jo.last_login_type === "google")
-				{
-					//alert("llt == google");
-    				$("#use_facebook_tr").hide();
-    				$("#social_wording_span").text("To use a FB picture, log in with FB, then return here. (Emails must match.)");
-				}	
-            	
-            	$("#use_google_radio").click(function () {
-            		// go get Google picture
-            		$.ajax({
-            			type: 'GET',
-            			url: bg.endpoint,
-            			data: {
-            				method: "getSocialPicture",
-            				social_access_token: docCookies.getItem("google_access_token"),
-            				social_access_token_expires: docCookies.getItem("google_access_token_expires"),
-            				login_type: "google"
-            			},
-            			dataType: 'json',
-            			async: true,
-            			success: function (data, status) {
-            				if(data.response_status === "error")
-            				{
-            					if(data.error_code == "0000")
-            					{
-            						docCookies.removeItem("google_access_token");
-            						docCookies.removeItem("google_access_token_expires");
-            					}	
-            					displayMessage("Can't get Google picture as your token has expired. Please log out/in and try again.");
-            					return "error";
-            				}
-            				else if(data.response_status === "success")
-            				{
-            					$("#avatar_img").attr("src", data.picture);
-            				}	
-            			},
-            			error: function (XMLHttpRequest, textStatus, errorThrown) {
-            				console.log(textStatus, errorThrown);
-            				displayMessage("Couldn't retrieve picture. Network connection? (AJAX)", "red");
-            				return error;
-            			} 
-            		});  
-            	});
-            	
-            	$("#use_facebook_radio").click(function () {
-            		// go get Google picture
-            		$.ajax({
-            			type: 'GET',
-            			url: bg.endpoint,
-            			data: {
-            				method: "getSocialPicture",
-            				social_access_token: docCookies.getItem("facebook_access_token"),
-            				social_access_token_expires: docCookies.getItem("facebook_access_token_expires"),
-            				login_type: "facebook"
-            			},
-            			dataType: 'json',
-            			async: true,
-            			success: function (data, status) {
-            				if(data.response_status === "error")
-            				{
-            					if(data.error_code == "0000")
-            					{
-            						docCookies.removeItem("facebook_access_token");
-            						docCookies.removeItem("facebook_access_token_expires");
-            					}	
-            					displayMessage("Can't get Facebook picture as your token has expired. Please log out/in and try again.");
-            					return "error";
-            				}
-            				else if(data.response_status === "success")
-            				{
-            					$("#avatar_img").attr("src", data.picture);
-            				}	
-            			},
-            			error: function (XMLHttpRequest, textStatus, errorThrown) {
-            				console.log(textStatus, errorThrown);
-            				displayMessage("Couldn't retrieve picture. Network connection? (AJAX)", "red");
-            				return error;
-            			} 
-            		});  
-            	});
             	
             	$("#use_geometric_radio").click(function () {
             		var g = guid();
@@ -699,53 +560,14 @@ function getProfile(screenname)
             	
             	$("#logout_link").click(
             			function () {
-            				var google_access_token = docCookies.getItem("google_access_token");
-            				var facebook_access_token = docCookies.getItem("facebook_access_token");
             				var logoutmessage = "<div>";
             				logoutmessage = logoutmessage + "<table style=\"margin-right:auto;margin-left:auto;border-spacing:20px\">";
             				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:14px\">";
             				logoutmessage = logoutmessage + "You have chosen to log out of WORDS.";
-            				if(facebook_access_token != null || google_access_token != null)
-            					logoutmessage = logoutmessage + "<br>Also disconnect your 3rd party login?";
-            				else
-            					logoutmessage = logoutmessage + "<br>Please confirm.";
+            				logoutmessage = logoutmessage + "<br>Please confirm.";
             				logoutmessage = logoutmessage + "		</td>";
             				logoutmessage = logoutmessage + "	</tr>";
-            				if(facebook_access_token != null)
-            				{
-            					logoutmessage = logoutmessage + "	<tr>";
-                				logoutmessage = logoutmessage + "		<td style=\"text-align:center\">";
-                				logoutmessage = logoutmessage + "			<table style=\"width:210px;margin-right:auto;margin-left:auto;\">";
-                				logoutmessage = logoutmessage + "				<tr>";
-                				logoutmessage = logoutmessage + "					<td style=\"width:25px\">";
-                				logoutmessage = logoutmessage + "<input type=\"checkbox\" id=\"facebook_disconnect_checkbox\" style=\"margin-left:auto;width:25px\">";
-                				logoutmessage = logoutmessage + "					</td>";
-                				logoutmessage = logoutmessage + "					<td>";
-                				logoutmessage = logoutmessage + "remove Facebook authorization";
-                				logoutmessage = logoutmessage + "					</td>";
-                				logoutmessage = logoutmessage + "				</tr>";
-                				logoutmessage = logoutmessage + "			</table>";
-                				logoutmessage = logoutmessage + "		</td>";
-                				logoutmessage = logoutmessage + "	</tr>";
-            				}
-            				if(google_access_token != null)
-            				{
-            					logoutmessage = logoutmessage + "	<tr>";
-                				logoutmessage = logoutmessage + "		<td style=\"text-align:center\">";
-                				logoutmessage = logoutmessage + "			<table style=\"width:210px;margin-right:auto;margin-left:auto;\">";
-                				logoutmessage = logoutmessage + "				<tr>";
-                				logoutmessage = logoutmessage + "					<td style=\"width:25px\">";
-                				logoutmessage = logoutmessage + "<input type=\"checkbox\" id=\"google_disconnect_checkbox\" style=\"margin-left:auto;width:25px\">";
-                				logoutmessage = logoutmessage + "					</td>";
-                				logoutmessage = logoutmessage + "					<td>";
-                				logoutmessage = logoutmessage + "remove Google authorization"; 
-                				logoutmessage = logoutmessage + "					</td>";
-                				logoutmessage = logoutmessage + "				</tr>";
-                				logoutmessage = logoutmessage + "			</table>";
-                				logoutmessage = logoutmessage + "		</td>";
-                				logoutmessage = logoutmessage + "	</tr>";
-            				}
             				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:15px\">";
             				logoutmessage = logoutmessage + "			<button id=\"logout_confirmation_button\">LOGOUT</button>";
@@ -760,51 +582,6 @@ function getProfile(screenname)
                         				docCookies.removeItem("email");
                         				docCookies.removeItem("this_access_token");
                         				docCookies.removeItem("this_access_token_expires");
-                        				if($("#facebook_disconnect_checkbox").prop("checked"))
-                        				{
-                        					//alert("telling facebook to delete permissions");
-                        					$.ajax({
-                        						type: 'DELETE',
-                        						url: "https://graph.facebook.com/me/permissions?access_token=" + docCookies.getItem("facebook_access_token"),
-                        						async: true,
-                        						contentType: "application/json",
-                        						dataType: 'json',
-                        						success: function(nullResponse) { // on successful disconnection, also delete facebook_access_token. It isn't valid anymore anyway.
-                        							//alert("deleting facebook access token and expires because person chose to log out and remove facebook authorization");
-                        						},
-                        						error: function(e) {
-                        							console.log(e);
-                        							displayMessage("Sorry. Disconnection didn't work. You may already be disconnected. If not, you can disconnect manually in your Facebook settings", "red", null, 7);
-                        						}
-                        					});	 
-                        					//alert("deleting facebook_access_token after logout conf button");
-                        					docCookies.removeItem("facebook_access_token");
-                							docCookies.removeItem("facebook_access_token_expires");
-                        				}
-                        				if($("#google_disconnect_checkbox").prop("checked"))
-                        				{
-                        					var revokeUrl = 'https://accounts.google.com/o/oauth2/revoke?token=' + docCookies.getItem("google_access_token");
-                        					//alert("deleting google_access_token after logout conf button");
-                        					docCookies.removeItem("google_access_token");
-                							docCookies.removeItem("google_access_token_expires");
-                        					// Tell google to disconnect this user.
-                        					//alert("telling google to disconnect user");
-                        					$.ajax({
-                        						type: 'GET',
-                        						url: revokeUrl,
-                        						async: true,
-                        						contentType: "application/json",
-                        						dataType: 'jsonp',
-                        						success: function(nullResponse) { // on successful disconnection, also delete google_access_token. It isn't valid anymore anyway.
-                        							//alert("success");
-                        						},
-                        						error: function(e) {
-                        							console.log(e);
-                        							//alert("ajax error");
-                        							displayMessage("Sorry. Disconnection didn't work. You can disconnect manually <a href=\"https://plus.google.com/apps\">here</a>.", "red", null, 7);
-                        						}
-                        					});	 
-                        				}
                         				email = null;
                         				this_access_token = null;
                         				bg.user_jo = null;

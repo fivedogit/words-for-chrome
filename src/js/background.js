@@ -58,9 +58,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 		chrome.tabs.getSelected(null, function(tab) { // only follow through if the updating tab is the same as the selected tab, don't want background tabs reloading and wrecking stuff
 			if(updatingtab.url === tab.url) // the one that's updating is the one we're looking at. good. proceed
 			{
-				if(currentURL !== tab.url) // only do this if the update is of a new url, no point in reloading the existing url again
+				if(currentURL !== tab.url) //  && tab.url.indexOf("chrome-extension://") !== 0) // only do this if the update is of a new url, no point in reloading the existing url again
 				{	
-					//alert("tab update triggered. drawing button.");
 					currentURL = updatingtab.url;
 					currentTitle = updatingtab.title;
 					currentId = tab.id;
@@ -80,7 +79,8 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 	chrome.tabs.getSelected(null, function(tab) {
 		if(typeof tab.url !== "undefined" && tab.url !== null && tab.url !== "")
 		{
-			//alert("tab activation event");
+			//alert("tab activation event tab.url=" + tab.url);
+			getUser(); // get user on every valid tab change. This updates notifications and logstat (do not getUser on random page updates)
 			currentURL = tab.url;
 			currentTitle = tab.title;
 			currentId = tab.id;
@@ -95,7 +95,7 @@ function doButtonGen()
 {
 	var url_at_function_call = currentURL;	   // need to save the currentURL bc if it has changed by the time threads come back, they are irrelevant at that point
 	t_jo = null;
-	getUser(); // get user on every tab change. This updates notifications and logstat
+	
 	// priority order: 
 	// 1. display a url error, if applicable
 	// 2. go get thread
@@ -643,6 +643,7 @@ function getUser(retrieve_asynchronously)
 	var this_access_token = docCookies.getItem("this_access_token");
 	if(email !== null && email.length >=6 && this_access_token !== null && this_access_token.length == 32)// the shortest possible email length is x@b.co = 6.
 	{
+		//alert("bg.getUserSelf()");
 		$.ajax({ 
 			type: 'GET', 
 			url: endpoint, 

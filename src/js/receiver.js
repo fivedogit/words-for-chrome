@@ -151,7 +151,7 @@ if(code !== null && code !== "")
 					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
 					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		doFinished();
+		    		doFinished(false);
 				}	
 				if(data.show_registration === "true" && data.login_type === "google")
 				{
@@ -168,7 +168,7 @@ if(code !== null && code !== "")
 					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
 					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		doFinished();
+		    		doFinished(false);
 				}	
 			}	
 		},
@@ -312,7 +312,7 @@ function login(login_type, social_access_token, social_access_token_expires)
 					docCookies.setItem("google_access_token", data.facebook_access_token, 31536e3);
 					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		doFinished();
+		    		doFinished(false);
 				}	
 				else if(data.show_registration === "true" && data.login_type === "facebook")
 				{
@@ -328,7 +328,7 @@ function login(login_type, social_access_token, social_access_token_expires)
 					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
 					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		doFinished();
+		    		doFinished(false);
 				}	
 			}	
 		},
@@ -582,7 +582,7 @@ function showRegistration(picture, login_type, email)
 					    		$("#progress_tr").hide();
 					    		docCookies.setItem("email", data.email, 31536e3);
 		    		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		    		doFinished();
+		    		    		doFinished(true);
 					    	}
 					    },
 					    error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -593,13 +593,7 @@ function showRegistration(picture, login_type, email)
 				});
 }
 
-
-
-
-
-
-
-function doFinished()
+function doFinished(from_registration)
 {
 	// we've gotten the login return, now we need to get the user before we can safely say, 
 	displayMessage("Identify verified. Loading WORDS user info... ", "black");
@@ -612,6 +606,7 @@ function doFinished()
 	//docCookies.removeItem("facebook_access_token_expires");
 	
 	$("#progress_tr").show();
+	//alert("receiver getUserSelf()");
 	$.ajax({ 
 		type: 'GET', 
 		url: bg.endpoint, 
@@ -624,6 +619,7 @@ function doFinished()
         async: true, 
         timeout: 20000,
         success: function (data, status) {
+        	var existing_pic = data.user_jo.picture;
         	if (data.response_status === "error") 
         	{
         		$("#progress_tr").hide();
@@ -639,28 +635,151 @@ function doFinished()
         	{	
         		$("#progress_tr").hide();
         		if(data.user_jo) { 	bg.user_jo = data.user_jo; }
-        		$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You are now logged in.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
         		
-        		// tips html formation
-        		var str = "";
-        		str = str + "<div style=\"width:360px;padding:15px;border-top:1px solid black\">";
-        		str = str + "<p style=\"font-weight:bold;text-align:left\">Remember to downvote the following:</p>";
-        		str = str + "<p style=\"text-align:left\">Name-calling, racism, trolling, general meanness, comments that should be upvotes instead (e.g. \"I love this site\", \"Me too!\"), out-of-place political/religious discussion, profanity aimed at another user, lolspeak and aggressively shoddy spelling/punctuation.</p>";
-        		str = str + "<p style=\"font-weight:bold;text-align:center\">Have fun and be nice!</p></div>";
-        		
-        		// end tips html formation
-        		
-        		$("#registration_form_td").html(str);//OK
-        		$("#registration_form_td").show();
-        		
-        		$("#close_this_tab_link").click( function () {
-        			chrome.tabs.getSelected(null, function(tab) { 
-        				var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
-        				chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
-        				docCookies.removeItem("last_tab_id");
-        				chrome.tabs.remove(tab.id);
-        			});
-        		});
+        		if(from_registration === false) // don't ask them if they've just come from registration
+        		{	
+        			var message = "";
+            		message = message + "<div style=\"width:360px;padding:15px\">";
+            		message = message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
+            		message = message + "		You are now logged in.";
+            		message = message + "	</div>";
+            		message = message + "	<div id=\"image_choice_progress_div\"><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></div>";
+            		message = message + "	<div id=\"image_choice_div\" style=\"display:none\">";
+            		message = message + " 		Use your " + capitalized_login_type  + " image as your WORDS profile pic?";
+            		message = message + "		<table style=\"padding-top:10px;margin-right:auto;margin-left:auto\">";
+            		message = message + "			<tr>";
+            		message = message + "				<td style=\"text-align:center;padding-right:10px\">";
+            		message = message + "					<table style=\"padding-top:10px;margin-right:auto;margin-left:auto\">";
+            		message = message + "						<tr>";
+            		message = message + "							<td style=\"text-align:center\">";
+            		message = message + "								" + capitalized_login_type + " picture";
+            		message = message + "							</td>";
+            		message = message + "						</tr>";
+            		message = message + "						<tr>";
+            		message = message + "							<td style=\"text-align:center\">";
+            		message = message + "								<img id=\"social_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
+            		message = message + "							</td>";
+            		message = message + "						</tr>";
+            		message = message + "						<tr>";
+            		message = message + "							<td style=\"text-align:center\">";
+            		message = message + "								<a href=\"#\" id=\"yes_link\">Yes</a>";
+            		message = message + "							</td>";
+            		message = message + "						</tr>";
+            		message = message + "					</table>";
+            		message = message + "				</td>";
+            		message = message + "				<td style=\"text-align:center\">";
+            		message = message + "					<table style=\"padding-top:10px;padding-left:10px;margin-right:auto;margin-left:auto\">";
+            		message = message + "						<tr>";
+            		message = message + "							<td style=\"text-align:center\">";
+            		message = message + "								Your current picture";
+            		message = message + "							</td>";
+            		message = message + "						</tr>";
+            		message = message + "						<tr>";
+            		message = message + "							<td style=\"text-align:center\">";
+            		message = message + "								<img id=\"existing_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
+            		message = message + "							</td>";
+            		message = message + "						</tr>";
+            		message = message + "						<tr>";
+            		message = message + "							<td style=\"text-align:center\">";
+            		message = message + "								<a href=\"#\" id=\"no_link\">No, use current</a>";
+            		message = message + "							</td>";
+            		message = message + "						</tr>";
+            		message = message + "					</table>";
+            		message = message + "				</td>";
+            		message = message + "			</tr>";
+            		message = message + "		</table>";
+            		message = message + "	</div>";
+            		message = message + "</div>";
+            		$("#message_td").html(message);
+            		
+            		var at = null;
+            		var ate = null;
+            		if(login_type === "google")
+            		{
+            			at = docCookies.getItem("google_access_token");
+            			ate = docCookies.getItem("google_access_token_expires");
+            		}
+            		else
+            		{
+            			at = docCookies.getItem("facebook_access_token");
+            			ate = docCookies.getItem("facebook_access_token_expires");
+            		}	
+            		var social_pic = null;
+            		$.ajax({
+            			type: 'GET',
+            			url: bg.endpoint,
+            			data: {
+            				method: "getSocialPicture",
+            				social_access_token: at,
+            				social_access_token_expires: ate,
+            				login_type: login_type
+            			},
+            			dataType: 'json',
+            			async: true,
+            			success: function (data, status) {
+            				
+            				// we do not need these tokens anymore now that login and picture retrival is complete.
+            				docCookies.removeItem("google_access_token");
+            				docCookies.removeItem("google_access_token_expires");
+            				docCookies.removeItem("facebook_access_token");
+            				docCookies.removeItem("facebook_access_token_expires");
+            				
+            				if(data.response_status === "error")
+            				{
+            					// should never ever ever happen as we've JUST gotten the token info to get to this point.
+            					return "error";
+            				}
+            				else if(data.response_status === "success")
+            				{
+            					social_pic = data.picture;
+            					if(social_pic === existing_pic)
+            						doReallyFinished();
+            					else
+            					{
+            						$("#image_choice_div").show();
+            						$("#image_choice_progress_div").hide();
+            						$("#social_img").attr("src", social_pic);
+            						$("#existing_img").attr("src", existing_pic);
+            					}
+            					
+            				}	
+            			},
+            			error: function (XMLHttpRequest, textStatus, errorThrown) {
+            				console.log(textStatus, errorThrown);
+            				displayMessage("Couldn't retrieve picture. Network connection? Please try again later.", "red");
+            				return error;
+            			} 
+            		});  
+            		
+            		$("#yes_link").click( function () {
+            			$.ajax({
+                			type: 'GET',
+                			url: bg.endpoint,
+                			data: {
+                				method: "savePicture",
+                				email: docCookies.getItem("email"),							
+                				this_access_token: docCookies.getItem("this_access_token"),	
+                				picture: social_pic
+                			},
+                			dataType: 'json',
+                			async: true,
+                			success: function (data, status) {
+                				bg.user_jo.picture = social_pic;
+                			},
+                			error: function (XMLHttpRequest, textStatus, errorThrown) {
+                				console.log(textStatus, errorThrown);
+                			} 
+                		});  
+            			doReallyFinished();
+            		});
+            		$("#no_link").click( function () {
+            			doReallyFinished();
+            		});
+        		}
+        		else // this person is coming from registration where they just chose their image. Don't ask them twice in a row.
+        		{
+        			doReallyFinished();
+        		}
         	}
         	else
         	{
@@ -679,4 +798,35 @@ function doFinished()
         } 
 	});
 	
+}
+
+function doReallyFinished()
+{
+	docCookies.removeItem("google_access_token"); 
+	docCookies.removeItem("google_access_token_expires");
+	docCookies.removeItem("facebook_access_token"); 
+	docCookies.removeItem("facebook_access_token_expires");
+	
+	$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You are now logged in.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
+	
+	// tips html formation
+	var str = "";
+	str = str + "<div style=\"width:360px;padding:15px;border-top:1px solid black\">";
+	str = str + "<p style=\"font-weight:bold;text-align:left\">Remember to downvote the following:</p>";
+	str = str + "<p style=\"text-align:left\">Name-calling, racism, trolling, general meanness, comments that should be upvotes instead (e.g. \"I love this site\", \"Me too!\"), out-of-place political/religious discussion, profanity aimed at another user, lolspeak and aggressively shoddy spelling/punctuation.</p>";
+	str = str + "<p style=\"font-weight:bold;text-align:center\">Have fun and be nice!</p></div>";
+	
+	// end tips html formation
+	
+	$("#registration_form_td").html(str);//OK
+	$("#registration_form_td").show();
+	
+	$("#close_this_tab_link").click( function () {
+		chrome.tabs.getSelected(null, function(tab) { 
+			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+			docCookies.removeItem("last_tab_id");
+			chrome.tabs.remove(tab.id);
+		});
+	});
 }
