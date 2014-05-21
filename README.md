@@ -7,8 +7,8 @@ Together we can fix it.
 
 WORDS DOES NOT TRACK and is open source for verification. 
 
-- (http://github.com/fivedogit/words-backend)
-- (http://github.com/fivedogit/words-for-chrome)
+- http://github.com/fivedogit/words-backend
+- http://github.com/fivedogit/words-for-chrome
 
 Enjoy! Follow us on Twitter @words4chrome or me, the developer, @fivedogit. Feedback welcome!
 
