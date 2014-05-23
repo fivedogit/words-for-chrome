@@ -240,17 +240,24 @@ function doNotificationItem(item_id, dom_id)
         			populate_parent = true;
         			populate_item = false;
         		}
-        		else if(item_id.endsWith("C"))
+        		else if(item_id.endsWith("M"))
         		{
-        			if(item_jo.parent.indexOf(".") !== -1) // parent is not a comment
-        				headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> <span id=\"repliedto_or_mentioned_span_" + item_random + "\">mentioned</span> you: ";
-        			else
-        				headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> <span id=\"repliedto_or_mentioned_span_" + item_random + "\">replied to or mentioned</span> you: ";
+        			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> mentioned you: ";
+        			populate_parent = false;
+        			populate_item = true;
+        		}	
+        		else if(item_id.endsWith("R"))
+        		{
+        			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> replied to you: ";
         			populate_parent = true;
         			populate_item = true;
-        			if(item_jo.parent.indexOf(".") !== -1) // parent is not a comment
-        				populate_parent = false;
         		}
+        		else
+        		{
+        			headerstring = headerstring + "Unknown activity item.";
+        			populate_parent = false;
+        			populate_item = false;
+        		}	
         		headerstring = headerstring + "<img id=\"google_favicon_" + item_random + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_random + "\" href=\"#\"></a>";
     			$("#header_td_" + item_random).html(headerstring);//OK
     			$("#google_favicon_" + item_random).css("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
@@ -292,13 +299,15 @@ function doNotificationItem(item_id, dom_id)
         	        	parent_jo = data.item;
         	        	if(data.response_status === "success")
         	        	{
-        	        		if(item_id.endsWith("C") && parent_jo.hidden === true)
+        	        		$("#you_wrote_td_" + parent_random).text("You wrote:"); // if we're showing the parent, this is a reply or a like/dislike. 
+        	        		writeComment(parent_jo, "notification_comment_td_" + parent_random);
+        	        		/*if(item_id.endsWith("C") && parent_jo.hidden === true)
         	        		{
         	        			// parent is hidden. We don't know who wrote it.
         	        			if(item_jo.text.indexOf("@" + bg.user_jo.screenname) !== -1) // treat as a mention, although it may be mention-reply. No way of knowing.
         	        			{
         	        				$("#parent_tr_" + parent_random).hide();
-        	        				$("#repliedto_or_mentioned_span_" + item_random).text("mentioned");
+        	        				//$("#repliedto_or_mentioned_span_" + item_random).text("mentioned");
         	        			}
         	        			else // no mention, must be a reply.
         	        			{
@@ -330,7 +339,7 @@ function doNotificationItem(item_id, dom_id)
         	        		{
         	        			writeComment(parent_jo, "notification_comment_td_" + parent_random);
         	        			$("#you_wrote_td_" + parent_random).text("You wrote:");
-        	        		}	
+        	        		}	*/
         	        	}
         	        },
         	        error: function (XMLHttpRequest, textStatus, errorThrown) {

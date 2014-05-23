@@ -77,10 +77,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
 	chrome.tabs.getSelected(null, function(tab) {
+		getUser(); // get user on every valid tab change. This updates notifications and logstat (do not getUser on random page updates)
 		if(typeof tab.url !== "undefined" && tab.url !== null && tab.url !== "")
 		{
 			//alert("tab activation event tab.url=" + tab.url);
-			getUser(); // get user on every valid tab change. This updates notifications and logstat (do not getUser on random page updates)
 			currentURL = tab.url;
 			currentTitle = tab.title;
 			currentId = tab.id;
@@ -166,260 +166,51 @@ function getThread(url_at_function_call, updatebutton)
         } 
 	});
 	
-	// the following ugly piece of code waits for up to 7 seconds for the thread to finish. Checking every .333 seconds, exiting upon completion
+	// the following ugly piece of code waits for up to 14 seconds for the thread to finish. Checking every .333 seconds, exiting upon completion
 	// as ugly as this is, there really isn't a better, more robust way to do animations in a chrome extension. Loops with setTimeout get really hairy. Don't judge.
 	// if there is a better way, please submit a bug report on Github or notify me on twitter
-	setTimeout(function () {
-	    if (updatebutton && (url_at_function_call === currentURL)) {
-	        drawTTUButton("-  ", "-  ")
-	    }
-	    if (threadstatus === 0 && loc_thread_jo != null) {
-	        finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	        return;
-	    }
-	    if (currentURL !== url_at_function_call) {
-	        return;
-	    }
-	    setTimeout(function () {
-	        if (updatebutton && (url_at_function_call === currentURL)) {
-	            drawTTUButton("-- ", "-- ")
-	        }
-	        if (threadstatus === 0 && loc_thread_jo != null) {
-	            finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	            return;
-	        }
-	        if (currentURL !== url_at_function_call) {
-	            return;
-	        }
-	        setTimeout(function () {
-	            if (updatebutton && (url_at_function_call === currentURL)) {
-	                drawTTUButton(" --", " --")
-	            }
-	            if (threadstatus === 0 && loc_thread_jo != null) {
-	                finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                return;
-	            }
-	            if (currentURL !== url_at_function_call) {
-	                return;
-	            }
-	            setTimeout(function () {
-	                if (updatebutton && (url_at_function_call === currentURL)) {
-	                    drawTTUButton("  -", "  -")
-	                }
-	                if (threadstatus === 0 && loc_thread_jo != null) {
-	                    finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                    return;
-	                }
-	                if (currentURL !== url_at_function_call) {
-	                    return;
-	                }
-	                setTimeout(function () {
-	                    if (updatebutton && (url_at_function_call === currentURL)) {
-	                        drawTTUButton("   ", "   ")
-	                    }
-	                    if (threadstatus === 0 && loc_thread_jo != null) {
-	                        finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                        return;
-	                    }
-	                    if (currentURL !== url_at_function_call) {
-	                        return;
-	                    }
-	                    setTimeout(function () {
-	                        if (updatebutton && (url_at_function_call === currentURL)) {
-	                            drawTTUButton("-  ", "-  ")
-	                        }
-	                        if (threadstatus === 0 && loc_thread_jo != null) {
-	                            finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                            return;
-	                        }
-	                        if (currentURL !== url_at_function_call) {
-	                            return;
-	                        }
-	                        setTimeout(function () {
-	                            if (updatebutton && (url_at_function_call === currentURL)) {
-	                                drawTTUButton("-- ", "-- ")
-	                            }
-	                            if (threadstatus === 0 && loc_thread_jo != null) {
-	                                finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                return;
-	                            }
-	                            if (currentURL !== url_at_function_call) {
-	                                return;
-	                            }
-	                            setTimeout(function () {
-	                                if (updatebutton && (url_at_function_call === currentURL)) {
-	                                    drawTTUButton(" --", " --")
-	                                }
-	                                if (threadstatus === 0 && loc_thread_jo != null) {
-	                                    finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                    return;
-	                                }
-	                                if (currentURL !== url_at_function_call) {
-	                                    return;
-	                                }
-	                                setTimeout(function () {
-	                                    if (updatebutton && (url_at_function_call === currentURL)) {
-	                                        drawTTUButton("  -", "  -")
-	                                    }
-	                                    if (threadstatus === 0 && loc_thread_jo != null) {
-	                                        finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                        return;
-	                                    }
-	                                    if (currentURL !== url_at_function_call) {
-	                                        return;
-	                                    }
-	                                    setTimeout(function () {
-	                                        if (updatebutton && (url_at_function_call === currentURL)) {
-	                                            drawTTUButton("   ", "   ")
-	                                        }
-	                                        if (threadstatus === 0 && loc_thread_jo != null) {
-	                                            finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                            return;
-	                                        }
-	                                        if (currentURL !== url_at_function_call) {
-	                                            return;
-	                                        }
-	                                        setTimeout(function () {
-	                                            if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                drawTTUButton("-  ", "-  ")
-	                                            }
-	                                            if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                return;
-	                                            }
-	                                            if (currentURL !== url_at_function_call) {
-	                                                return;
-	                                            }
-	                                            setTimeout(function () {
-	                                                if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                    drawTTUButton("-- ", "-- ")
-	                                                }
-	                                                if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                    finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                    return;
-	                                                }
-	                                                if (currentURL !== url_at_function_call) {
-	                                                    return;
-	                                                }
-	                                                setTimeout(function () {
-	                                                    if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                        drawTTUButton(" --", " --")
-	                                                    }
-	                                                    if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                        finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                        return;
-	                                                    }
-	                                                    if (currentURL !== url_at_function_call) {
-	                                                        return;
-	                                                    }
-	                                                    setTimeout(function () {
-	                                                        if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                            drawTTUButton("  -", "  -")
-	                                                        }
-	                                                        if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                            finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                            return;
-	                                                        }
-	                                                        if (currentURL !== url_at_function_call) {
-	                                                            return;
-	                                                        }
-	                                                        setTimeout(function () {
-	                                                            if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                                drawTTUButton("   ", "   ")
-	                                                            }
-	                                                            if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                                finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                                return;
-	                                                            }
-	                                                            if (currentURL !== url_at_function_call) {
-	                                                                return;
-	                                                            }
-	                                                            setTimeout(function () {
-	                                                                if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                                    drawTTUButton("-  ", "-  ")
-	                                                                }
-	                                                                if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                                    finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                                    return;
-	                                                                }
-	                                                                if (currentURL !== url_at_function_call) {
-	                                                                    return;
-	                                                                }
-	                                                                setTimeout(function () {
-	                                                                    if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                                        drawTTUButton("-- ", "-- ")
-	                                                                    }
-	                                                                    if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                                        finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                                        return;
-	                                                                    }
-	                                                                    if (currentURL !== url_at_function_call) {
-	                                                                        return;
-	                                                                    }
-	                                                                    setTimeout(function () {
-	                                                                        if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                                            drawTTUButton(" --", " --")
-	                                                                        }
-	                                                                        if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                                            finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                                            return;
-	                                                                        }
-	                                                                        if (currentURL !== url_at_function_call) {
-	                                                                            return;
-	                                                                        }
-	                                                                        setTimeout(function () {
-	                                                                            if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                                                drawTTUButton("  -", "  -")
-	                                                                            }
-	                                                                            if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                                                finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                                                return;
-	                                                                            }
-	                                                                            if (currentURL !== url_at_function_call) {
-	                                                                                return;
-	                                                                            }
-	                                                                            setTimeout(function () {
-	                                                                                if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                                                    drawTTUButton("   ", "   ")
-	                                                                                }
-	                                                                                if (threadstatus === 0 && loc_thread_jo != null) {
-	                                                                                    finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                                                    return;
-	                                                                                }
-	                                                                                if (currentURL !== url_at_function_call) {
-	                                                                                    return;
-	                                                                                }
-	                                                                                setTimeout(function () {
-	                                                                                    if (updatebutton && (url_at_function_call === currentURL)) {
-	                                                                                        drawTTUButton("---", "---");
-	                                                                                        threadstatus = 0;
-	                                                                                    }
-	                                                                                    if (currentURL !== url_at_function_call) {
-	                                                                                        return;
-	                                                                                    }
-	                                                                                    finishThread(loc_thread_jo, updatebutton, url_at_function_call);
-	                                                                                    return;
-	                                                                                }, 333)
-	                                                                            }, 333)
-	                                                                        }, 333)
-	                                                                    }, 333)
-	                                                                }, 333)
-	                                                            }, 333)
-	                                                        }, 333)
-	                                                    }, 333)
-	                                                }, 333)
-	                                            }, 333)
-	                                        }, 333)
-	                                    }, 333)
-	                                }, 333)
-	                            }, 333)
-	                        }, 333)
-	                    }, 333)
-	                }, 333)
-	            }, 333)
-	        }, 333)
-	    }, 333)
-	}, 333);
+	
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-  ","-  ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-- ","-- ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton(" --"," --")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("  -","  -")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("   ","   ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-  ","-  ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-- ","-- ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton(" --"," --")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("  -","  -")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("   ","   ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-  ","-  ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-- ","-- ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton(" --"," --")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("  -","  -")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("   ","   ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-  ","-  ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-- ","-- ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton(" --"," --")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("  -","  -")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("   ","   ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-  ","-  ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-- ","-- ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton(" --"," --")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("  -","  -")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("   ","   ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-  ","-  ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-- ","-- ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton(" --"," --")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("  -","  -")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("   ","   ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-  ","-  ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-- ","-- ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton(" --"," --")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("  -","  -")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("   ","   ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-  ","-  ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("-- ","-- ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton(" --"," --")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("  -","  -")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("   ","   ")}if(threadstatus===0&&loc_thread_jo!=null){finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;}if(currentURL!==url_at_function_call){return;}
+	setTimeout(function(){if(updatebutton&&url_at_function_call===currentURL){drawTTUButton("---","---");threadstatus=0}if(currentURL!==url_at_function_call){return;}finishThread(loc_thread_jo,updatebutton,url_at_function_call);return;},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)},333)});
 }
 
 function finishThread(inc_thread_jo, updatebutton, url_at_function_call) 
@@ -440,8 +231,10 @@ function finishThread(inc_thread_jo, updatebutton, url_at_function_call)
 			{	
 				var top_and_bottom = [];
 				if(inc_thread_jo.children)
-				{ top_and_bottom = getTopAndBottom(inc_thread_jo.children); 
-				drawTTUButton(top_and_bottom[0], top_and_bottom[1]); }
+				{ 
+					//top_and_bottom = getTopAndBottom(inc_thread_jo.children); 
+					drawTTUButton(inc_thread_jo.top, inc_thread_jo.bottom); 
+				}
 				else
 				{ drawTTUButton("0", "1Y"); }
 			}
@@ -453,6 +246,7 @@ function finishThread(inc_thread_jo, updatebutton, url_at_function_call)
 	}	
 }
 
+/*
 function getTopAndBottom(inc_stripped)
 {
 	var top = inc_stripped.length+"";
@@ -542,7 +336,7 @@ function getTopAndBottom(inc_stripped)
 		tb.push(bottom);
 		return tb;
 	}
-}
+}*/
 
 
 //draws the button. if bottom=="NOTIFICATION", then top is displayed larger (and bottom is not displayed)

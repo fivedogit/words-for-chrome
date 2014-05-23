@@ -490,6 +490,24 @@ $(window).scroll(function() {
  				footerstr = footerstr + "Remember: Appropriate downvoting isn't \"mean\" -- <span style=\"color:#ffde00\">it's necessary</span>.";
  				$("#footer_div").html(footerstr);
  			}
+ 			else if(randomint === 4)
+ 			{
+ 				var footerstr = "";
+ 				footerstr = footerstr + "Support WORDS with Bitcoin: ";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_10_link\" >$10</a>";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_20_link\" >$20</a>";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_50_link\" >$50</a>";
+ 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";
+ 				$("#footer_div").html(footerstr);
+ 				noteImpressionAndCreateHandler("coinbase2", "footer", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");
+ 				noteImpressionAndCreateHandler("coinbase5", "footer", "coinbase_5_link", "https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41");
+ 				noteImpressionAndCreateHandler("coinbase10", "footer", "coinbase_10_link", "https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca");
+ 				noteImpressionAndCreateHandler("coinbase20", "footer", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
+ 				noteImpressionAndCreateHandler("coinbase50", "footer", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
+ 				noteImpressionAndCreateHandler("coinbase100", "footer", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");
+ 			}
  		}
  	}
  	

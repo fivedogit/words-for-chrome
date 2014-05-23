@@ -25,7 +25,9 @@ function doAboutTab(message)
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var aboutmessage = "";
 	aboutmessage = aboutmessage + "<div style=\"text-align:left;font-size:12px;padding:10px\">";
-	
+	aboutmessage = aboutmessage + "<table>";
+	aboutmessage = aboutmessage + "	<tr>";
+	aboutmessage = aboutmessage + "		<td style=\"text-align:left\">";
 	aboutmessage = aboutmessage + "<p style=\"font-size:14px;font-weight:bold\">Better comments everywhere</p>";
 	aboutmessage = aboutmessage + "<p>Web commenting is broken. Too many accounts/logins, too many trolls, not enough privacy, too much censorship.</p>";
 	aboutmessage = aboutmessage + "<p>Together we can fix it.</p>";
@@ -45,14 +47,21 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "<li>Rate 5 stars <a href=\"#\" id=\"rate_5_stars_link\">here</a></li>";
 	aboutmessage = aboutmessage + "<li>Report bugs to <a href=\"#\" id=\"fivedogit_link\">@fivedogit</a></li>";
 	aboutmessage = aboutmessage + "<li>Donate Bitcoins to keep the servers running ";
-	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/60199bf8c30fc013dd5ec8f2e39bb566\">$2.50</a> - ";
-	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41\">$5</a> - ";
-	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca\">$10</a> - ";
-	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895\">$20</a> - ";
-	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529\">$50</a> - ";
-	aboutmessage = aboutmessage + "<a class=\"newtab\" href=\"https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a\">$100</a>";
+	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
+	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
+	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_10_link\" >$10</a>";
+	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_20_link\" >$20</a>";
+	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_50_link\" >$50</a>";
+	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";
 	aboutmessage = aboutmessage + "</li>";
 	aboutmessage = aboutmessage + "</ol>";
+	aboutmessage = aboutmessage + "		</td>";
+	aboutmessage = aboutmessage + "		<td>";
+	aboutmessage = aboutmessage + "<figure style=\"width;150px\"><img src=\"images/happy_noanimation.gif\" style=\"border:1px solid black\"></img><figcaption style=\"font-size:10px;font-style:italic\">fivedogit, the developer.<br>Actual face.</figcaption></figure>";
+	aboutmessage = aboutmessage + "		</td>";
+	aboutmessage = aboutmessage + "	</tr>";
+	aboutmessage = aboutmessage + "</table>";
+
 	aboutmessage = aboutmessage + "<hr>";
 	aboutmessage = aboutmessage + "<p>WORDS DOES NOT TRACK and is open source for verification. The code is available here:</p>";
 	aboutmessage = aboutmessage + "<p>github.com/fivedogit/words-backend<br>";
@@ -85,7 +94,16 @@ function doAboutTab(message)
  	noteImpressionAndCreateHandler("tumblrshare", "about", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
  	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
  			noteImpressionAndCreateHandler("gmailshare", "about", "share_to_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=WORDS%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%20It%27s%20also%20available%20for%20Opera.%20%0A%0AEnjoy!");
-	noteImpressionAndCreateHandler("twitter_persacct", "about", "words4chrome_link", "http://www.twitter.com/words4chrome");
+	
+	noteImpressionAndCreateHandler("coinbase2", "about", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");
+	noteImpressionAndCreateHandler("coinbase5", "about", "coinbase_5_link", "https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41");
+	noteImpressionAndCreateHandler("coinbase10", "about", "coinbase_10_link", "https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca");
+	noteImpressionAndCreateHandler("coinbase20", "about", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
+	noteImpressionAndCreateHandler("coinbase50", "about", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
+	noteImpressionAndCreateHandler("coinbase100", "about", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");
+ 	
+ 	noteImpressionAndCreateHandler("twitter_persacct", "about", "words4chrome_link", "http://www.twitter.com/words4chrome");
 	noteImpressionAndCreateHandler("twitter_persacct", "about", "fivedogit_link2", "http://www.twitter.com/fivedogit");
+	
 }
 

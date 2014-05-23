@@ -813,7 +813,7 @@ function doReallyFinished()
 	var str = "";
 	str = str + "<div style=\"width:360px;padding:15px;border-top:1px solid black\">";
 	str = str + "<p style=\"font-weight:bold;text-align:left\">Remember to downvote the following:</p>";
-	str = str + "<p style=\"text-align:left\">Name-calling, racism, trolling, general meanness, comments that should be upvotes instead (e.g. \"I love this site\", \"Me too!\"), out-of-place political/religious discussion, profanity aimed at another user, lolspeak and aggressively shoddy spelling/punctuation.</p>";
+	str = str + "<p style=\"text-align:left\">Racism, trolling, general meanness, comments that should be upvotes instead (e.g. \"I love this site\", \"Me too!\"), out-of-place political/religious discussion, name-calling or profanity aimed at another user, lolspeak and aggressively shoddy spelling/punctuation.</p>";
 	str = str + "<p style=\"font-weight:bold;text-align:center\">Have fun and be nice!</p></div>";
 	
 	// end tips html formation
