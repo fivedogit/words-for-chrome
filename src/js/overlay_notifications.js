@@ -252,6 +252,12 @@ function doNotificationItem(item_id, dom_id)
         			populate_parent = true;
         			populate_item = true;
         		}
+        		else if(item_id.endsWith("F"))
+        		{
+        			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> commented on a page you're following: ";
+        			populate_parent = false;
+        			populate_item = true;
+        		}
         		else
         		{
         			headerstring = headerstring + "Unknown activity item.";
