@@ -196,6 +196,16 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onmention_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
+					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">A page you're following<br>is commented on:</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "							<select id=\"onfollowcomment_selector\">";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
+					main_div_string = main_div_string + "							</select>";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onfollowcomment_result_td\">";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">News/info emails:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"emailpromos_selector\">";
@@ -615,6 +625,11 @@ function getProfile(screenname)
             		$("#onmention_selector").val("email");
             	else if (bg.user_jo.onmention === "do nothing")
             		$("#onmention_selector").val("do nothing");
+
+            	if (bg.user_jo.onfollowcomment === "email")
+            		$("#onfollowcomment_selector").val("email");
+            	else if (bg.user_jo.onfollowcomment === "do nothing")
+            		$("#onfollowcomment_selector").val("do nothing");
             	
             	if (bg.user_jo.emailpromos === "email")
             		$("#emailpromos_selector").val("email");
@@ -853,6 +868,52 @@ function getProfile(screenname)
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
 				        	$("#onmention_result_td").text("ajax error");
 				        	setTimeout(function(){$("#onmention_result_td").text("");},3000);
+				            console.log(textStatus, errorThrown);
+				        }
+					});
+            	});
+            	
+            	
+            	$("#onfollowcomment_selector").change(function () {
+					$.ajax({
+						type: 'GET',
+						url: endpoint,
+						data: {
+				            method: "setUserPreference",
+				            email: email,             
+				            this_access_token: this_access_token,  
+				            which: "onfollowcomment",
+				            value: $("#onfollowcomment_selector").val() 
+				        },
+				        dataType: 'json',
+				        async: true,
+				        success: function (data, status) {
+				        	if (data.response_status === "error")
+				        	{
+				        		$("#onfollowcomment_result_td").text("Error: " + data.message);
+				        		// on error, reset the selector to the bg.user_jo value
+				        		if (bg.user_jo.onfollowcomment === "email")
+				            		$("#onfollowcomment_selector").val("email");
+				            	else if (bg.user_jo.onfollowcomment === "do nothing")
+				            		$("#onfollowcomment_selector").val("do nothing");
+				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			docCookies.removeItem("email"); 
+				        			docCookies.removeItem("this_access_token");
+				        			bg.user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
+				        	else
+				        		$("#onfollowcomment_result_td").text("updated");
+				        	setTimeout(function(){$("#onfollowcomment_result_td").text("");},3000);
+				        }
+				        ,
+				        error: function (XMLHttpRequest, textStatus, errorThrown) {
+				        	$("#onfollowcomment_result_td").text("ajax error");
+				        	setTimeout(function(){$("#onfollowcomment_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});
