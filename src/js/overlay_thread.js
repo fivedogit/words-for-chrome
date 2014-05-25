@@ -73,8 +73,9 @@ function gotThread()
 			happy = happy + "<img id=\"separated_img\" src=\"images/separated_icon.png\"> ";
 		}
 		happy = happy + "<span id=\"url_span_" + currentURLhash + "\" style=\"font-family:arial;font-size:12px\"></span> ";
+		happy = happy + "<span id=\"is_user_following_span\" style=\"padding-right:4px\"><img id=\"follow_img\" src=\"images/follow_off_12x16.png\"></span>";
 		happy = happy + "<span id=\"has_user_liked_span\"><img id=\"pagelike_img\" src=\"images/star_grayscale_16x16.png\"></span> <span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
-		if(bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
+		if(thread_jo.combined_or_separated === "separated" && bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
 		{
 			happy = happy + " <input size=5 id=\"sqsp\"> <a href=\"#\" id=\"set_sqsp\">s</a>";
 		}	
@@ -160,12 +161,40 @@ function gotThread()
 		        success: function (data, status) {
 		        	if (data.response_status === "error")
 		        	{
-		        		$("#has_user_liked_span").text("err");
+		        		// fail silently
 		        	}
 		        	else if (data.response_status === "success")
 		        	{
 		        		if(data.response_value === true)
 		        			$("#pagelike_img").attr("src","images/star_16x16.png");
+		        	}
+		        },
+		        error: function (XMLHttpRequest, textStatus, errorThrown) {
+		        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+		            console.log(textStatus, errorThrown);
+		        } 
+			});
+			
+			$.ajax({
+				type: 'GET',
+		        url: endpoint,
+		        data: {
+		            method: "amIFollowingThisPage",
+		            url: currentURL,
+		            email: docCookies.getItem("email"),
+		            this_access_token: docCookies.getItem("this_access_token")
+		        },
+		        dataType: 'json',
+		        async: true,
+		        success: function (data, status) {
+		        	if (data.response_status === "error")
+		        	{
+		        		// fail silently
+		        	}
+		        	else if (data.response_status === "success")
+		        	{
+		        		if(data.response_value === true)
+		        			$("#follow_img").attr("src","images/follow_on_12x16.png");
 		        	}
 		        },
 		        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -196,9 +225,103 @@ function gotThread()
 	 					$("#tab_tooltip_td").text("Profile/Settings");
 	 				return false;
 	 			});
+	 	
+		$("#follow_img").mouseover(
+	 			function () {
+	 				if($("#follow_img").attr("src").indexOf("off") != -1)
+	 					$("#tab_tooltip_td").text("Follow this page");
+	 				else
+	 					$("#tab_tooltip_td").text("Unfollow this page");
+	 				return false;
+	 			});
+
+	 	$("#follow_img").mouseout(
+	 			function () {
+	 				if(tabmode === "thread")
+	 					$("#tab_tooltip_td").text("Comments");
+	 				else if(tabmode === "trending")
+	 					$("#tab_tooltip_td").text("Trending");
+	 				else if(tabmode === "notifications")
+	 					$("#tab_tooltip_td").text("Notifications");
+	 				else if(tabmode === "profile")
+	 					$("#tab_tooltip_td").text("Profile/Settings");
+	 				return false;
+	 			});
+	 	
+	 	$("#follow_img").click(
+	 			function (event) {
+	 				var previous_src = $("#follow_img").attr("src");
+	 				$("#follow_img").attr("src", "images/ajaxSnake.gif");
+	 				if(previous_src.indexOf("off") != -1)
+	 				{	
+	 					$.ajax({
+	    			        type: 'GET',
+	    			        url: endpoint,
+	    			        data: {
+	    			        	email: docCookies.getItem("email"),
+	    			        	this_access_token: docCookies.getItem("this_access_token"),
+	    			            method: "followPage",
+	    			            url: currentURL
+	    			        },
+	    			        dataType: 'json',
+	    			        async: true,
+	    			        success: function (data, status) {
+	    			        	if(data.response_status === "success")
+	    			        	{
+	    			        		$("#follow_img").attr("src", "images/follow_on_12x16.png");
+	    			        		displayMessage("You are now following this page.", "black");
+	    			        	}
+	    			        	else if(data.response_status === "error")
+	    			        	{
+	    			        		$("#follow_img").attr("src", previous_src);
+	    			        		displayMessage("Unable to follow page. " + data.message, "red");
+	    			        	}	
+	    			        },
+	    			        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	    			        	$("#follow_img").attr("src", previous_src);
+	    			        	displayMessage("Unable to follow page. (AJAX)", "red");
+	    			        	console.log(textStatus, errorThrown);
+	    			        }
+	    				});
+	 				}
+	 				else
+	 				{
+	 					$.ajax({
+	    			        type: 'GET',
+	    			        url: endpoint,
+	    			        data: {
+	    			        	email: docCookies.getItem("email"),
+	    			        	this_access_token: docCookies.getItem("this_access_token"),
+	    			            method: "unfollowPage",
+	    			            url: currentURL
+	    			        },
+	    			        dataType: 'json',
+	    			        async: true,
+	    			        success: function (data, status) {
+	    			        	if(data.response_status === "success")
+	    			        	{
+	    			        		$("#follow_img").attr("src", "images/follow_off_12x16.png");
+	    			        		displayMessage("You are no longer following this page.", "black");
+	    			        	}
+	    			        	else if(data.response_status === "error")
+	    			        	{
+	    			        		$("#follow_img").attr("src", previous_src);
+	    			        		displayMessage("Unable to unfollow page. " + data.message, "red");
+	    			        	}	
+	    			        },
+	    			        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	    			        	$("#follow_img").attr("src", previous_src);
+	    			        	displayMessage("Unable to unfollow page. (ajax)", "red", "message_div_" + currentURLhash);
+	    			        	console.log(textStatus, errorThrown);
+	    			        }
+	    				});
+	 				}	
+	 				event.preventDefault();
+	 			});
+	 	
 		
-	 	if(bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
-		{
+	 	if(thread_jo.combined_or_separated === "separated" && bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
+	 	{
 	 		$("#combined_img").click(
 					function () {
 						$.ajax({
