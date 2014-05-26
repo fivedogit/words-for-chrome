@@ -96,7 +96,19 @@ var capitalized_login_type = "Unknown";
 if(login_type !== null && login_type.length > 1)
 	capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
 
-if(code !== null && code !== "")
+if(code !== null && code === "undefined")
+{
+	$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You canceled the " + capitalized_login_type + " login process. If you have concerns, please let me know @fivedogit on Twitter.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
+	$("#close_this_tab_link").click( function () {
+		chrome.tabs.getSelected(null, function(tab) { 
+			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+			docCookies.removeItem("last_tab_id");
+			chrome.tabs.remove(tab.id);
+		});
+	});
+}	
+else if(code !== null && code !== "")
 {
 	// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
 	displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");

@@ -1045,7 +1045,10 @@ function writeComment(feeditem_jo, dom_id)
 			$("#comment_textarea_" + comment_id).text(s_text);
 		}
 		else	
+		{
+			$("#comment_textarea_" + comment_id).css("color", "#aaa");
 			$("#comment_textarea_" + comment_id).text("Say something...");
+		}
 		$("#charsleft_" + comment_id).text(charsleft);
 	}
 	
