@@ -911,9 +911,8 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "		<td  class=\"comment-details-td\"> <!-- everything else, right-hand side -->";
 		tempstr = tempstr + "			<table>";
 		tempstr = tempstr + "				<tr>";
-		tempstr = tempstr + "					<td class=\"comment-screenname-state-country-td\"> ";
+		tempstr = tempstr + "					<td class=\"comment-screenname-td\"> ";
 		tempstr = tempstr + "						<a class=\"comment-screenname-link\" href=\"#\" id=\"screenname_link_" + comment_id + "\"></a> - ";
-		tempstr = tempstr + "						<span id=\"state_country_span_" + comment_id + "\"></span> - ";
 		tempstr = tempstr + "						<span id=\"time_ago_span_" + comment_id + "\"></span>";
 		tempstr = tempstr + "					</td>";
 		
@@ -1016,10 +1015,6 @@ function writeComment(feeditem_jo, dom_id)
 	$("[id=author_rating_center_td_" + comment_id + "]").css("background-color", ratingcolor);
 	$("[id=author_rating_right_td_" + comment_id + "]").css("width", right_percentage + "%");
 	$("[id=screenname_link_" + comment_id + "]").text(feeditem_jo.author_screenname);
-	if (feeditem_jo.author_country === "USA")
-		$("[id=state_country_span_" + comment_id + "]").text(feeditem_jo.author_state + ", " + feeditem_jo.author_country);
-	else
-		$("[id=state_country_span_" + comment_id + "]").text(feeditem_jo.author_country);
 	$("[id=time_ago_span_" + comment_id + "]").text(feeditem_jo.time_ago);
 	$("[id=comment_likes_count_td_" + comment_id + "]").text(feeditem_jo.likes.length);
 	$("[id=comment_dislikes_count_td_" + comment_id + "]").text(feeditem_jo.dislikes.length);

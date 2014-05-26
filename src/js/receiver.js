@@ -439,16 +439,6 @@ function showRegistration(picture, login_type, email)
 			});
 		});
 	});
-
-	$("#registration_country_select").change( function() {
-		if($("#registration_country_select").val() === "USA")
-			$("#registration_state_select_tr").show();
-		else
-		{
-			$("#registration_state_select_tr").hide();
-			$("#registration_state_select").val("");
-		}
-	});
 	
 	$("#registration_screenname_button").click(
 			function () 
@@ -543,19 +533,7 @@ function showRegistration(picture, login_type, email)
 					
 					var avatar_str = null;
 					var picture = $("#avatar_img").attr("src");
-					
-					if($("#registration_country_select").val() === "")
-					{
-						displayMessage("Select a country.", "red");
-						return false;
-					}
-					
-					if($("#registration_country_select").val() === "USA" && $("#registration_state_select").val() === "")
-					{
-						displayMessage("When you select USA as your country, you must pick a state.", "red");
-						return false;
-					}
-					
+
 					displayMessage("Creating WORDS account... ", "black");
 					$("#progress_tr").show();
 					$("#registration_form_td").hide();
@@ -573,8 +551,6 @@ function showRegistration(picture, login_type, email)
 					    	login_type: login_type,
 					    	social_access_token: local_a_t,
 					    	screenname: $("#registration_screenname_input").val(),
-					    	state: $("#registration_state_select").val(),
-					    	country: $("#registration_country_select").val(),
 					    	picture: picture,
 					    	email: docCookies.getItem("email"),
 					    	useragent: navigator.userAgent
