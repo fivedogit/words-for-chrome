@@ -174,7 +174,7 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 		for(var x = 0; x < data.trendingactivity_ja.length; x++)
 		{
 			mds = mds + "	<tr>";
-			mds = mds + "		<td style=\"text-align:left;padding-top:3px;vertical-align:top\">";
+			mds = mds + "		<td style=\"text-align:left;padding-top:3px;vertical-align:top;width:16px\">";
 			mds = mds + "			<img id=\"google_favicon_img_" + rand + "_" + x + "\" src=\"images/ajaxSnake.gif\" style=\"vertical-align:middle\"> ";
 			mds = mds + "		</td>";
 			mds = mds + "		<td id=\"page_title_td_" + rand + "_" + x + "\" style=\"text-align:left;padding-top:3px;padding-left:3px;font-size:10px\">";

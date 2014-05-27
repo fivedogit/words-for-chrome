@@ -67,17 +67,15 @@ function gotThread()
 		var happy = "";
 		happy = happy + "<img id=\"google_favicon_img_" + currentURLhash + "\" src=\"images/ajaxSnake.gif\"> "
 		if(thread_jo.combined_or_separated === "combined")
-			happy = happy + "<img id=\"combined_img\" src=\"images/combined_icon.png\"> ";
+			happy = happy + "<img id=\"separated_or_combined_img\" src=\"images/combined_icon.png\"> ";
 		else
-		{
-			happy = happy + "<img id=\"separated_img\" src=\"images/separated_icon.png\"> ";
-		}
-		happy = happy + "<span id=\"url_span_" + currentURLhash + "\" style=\"font-family:arial;font-size:12px\"></span> ";
-		happy = happy + "<span id=\"is_user_following_span\" style=\"padding-right:4px\"><img id=\"follow_img\" src=\"images/follow_off_12x16.png\"></span>";
-		happy = happy + "<span id=\"has_user_liked_span\"><img id=\"pagelike_img\" src=\"images/star_grayscale_16x16.png\"></span> <span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
+			happy = happy + "<img id=\"separated_or_combined_img\" src=\"images/separated_icon.png\"> ";
+		happy = happy + "<span id=\"url_span_" + currentURLhash + "\" style=\"font-family:arial;font-size:12px;padding-right:6px;\"></span>";
+		happy = happy + "<img id=\"follow_img\" src=\"images/follow_off_12x16.png\" style=\"padding-right:6px;\">";
+		happy = happy + "<img id=\"pagelike_img\" src=\"images/star_grayscale_16x16.png\" style=\"padding-right:1px;\"><span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
 		if(thread_jo.combined_or_separated === "separated" && bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
 		{
-			happy = happy + " <input size=5 id=\"sqsp\"> <a href=\"#\" id=\"set_sqsp\">s</a>";
+			happy = happy + " <input style=\"width:24px\" id=\"sqsp\"> <a href=\"#\" id=\"set_sqsp\">s</a>";
 		}	
 		
 		
@@ -320,38 +318,73 @@ function gotThread()
 	 			});
 	 	
 		
-	 	if(thread_jo.combined_or_separated === "separated" && bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
+	 	if(bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
 	 	{
-	 		$("#combined_img").click(
+	 		$("#separated_or_combined_img").click(
 					function () {
-						$.ajax({
-					        type: 'GET',
-					        url: endpoint,
-					        data: {
-					            method: "separateHostname",
-					            url: currentURL,
-					            email: docCookies.getItem("email"),
-					            this_access_token: docCookies.getItem("this_access_token")
-					        },
-					        dataType: 'json',
-					        async: true,
-					        success: function (data, status) {
-					        	if (data.response_status === "error")
-					        	{
-					        		// if someone clicks this without proper admin credentials to separate the hostname, just fail silently as if nothing happened.
-					        	}
-					        	else if (data.response_status === "success")
-					        	{
-					        		displayMessage("hostname separated", "red", "message_div_" + currentURLhash);
-					        	}
-					        },
-					        error: function (XMLHttpRequest, textStatus, errorThrown) {
-					        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
-					            console.log(textStatus, errorThrown);
-					        } 
-						});
+						alert($("#separated_or_combined_img").attr("src"));
+						if($("#separated_or_combined_img").attr("src").indexOf("combined") != -1)
+		 				{	
+							$.ajax({
+						        type: 'GET',
+						        url: endpoint,
+						        data: {
+						            method: "separateHostname",
+						            url: currentURL,
+						            email: docCookies.getItem("email"),
+						            this_access_token: docCookies.getItem("this_access_token")
+						        },
+						        dataType: 'json',
+						        async: true,
+						        success: function (data, status) {
+						        	if (data.response_status === "error")
+						        	{
+						        		// if someone clicks this without proper admin credentials, just fail silently as if nothing happened.
+						        	}
+						        	else if (data.response_status === "success")
+						        	{
+						        		displayMessage("Hostname separated.", "red", "message_div_" + currentURLhash);
+						        		$("#separated_or_combined_img").attr("src", "images/separated_icon.png");
+						        	}
+						        },
+						        error: function (XMLHttpRequest, textStatus, errorThrown) {
+						        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+						            console.log(textStatus, errorThrown);
+						        } 
+							});
+		 				}
+						else // the img source is separated
+						{
+							$.ajax({
+						        type: 'GET',
+						        url: endpoint,
+						        data: {
+						            method: "combineHostname",
+						            url: currentURL,
+						            email: docCookies.getItem("email"),
+						            this_access_token: docCookies.getItem("this_access_token")
+						        },
+						        dataType: 'json',
+						        async: true,
+						        success: function (data, status) {
+						        	if (data.response_status === "error")
+						        	{
+						        		// if someone clicks this without proper admin credentials, just fail silently as if nothing happened.
+						        	}
+						        	else if (data.response_status === "success")
+						        	{
+						        		displayMessage("Hostname combined.", "red", "message_div_" + currentURLhash);
+						        		$("#separated_or_combined_img").attr("src", "images/combined_icon.png");
+						        	}
+						        },
+						        error: function (XMLHttpRequest, textStatus, errorThrown) {
+						        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+						            console.log(textStatus, errorThrown);
+						        } 
+							});
+						}	
 					});
-			
+	 		
 			$("#set_sqsp").click(
 					function () {
 						$.ajax({
@@ -442,7 +475,7 @@ function getPageLikes(which)
         success: function (data, status) {
         	if (data.response_status === "error")
         	{
-        		$("#has_user_liked_span").text("err");
+        		// fail silently
         	}
         	else if (data.response_status === "success")
         	{
@@ -1441,7 +1474,7 @@ function likeOrDislikeComment(id, like_or_dislike)
 		$("#dislike_img_" + id).attr("src", "images/dislike_snake.gif");
 		//alert("dislike snake");
 	}
-	if (bg.user_jo)
+	if(bg.user_jo != null)
 	{
 		var email = docCookies.getItem("email");
 		var this_access_token = docCookies.getItem("this_access_token");
@@ -1453,8 +1486,7 @@ function likeOrDislikeComment(id, like_or_dislike)
 				email: email, 
 				this_access_token: this_access_token, 
 				id: id,
-				like_or_dislike: like_or_dislike,
-				reason: "generic_like"
+				like_or_dislike: like_or_dislike
 			},
 			dataType: 'json',
 			async: true,
