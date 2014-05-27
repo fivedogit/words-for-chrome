@@ -98,7 +98,7 @@ if(login_type !== null && login_type.length > 1)
 
 if(code !== null && code === "undefined")
 {
-	$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You canceled the " + capitalized_login_type + " login process. If you have concerns, please let me know @fivedogit on Twitter.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
+	$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You canceled the " + capitalized_login_type + " login process. If you have concerns about privacy, <a id=\"link_to_blog_post_about_login\" href=\"#\">read this</a>.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
 	$("#close_this_tab_link").click( function () {
 		chrome.tabs.getSelected(null, function(tab) { 
 			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
@@ -106,6 +106,9 @@ if(code !== null && code === "undefined")
 			docCookies.removeItem("last_tab_id");
 			chrome.tabs.remove(tab.id);
 		});
+	});
+	$("#link_to_blog_post_about_login").click(function (event) {
+		chrome.tabs.create({url: ""});
 	});
 }	
 else if(code !== null && code !== "")
