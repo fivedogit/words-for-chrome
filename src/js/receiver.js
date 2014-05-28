@@ -114,22 +114,32 @@ if(code !== null && code === "undefined")
 else if(code !== null && code !== "")
 {
 	// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
+	alert("parsing code, going to getAccessTokenFromAuthorizationCode with redirect_uri=" + getParameterByName("redirect_uri"));
 	displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
 	$("#progress_tr").show();
+	var client_id = "";
+	if(login_type === "google" && bg.devel === false)
+		client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
+	else if(login_type === "google" && bg.devel === true)
+		client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
+	else
+		client_id = "271212039709142";
 	$.ajax({
 		type: 'get',
 		url: bg.endpoint,
 		data: {
 			method: "getAccessTokenFromAuthorizationCode",
 			code: getParameterByName("code"),
-			login_type: login_type
+			login_type: login_type,
+			redirect_uri: getParameterByName("redirect_uri"),
+			client_id: client_id
 		},
 		dataType: 'json',
 		async: true,
 		success: function (data, status) {
 			if(data.response_status === "error")
 			{
-				displayMessage("error getting access_token from " + login_type, "red");
+				displayMessage("Error getting access_token from " + login_type + ". " + data.message, "red");
 				$("#progress_tr").hide();
 				if(data.error_code === "0000" && data.login_type === "facebook")
 				{
@@ -218,13 +228,62 @@ else
 		if(access_token_expired_or_doesnt_exist)
 		{
 			//displayMessage("Didn't find valid google_access_token and google_access_token_expires cookies. Redirecting to google.", "black");
-			var google_url = 'https://accounts.google.com/o/oauth2/auth?' +
+			/*var google_url = 'https://accounts.google.com/o/oauth2/auth?' +
 		      'scope=profile email&' +
 		      'redirect_uri=urn:ietf:wg:oauth:2.0:oob&'+
 		      'response_type=code&' +
 		      'client_id=591907226969-rrjdbkf5ugett5nspi518gkh3qs0ghsj.apps.googleusercontent.com&' +
 		      'access_type=offline';
-			window.location = google_url;
+			window.location = google_url;*/
+			
+			//lgdfecngaioibcmfbfpeeddgkjfdpgij
+			var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
+			//var redirectUri0 = 'https://lgdfecngaioibcmfbfpeeddgkjfdpgij.chromiumapp.org/provider_cb'; // has to be hardcoded, bc this is what the gapp expects
+			var interactive = true;
+			var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
+			
+			var client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
+			if(bg.devel === true)
+				client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
+			
+			var options = {
+			          'interactive': interactive,
+			          url:'https://accounts.google.com/o/oauth2/auth?' +
+				      'scope=profile email' +
+				      '&response_type=code' +
+				      '&client_id=' + client_id +
+				      '&access_type=offline' + 
+				      '&redirect_uri=' + encodeURIComponent(redirectUri0)
+			        }
+			
+			displayMessage("launching goog web auth flow with url=" + options.url + " and redirectUri=" + redirectUri0, "black");
+			//alert("launching goog web auth flow with url=" + options.url + " and redirectUri=" + redirectUri);
+			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
+				if (chrome.runtime.lastError) {
+					alert("error=" + JSON.stringify(chrome.runtime.lastError));
+					callback(new Error(chrome.runtime.lastError));
+					return;
+				}
+				 
+				 // Upon success the response is appended to redirectUri, e.g.
+				 // https://{app_id}.chromiumapp.org/provider_cb#access_token={value}
+				 //     &refresh_token={value}
+				 // or:
+				 // https://{app_id}.chromiumapp.org/provider_cb#code={value}
+				 var matches = redirectUri1.match(redirectRe);
+				 if (matches && matches.length > 1)
+				 {
+					 alert("successful redirect URI match");
+					 var values = parseRedirectFragment(matches[1]);
+					 window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=google&code=" + values.code + "&redirect_uri=" + encodeURIComponent(redirectUri0);
+				 }
+				 else
+				 {
+					 alert("unsuccessful redirect URI match");
+					 // callback(new Error('Invalid redirect URI'));
+				 }	 
+					 
+			 });
 		}
 		else // use the apparently valid access token to log the user in.
 		{
@@ -253,8 +312,47 @@ else
 		if(access_token_expired_or_doesnt_exist)
 		{
 			//displayMessage("Didn't find valid facebook_access_token and facebook_access_token_expires cookies. Redirecting to google.", "black");
-			var facebook_url = "https://www.facebook.com/dialog/oauth?client_id=271212039709142&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=email";
-			window.location = facebook_url;
+			//var facebook_url = "https://www.facebook.com/dialog/oauth?client_id=271212039709142&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=email";
+			//window.location = facebook_url;
+			var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
+			var interactive = true;
+			var clientId = "271212039709142";
+			var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
+			var options = {
+			          'interactive': interactive,
+			          url:'https://www.facebook.com/dialog/oauth?client_id=' + clientId +
+			              '&reponse_type=token' +
+			              '&access_type=online' +
+			              '&redirect_uri=' + encodeURIComponent(redirectUri0)
+			        }
+			
+			alert("launching fb web auth flow with " + redirectUri0);
+			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
+				if (chrome.runtime.lastError) {
+					callback(new Error(chrome.runtime.lastError));
+					return;
+				}
+				 
+				 // Upon success the response is appended to redirectUri, e.g.
+				 // https://{app_id}.chromiumapp.org/provider_cb#access_token={value}
+				 //     &refresh_token={value}
+				 // or:
+				 // https://{app_id}.chromiumapp.org/provider_cb#code={value}
+				 var matches = redirectUri1.match(redirectRe);
+				 if (matches && matches.length > 1)
+				 {
+					 alert("successful redirect URI match");
+					 var values = parseRedirectFragment(matches[1]);
+					 window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=facebook&redirect_uri=" + encodeURIComponent(redirectUri0) + "&code=" + values.code;
+				 }
+				 else
+				 {
+					 alert("unsuccessful redirect URI match");
+					 // callback(new Error('Invalid redirect URI'));
+				 }	 
+					 
+			 });
+			
 		}
 		else // use the apparently valid access token to log the user in.
 		{
@@ -264,6 +362,37 @@ else
 	}	
 }	
 
+function parseRedirectFragment(fragment) {
+    var pairs = fragment.split(/&/);
+    var values = {};
+
+    pairs.forEach(function(pair) {
+      var nameval = pair.split(/=/);
+      values[nameval[0]] = nameval[1];
+    });
+
+    return values;
+  }
+
+/*
+function handleProviderResponse(values) {
+    if (values.hasOwnProperty('access_token'))
+    {
+    	//setAccessToken(values.access_token);
+    	alert("access_token=" + values.access_token);
+    }
+    else if (values.hasOwnProperty('code'))
+    {
+    	//exchangeCodeForToken(values.code);
+    	alert("code=" + values.code);
+    	window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=facebook&redirect_uri=" + encodeURIComponent(redirect_uri) + "&code=" + values.code;
+    }
+    else
+    {
+    	//callback(new Error('Neither access_token nor code avialable.'));
+    	alert('Neither access_token nor code avialable.');
+    }
+  }*/
 
 function login(login_type, social_access_token, social_access_token_expires)
 {
