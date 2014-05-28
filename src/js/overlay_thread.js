@@ -322,7 +322,7 @@ function gotThread()
 	 	{
 	 		$("#separated_or_combined_img").click(
 					function () {
-						alert($("#separated_or_combined_img").attr("src"));
+						//alert($("#separated_or_combined_img").attr("src"));
 						if($("#separated_or_combined_img").attr("src").indexOf("combined") != -1)
 		 				{	
 							$.ajax({

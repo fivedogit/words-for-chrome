@@ -114,7 +114,7 @@ if(code !== null && code === "undefined")
 else if(code !== null && code !== "")
 {
 	// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
-	alert("parsing code, going to getAccessTokenFromAuthorizationCode with redirect_uri=" + getParameterByName("redirect_uri"));
+	//alert("parsing code, going to getAccessTokenFromAuthorizationCode with redirect_uri=" + getParameterByName("redirect_uri"));
 	displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
 	$("#progress_tr").show();
 	var client_id = "";
@@ -236,9 +236,7 @@ else
 		      'access_type=offline';
 			window.location = google_url;*/
 			
-			//lgdfecngaioibcmfbfpeeddgkjfdpgij
 			var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
-			//var redirectUri0 = 'https://lgdfecngaioibcmfbfpeeddgkjfdpgij.chromiumapp.org/provider_cb'; // has to be hardcoded, bc this is what the gapp expects
 			var interactive = true;
 			var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
 			
@@ -256,7 +254,7 @@ else
 				      '&redirect_uri=' + encodeURIComponent(redirectUri0)
 			        }
 			
-			displayMessage("launching goog web auth flow with url=" + options.url + " and redirectUri=" + redirectUri0, "black");
+			//displayMessage("launching goog web auth flow with url=" + options.url + " and redirectUri=" + redirectUri0, "black");
 			//alert("launching goog web auth flow with url=" + options.url + " and redirectUri=" + redirectUri);
 			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
 				if (chrome.runtime.lastError) {
@@ -273,13 +271,13 @@ else
 				 var matches = redirectUri1.match(redirectRe);
 				 if (matches && matches.length > 1)
 				 {
-					 alert("successful redirect URI match");
+					 //alert("successful redirect URI match");
 					 var values = parseRedirectFragment(matches[1]);
 					 window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=google&code=" + values.code + "&redirect_uri=" + encodeURIComponent(redirectUri0);
 				 }
 				 else
 				 {
-					 alert("unsuccessful redirect URI match");
+					alert("unsuccessful redirect URI match");
 					 // callback(new Error('Invalid redirect URI'));
 				 }	 
 					 
@@ -321,14 +319,16 @@ else
 			var options = {
 			          'interactive': interactive,
 			          url:'https://www.facebook.com/dialog/oauth?client_id=' + clientId +
-			              '&reponse_type=token' +
-			              '&access_type=online' +
+			              '&reponse_type=code' +
+						   '&display=popup' + 
+			              '&scope=email' +
 			              '&redirect_uri=' + encodeURIComponent(redirectUri0)
 			        }
 			
-			alert("launching fb web auth flow with " + redirectUri0);
+			//alert("launching fb web auth flow with " + redirectUri0);
 			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
 				if (chrome.runtime.lastError) {
+					alert("error=" + JSON.stringify(chrome.runtime.lastError));
 					callback(new Error(chrome.runtime.lastError));
 					return;
 				}
@@ -341,7 +341,7 @@ else
 				 var matches = redirectUri1.match(redirectRe);
 				 if (matches && matches.length > 1)
 				 {
-					 alert("successful redirect URI match");
+					 //alert("successful redirect URI match");
 					 var values = parseRedirectFragment(matches[1]);
 					 window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=facebook&redirect_uri=" + encodeURIComponent(redirectUri0) + "&code=" + values.code;
 				 }
