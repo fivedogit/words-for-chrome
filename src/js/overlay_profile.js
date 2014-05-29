@@ -569,6 +569,18 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "		</td>";
             				logoutmessage = logoutmessage + "	</tr>";
             				logoutmessage = logoutmessage + "	<tr>";
+            				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:11px;font-style:italic\">";
+            				if(bg.user_jo.last_login_type === "google")
+            				{
+            					logoutmessage = logoutmessage + "To use a different Google account, click LOGOUT below, <b>restart your browser</b>, then log back in.";
+            				}	
+            				else if(bg.user_jo.last_login_type === "facebook")
+            				{
+            					logoutmessage = logoutmessage + "To use a different Facebook account, click LOGOUT below, <b>restart your browser</b>, then log back in.";
+            				}	
+            				logoutmessage = logoutmessage + "		</td>";
+            				logoutmessage = logoutmessage + "	</tr>";
+            				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:15px\">";
             				logoutmessage = logoutmessage + "			<button id=\"logout_confirmation_button\">LOGOUT</button>";
             				logoutmessage = logoutmessage + "		</td>";
@@ -587,6 +599,7 @@ function getProfile(screenname)
                         				displayLogstatAsLoggedOut();
                         				doThreadTab();
                         			});
+            			
             				return;
             			});
             

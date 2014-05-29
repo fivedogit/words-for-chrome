@@ -96,18 +96,69 @@ var capitalized_login_type = "Unknown";
 if(login_type !== null && login_type.length > 1)
 	capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
 
-if(code === null)
+var client_id = "";
+if(login_type === "google" && chrome.runtime.id === "mpefojdpeaiaepbgjjmnanepdkhoeeii")
+	client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
+else if(login_type === "google" && chrome.runtime.id === "lgdfecngaioibcmfbfpeeddgkjfdpgij")
+	client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
+else //fb
+    client_id = "271212039709142";
+if(login_type === "google" && code === "undefined") // if google the user clicks "cancel" 
 {
-	//alert("there is no code parameter");
+	$("#progress_tr").hide();
+	var google_cancel_message = "";
+	google_cancel_message = google_cancel_message + "<div style=\"width:360px;padding:15px\">";
+	google_cancel_message = google_cancel_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
+	google_cancel_message = google_cancel_message + "		You canceled the login.";
+	google_cancel_message = google_cancel_message + "	</div>";
+	google_cancel_message = google_cancel_message + "	<div style=\"font-size:11px;padding-bottom:15px;font-style:italic\">";
+	google_cancel_message = google_cancel_message + "		To use a different Google account, <b>restart your browser</b> and then log back in.";
+	google_cancel_message = google_cancel_message + "	</div>";
+	google_cancel_message = google_cancel_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
+	google_cancel_message = google_cancel_message + "</div>";
+	$("#message_td").html(google_cancel_message);
+	$("#close_this_tab_link").click( function () {
+		chrome.tabs.getSelected(null, function(tab) { 
+			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+			docCookies.removeItem("last_tab_id");
+			chrome.tabs.remove(tab.id);
+		});
+	});
+}	
+else if(login_type === "facebook" && code === "undefined") // if google the user clicks "cancel" 
+{
+	$("#progress_tr").hide();
+	var facebook_cancel_message = "";
+	facebook_cancel_message = facebook_cancel_message + "<div style=\"width:360px;padding:15px\">";
+	facebook_cancel_message = facebook_cancel_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
+	facebook_cancel_message = facebook_cancel_message + "		You canceled the login.";
+	facebook_cancel_message = facebook_cancel_message + "	</div>";
+	facebook_cancel_message = facebook_cancel_message + "	<div style=\"font-size:11px;padding-bottom:15px;font-style:italic\">";
+	facebook_cancel_message = facebook_cancel_message + "		To use a different Facebook account, <b>restart your browser</b> and then log back in.";
+	facebook_cancel_message = facebook_cancel_message + "	</div>";
+	facebook_cancel_message = facebook_cancel_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
+	facebook_cancel_message = facebook_cancel_message + "</div>";
+	$("#message_td").html(facebook_cancel_message);
+	$("#close_this_tab_link").click( function () {
+		chrome.tabs.getSelected(null, function(tab) { 
+			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+			docCookies.removeItem("last_tab_id");
+			chrome.tabs.remove(tab.id);
+		});
+	});
+}	
+else if(code === null)
+{
+	displayMessage("Requesting login permission from " + capitalized_login_type + "... ", "black");
+	$("#progress_tr").show();
+	
 	if(login_type === "google")
 	{
 		var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
 		var interactive = true;
 		var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
-		
-		var client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
-		if(chrome.runtime.id === "mpefojdpeaiaepbgjjmnanepdkhoeeii")
-			client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
 		
 		var options = {
 		          'interactive': interactive,
@@ -119,8 +170,27 @@ if(code === null)
 		        }
 		
 		chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
-			if (chrome.runtime.lastError) {
-				alert("error=" + JSON.stringify(chrome.runtime.lastError));
+			if (chrome.runtime.lastError) { // if google and the user clicks the X to close the perm window
+				$("#progress_tr").hide();
+				var google_close_message = "";
+				google_close_message = google_close_message + "<div style=\"width:360px;padding:15px\">";
+				google_close_message = google_close_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
+				google_close_message = google_close_message + "		You closed the permission window.";
+				google_close_message = google_close_message + "	</div>";
+				google_close_message = google_close_message + "	<div style=\"font-size:11px;padding-bottom:15px;font-style:italic\">";
+				google_close_message = google_close_message + "		To use a different Google account, <b>restart your browser</b> and then log back in.";
+				google_close_message = google_close_message + "	</div>";
+				google_close_message = google_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
+				google_close_message = google_close_message + "</div>";
+				$("#message_td").html(google_close_message);
+				$("#close_this_tab_link").click( function () {
+					chrome.tabs.getSelected(null, function(tab) { 
+						var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+						chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+						docCookies.removeItem("last_tab_id");
+						chrome.tabs.remove(tab.id);
+					});
+				});
 				return;
 			}
 			var matches = redirectUri1.match(redirectRe);
@@ -140,11 +210,10 @@ if(code === null)
 	{
 		var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
 		var interactive = true;
-		var clientId = "271212039709142";
 		var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
 		var options = {
 		          'interactive': interactive,
-		          url:'https://www.facebook.com/dialog/oauth?client_id=' + clientId +
+		          url:'https://www.facebook.com/dialog/oauth?client_id=' + client_id +
 		              '&reponse_type=code' +
 		              '&display=popup' + 
 		              '&scope=email' +
@@ -153,7 +222,27 @@ if(code === null)
 		
 		chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
 			if (chrome.runtime.lastError) {
-				alert("error=" + JSON.stringify(chrome.runtime.lastError));
+				$("#progress_tr").hide();
+				//alert("error=" + JSON.stringify(chrome.runtime.lastError));
+				var facebook_close_message = "";
+				facebook_close_message = facebook_close_message + "<div style=\"width:360px;padding:15px\">";
+				facebook_close_message = facebook_close_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
+				facebook_close_message = facebook_close_message + "		You closed the permission window.";
+				facebook_close_message = facebook_close_message + "	</div>";
+				facebook_close_message = facebook_close_message + "	<div style=\"font-size:11px;padding-bottom:15px;font-style:italic\">";
+				facebook_close_message = facebook_close_message + "		To use a different Facebook account, <b>restart your browser</b> and then log back in.";
+				facebook_close_message = facebook_close_message + "	</div>";
+				facebook_close_message = facebook_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
+				facebook_close_message = facebook_close_message + "</div>";
+				$("#message_td").html(facebook_close_message);
+				$("#close_this_tab_link").click( function () {
+					chrome.tabs.getSelected(null, function(tab) { 
+						var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+						chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+						docCookies.removeItem("last_tab_id");
+						chrome.tabs.remove(tab.id);
+					});
+				});
 				return;
 			}
 			var matches = redirectUri1.match(redirectRe);
@@ -181,13 +270,7 @@ else if(code !== null && code !== "")
 	//alert("parsing code, going to getAccessTokenFromAuthorizationCode with redirect_uri=" + getParameterByName("redirect_uri"));
 	displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
 	$("#progress_tr").show();
-	var client_id = "";
-	if(login_type === "google" && bg.devel === false)
-		client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
-	else if(login_type === "google" && bg.devel === true)
-		client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
-	else
-		client_id = "271212039709142";
+	
 	$.ajax({
 		type: 'get',
 		url: bg.endpoint,
@@ -203,16 +286,48 @@ else if(code !== null && code !== "")
 		success: function (data, status) {
 			if(data.response_status === "error")
 			{
-				displayMessage("Error getting access_token from " + login_type + ". " + data.message, "red");
+				displayMessage(data.message, "red");
 				$("#progress_tr").hide();
+				if(data.login_type === "facebook")
+				{
+					var msg = "";
+					msg = msg + "<div style=\"margin-right:auto;margin-left:auto;width:360px;padding:15px;font-style:italic\">If you're having trouble or want to switch Facebook accounts, <b>try restarting your browser</b> and logging back in.<br><br><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>";
+					$("#registration_form_td").html(msg);//OK
+					$("#registration_form_td").show();
+					$("#close_this_tab_link").click( function () {
+						chrome.tabs.getSelected(null, function(tab) { 
+							var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+							chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+							docCookies.removeItem("last_tab_id");
+							chrome.tabs.remove(tab.id);
+						});
+					});
+				}	
+				else if(data.login_type === "google")
+				{
+					var msg = "";
+					msg = msg + "<div style=\"margin-right:auto;margin-left:auto;width:360px;padding:15px;font-style:italic\">If you're having trouble or want to switch Google accounts, <b>try restarting your browser</b> and logging back in.<br><br><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>";
+					$("#registration_form_td").html(msg);//OK
+					$("#registration_form_td").show();
+					$("#close_this_tab_link").click( function () {
+						chrome.tabs.getSelected(null, function(tab) { 
+							var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+							chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+							docCookies.removeItem("last_tab_id");
+							chrome.tabs.remove(tab.id);
+						});
+					});
+				}
+				
 				if(data.error_code === "0000" && data.login_type === "facebook")
 				{
 					docCookies.removeItem("last_tab_id");
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
 				}	
-				if(data.error_code === "0000" && data.login_type === "google")
+				else if(data.error_code === "0000" && data.login_type === "google")
 				{
+					//alert("delete token here.");
 					docCookies.removeItem("last_tab_id");
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
@@ -247,7 +362,7 @@ else if(code !== null && code !== "")
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown) {
 			console.log(textStatus, errorThrown);
-			displayMessage("Could not retrieve access token. Please try again through the WORDS extension. (AJAX)", "red");
+			displayMessage("Unknown login error. Please try again.", "red");
 		} 
 	}); 
 }	
