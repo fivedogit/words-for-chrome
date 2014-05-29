@@ -276,6 +276,7 @@ function updateNotificationTabLinkImage()
 		$("#notifications_tab_img").attr("src","images/flag_gray.png"); 
 }
 
+
 function displayMessage(inc_message, inc_color, dom_id, s)
 {
 	if(typeof dom_id === "undefined" || dom_id === null)
@@ -916,8 +917,8 @@ $(window).scroll(function() {
 		 }
 		 if(open_tab_id !== null) // found it
 		 {
-			 if(currentId === open_tab_id)
-				 displayMessage("You're already on this page.", black, "message_div_" + currentURLhash);
+			 if(bg.currentId === open_tab_id)
+				 displayMessage("That's the current page.", "black");
 			 else
 				 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {}); // open the existing tab
 		 }
@@ -929,8 +930,8 @@ $(window).scroll(function() {
 				 }
 				 if(open_tab_id !== null) // found it
 				 {
-					 if(currentId === open_tab_id)
-						 displayMessage("You're already on this page.", black, "message_div_" + currentURLhash);
+					 if(bg.currentId === open_tab_id)
+						 displayMessage("That's the current page.", "black");
 					 else
 						 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {}); // open the existing tab
 				 }
