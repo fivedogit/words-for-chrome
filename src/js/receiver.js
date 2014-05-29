@@ -68,7 +68,7 @@ function getParameterByName(name) {
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
     var results = regex.exec(window.location.search);
-    if (results === null) return "";
+    if (results === null) return null;
     else return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
@@ -96,20 +96,84 @@ var capitalized_login_type = "Unknown";
 if(login_type !== null && login_type.length > 1)
 	capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
 
-if(code !== null && code === "undefined")
+if(code === null)
 {
-	$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You canceled the " + capitalized_login_type + " login process. If you have concerns about privacy, <a id=\"link_to_blog_post_about_login\" href=\"#\">read this</a>.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
-	$("#close_this_tab_link").click( function () {
-		chrome.tabs.getSelected(null, function(tab) { 
-			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
-			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
-			docCookies.removeItem("last_tab_id");
-			chrome.tabs.remove(tab.id);
+	//alert("there is no code parameter");
+	if(login_type === "google")
+	{
+		var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
+		var interactive = true;
+		var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
+		
+		var client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
+		if(chrome.runtime.id === "mpefojdpeaiaepbgjjmnanepdkhoeeii")
+			client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
+		
+		var options = {
+		          'interactive': interactive,
+		          url:'https://accounts.google.com/o/oauth2/auth?' +
+			      'scope=profile email' +
+			      '&response_type=code' +
+			      '&client_id=' + client_id +
+			      '&redirect_uri=' + encodeURIComponent(redirectUri0)
+		        }
+		
+		chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
+			if (chrome.runtime.lastError) {
+				alert("error=" + JSON.stringify(chrome.runtime.lastError));
+				return;
+			}
+			var matches = redirectUri1.match(redirectRe);
+			if (matches && matches.length > 1)
+			{
+				//alert("successful redirect URI match");
+				var values = parseRedirectFragment(matches[1]);
+				window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=google&code=" + values.code + "&redirect_uri=" + encodeURIComponent(redirectUri0);
+			}
+			else
+			{
+				alert("unsuccessful redirect URI match");
+			}	 
+		 });
+	}
+	else if(login_type === "facebook")
+	{
+		var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
+		var interactive = true;
+		var clientId = "271212039709142";
+		var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
+		var options = {
+		          'interactive': interactive,
+		          url:'https://www.facebook.com/dialog/oauth?client_id=' + clientId +
+		              '&reponse_type=code' +
+		              '&display=popup' + 
+		              '&scope=email' +
+		              '&redirect_uri=' + encodeURIComponent(redirectUri0)
+		        }
+		
+		chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
+			if (chrome.runtime.lastError) {
+				alert("error=" + JSON.stringify(chrome.runtime.lastError));
+				return;
+			}
+			var matches = redirectUri1.match(redirectRe);
+			if (matches && matches.length > 1)
+			{
+				//alert("successful redirect URI match");
+				var values = parseRedirectFragment(matches[1]);
+				window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=facebook&redirect_uri=" + encodeURIComponent(redirectUri0) + "&code=" + values.code;
+			}
+			else
+			{
+				alert("unsuccessful redirect URI match");
+			}	 
 		});
-	});
-	$("#link_to_blog_post_about_login").click(function (event) {
-		chrome.tabs.create({url: ""});
-	});
+	}	
+	else
+	{
+		alert("Unknown login type");
+	}	
+	
 }	
 else if(code !== null && code !== "")
 {
@@ -144,16 +208,12 @@ else if(code !== null && code !== "")
 				if(data.error_code === "0000" && data.login_type === "facebook")
 				{
 					docCookies.removeItem("last_tab_id");
-					docCookies.removeItem("facebook_access_token");
-					docCookies.removeItem("facebook_access_token_expires");
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
 				}	
 				if(data.error_code === "0000" && data.login_type === "google")
 				{
 					docCookies.removeItem("last_tab_id");
-					docCookies.removeItem("google_access_token");
-					docCookies.removeItem("google_access_token_expires");
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
 				}	
@@ -163,37 +223,25 @@ else if(code !== null && code !== "")
 				$("#progress_tr").hide();
 				if(data.show_registration === "true" && data.login_type === "facebook")
 				{
-					//alert("getAccessTokenFromAuthorizationCode() show registration=true");
-					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
-					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
 					docCookies.setItem("email", data.email, 31536e3);
-					showRegistration(data.picture, data.login_type, data.email);
+					showRegistration(data.picture, data.login_type, data.email, data.facebook_access_token);
 				}
 				else if(data.show_registration === "false" && data.login_type === "facebook")
 				{
-					//alert("getAccessTokenFromAuthorizationCode() show registration=false");
 					docCookies.setItem("email", data.email, 31536e3);
-					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
-					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		doFinished(false);
+		    		doFinished(false, data.facebook_access_token);
 				}	
 				if(data.show_registration === "true" && data.login_type === "google")
 				{
-					//alert("gATFAC: show registration=true\nexpires=" + data.google_access_token_expires + "\nrefresh=" + data.google_refresh_token);
-					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
 					docCookies.setItem("email", data.email, 31536e3);
-					showRegistration(data.picture, data.login_type, data.email);
+					showRegistration(data.picture, data.login_type, data.email, data.google_access_token);
 				}
 				else if(data.show_registration === "false" && data.login_type === "google")
 				{
-					//alert("getAccessTokenFromAuthorizationCode() show registration=false");
 					docCookies.setItem("email", data.email, 31536e3);
-					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		doFinished(false);
+		    		doFinished(false, data.google_access_token);
 				}	
 			}	
 		},
@@ -202,164 +250,6 @@ else if(code !== null && code !== "")
 			displayMessage("Could not retrieve access token. Please try again through the WORDS extension. (AJAX)", "red");
 		} 
 	}); 
-}	
-else
-{
-	var capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
-	displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
-	if(login_type === "google")
-	{
-		var access_token_expired_or_doesnt_exist = true;
-		if(docCookies.getItem("google_access_token_expires") != null && docCookies.getItem("google_access_token") != null) // ok, the token/expires cookies exist
-		{
-			var ex = docCookies.getItem("google_access_token_expires");
-			if(ex > bg.msfe_according_to_backend) 
-				access_token_expired_or_doesnt_exist = false; // and it appears valid
-			else 
-			{												// it existed, but wasn't valid. Delete everything
-				docCookies.removeItem("last_tab_id");
-				docCookies.removeItem("google_access_token");
-				docCookies.removeItem("google_access_token_expires");
-				docCookies.removeItem("email");
-				docCookies.removeItem("this_access_token");
-				access_token_expired_or_doesnt_exist = true;
-			}	
-		}	
-		if(access_token_expired_or_doesnt_exist)
-		{
-			//displayMessage("Didn't find valid google_access_token and google_access_token_expires cookies. Redirecting to google.", "black");
-			/*var google_url = 'https://accounts.google.com/o/oauth2/auth?' +
-		      'scope=profile email&' +
-		      'redirect_uri=urn:ietf:wg:oauth:2.0:oob&'+
-		      'response_type=code&' +
-		      'client_id=591907226969-rrjdbkf5ugett5nspi518gkh3qs0ghsj.apps.googleusercontent.com&' +
-		      'access_type=offline';
-			window.location = google_url;*/
-			
-			var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
-			var interactive = true;
-			var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
-			
-			var client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
-			if(bg.devel === true)
-				client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
-			
-			var options = {
-			          'interactive': interactive,
-			          url:'https://accounts.google.com/o/oauth2/auth?' +
-				      'scope=profile email' +
-				      '&response_type=code' +
-				      '&client_id=' + client_id +
-				      '&access_type=offline' + 
-				      '&redirect_uri=' + encodeURIComponent(redirectUri0)
-			        }
-			
-			//displayMessage("launching goog web auth flow with url=" + options.url + " and redirectUri=" + redirectUri0, "black");
-			//alert("launching goog web auth flow with url=" + options.url + " and redirectUri=" + redirectUri);
-			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
-				if (chrome.runtime.lastError) {
-					alert("error=" + JSON.stringify(chrome.runtime.lastError));
-					callback(new Error(chrome.runtime.lastError));
-					return;
-				}
-				 
-				 // Upon success the response is appended to redirectUri, e.g.
-				 // https://{app_id}.chromiumapp.org/provider_cb#access_token={value}
-				 //     &refresh_token={value}
-				 // or:
-				 // https://{app_id}.chromiumapp.org/provider_cb#code={value}
-				 var matches = redirectUri1.match(redirectRe);
-				 if (matches && matches.length > 1)
-				 {
-					 //alert("successful redirect URI match");
-					 var values = parseRedirectFragment(matches[1]);
-					 window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=google&code=" + values.code + "&redirect_uri=" + encodeURIComponent(redirectUri0);
-				 }
-				 else
-				 {
-					alert("unsuccessful redirect URI match");
-					 // callback(new Error('Invalid redirect URI'));
-				 }	 
-					 
-			 });
-		}
-		else // use the apparently valid access token to log the user in.
-		{
-			displayMessage("Existing Google credentials appear valid. Logging you into WORDS... ", "black");
-			login("google", docCookies.getItem("google_access_token"), docCookies.getItem("google_access_token_expires"));
-		}
-	}
-	else if(login_type === "facebook")
-	{
-		var access_token_expired_or_doesnt_exist = true;
-		if(docCookies.getItem("facebook_access_token_expires") != null && docCookies.getItem("facebook_access_token") != null) // ok, the token/expires cookies exist
-		{
-			var ex = docCookies.getItem("facebook_access_token_expires");
-			if(ex > bg.msfe_according_to_backend) 
-				access_token_expired_or_doesnt_exist = false; // and it appears valid
-			else 
-			{												// it existed, but wasn't valid. Delete everything
-				docCookies.removeItem("last_tab_id");
-				docCookies.removeItem("facebook_access_token");
-				docCookies.removeItem("facebook_access_token_expires");
-				docCookies.removeItem("email");
-				docCookies.removeItem("this_access_token");
-				access_token_expired_or_doesnt_exist = true;
-			}	
-		}	
-		if(access_token_expired_or_doesnt_exist)
-		{
-			//displayMessage("Didn't find valid facebook_access_token and facebook_access_token_expires cookies. Redirecting to google.", "black");
-			//var facebook_url = "https://www.facebook.com/dialog/oauth?client_id=271212039709142&redirect_uri=https://www.facebook.com/connect/login_success.html&scope=email";
-			//window.location = facebook_url;
-			var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
-			var interactive = true;
-			var clientId = "271212039709142";
-			var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
-			var options = {
-			          'interactive': interactive,
-			          url:'https://www.facebook.com/dialog/oauth?client_id=' + clientId +
-			              '&reponse_type=code' +
-						   '&display=popup' + 
-			              '&scope=email' +
-			              '&redirect_uri=' + encodeURIComponent(redirectUri0)
-			        }
-			
-			//alert("launching fb web auth flow with " + redirectUri0);
-			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
-				if (chrome.runtime.lastError) {
-					alert("error=" + JSON.stringify(chrome.runtime.lastError));
-					callback(new Error(chrome.runtime.lastError));
-					return;
-				}
-				 
-				 // Upon success the response is appended to redirectUri, e.g.
-				 // https://{app_id}.chromiumapp.org/provider_cb#access_token={value}
-				 //     &refresh_token={value}
-				 // or:
-				 // https://{app_id}.chromiumapp.org/provider_cb#code={value}
-				 var matches = redirectUri1.match(redirectRe);
-				 if (matches && matches.length > 1)
-				 {
-					 //alert("successful redirect URI match");
-					 var values = parseRedirectFragment(matches[1]);
-					 window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=facebook&redirect_uri=" + encodeURIComponent(redirectUri0) + "&code=" + values.code;
-				 }
-				 else
-				 {
-					 alert("unsuccessful redirect URI match");
-					 // callback(new Error('Invalid redirect URI'));
-				 }	 
-					 
-			 });
-			
-		}
-		else // use the apparently valid access token to log the user in.
-		{
-			displayMessage("Existing Facebook credentials appear valid. Logging you into WORDS... ", "black");
-			login("facebook", docCookies.getItem("facebook_access_token"), docCookies.getItem("facebook_access_token_expires"));
-		}
-	}	
 }	
 
 function parseRedirectFragment(fragment) {
@@ -374,26 +264,6 @@ function parseRedirectFragment(fragment) {
     return values;
   }
 
-/*
-function handleProviderResponse(values) {
-    if (values.hasOwnProperty('access_token'))
-    {
-    	//setAccessToken(values.access_token);
-    	alert("access_token=" + values.access_token);
-    }
-    else if (values.hasOwnProperty('code'))
-    {
-    	//exchangeCodeForToken(values.code);
-    	alert("code=" + values.code);
-    	window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=facebook&redirect_uri=" + encodeURIComponent(redirect_uri) + "&code=" + values.code;
-    }
-    else
-    {
-    	//callback(new Error('Neither access_token nor code avialable.'));
-    	alert('Neither access_token nor code avialable.');
-    }
-  }*/
-
 function login(login_type, social_access_token, social_access_token_expires)
 {
 	$("#progress_tr").show();
@@ -403,7 +273,6 @@ function login(login_type, social_access_token, social_access_token_expires)
 		data: {
 			method: "login",
 			social_access_token: social_access_token,
-			social_access_token_expires: social_access_token_expires,
 			login_type: login_type
 		},
 		dataType: 'json',
@@ -415,16 +284,12 @@ function login(login_type, social_access_token, social_access_token_expires)
 				if(data.error_code == "0000" && data.login_type === "facebook")
 				{
 					docCookies.removeItem("last_tab_id");
-					docCookies.removeItem("facebook_access_token");
-					docCookies.removeItem("facebook_access_token_expires");
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
 				}	
 				if(data.error_code == "0000" && data.login_type === "google")
 				{
 					docCookies.removeItem("last_tab_id");
-					docCookies.removeItem("google_access_token");
-					docCookies.removeItem("google_access_token_expires");
 					docCookies.removeItem("email");
 					docCookies.removeItem("this_access_token");
 				}	
@@ -444,35 +309,27 @@ function login(login_type, social_access_token, social_access_token_expires)
 				if(data.show_registration === "true" && data.login_type === "google")
 				{
 					//alert("login: show registration=true\nexpires=" + data.google_access_token_expires + "\nrefresh=" + data.google_refresh_token);
-					docCookies.setItem("google_access_token", data.google_access_token, 31536e3);
-					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
 					docCookies.setItem("email", data.email, 31536e3);
-					showRegistration(data.picture, data.login_type, data.email);
+					showRegistration(data.picture, data.login_type, data.email, data.google_access_token);
 				}
 				else if(data.show_registration === "false" && data.login_type === "google")
 				{
 					//alert("login() show registration=false");
 					docCookies.setItem("email", data.email, 31536e3);
-					docCookies.setItem("google_access_token", data.facebook_access_token, 31536e3);
-					docCookies.setItem("google_access_token_expires", data.google_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		doFinished(false);
+		    		doFinished(false, data.google_access_token);
 				}	
 				else if(data.show_registration === "true" && data.login_type === "facebook")
 				{
-					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
-					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
 					docCookies.setItem("email", data.email, 31536e3);
-					showRegistration(data.picture, data.login_type, data.email);
+					showRegistration(data.picture, data.login_type, data.email, data.facebook_access_token);
 				}
 				else if(data.show_registration === "false" && data.login_type === "facebook")
 				{
 					//alert("login() show registration=false");
 					docCookies.setItem("email", data.email, 31536e3);
-					docCookies.setItem("facebook_access_token", data.facebook_access_token, 31536e3);
-					docCookies.setItem("facebook_access_token_expires", data.facebook_access_token_expires, 31536e3);
 		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		doFinished(false);
+		    		doFinished(false, data.facebook_access_token);
 				}	
 			}	
 		},
@@ -494,7 +351,7 @@ function guid() {
 	         s4() +s4() + s4() + s4();
 	}
 
-function showRegistration(picture, login_type, email)
+function showRegistration(picture, login_type, email, social_access_token)
 {
 	$("#message_td").css("font-weight", "bold");
 	$("#message_td").text("Welcome! Let's create a WORDS account for you.");
@@ -558,9 +415,7 @@ function showRegistration(picture, login_type, email)
 	$("#not_you_link").click(function () {
 		docCookies.removeItem("email");
 		docCookies.removeItem("last_tab_id");
-		docCookies.removeItem("google_access_token");
 		docCookies.removeItem("this_access_token");
-		docCookies.removeItem("facebook_access_token");
 		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
 		$("#registration_form_td").show();
 		$("#message_td").text("The existing user information has been removed. Please start the login process again.");
@@ -670,18 +525,13 @@ function showRegistration(picture, login_type, email)
 					$("#progress_tr").show();
 					$("#registration_form_td").hide();
 
-					var local_a_t;
-					if(login_type === "google")
-						local_a_t = docCookies.getItem("google_access_token");
-					else if(login_type === "facebook")
-						local_a_t = docCookies.getItem("facebook_access_token");
 					$.ajax({
 					    type: 'GET',
 					    url: bg.endpoint,
 					    data: {
 					    	method: "createUser",
 					    	login_type: login_type,
-					    	social_access_token: local_a_t,
+					    	social_access_token: social_access_token,
 					    	screenname: $("#registration_screenname_input").val(),
 					    	picture: picture,
 					    	email: docCookies.getItem("email"),
@@ -702,7 +552,7 @@ function showRegistration(picture, login_type, email)
 					    		$("#progress_tr").hide();
 					    		docCookies.setItem("email", data.email, 31536e3);
 		    		    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-		    		    		doFinished(true);
+		    		    		doFinished(true, social_access_token);
 					    	}
 					    },
 					    error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -713,17 +563,13 @@ function showRegistration(picture, login_type, email)
 				});
 }
 
-function doFinished(from_registration)
+function doFinished(from_registration, social_access_token)
 {
 	// we've gotten the login return, now we need to get the user before we can safely say, 
 	displayMessage("Identify verified. Loading WORDS user info... ", "black");
 	
 	// the only reason we MIGHT need these again is for changing images
 	// there is probably a better way, meaning these can be deleted immediately upon login
-	//docCookies.removeItem("google_access_token"); 
-	//docCookies.removeItem("google_access_token_expires");
-	//docCookies.removeItem("facebook_access_token"); 
-	//docCookies.removeItem("facebook_access_token_expires");
 	
 	$("#progress_tr").show();
 	//alert("receiver getUserSelf()");
@@ -812,37 +658,18 @@ function doFinished(from_registration)
             		message = message + "</div>";
             		$("#message_td").html(message);
             		
-            		var at = null;
-            		var ate = null;
-            		if(login_type === "google")
-            		{
-            			at = docCookies.getItem("google_access_token");
-            			ate = docCookies.getItem("google_access_token_expires");
-            		}
-            		else
-            		{
-            			at = docCookies.getItem("facebook_access_token");
-            			ate = docCookies.getItem("facebook_access_token_expires");
-            		}	
             		var social_pic = null;
             		$.ajax({
             			type: 'GET',
             			url: bg.endpoint,
             			data: {
             				method: "getSocialPicture",
-            				social_access_token: at,
-            				social_access_token_expires: ate,
+            				social_access_token: social_access_token,
             				login_type: login_type
             			},
             			dataType: 'json',
             			async: true,
             			success: function (data, status) {
-            				
-            				// we do not need these tokens anymore now that login and picture retrival is complete.
-            				docCookies.removeItem("google_access_token");
-            				docCookies.removeItem("google_access_token_expires");
-            				docCookies.removeItem("facebook_access_token");
-            				docCookies.removeItem("facebook_access_token_expires");
             				
             				if(data.response_status === "error")
             				{
@@ -922,11 +749,6 @@ function doFinished(from_registration)
 
 function doReallyFinished()
 {
-	docCookies.removeItem("google_access_token"); 
-	docCookies.removeItem("google_access_token_expires");
-	docCookies.removeItem("facebook_access_token"); 
-	docCookies.removeItem("facebook_access_token_expires");
-	
 	$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You are now logged in.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
 	
 	// tips html formation

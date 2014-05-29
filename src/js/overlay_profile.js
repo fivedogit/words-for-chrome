@@ -581,7 +581,6 @@ function getProfile(screenname)
                         			function () {
                         				docCookies.removeItem("email");
                         				docCookies.removeItem("this_access_token");
-                        				docCookies.removeItem("this_access_token_expires");
                         				email = null;
                         				this_access_token = null;
                         				bg.user_jo = null;

@@ -915,15 +915,25 @@ $(window).scroll(function() {
 			 open_tab_id = tabs[i].id;
 		 }
 		 if(open_tab_id !== null) // found it
-			 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {}); // open the existing tab
+		 {
+			 if(currentId === open_tab_id)
+				 displayMessage("You're already on this page.", black, "message_div_" + currentURLhash);
+			 else
+				 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {}); // open the existing tab
+		 }
 		 else // if(open_tab_id === null)  // didn't find h
 		 {
 			 chrome.tabs.query({url: newh}, function(tabs) {  // try to find newh
 				 for (var i = 0; i < tabs.length; i++) {
 					 open_tab_id = tabs[i].id;
 				 }
-				 if((open_tab_id !== null)) // found it
-					 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {}); // open the existing tab
+				 if(open_tab_id !== null) // found it
+				 {
+					 if(currentId === open_tab_id)
+						 displayMessage("You're already on this page.", black, "message_div_" + currentURLhash);
+					 else
+						 chrome.tabs.update(open_tab_id,{"active":true}, function(tab) {}); // open the existing tab
+				 }
 				 else // if(open_tab_id === null)
 					 chrome.tabs.create({url:h}); // all else fails, open new tab
 			 });
