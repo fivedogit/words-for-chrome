@@ -58,7 +58,7 @@ function getTrendingActivity()
 		success: function (data, status) {
 			if (data.response_status === "success") 
 			{
-				drawTrendingChart(data.num_hours, data, "most_active_pages_td");
+				drawTrendingChart(data, "most_active_pages_td");
 				$("#trending_activity_hours_span").text("(" + data.num_hours + " hrs)");
 			}
 			else if (data.response_status === "error") 
@@ -90,7 +90,7 @@ function getTrendingActivity()
 		success: function (data, status) {
 			if (data.response_status === "success") 
 			{
-				drawTrendingChart(data.num_hours, data, "most_liked_pages_td");
+				drawTrendingChart(data, "most_liked_pages_td");
 				$("#trending_activity_hours_span").text("(" + data.num_hours + " hrs)");
 			}
 			else if (data.response_status === "error") 
@@ -130,10 +130,9 @@ function splitString(inc_str)
 		return inc_str;
 }
 
-function drawTrendingChart(hours_to_get, data, dom_id)
+function drawTrendingChart(data, dom_id)
 {
 	
-	var cutoff_in_hours = hours_to_get;
 	var mds = "";
 	var rand = makeid();
 	// did the system find ANY activity at all? In any window? If not, say so.
@@ -152,7 +151,7 @@ function drawTrendingChart(hours_to_get, data, dom_id)
 		mds = mds + "<table>";
 		mds = mds + "	<tr>";
 		mds = mds + "		<td style=\"text-align:center;padding:8px;font-size:12px\">";
-		mds = mds + " 			No data in the past " + cutoff_in_hours + " hours. ";
+		mds = mds + " 			No data in the past " + data.num_hours + " hours. ";
 		mds = mds + "		</td>";
 		mds = mds + "	</tr>";
 	}	

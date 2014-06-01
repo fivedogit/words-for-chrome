@@ -557,7 +557,7 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "<div class=\"no-comments-div\">";
 			main_div_string = main_div_string + "		No comments for this page. Write one!";
 			main_div_string = main_div_string + "</div>";
-			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\"><img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (48 hrs)</div>";
+			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\"><img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (<span id=\"num_hours_span\"></span> hrs)</div>";
 			main_div_string = main_div_string + "<table id=\"trending_for_this_site_table\" style=\"display:none\">";
 			main_div_string = main_div_string + "	<tr>";
 			main_div_string = main_div_string + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
@@ -584,7 +584,6 @@ function prepareGetAndPopulateThreadPortion()
 				data: {
 					method: "getMostActivePagesForThisHostname",
 					url: currentURL // let the backend figure out the hostname, authoritatively
-						// for right now, backend is doing 6, 12, 24, 48, but frontend should specify what it wants, right?
 				},
 				dataType: 'json',
 				async: true,
@@ -597,11 +596,10 @@ function prepareGetAndPopulateThreadPortion()
 						}
 						else
 						{
+							$("#num_hours_span").text(data.num_hours);
 							$("#trending_on_this_site_div").show();
 							$("#trending_for_this_site_table").show();
-							var cutoff_in_hours = 48;
-							var choices = [48];
-							drawTrendingChart(cutoff_in_hours, data, "most_active_pages_on_this_site_td");
+							drawTrendingChart(data, "most_active_pages_on_this_site_td");
 						}
 					}
 					else if (data.response_status === "error") 
@@ -640,9 +638,7 @@ function prepareGetAndPopulateThreadPortion()
 						{
 							$("#trending_on_this_site_div").show();
 							$("#trending_for_this_site_table").show();
-							var cutoff_in_hours = 48;
-							var choices = [48];
-							drawTrendingChart(cutoff_in_hours, data, "most_liked_pages_on_this_site_td");
+							drawTrendingChart(data, "most_liked_pages_on_this_site_td");
 						}
 					}
 					else if (data.response_status === "error") 
@@ -1522,6 +1518,10 @@ function likeOrDislikeComment(id, like_or_dislike)
 				}
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				if(like_or_dislike === "like")
+					$("#like_img_" + id).attr("src", "images/like_arrow.png");
+				else
+					$("#dislike_img_" + id).attr("src", "images/dislike_arrow.png");
 				displayMessage("Ajax error addCommentLikeOrDislike: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + id);
 				console.log(textStatus, errorThrown);
 			} 
@@ -1529,6 +1529,10 @@ function likeOrDislikeComment(id, like_or_dislike)
 	}
 	else
 	{
+		if(like_or_dislike === "like")
+			$("#like_img_" + id).attr("src", "images/like_arrow.png");
+		else
+			$("#dislike_img_" + id).attr("src", "images/dislike_arrow.png");
 		displayMessage("Please login first.", "red", "message_div_" + id);
 	}		 
 }
