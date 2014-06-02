@@ -649,7 +649,7 @@ function showRegistration(picture, login_type, email, social_access_token)
 					    	social_access_token: social_access_token,
 					    	screenname: $("#registration_screenname_input").val(),
 					    	picture: picture,
-					    	email: docCookies.getItem("email"),
+					    	email: email,
 					    	useragent: navigator.userAgent
 					    },
 					    dataType: 'json',
