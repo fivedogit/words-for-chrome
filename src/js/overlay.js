@@ -377,7 +377,7 @@ $(window).scroll(function() {
  	
  	var shown_softlaunchmsg = docCookies.getItem("shown_softlaunchmsg");
  	var firstrun_msg_index = docCookies.getItem("firstrun_msg_index")*1; 
- 	if(bg.msfe_according_to_backend >= 1402232400000 && bg.msfe_according_to_backend < 1402318800000 && (shown_softlaunchmsg === null || firstrun_msg_index > 5)) // June 8th 9pm - June 9th 9pm est
+ 	if(bg.msfe_according_to_backend >= 1402266600000 && bg.msfe_according_to_backend < 1402300800000 && (shown_softlaunchmsg === null || firstrun_msg_index > 5)) // June 8th 6:30pm EST - June 9th 4am PST est
  	{
  		docCookies.setItem("shown_softlaunchmsg", "yes", 31536e3);
  		footerstr = footerstr + "Soft Launch Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a> and <a href=\"#\" style=\"color:#baff00\" id=\"reddit_link\">Reddit</a>!";
