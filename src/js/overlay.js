@@ -380,7 +380,7 @@ $(window).scroll(function() {
  	if(bg.msfe_according_to_backend >= 1402266600000 && bg.msfe_according_to_backend < 1402300800000 && (shown_softlaunchmsg === null || firstrun_msg_index > 5)) // June 8th 6:30pm EST - June 9th 4am PST est
  	{
  		docCookies.setItem("shown_softlaunchmsg", "yes", 31536e3);
- 		footerstr = footerstr + "Soft Launch Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a> and <a href=\"#\" style=\"color:#baff00\" id=\"reddit_link\">Reddit</a>!";
+ 		footerstr = footerstr + "Preview Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a>, <a href=\"#\" style=\"color:#baff00\" id=\"product_hunt_link\">Product Hunt</a> *AND* <a href=\"#\" style=\"color:#baff00\" id=\"reddit_link\">Reddit</a>!";
  		$("#footer_div").html(footerstr);
  		var hn_url = "http://news.ycombinator.com";
  		$.ajax({
@@ -434,6 +434,7 @@ $(window).scroll(function() {
  			} 
  		}); 			
  		noteImpressionAndCreateHandler("reddit", "footer", "reddit_link", reddit_url);
+ 		noteImpressionAndCreateHandler("producthunt", "footer", "product_hunt_link", "http://www.producthunt.com/");
  	}
  	else // not soft launch day
  	{
