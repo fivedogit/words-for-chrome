@@ -55,9 +55,11 @@ function getColorHexStringFromRGB(r, g, b)
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 	if (changeInfo.status === "loading") // also fires at "complete", which I'm ignoring here. Only need one (this one).
 	{
+		//alert("updating");
 		chrome.tabs.getSelected(null, function(tab) { // only follow through if the updating tab is the same as the selected tab, don't want background tabs reloading and wrecking stuff
 			if(updatingtab.url === tab.url) // the one that's updating is the one we're looking at. good. proceed
 			{
+				//alert("updating current");
 				if(currentURL !== tab.url) //  && tab.url.indexOf("chrome-extension://") !== 0) // only do this if the update is of a new url, no point in reloading the existing url again
 				{	
 					currentURL = updatingtab.url;
@@ -67,11 +69,30 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 					doButtonGen();
 				}
 			}	
+			else
+			{
+				//alert("updating other");
+				// some other tab is updating. ignore.
+			}	
 		});
 	}
 	else if (changeInfo.status === "complete") // also fires at "complete", which I'm ignoring here. Only need one (this one).
 	{
 		//alert("onupdated complete");
+		chrome.tabs.getSelected(null, function(tab) { // only follow through if the updating tab is the same as the selected tab, don't want background tabs reloading and wrecking stuff
+			if(updatingtab.url === tab.url) // the one that's updating is the one we're looking at. good. proceed
+			{
+				// if the page in the current tab is updating or changing, always do the TC embed check 
+				if(currentURL.indexOf("http://www.techcrunch.com/") === 0 || currentURL.indexOf("https://www.techcrunch.com/")  === 0 ||
+						currentURL.indexOf("http://techcrunch.com/")  === 0 || currentURL.indexOf("https://techcrunch.com/")  === 0 )
+				{
+					//alert("sending from update");
+					chrome.tabs.getSelected(null, function(tab) { 
+						chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo}, function(response) { });
+					});
+				}
+			}
+		});
 	}
 }); 
 
@@ -86,6 +107,14 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 			currentId = tab.id;
 			drawTTUButton("   ", "   "); // clear out anything that's there now
 			doButtonGen();
+			if(currentURL.indexOf("http://www.techcrunch.com/") === 0 || currentURL.indexOf("https://www.techcrunch.com/")  === 0 ||
+					currentURL.indexOf("http://techcrunch.com/")  === 0 || currentURL.indexOf("https://techcrunch.com/")  === 0 )
+			{
+				//alert("sending msg");
+				chrome.tabs.getSelected(null, function(tab) { 
+					chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo}, function(response) { });
+				});
+			}
 		}
 	});
 }); 
@@ -246,99 +275,6 @@ function finishThread(inc_thread_jo, updatebutton, url_at_function_call)
 	}	
 }
 
-/*
-function getTopAndBottom(inc_stripped)
-{
-	var top = inc_stripped.length+"";
-	var bottom = "1Y";
-	if (top === "0")
-	{
-		var tb = [];
-		tb.push(top);
-		tb.push(bottom);
-		return tb;
-	}
-	else
-	{
-		var d = new Date();
-		var now = d.getTime();
-		var yearago = now - 31556901000;
-		var monthago = now - 2592000000;
-		var weekago = now - 604800000;
-		var dayago = now - 86400000;
-		var millisecondsintheyearportion = monthago - yearago;
-		var millisecondsinthemonthportion = weekago - monthago;
-		var millisecondsintheweekportion = dayago - weekago;
-		var millisecondsinthedayportion = now - dayago;
-		var yearportionweight = millisecondsintheyearportion / 31556901000;
-		var monthportionweight = millisecondsinthemonthportion / 31556901000;
-		var weekportionweight = millisecondsintheweekportion / 31556901000;
-		var dayportionweight = millisecondsinthedayportion / 31556901000;
-		var hitsintheyearportion = 0;
-		var hitsinthemonthportion = 0;
-		var hitsintheweekportion = 0;
-		var hitsinthedayportion = 0;
-		var currenttimestamp = 0;
-		for(var x = 0; x < inc_stripped.length; x++)
-	    {
-			currenttimestamp = fromOtherBaseToDecimal(62, inc_stripped[x].substring(0,7));
-			if (currenttimestamp > dayago && currenttimestamp < now) // this comment happened between now and 24 hours ago
-				hitsinthedayportion++;
-			else if (currenttimestamp > weekago && currenttimestamp < dayago)
-				hitsintheweekportion++;
-			else if (currenttimestamp > monthago && currenttimestamp < weekago)
-				hitsinthemonthportion++;
-			else if (currenttimestamp > yearago && currenttimestamp < monthago)
-				hitsintheyearportion++;
-		}
-		var dayscore = hitsinthedayportion / dayportionweight;
-		var weekscore = hitsintheweekportion / weekportionweight;
-		var monthscore = hitsinthemonthportion / monthportionweight;
-		var yearscore = hitsintheyearportion / yearportionweight;
-		var scores = [];
-		scores.push(dayscore);
-		scores.push(weekscore);
-		scores.push(monthscore);
-		scores.push(yearscore);
-		var max = 0;
-		var index = 0;
-		for(var x = 0; x < scores.length; x++)
-		{
-			if (scores[x] > max)
-			{
-				max = scores[x];
-				index = x;
-			}	
-		}
-		if (index === 0)
-		{
-			top = hitsinthedayportion;
-			bottom = "24h";
-		}
-		else if (index === 1)
-		{
-			top = hitsintheweekportion;
-			bottom = "7d";
-		}
-		else if (index === 2)
-		{
-			top = hitsinthemonthportion;
-			bottom = "30d";
-		}
-		else if (index === 3)
-		{
-			top = hitsintheyearportion;
-			bottom = "1Y";
-		}
-		top = top + "";
-		var tb = [];
-		tb.push(top);
-		tb.push(bottom);
-		return tb;
-	}
-}*/
-
-
 //draws the button. if bottom=="NOTIFICATION", then top is displayed larger (and bottom is not displayed)
 function drawTTUButton(top, bottom) {
 	
@@ -348,7 +284,7 @@ function drawTTUButton(top, bottom) {
  // Specify a 2d drawing context.
  var context = canvas.getContext("2d");
  
- var top_color = "4c7dd0";//<-- chrome blue   "29abe2"; <-- original teal-ish color
+ var top_color = "0a9e01"; //<-- TechCrunch green // "4c7dd0";//<-- chrome blue   "29abe2"; <-- original teal-ish color
  
  var top_bg_r = "0x" + top_color.substring(0,2);
  var top_bg_g = "0x" + top_color.substring(2,4);
