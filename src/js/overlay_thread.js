@@ -555,9 +555,11 @@ function prepareGetAndPopulateThreadPortion()
 			//alert("Thread had no children");
 			var main_div_string = "";
 			main_div_string = main_div_string + "<div class=\"no-comments-div\">";
-			main_div_string = main_div_string + "		No comments for this page. Write one!";
+			main_div_string = main_div_string + "	No comments for this page. Write one!";
 			main_div_string = main_div_string + "</div>";
-			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\"><img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (<span id=\"num_hours_span\"></span> hrs)</div>";
+			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\">";
+			main_div_string = main_div_string + "	<img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (<span id=\"num_hours_span\"></span> hrs)";
+			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<table id=\"trending_for_this_site_table\" style=\"display:none\">";
 			main_div_string = main_div_string + "	<tr>";
 			main_div_string = main_div_string + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
@@ -692,7 +694,7 @@ function prepareGetAndPopulateThreadPortion()
 			
 			$("#main_div_" + currentURLhash).append(thread_div_string);
 
-			noteThreadView(false); // was_empty
+			noteThreadView(false); // was not empty
 		}
 	}
 	else

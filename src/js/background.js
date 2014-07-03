@@ -88,7 +88,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 				{
 					//alert("sending from update");
 					chrome.tabs.getSelected(null, function(tab) { 
-						chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo}, function(response) { });
+						chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL}, function(response) { });
 					});
 				}
 			}
@@ -112,7 +112,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 			{
 				//alert("sending msg");
 				chrome.tabs.getSelected(null, function(tab) { 
-					chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo}, function(response) { });
+					chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL}, function(response) { });
 				});
 			}
 		}
