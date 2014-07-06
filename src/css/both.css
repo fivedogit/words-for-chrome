@@ -5,6 +5,7 @@ div#words_div {
     padding: 0px;
     font-family: arial, helvetica;
     font-size: 11px;
+    line-height:17px;
 }
 
 div#words_div span {
@@ -60,14 +61,14 @@ div#words_div #logo_logstat_tabs_table {
 	background-image:url('/images/outlets2X.png');
 	padding:5px;
 	color:white;
-	
+
 }
 
 #logo_logstat_tabs_table a:link {color:white;}      /* unvisited link */
 #logo_logstat_tabs_table a:visited {color:white;}  /* visited link */
 #logo_logstat_tabs_table a:hover {color:white;}  /* mouse over link */
 #logo_logstat_tabs_table a:active {color:white;}  /* selected link */
-	
+
 div#words_div #small_words_logo_td {
 	text-align:left;
 	padding-left:5px;
@@ -309,7 +310,7 @@ div#words_div .footer_div {
 .footer_div a:visited {color:white;}  /* visited link */
 .footer_div a:hover {color:white;}  /* mouse over link */
 .footer_div a:active {color:white;}  /* selected link */
-	
+
 div#words_div img.rounded {
     /*border: 1px solid #7c7c7c;*/
     border-radius: 4px;

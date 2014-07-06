@@ -112,24 +112,6 @@ function getTrendingActivity()
 	});
 }
 
-
-function splitString(inc_str)
-{
-	if(inc_str.length > 40)
-	{
-		var left = inc_str.substring(0,inc_str.length/2);
-		var right = inc_str.substring(inc_str.length/2);
-		if(left > 40)
-			left = splitString(left);
-		if(right > 40)
-			right = splitString(right);
-		//alert("returning " + left + " " + right);
-		return left + " " + right;
-	}
-	else
-		return inc_str;
-}
-
 function drawTrendingChart(data, dom_id)
 {
 	
@@ -185,7 +167,7 @@ function drawTrendingChart(data, dom_id)
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
-			mds = mds + "		<td colspan=2 style=\"padding-bottom:5px\">";
+			mds = mds + "		<td colspan=2 style=\"padding-bottom:5px;line-height:10px\">";
 			mds = mds + "			<table>";
 			mds = mds + "				<tr>";
 			mds = mds + "					<td id=\"orange_left_" + rand + "_" + x + "\" style=\"height:10px;border:1px solid black;background-color:orange;width:50%\"></td>";

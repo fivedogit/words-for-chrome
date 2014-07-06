@@ -663,7 +663,7 @@ function prepareGetAndPopulateThreadPortion()
 		else if (bg.threadstatus === 0) // the last thread has come in (with children), now populate
 		{
 			//alert("Thread had children");
-			var thread_div_string = "";
+			//var thread_div_string = "";
 			var tempcomments = thread_jo.children;
 			tempcomments.sort(function(a,b){
 				var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
@@ -692,7 +692,7 @@ function prepareGetAndPopulateThreadPortion()
 				scrollable = 0;
 			}
 			
-			$("#main_div_" + currentURLhash).append(thread_div_string);
+			//$("#main_div_" + currentURLhash).append(thread_div_string);
 
 			noteThreadView(false); // was not empty
 		}
@@ -717,7 +717,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 	if(isValidThreadItemId(comment_id)) // before innerHTMl below, make sure this is a harmless 11-char string of letters and numbers.
 	{	
 		var comment_div_string = "";
-		var indent = 0;
+		//var indent = 0;
 		var parent_outer_container_div = "main_div_" + parent;
 		var parent_comment_div = "";
 		
@@ -731,7 +731,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 		
 		if(parent.length !== 11) // toplevel "parent" is a 8-length hash of the currentURL set by overlay.js
 		{
-			indent = 0;
+			//indent = 0;
 		}
 		else 
 		{
@@ -740,7 +740,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 			//alert("parent_outer_container_div=" + parent_outer_container_div);
 			parent_comment_div = "comment_div_" + parent;
 			//alert("getting indent from parent_comment_div=" + parent_comment_div);
-			indent = ($("#" + parent_comment_div).css("margin-left").replace("px", "")*1) + 25;
+			//indent = ($("#" + parent_comment_div).css("margin-left").replace("px", "")*1) + 25;
 			//alert("indent=" + indent);
 		}	
 		// This is the main thread item (comment) structure. We have a blank container around the actual visible comment.
@@ -751,7 +751,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 			comment_div_string = comment_div_string + "<div class=\"comment-outer-container-div\" id=\"comment_outer_container_div_" + comment_id + "\">";
 		comment_div_string = comment_div_string + "		    <div class=\"complete-horiz-line-div\" id=\"complete_horiz_line_div_" + comment_id + "\"></div>";
 		comment_div_string = comment_div_string + "		    <div class=\"message-div\" id=\"message_div_" + comment_id + "\" style=\"display:none\"></div>";
-		comment_div_string = comment_div_string + "				<div class=\"comment-div\" style=\"margin-left:" + indent + "px\" id=\"comment_div_" + comment_id + "\">";
+		comment_div_string = comment_div_string + "				<div class=\"comment-div\" id=\"comment_div_" + comment_id + "\">";
 		comment_div_string = comment_div_string + "					<span style=\"padding:20px\"><img src=\"images/ajaxSnake.gif\"></span>";
 		comment_div_string = comment_div_string + "				</div>";
 		if(!$("#comment_outer_container_div_" + comment_id).length)
@@ -793,6 +793,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 	        success: function (data, status) {
 	        	if(data.response_status !== "error" && tabmode === "thread")
 	        	{
+	        		$("#comment_div_" + data.item.id).css("margin-left", ((data.item.depth-1) * 25) + "px");
 	        		writeComment(data.item, "comment_div_" + data.item.id);
 	        		if(data.item.children && data.item.children.length > 0)
 	        		{

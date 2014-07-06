@@ -107,17 +107,6 @@ function getNotifications()
 	}
 }
 
-function makeid()
-{
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for( var i=0; i < 5; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
-
 // item ids are unique. There is only one specific like/dislike/comment in the person's notification array
 // parent ids are not. The same parent item can be replied to, liked, disliked, etc, so the reference has to be randomized
 function doNotificationItem(item_id, dom_id)
