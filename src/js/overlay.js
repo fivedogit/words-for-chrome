@@ -26,6 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		 {	
 			 $("body").css("width", bg.user_jo.overlay_size + "px");
 		 }
+		 
+		 // need a valid email/this_access_token to do the rest
+		 email = docCookies.getItem("email");
+		 this_access_token = docCookies.getItem("this_access_token");
+		 
 		 doThreadTab();
 	 });
 });

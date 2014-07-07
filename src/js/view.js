@@ -25,8 +25,8 @@
  		bs = bs + "</tr>";
  	bs = bs + "</table>";
  	bs = bs + "<div id=\"utility_div_" + currentURLhash + "\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X_light.png") + "');padding-top:10px;padding-bottom:10px;border-top: 1px solid #ddd;\">";
- 	bs = bs + "	<div id=\"header_div_top\" style=\"display:none\"></div>"; // make unique with currentURLhash?
- 	bs = bs + "	<div class=\"message-div\" id=\"message_div_" + currentURLhash + "\" style=\"display:none\"></div>";
+ 	bs = bs + "	<div id=\"header_div_top\" style=\"font-size:14px;font-weight:bold;display:none;padding-bottom:5px;\"></div>"; // make unique with currentURLhash?
+ 	bs = bs + "	<div class=\"message-div\" id=\"message_div_" + currentURLhash + "\" style=\"display:none;padding-bottom:5px\"></div>";
  	bs = bs + "	<div id=\"tlcf_div_" + currentURLhash + "\">something</div>";
  	bs = bs + "</div>";
 	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><div style=\"padding:20px\"></div></div>";
@@ -190,8 +190,8 @@
  function writeTopLevelCommentForm()
  {
 	 var tlcf = "";
-	 tlcf = tlcf + "<form class=\"comment-submission-form\" method=post action=\"#\">"; 
-		tlcf = tlcf + "<div class=\"comment-submission-form-div\" id=\"comment_submission_form_div_" + currentURLhash + "\" style=\"padding-top:6px\">"; 
+	 tlcf = tlcf + "<form method=post action=\"#\">"; 
+		tlcf = tlcf + "<div style=\"margin-right:auto;margin-left:auto;width:80%;\" id=\"comment_submission_form_div_" + currentURLhash + "\" style=\"padding-top:6px\">"; 
 		var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
 		var charsleft = 500;
 		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + currentURLhash) 
@@ -204,13 +204,14 @@
 		else	
 			tlcf = tlcf + "<textarea class=\"composition-textarea\" style=\"height:22px;color:#aaa\" id=\"comment_textarea_" + currentURLhash + "\">Say something...</textarea>";
 		tlcf = tlcf + "	<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + currentURLhash + "\">";
-		tlcf = tlcf + "		<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"images/ajaxSnake.gif\"></span>";
-		tlcf = tlcf + "		<span id=\"charsleft_" + currentURLhash + "\">" + charsleft + "</span> ";
-		tlcf = tlcf + "		<span><input id=\"comment_submission_form_submit_button_" + currentURLhash + "\" style=\"width:50px;height:20px\" type=button value=\"Submit\"></input></span>";
+		tlcf = tlcf + "		<span style=\"display:none;padding-right:3px;\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"images/ajaxSnake.gif\"></span>";
+		tlcf = tlcf + "		<span id=\"charsleft_" + currentURLhash + "\" style=\"margin-right:3px\">" + charsleft + "</span> ";
+		tlcf = tlcf + "		<span><input id=\"comment_submission_form_submit_button_" + currentURLhash + "\" class=\"comment-submit-button\" type=button value=\"Submit\"></input></span>";
 		tlcf = tlcf + "	</div>";
 		tlcf = tlcf + "</div>";
 	tlcf = tlcf + "</form>";	
 	$("#tlcf_div_" + currentURLhash).html(tlcf);
+	
 	createSubmissionFormSubmitButtonClickEvent(currentURLhash, user_jo);
  	createFocusEventForTextarea(currentURLhash, user_jo);
  	createBlurEventForTextarea(currentURLhash);

@@ -90,7 +90,7 @@ function gotThread()
 		$("#google_favicon_img_" + currentURLhash).attr("src", "http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation);
 		$("#url_span_" + currentURLhash).text(url_to_use);
 		
-		/*
+		
 		var likepage_method = "likeHostname";
 		var haveilikedpage_method = "haveILikedThisHostname";
 		var which_like_type = "hostname";
@@ -100,6 +100,7 @@ function gotThread()
 			haveilikedpage_method = "haveILikedThisHPQSP";
 			which_like_type = "hpqsp";
 		}
+
 		
 		getPageLikes(which_like_type);
 		
@@ -110,8 +111,8 @@ function gotThread()
     			        type: 'GET',
     			        url: endpoint,
     			        data: {
-    			        	email: docCookies.getItem("email"),
-    			        	this_access_token: docCookies.getItem("this_access_token"),
+    			        	email: email,
+    			        	this_access_token: this_access_token,
     			            method: likepage_method,
     			            url: currentURL
     			        },
@@ -134,9 +135,9 @@ function gotThread()
     			        		if(data.error_code && data.error_code === "0000")
     			        		{
     			        			displayMessage("Your login has expired. Please relog.", "red");
-    			        			docCookies.removeItem("email"); 
-    			        			docCookies.removeItem("this_access_token");
-    			        			bg.user_jo = null;
+    			        			//docCookies.removeItem("email"); 
+    			        			//docCookies.removeItem("this_access_token");
+    			        			user_jo = null;
     			        			displayAsLoggedOut();
     			        		}
     			        	}	
@@ -150,7 +151,7 @@ function gotThread()
 	 				return false;
 	 			});
 	 	
-		if(bg.user_jo !== null)
+		if(user_jo !== null)
 		{
 			$.ajax({
 				type: 'GET',
@@ -158,8 +159,8 @@ function gotThread()
 		        data: {
 		            method: haveilikedpage_method,
 		            url: currentURL,
-		            email: docCookies.getItem("email"),
-		            this_access_token: docCookies.getItem("this_access_token")
+		            email: email,
+		            this_access_token: this_access_token
 		        },
 		        dataType: 'json',
 		        async: true,
@@ -186,8 +187,8 @@ function gotThread()
 		        data: {
 		            method: "amIFollowingThisPage",
 		            url: currentURL,
-		            email: docCookies.getItem("email"),
-		            this_access_token: docCookies.getItem("this_access_token")
+		            email: email,
+		            this_access_token: this_access_token
 		        },
 		        dataType: 'json',
 		        async: true,
@@ -263,8 +264,8 @@ function gotThread()
 	    			        type: 'GET',
 	    			        url: endpoint,
 	    			        data: {
-	    			        	email: docCookies.getItem("email"),
-	    			        	this_access_token: docCookies.getItem("this_access_token"),
+	    			        	email: email,
+	    			        	this_access_token: this_access_token,
 	    			            method: "followPage",
 	    			            url: currentURL
 	    			        },
@@ -295,8 +296,8 @@ function gotThread()
 	    			        type: 'GET',
 	    			        url: endpoint,
 	    			        data: {
-	    			        	email: docCookies.getItem("email"),
-	    			        	this_access_token: docCookies.getItem("this_access_token"),
+	    			        	email: email,
+	    			        	this_access_token: this_access_token,
 	    			            method: "unfollowPage",
 	    			            url: currentURL
 	    			        },
@@ -325,7 +326,7 @@ function gotThread()
 	 			});
 	 	
 		
-	 	if(bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
+	 	if(user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
 	 	{
 	 		$("#separated_or_combined_img").click(
 					function () {
@@ -338,8 +339,8 @@ function gotThread()
 						        data: {
 						            method: "separateHostname",
 						            url: currentURL,
-						            email: docCookies.getItem("email"),
-						            this_access_token: docCookies.getItem("this_access_token")
+						            email: email,
+						            this_access_token: this_access_token
 						        },
 						        dataType: 'json',
 						        async: true,
@@ -368,8 +369,8 @@ function gotThread()
 						        data: {
 						            method: "combineHostname",
 						            url: currentURL,
-						            email: docCookies.getItem("email"),
-						            this_access_token: docCookies.getItem("this_access_token")
+						            email: email,
+						            this_access_token: this_access_token
 						        },
 						        dataType: 'json',
 						        async: true,
@@ -401,8 +402,8 @@ function gotThread()
 					            method: "setSignificantQSP",
 					            url: currentURL,
 					            sqsp: $("#sqsp").val(),
-					            email: docCookies.getItem("email"),
-					            this_access_token: docCookies.getItem("this_access_token")
+					            email: email,
+					            this_access_token: this_access_token
 					        },
 					        dataType: 'json',
 					        async: true,
@@ -463,7 +464,7 @@ function gotThread()
 	 			});
 		beginindex = 0;
 		endindex = 8;
-		prepareGetAndPopulateThreadPortion();*/
+		prepareGetAndPopulateThreadPortion();
 	}
 }
 
@@ -527,8 +528,8 @@ function noteThreadView(was_empty) //booleans or strings
 		url: endpoint,
 		data: {
 			method: "noteThreadView",
-			email: docCookies.getItem("email"),
-			this_access_token: docCookies.getItem("this_access_token"),
+			email: email,
+			this_access_token: this_access_token,
 			url: currentURL,
 			was_empty: was_empty
 		},
@@ -557,7 +558,7 @@ function prepareGetAndPopulateThreadPortion()
 {
 	if (tabmode === "thread")
 	{
-		if ((typeof thread_jo.children === "undefined" || thread_jo.children === null || thread_jo.children.length === 0) && bg.threadstatus === 0)
+		if (typeof thread_jo.children === "undefined" || thread_jo.children === null || thread_jo.children.length === 0)// && bg.threadstatus === 0)
 		{
 			//alert("Thread had no children");
 			var main_div_string = "";
@@ -667,7 +668,7 @@ function prepareGetAndPopulateThreadPortion()
 			
 			noteThreadView(true); // was empty
 		}
-		else if (bg.threadstatus === 0) // the last thread has come in (with children), now populate
+		else // if (bg.threadstatus === 0) // the last thread has come in (with children), now populate
 		{
 			//alert("Thread had children");
 			//var thread_div_string = "";
@@ -755,7 +756,7 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 		// as to the comment container (subsequent or previous comments of the same level)
 
 		if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
-			comment_div_string = comment_div_string + "<div class=\"comment-outer-container-div\" id=\"comment_outer_container_div_" + comment_id + "\">";
+			comment_div_string = comment_div_string + "<div id=\"comment_outer_container_div_" + comment_id + "\">";
 		comment_div_string = comment_div_string + "		    <div class=\"complete-horiz-line-div\" id=\"complete_horiz_line_div_" + comment_id + "\"></div>";
 		comment_div_string = comment_div_string + "		    <div class=\"message-div\" id=\"message_div_" + comment_id + "\" style=\"display:none\"></div>";
 		comment_div_string = comment_div_string + "				<div class=\"comment-div\" id=\"comment_div_" + comment_id + "\">";
@@ -908,14 +909,14 @@ function writeComment(feeditem_jo, dom_id)
 	{
 		tempstr = tempstr + "<table>";
 		tempstr = tempstr + "	<tr>";
-		tempstr = tempstr + "		<td class=\"comment-avatar-rating-td\">";
+		tempstr = tempstr + "		<td style=\"vertical-align:top;width:48px;\">";
 		tempstr = tempstr + "			<table>";
 		tempstr = tempstr + "				<tr>";
-		tempstr = tempstr + "					<td><img class=\"userpic48 rounded\" src=\"images/48avatar_ghosted.png\"></td>";
+		tempstr = tempstr + "					<td><img style=\"width:48px;height:48px;border-radius:4px\" src=\"" + chrome.extension.getURL("images/48avatar_ghosted.png") + "\"></td>";
 		tempstr = tempstr + "				</tr>";
 		tempstr = tempstr + "			</table>";
 		tempstr = tempstr + "		</td>";
-		tempstr = tempstr + "		<td class=\"comment-details-td comment-hidden-td\">";
+		tempstr = tempstr + "		<td style=\"padding:5px;vertical-align:middle;text-align:left\" >";
 		tempstr = tempstr + "			Comment deleted";
 		tempstr = tempstr + "		</td>";
 		tempstr = tempstr + "	</tr>";
@@ -927,52 +928,49 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "	<tr>";
 		
 		// show this user's info
-		tempstr = tempstr + "		<td class=\"comment-avatar-rating-td\"> <!-- avatar, left hand side -->";
+		tempstr = tempstr + "		<td style=\"vertical-align:top;width:48px;\"> <!-- avatar, left hand side -->"; 
 		tempstr = tempstr + "			<table>";
 		tempstr = tempstr + "				<tr>";
 		tempstr = tempstr + "					<td> ";
-		tempstr = tempstr + "						<img id=\"author_picture_img_" + comment_id + "\" class=\"userpic48 rounded\" src=\"images/ajaxSnake.gif\">";
+		tempstr = tempstr + "						<img style=\"width:48px;height:48px;border-radius:4px\" id=\"author_picture_img_" + comment_id + "\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 		tempstr = tempstr + "					</td>";
 		tempstr = tempstr + "				</tr>";			
 		tempstr = tempstr + "				<tr>";
 		tempstr = tempstr + "					<td> ";
-		tempstr = tempstr + "						<table class=\"user-rating-table\">";
+		tempstr = tempstr + "						<table style=\"width:48px; height:5px; border:1px solid #7c7c7c; border-radius:2px; border-collapse: separate\">"; 
 		tempstr = tempstr + "							<tr>";
-		tempstr = tempstr + "								<td id=\"author_rating_left_td_" + comment_id + "\" style=\"width:33%;height:3px;border:0px solid black\"></td>";
-		tempstr = tempstr + "								<td id=\"author_rating_center_td_" + comment_id + "\" style=\"width:34%;height:3px;border:0px solid black;background-color:blue\"></td>";
-		tempstr = tempstr + "								<td id=\"author_rating_right_td_" + comment_id + "\" style=\"width:33%;height:3px;border:0px solid black\"></td>";
+		tempstr = tempstr + "								<td id=\"author_rating_left_td_" + comment_id + "\" style=\"width:33%;height:3px;border:0px\"></td>";
+		tempstr = tempstr + "								<td id=\"author_rating_center_td_" + comment_id + "\" style=\"width:34%;height:3px;border:0px;background-color:blue\"></td>";
+		tempstr = tempstr + "								<td id=\"author_rating_right_td_" + comment_id + "\" style=\"width:33%;height:3px;border:0px\"></td>";
 	  	tempstr = tempstr + "							</tr>";
 	  	tempstr = tempstr + "						</table>"
 		tempstr = tempstr + "					</td>";
 		tempstr = tempstr + "				</tr>";			
 		tempstr = tempstr + "			</table>";
 		tempstr = tempstr + "		</td>";
-		tempstr = tempstr + "		<td  class=\"comment-details-td\"> <!-- everything else, right-hand side -->";
+		tempstr = tempstr + "		<td> <!-- everything else, right-hand side -->";
 		tempstr = tempstr + "			<table>";
 		tempstr = tempstr + "				<tr>";
-		tempstr = tempstr + "					<td class=\"comment-screenname-td\"> ";
-		tempstr = tempstr + "						<a class=\"comment-screenname-link\" href=\"#\" id=\"screenname_link_" + comment_id + "\"></a> - ";
-		tempstr = tempstr + "						<span id=\"time_ago_span_" + comment_id + "\"></span>";
-		tempstr = tempstr + "					</td>";
-		
-		// show like/dislike (and maybe delete) buttons
-		tempstr = tempstr + "					<td> ";
-		tempstr = tempstr + "	<table>";
-		tempstr = tempstr + "		<tr> ";
-		tempstr = tempstr + "		   <td id=\"comment_likes_count_td_" + comment_id + "\" class=\"comment-likes-count-td\"></td>";
+		tempstr = tempstr + "					<td style=\"vertical-align:middle;text-align:left;border:0px solid black\" > "; 
+		tempstr = tempstr + "						<table style=\"width:100%;float:left;border:0px solid black;vertical-align:middle;\">";
+		tempstr = tempstr + "							<tr> ";
+		tempstr = tempstr + "		  					 	<td style=\"width:50%;vertical-align:middle\"><span id=\"screenname_span_" + comment_id + "\" style=\"padding:5px;color:blue\"></span> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span></td>";
+		tempstr = tempstr + "		  					 	<td style=\"width:100%\"></td>"; // separator
+		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:green;text-align:right;vertical-align:middle;padding-right:3px\" id=\"comment_likes_count_td_" + comment_id + "\"></td>";
 		if (tabmode === "thread") 
         {
-			tempstr = tempstr + "	       <td class=\"comment-like-image-td\"><img src=\"images/like_arrow.png\" id=\"like_img_" + comment_id + "\"></td>";
-			tempstr = tempstr + "	       <td class=\"comment-dislike-image-td\"><img src=\"images/dislike_arrow.png\" id=\"dislike_img_" + comment_id + "\"></td>";
+			tempstr = tempstr + "	       						<td style=\"width:19px;height:19px;vertical-align:middle;\"><img style=\"height:19px;width:19px\" src=\"" + chrome.extension.getURL("images/like_arrow.png") + "\" id=\"like_img_" + comment_id + "\"></td>";
+			tempstr = tempstr + "	       						<td style=\"width:19px;height:19px;vertical-align:middle;\"><img style=\"height:19px;width:19px\" src=\"" + chrome.extension.getURL("images/dislike_arrow.png") + "\" id=\"dislike_img_" + comment_id + "\"></td>";
         }
-		tempstr = tempstr + "		   <td id=\"comment_dislikes_count_td_" + comment_id + "\" class=\"comment-dislikes-count-td\"></td>";
-		if ((tabmode === "thread" || tabmode === "past") && (bg.user_jo !== null && bg.user_jo.screenname === feeditem_jo.author_screenname)) // if no bg.user_jo or screennames don't match, hide
+		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:red;text-align:left;vertical-align:middle;padding-left:3px\" id=\"comment_dislikes_count_td_" + comment_id + "\"></td>";
+		
+		/*if ((tabmode === "thread" || tabmode === "past") && (user_jo !== null && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
 		{
 			tempstr = tempstr + "		   <td class=\"comment-delete-td\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + comment_id + "\">X</a> ";
 			tempstr = tempstr + "		   </td>";
 		}
-		if(tabmode === "thread" && bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
+		if(tabmode === "thread" && user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
 		{
 			tempstr = tempstr + "		   <td class=\"comment-nuke-td\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + comment_id + "\">N!</a> ";
@@ -980,33 +978,32 @@ function writeComment(feeditem_jo, dom_id)
 			tempstr = tempstr + "		   <td class=\"comment-megadownvote-td\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
 			tempstr = tempstr + "		   </td>";
-		}	
-		tempstr = tempstr + "		</tr>";
-		tempstr = tempstr + "  	</table>";
+		}	*/
+		
+		tempstr = tempstr + "							</tr>";
+		tempstr = tempstr + "  						</table>";
 		tempstr = tempstr + "					</td>";
 		tempstr = tempstr + "				</tr>";
 		tempstr = tempstr + "				<tr>";
-		tempstr = tempstr + "					<td colspan=2 id=\"comment_text_td_" + comment_id + "\" class=\"comment-text-td\"> ";
+		tempstr = tempstr + "					<td style=\"padding:5px;vertical-align:top;text-align:left\" id=\"comment_text_td_" + comment_id + "\"> "; //  class=\"comment-text-td\"
 	  	tempstr = tempstr + "					</td>";
 	  	tempstr = tempstr + "				</tr>";
-
-	  	// show reply stuff  
-	  	if (tabmode === "thread" && (($("#comment_div_" + feeditem_jo.id).css("margin-left").replace("px","")*1) < 125)) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
+		if (tabmode === "thread" && (($("#comment_div_" + feeditem_jo.id).css("margin-left").replace("px","")*1) < 125)) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
 	  	{
-	  		tempstr = tempstr + "				<tr>";
-	  		tempstr = tempstr + "					<td class=\"comment-reply-link-td\" colspan=2> ";
+			tempstr = tempstr + "				<tr>";
+	  		tempstr = tempstr + "					<td style=\"padding:6px;text-align:left\"> ";
 	  		tempstr = tempstr + "							<a href=\"#\" id=\"reply_link_" + comment_id + "\"><b>Reply</b></a>";
 	  		tempstr = tempstr + "					</td>";
 	  		tempstr = tempstr + "				</tr>";
 	  		tempstr = tempstr + "				<tr>";
-	  		tempstr = tempstr + "					<td class=\"reply-td\" id=\"reply_td_" + comment_id + "\" colspan=2> ";
-	  		tempstr = tempstr + "						<form class=\"comment-submission-form\" method=post action=\"#\">";
-	  		tempstr = tempstr + "							<div class=\"comment-submission-form-div\">";
-	  		tempstr = tempstr + "								<textarea class=\"composition-textarea\" style=\"color:black\" id=\"comment_textarea_" + comment_id + "\"></textarea>";
-	  		tempstr = tempstr + "								<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + comment_id + "\">";
-	  		tempstr = tempstr + "									<span class=\"comment-submission-progress-span\" id=\"comment_submission_progress_span_" + comment_id + "\"><img src=\"images/ajaxSnake.gif\"></span>";
+	  		tempstr = tempstr + "					<td id=\"reply_td_" + comment_id + "\" style=\"display:none;\"> ";
+	  		tempstr = tempstr + "						<form method=post action=\"#\">";
+	  		tempstr = tempstr + "							<div style=\"margin-right:auto;margin-left:auto;width:80%;\">"; 
+	  		tempstr = tempstr + "								<textarea style=\"color:black;width:98%;margin-bottom:2px;border: 1px solid #7c7c7c; border-radius:4px; padding:2px;\" id=\"comment_textarea_" + comment_id + "\"></textarea>";
+	  		tempstr = tempstr + "								<div id=\"char_count_and_submit_button_div_" + comment_id + "\" style=\"width:100px;height:16px;margin-left:auto;margin-right:0px;vertical-align:middle;display:none;\">";
+	  		tempstr = tempstr + "									<span id=\"comment_submission_progress_span_" + comment_id + "\" style=\"display:none;padding-right:3px\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>"; 
 	  		tempstr = tempstr + "									<span id=\"charsleft_" + comment_id + "\"></span>";
-	  		tempstr = tempstr + "									<span><input id=\"comment_submission_form_submit_button_" + comment_id + "\" type=button value=\"Submit\"></input></span>";
+	  		tempstr = tempstr + "									<span><input id=\"comment_submission_form_submit_button_" + comment_id + "\" class=\"comment-submit-button\" type=button value=\"Submit\"></input></span>";
 	  		tempstr = tempstr + "								</div>";
 	  		tempstr = tempstr + "							</div>";
 	  		tempstr = tempstr + "						</form>";
@@ -1052,7 +1049,7 @@ function writeComment(feeditem_jo, dom_id)
 	$("[id=author_rating_center_td_" + comment_id + "]").css("width", center_percentage + "%");
 	$("[id=author_rating_center_td_" + comment_id + "]").css("background-color", ratingcolor);
 	$("[id=author_rating_right_td_" + comment_id + "]").css("width", right_percentage + "%");
-	$("[id=screenname_link_" + comment_id + "]").text(feeditem_jo.author_screenname);
+	$("[id=screenname_span_" + comment_id + "]").text(feeditem_jo.author_screenname);
 	$("[id=time_ago_span_" + comment_id + "]").text(feeditem_jo.time_ago);
 	$("[id=comment_likes_count_td_" + comment_id + "]").text(feeditem_jo.likes.length);
 	$("[id=comment_dislikes_count_td_" + comment_id + "]").text(feeditem_jo.dislikes.length);
@@ -1098,7 +1095,7 @@ function writeComment(feeditem_jo, dom_id)
 		}
 	});
 	
-	if(bg.user_jo !== null)
+	if(user_jo !== null)
 	{
 		$.ajax({
 			type: 'GET',
@@ -1106,8 +1103,8 @@ function writeComment(feeditem_jo, dom_id)
 	        data: {
 	            method: "haveILikedThisComment",
 	            id: feeditem_jo.id,
-	            email: docCookies.getItem("email"),
-	            this_access_token: docCookies.getItem("this_access_token")
+	            email: email,
+	            this_access_token: this_access_token
 	        },
 	        dataType: 'json',
 	        async: true,
@@ -1119,7 +1116,7 @@ function writeComment(feeditem_jo, dom_id)
 	        	else if (data.response_status === "success")
 	        	{
 	        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
-	        			$("#like_img_" + comment_id).attr("src", "images/like_arrow_liked.png");
+	        			$("#like_img_" + comment_id).attr("src", chrome.extension.getURL("images/like_arrow_liked.png"));
 	        	}
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -1134,8 +1131,8 @@ function writeComment(feeditem_jo, dom_id)
 	        data: {
 	            method: "haveIDislikedThisComment",
 	            id: feeditem_jo.id,
-	            email: docCookies.getItem("email"),
-	            this_access_token: docCookies.getItem("this_access_token")
+	            email: email,
+	            this_access_token: this_access_token
 	        },
 	        dataType: 'json',
 	        async: true,
@@ -1147,7 +1144,7 @@ function writeComment(feeditem_jo, dom_id)
 	        	else if (data.response_status === "success")
 	        	{
 	        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
-	        			$("#dislike_img_" + comment_id).attr("src", "images/dislike_arrow_disliked.png");
+	        			$("#dislike_img_" + comment_id).attr("src", chrome.extension.getURL("images/dislike_arrow_disliked.png"));
 	        	}
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -1160,7 +1157,7 @@ function writeComment(feeditem_jo, dom_id)
 	if (tabmode === "thread")
 	{
 		$("#reply_link_" + comment_id).click({value: comment_id}, function(event) {
-			if (bg.user_jo)
+			if (user_jo !== null)
 			{
 				if(!$("#reply_td_" + event.data.value).is(":visible"))
 				{
@@ -1183,8 +1180,8 @@ function writeComment(feeditem_jo, dom_id)
 			return false;
 		});
 			
-		createSubmissionFormSubmitButtonClickEvent(comment_id, bg.user_jo);
-	 	createFocusEventForTextarea(comment_id, bg.user_jo);
+		createSubmissionFormSubmitButtonClickEvent(comment_id, user_jo);
+	 	createFocusEventForTextarea(comment_id, user_jo);
 	 	createBlurEventForTextarea(comment_id);
 	 	createKeyupEventForTextarea(comment_id, 500);
 		
@@ -1234,8 +1231,6 @@ function submitComment(parent) // submits comment and updates thread
 {
 	var text = $("#comment_textarea_" + parent).val();
 	//alert("submitting comment");
-	var email = docCookies.getItem("email");
-	var this_access_token = docCookies.getItem("this_access_token");
 	var parent_to_submit = parent;
 	if(parent.length !== 11) // this is a toplevel comment. if toplevel, "parent" should be 8 chars as hashed by hashFnv32a()
 		parent_to_submit = currentURL;
@@ -1263,9 +1258,9 @@ function submitComment(parent) // submits comment and updates thread
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
-        			docCookies.removeItem("email"); 
-        			docCookies.removeItem("this_access_token");
-        			bg.user_jo = null;
+        			//docCookies.removeItem("email"); 
+        			//docCookies.removeItem("this_access_token");
+        			user_jo = null;
         			updateLogstat();
         		}
 	        	// on error, leave the comment box open with whatever was in there, char count the same. Just re-enable the submit button.
@@ -1328,8 +1323,6 @@ function submitComment(parent) // submits comment and updates thread
 
 function hideComment(inc_id) // submits comment and updates thread
 {
-	var email = docCookies.getItem("email");
-	var this_access_token = docCookies.getItem("this_access_token");
 	$.ajax({
 	    type: 'GET',
 	    url: endpoint,
@@ -1349,9 +1342,9 @@ function hideComment(inc_id) // submits comment and updates thread
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
-        			docCookies.removeItem("email"); 
-        			docCookies.removeItem("this_access_token");
-        			bg.user_jo = null;
+        			//docCookies.removeItem("email"); 
+        			//docCookies.removeItem("this_access_token");
+        			user_jo = null;
         			updateLogstat();
         		}
 	        }
@@ -1377,8 +1370,6 @@ function hideComment(inc_id) // submits comment and updates thread
 
 function nukeComment(inc_id) // submits comment and updates thread
 {
-	var email = docCookies.getItem("email");
-	var this_access_token = docCookies.getItem("this_access_token");
 	$.ajax({
 	    type: 'GET',
 	    url: endpoint,
@@ -1398,9 +1389,9 @@ function nukeComment(inc_id) // submits comment and updates thread
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
-        			docCookies.removeItem("email"); 
-        			docCookies.removeItem("this_access_token");
-        			bg.user_jo = null;
+        			//docCookies.removeItem("email"); 
+        			//docCookies.removeItem("this_access_token");
+        			user_jo = null;
         			updateLogstat();
         		}
 	        }
@@ -1423,8 +1414,6 @@ function nukeComment(inc_id) // submits comment and updates thread
 
 function megadownvoteComment(inc_id) // submits comment and updates thread
 {
-	var email = docCookies.getItem("email");
-	var this_access_token = docCookies.getItem("this_access_token");
 	$.ajax({
 	    type: 'GET',
 	    url: endpoint,
@@ -1444,9 +1433,9 @@ function megadownvoteComment(inc_id) // submits comment and updates thread
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
-        			docCookies.removeItem("email"); 
-        			docCookies.removeItem("this_access_token");
-        			bg.user_jo = null;
+        			//docCookies.removeItem("email"); 
+        			//docCookies.removeItem("this_access_token");
+        			user_jo = null;
         			updateLogstat();
         		}
 	        }
@@ -1479,10 +1468,8 @@ function likeOrDislikeComment(id, like_or_dislike)
 		$("#dislike_img_" + id).attr("src", "images/dislike_snake.gif");
 		//alert("dislike snake");
 	}
-	if(bg.user_jo != null)
+	if(user_jo != null)
 	{
-		var email = docCookies.getItem("email");
-		var this_access_token = docCookies.getItem("this_access_token");
 		$.ajax({
 			type: 'GET',
 			url: endpoint,
@@ -1506,9 +1493,9 @@ function likeOrDislikeComment(id, like_or_dislike)
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
 	        			displayMessage("Your login has expired. Please relog.", "red");
-	        			docCookies.removeItem("email"); 
-	        			docCookies.removeItem("this_access_token");
-	        			bg.user_jo = null;
+	        			//docCookies.removeItem("email"); 
+	        			//docCookies.removeItem("this_access_token");
+	        			user_jo = null;
 	        			updateLogstat();
 	        		}
 					return;

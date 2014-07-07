@@ -12,11 +12,11 @@
 function doNotificationsTab()
 {
 	tabmode = "notifications";
-	$("#thread_tab_img").attr("src", "images/chat_gray.png");
-	$("#trending_tab_img").attr("src", "images/trending_gray.png");
-	$("#notifications_tab_img").attr("src", "images/flag_blue.png");
-	$("#past_tab_img").attr("src", "images/clock_gray.png");
-	$("#profile_tab_img").attr("src", "images/user_gray.png");
+	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_gray.png"));
+	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_gray.png"));
+	$("#notifications_tab_img").attr("src", chrome.extension.getURL("images/flag_blue.png"));
+	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
+	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	
 	$("#header_div_top").text("Notification Feed");
 	$("#utility_div").show();
