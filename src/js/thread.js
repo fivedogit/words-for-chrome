@@ -13,11 +13,11 @@
 function doThreadTab() 
 {
 	tabmode = "thread";
-	$("#thread_tab_img").attr("src", "images/chat_blue.png");
-	$("#trending_tab_img").attr("src", "images/trending_gray.png");
+	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_blue.png"));
+	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_gray.png"));
 	updateNotificationTabLinkImage();
-	$("#past_tab_img").attr("src", "images/clock_gray.png");
-	$("#profile_tab_img").attr("src", "images/user_gray.png");
+	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
+	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	
 	$("#utility_div").show();
 	$("#header_div_top").text("Comment thread");
@@ -28,6 +28,9 @@ function doThreadTab()
 	
 	if(isValidURLFormation(currentURL))
 	{
+		gotThread();
+		// temporarily removing the possibility that the thread hasn't been retrieved yet.
+		/*
 		if((typeof thread_jo === "undefined" || thread_jo === null) && bg.threadstatus !== 0) // overlay has been loaded, but thread is still being retrieved
 		{
 			var url_at_function_call = currentURL;
@@ -45,7 +48,7 @@ function doThreadTab()
 		else if(thread_jo !== null && bg.threadstatus === 0) 
 		{
 			gotThread();
-		}
+		}*/
 	}
 	else // not a valid URL formation
 	{
@@ -65,15 +68,16 @@ function gotThread()
 	{
 		var url_to_use = getSmartCutURL(thread_jo.significant_designation, 60);
 		var happy = "";
-		happy = happy + "<img id=\"google_favicon_img_" + currentURLhash + "\" src=\"images/ajaxSnake.gif\"> "
+		happy = happy + "<img id=\"google_favicon_img_" + currentURLhash + "\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"> ";
 		if(thread_jo.combined_or_separated === "combined")
-			happy = happy + "<img id=\"separated_or_combined_img\" src=\"images/combined_icon.png\"> ";
+			happy = happy + "<img id=\"separated_or_combined_img\" src=\"" + chrome.extension.getURL("images/combined_icon.png") + "\"> ";
 		else
-			happy = happy + "<img id=\"separated_or_combined_img\" src=\"images/separated_icon.png\"> ";
+			happy = happy + "<img id=\"separated_or_combined_img\" src=\"" + chrome.extension.getURL("images/separated_icon.png") + "\"> ";
 		happy = happy + "<span id=\"url_span_" + currentURLhash + "\" style=\"font-family:arial;font-size:12px;padding-right:6px;\"></span>";
-		happy = happy + "<img id=\"follow_img\" src=\"images/follow_off_12x16.png\" style=\"padding-right:6px;\">";
-		happy = happy + "<img id=\"pagelike_img\" src=\"images/star_grayscale_16x16.png\" style=\"padding-right:1px;\"><span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
-		if(thread_jo.combined_or_separated === "separated" && bg.user_jo !== null && typeof bg.user_jo.permission_level !== "undefined" && bg.user_jo.permission_level !== null && bg.user_jo.permission_level === "admin")
+		happy = happy + "<img id=\"follow_img\" src=\"" + chrome.extension.getURL("images/follow_off_12x16.png") + "\" style=\"padding-right:6px;\">";
+		happy = happy + "<img id=\"pagelike_img\" src=\"" + chrome.extension.getURL("images/star_grayscale_16x16.png") + "\" style=\"padding-right:1px;\"><span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
+		if(thread_jo.combined_or_separated === "separated" && user_jo !== null && typeof user_jo.permission_level !== "undefined" 
+			&& user_jo.permission_level !== null && user_jo.permission_level === "admin")
 		{
 			happy = happy + " <input style=\"width:24px\" id=\"sqsp\"> <a href=\"#\" id=\"set_sqsp\">s</a>";
 		}	
@@ -81,9 +85,12 @@ function gotThread()
 		
 		// like/dislike indicator here
 		$("#header_div_top").html(happy);//OK
+		
+		
 		$("#google_favicon_img_" + currentURLhash).attr("src", "http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation);
 		$("#url_span_" + currentURLhash).text(url_to_use);
 		
+		/*
 		var likepage_method = "likeHostname";
 		var haveilikedpage_method = "haveILikedThisHostname";
 		var which_like_type = "hostname";
@@ -98,7 +105,7 @@ function gotThread()
 		
 		$("#pagelike_img").click(
 	 			function () {
-	 				$("#pagelike_img").attr("src", "images/ajaxSnake.gif");
+	 				$("#pagelike_img").attr("src", chrome.extension.getURL("images/ajaxSnake.gif"));
 	 				$.ajax({
     			        type: 'GET',
     			        url: endpoint,
@@ -456,7 +463,7 @@ function gotThread()
 	 			});
 		beginindex = 0;
 		endindex = 8;
-		prepareGetAndPopulateThreadPortion();
+		prepareGetAndPopulateThreadPortion();*/
 	}
 }
 
@@ -974,7 +981,6 @@ function writeComment(feeditem_jo, dom_id)
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
 			tempstr = tempstr + "		   </td>";
 		}	
-		
 		tempstr = tempstr + "		</tr>";
 		tempstr = tempstr + "  	</table>";
 		tempstr = tempstr + "					</td>";
@@ -1177,8 +1183,8 @@ function writeComment(feeditem_jo, dom_id)
 			return false;
 		});
 			
-		createSubmissionFormSubmitButtonClickEvent(comment_id);
-	 	createFocusEventForTextarea(comment_id);
+		createSubmissionFormSubmitButtonClickEvent(comment_id, bg.user_jo);
+	 	createFocusEventForTextarea(comment_id, bg.user_jo);
 	 	createBlurEventForTextarea(comment_id);
 	 	createKeyupEventForTextarea(comment_id, 500);
 		
@@ -1539,6 +1545,7 @@ function likeOrDislikeComment(id, like_or_dislike)
 		displayMessage("Please login first.", "red", "message_div_" + id);
 	}		 
 }
+
 
 //this ugly function happens when a user has clicked the activation button before
 //the thread has been downloaded from the backend.

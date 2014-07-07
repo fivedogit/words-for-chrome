@@ -23,8 +23,8 @@
         "run_at": "document_end"
     },{
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["/js/widget_embedder.js", "/js/both.js", "/js/jquery-1.8.2.min.js"],
-        "css": ["/css/embed.css"],
+        "js": ["/js/jquery-1.8.2.min.js", "/js/widget_embedder.js", "/js/view.js", "/js/util.js", "/js/thread.js"],
+        "css": ["/css/both.css"],
         "run_at": "document_end"
     }],
     "permissions": [

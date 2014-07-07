@@ -6,17 +6,10 @@ var user_jo;
 var thread_jo;
 var currentURL;
 var currentURLhash;
-
-function findClass(matchClass) {
-    var elems = document.getElementsByTagName('*'), i;
-    for (i in elems) {
-        if((' ' + elems[i].className + ' ').indexOf(' ' + matchClass + ' ')
-                > -1) {
-            alert("found class " + matchClass);
-            return elems[i];
-        }
-    }
-}
+var email;
+var this_access_token;
+var scrollable = 0;
+var tabmode = "thread";
 
 function elementInViewport(el) {
 	  var top = el.offsetTop;
@@ -38,18 +31,17 @@ function elementInViewport(el) {
 	  );
 	}
 
-function isValidThreadItemId(inc_id)
-{
-	// before innerHTML, make sure this is a harmless 11-char string of letters and numbers ending with the letter C (for "comment").
-	if(inc_id.length === 11 && /^[A-Za-z0-9]+C$/.test(inc_id))
-		return true;
-	return false;
-}
-
 chrome.extension.onMessage.addListener(function(request, sender, callback)
 {
 	currentURLhash = fromDecimalToOtherBase(62,hashFnv32a(request.currentURL));
 	currentURL = request.currentURL;
+	if(request.user_jo !== null)
+	{
+		email = request.email;
+		this_access_token = request.this_access_token;
+	}	
+	user_jo = request.user_jo;
+	thread_jo = request.thread_jo;
 	if (request.action === "embedWORDS")
 	{
 		var alreadyfound = false;
@@ -58,32 +50,32 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		{	
 			elem.innerHTML = ""; // blank it.
 			document.getElementById("comments-container").setAttribute("id", "words_div");
-			$("#words_div").append("<div id=\"main_div_" + currentURLhash + "\"></div>");
-			elem = document.getElementById("main_div_" + currentURLhash);
 		}
 		else
 		{
-			elem = document.getElementById("main_div_" + currentURLhash);
+			elem = document.getElementById("words_div");
 		}
 		
 		if(!alreadyfound && elementInViewport(elem)) // when found for the first time...
 		{
 			alreadyfound = true;
-			doEet(request);
+			initializeView();
+			doThreadTab();
 		}	
 		
 		window.onscroll = function(){  // when scrolling, look for it
 			if(!alreadyfound && elementInViewport(elem)) // when found for the first time...
 			{
 				alreadyfound = true;
-				doEet(request);
+				initializeView();
+				doThreadTab();
 			}	
 		};
 		return;
 	}
 });			
 
-
+/*
 function doEet(request)
 {
 	thread_jo = request.thread_jo;
@@ -423,6 +415,15 @@ function getLinkifiedDiv(text) // also replaces line breaks with br
 	return linkified_div;
 }
 
+function has_scrollbar(elem_id) 
+{ 
+ elem = document.getElementById(elem_id); 
+ if (elem.clientHeight < elem.scrollHeight) 
+   return true;
+ else 
+   return false;
+} 
+
 function writeComment(feeditem_jo, dom_id)
 {
 	//$("#" + dom_id).html(JSON.stringify(feeditem_jo));
@@ -482,19 +483,42 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "		<td> <!-- everything else, right-hand side -->";
 		tempstr = tempstr + "			<table>";
 		tempstr = tempstr + "				<tr>";
-		tempstr = tempstr + "					<td style=\"padding:5px;vertical-align:middle;text-align:left;border:0px solid black\" > "; 
-		tempstr = tempstr + "						<span id=\"screenname_span_" + comment_id + "\" style=\"color:blue\"></span> - "; 
-		tempstr = tempstr + "						<span id=\"time_ago_span_" + comment_id + "\"></span>";
-		// show like/dislike (and maybe delete) buttons
-		tempstr = tempstr + "	<div style=\"float:right;width:50px;border:0px solid black;vertical-align:middle;text-align:right\">";
-		tempstr = tempstr + "		   <span style=\"color:green;\" id=\"comment_likes_count_span_" + comment_id + "\">0</span> - <span style=\"color:red;\" id=\"comment_dislikes_count_span_" + comment_id + "\">0</span>";
-		tempstr = tempstr + "  	</div>";
+		tempstr = tempstr + "					<td style=\"vertical-align:middle;text-align:left;border:0px solid black\" > "; 
+		tempstr = tempstr + "						<table style=\"width:100%;float:left;border:0px solid black;vertical-align:middle;\">";
+		tempstr = tempstr + "							<tr> ";
+		tempstr = tempstr + "		  					 	<td style=\"width:50%;vertical-align:middle\"><span id=\"screenname_span_" + comment_id + "\" style=\"padding:5px;color:blue\"></span> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span></td>";
+		tempstr = tempstr + "		  					 	<td style=\"width:100%\"></td>"; // separator
+		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:green;text-align:right;vertical-align:middle;padding-right:3px\" id=\"comment_likes_count_td_" + comment_id + "\"></td>";
+		tempstr = tempstr + "	       						<td style=\"width:19px;height:19px;vertical-align:middle;\"><img style=\"height:19px;width:19px\" src=\"" + chrome.extension.getURL("images/like_arrow.png") + "\" id=\"like_img_" + comment_id + "\"></td>";
+		tempstr = tempstr + "	       						<td style=\"width:19px;height:19px;vertical-align:middle;\"><img style=\"height:19px;width:19px\" src=\"" + chrome.extension.getURL("images/dislike_arrow.png") + "\" id=\"dislike_img_" + comment_id + "\"></td>";
+		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:red;text-align:left;vertical-align:middle;padding-left:3px\" id=\"comment_dislikes_count_td_" + comment_id + "\"></td>";
+		tempstr = tempstr + "							</tr>";
+		tempstr = tempstr + "  						</table>";
 		tempstr = tempstr + "					</td>";
 		tempstr = tempstr + "				</tr>";
 		tempstr = tempstr + "				<tr>";
 		tempstr = tempstr + "					<td style=\"padding:5px;vertical-align:top;text-align:left\" id=\"comment_text_td_" + comment_id + "\"> "; //  class=\"comment-text-td\"
 	  	tempstr = tempstr + "					</td>";
 	  	tempstr = tempstr + "				</tr>";
+	  	tempstr = tempstr + "				<tr>";
+  		tempstr = tempstr + "					<td style=\"padding:6px;text-align:left\"> ";
+  		tempstr = tempstr + "							<a href=\"#\" id=\"reply_link_" + comment_id + "\"><b>Reply</b></a>";
+  		tempstr = tempstr + "					</td>";
+  		tempstr = tempstr + "				</tr>";
+  		tempstr = tempstr + "				<tr>";
+  		tempstr = tempstr + "					<td id=\"reply_td_" + comment_id + "\" style=\"display:none;\"> ";
+  		tempstr = tempstr + "						<form method=post action=\"#\">";
+  		tempstr = tempstr + "							<div style=\"margin-right:auto;margin-left:auto;width:80%;\">"; 
+  		tempstr = tempstr + "								<textarea style=\"color:black;width:98%;margin-bottom:2px;border: 1px solid #7c7c7c; border-radius:4px; padding:2px;\" id=\"comment_textarea_" + comment_id + "\"></textarea>";
+  		tempstr = tempstr + "								<div id=\"char_count_and_submit_button_div_" + comment_id + "\" style=\"width:100px;height:16px;margin-left:auto;margin-right:0px;vertical-align:middle;display:none;\">";
+  		tempstr = tempstr + "									<span id=\"comment_submission_progress_span_" + comment_id + "\" style=\"display:none;padding-right:3px\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>"; 
+  		tempstr = tempstr + "									<span id=\"charsleft_" + comment_id + "\"></span>";
+  		tempstr = tempstr + "									<span><input id=\"comment_submission_form_submit_button_" + comment_id + "\" type=button value=\"Submit\"></input></span>";
+  		tempstr = tempstr + "								</div>";
+  		tempstr = tempstr + "							</div>";
+  		tempstr = tempstr + "						</form>";
+  		tempstr = tempstr + "					</td>";
+  		tempstr = tempstr + "				</tr>";
 	  	tempstr = tempstr + "			</table>";
 	  	tempstr = tempstr + "		</td>";
 	  	tempstr = tempstr + "	</tr>";
@@ -541,6 +565,97 @@ function writeComment(feeditem_jo, dom_id)
 	
 	var linkified_div = getLinkifiedDiv(feeditem_jo.text);
 	$("[id=comment_text_td_" + comment_id + "]").html(linkified_div);
+	
+	if(user_jo !== null)
+	{
+		$.ajax({
+			type: 'GET',
+	        url: endpoint,
+	        data: {
+	            method: "haveILikedThisComment",
+	            id: feeditem_jo.id,
+	            email: email,
+	            this_access_token: this_access_token
+	        },
+	        dataType: 'json',
+	        async: true,
+	        success: function (data, status) {
+	        	if (data.response_status === "error")
+	        	{
+	        		// fail silently
+	        		alert("haveILikedThisComment error " + JSON.stringify(data));
+	        	}
+	        	else if (data.response_status === "success")
+	        	{
+	        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
+	        			$("#like_img_" + comment_id).attr("src", chrome.extension.getURL("images/like_arrow_liked.png"));
+	        	}
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+	            console.log(textStatus, errorThrown);
+	        } 
+		});
+		
+		$.ajax({
+			type: 'GET',
+	        url: endpoint,
+	        data: {
+	            method: "haveIDislikedThisComment",
+	            id: feeditem_jo.id,
+	            email: email,
+	            this_access_token: this_access_token
+	        },
+	        dataType: 'json',
+	        async: true,
+	        success: function (data, status) {
+	        	if (data.response_status === "error")
+	        	{
+	        		// fail silently
+	        		alert("haveIDislikedThisComment error " + JSON.stringify(data));
+	        	}
+	        	else if (data.response_status === "success")
+	        	{
+	        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
+	        			$("#dislike_img_" + comment_id).attr("src", chrome.extension.getURL("images/dislike_arrow_disliked.png"));
+	        	}
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+	            console.log(textStatus, errorThrown);
+	        } 
+		});
+	}
+	
+	$("#reply_link_" + comment_id).click({value: comment_id}, function(event) {
+		if(user_jo !== null)
+		{
+			if(!$("#reply_td_" + event.data.value).is(":visible"))
+			{
+				$("#reply_td_" + event.data.value).show();
+				var currtext = $("#comment_textarea_" + event.data.value).val();
+				if(currtext !== "Say something...")
+			 	{
+					// textarea has a scrollbar due to previous text, grow it
+			 		 if(has_scrollbar("comment_textarea_" + event.data.value))
+					 {
+						 $("#comment_textarea_" + event.data.value).trigger("keyup");
+					 }
+			 	}
+			}
+			else
+				$("#reply_td_" + event.data.value).hide();
+		}
+		else
+			displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
+		event.preventDefault();
+	});
+	
+	createSubmissionFormSubmitButtonClickEvent(comment_id, user_jo);
+ 	createFocusEventForTextarea(comment_id, user_jo);
+ 	createBlurEventForTextarea(comment_id);
+ 	createKeyupEventForTextarea(comment_id, 500);
+	
 }
 
 function drawTrendingChart(data, dom_id)
@@ -651,20 +766,7 @@ function drawTrendingChart(data, dom_id)
 		$("#count_" + rand + "_" + x).text(data.trendingactivity_ja[x].count);
 	}
 	
-	/*
-	$("a").click(function(event) {
-		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
-		{
-			event.processed = true;
-			var c = $(this).attr('class');
-			if(c == "newtab")
-			{
-				var h = $(this).attr('href');
-				doNewtabClick(h);
-			}
-		}
-	});*/
 	return;
 }
-
+*/
 
