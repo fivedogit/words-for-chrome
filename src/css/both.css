@@ -145,97 +145,6 @@ div#words_div div.complete-horiz-line-div {
 	border-top: 1px solid #ddd;
 }
 
-/*
-
-div#words_div td.comment-screenname-td {
-    padding-left: 6px;
-    padding-top: 2px;
-    vertical-align:top;
-    text-align:left;
-    width:95%
-}
-
-div#words_div a.comment-screenname-link {
-    font-size:11px;
-}
-
-div#words_div td.comment-likes-count-td {
-	font-weight:bold;
-	color: green;
-	text-align:right;
-	padding-right:3px;
-}
-
-div#words_div td.comment-dislikes-count-td {
-	font-weight:bold;
-	color: red;
-	text-align:left;
-	padding-left:3px;
-}
-
-div#words_div td.comment-like-image-td {
-	text-align:right;
-	width:19px;
-}
-
-div#words_div td.comment-dislike-image-td {
-	text-align:left;
-	width:19px;
-}
-
-div#words_div td.comment-delete-td {
-	width:10px;
-	padding-left:3px;
-}
-
-div#words_div td.comment-text-td {
-    text-align:left;
-    padding: 4px;
-    padding-left:6px;
-}
-
-div#words_div td.comment-reply-link-td {
-    padding: 6px;
-    text-align:left;
-}
-
-div#words_div td.comment-hidden-td {
-	padding-top:8px;
-	padding-left:5px;
-	padding-bottom:8px;
-	text-align:left;
-	vertical-align:middle;
-}
-
-div#words_div .message-div {
-	padding:5px;
-	font-size:12px;
-}
-
-div#words_div .no-comments-div {
- 	padding:25px;
- 	font-size:12px;
- 	background-color:white;
-}
-
-div#words_div .non-website-no-comments-div {
- 	padding-top:25px;
- 	padding-bottom:25px;
- 	background-color:white;
-}
-
-div#words_div table.user-rating-table {
-	width:48px;
-	height:5px;
-	border: 1px solid #7c7c7c;
-    border-radius: 2px;
-}
-
-div#words_div .rotate {
-    -webkit-transform: rotate(-90deg);
-    -webkit-transform-origin: 50% 50%;
-}
-
 div#words_div .rotated-who-wrote {
 	width:34px;
 	text-align:right;
@@ -243,18 +152,7 @@ div#words_div .rotated-who-wrote {
     -webkit-transform-origin: 50% 50%;
 }
 
-div#words_div .notification-comment-td {
-	padding:3px;
-}
-
-div#words_div .notification-header-td {
-	text-align:left;
-	width:95%
-}
-
-div#words_div img.rounded {
-    border-radius: 4px;
-}
+/*
 
 *:focus {
     outline: none;

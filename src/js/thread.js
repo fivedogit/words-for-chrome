@@ -135,8 +135,6 @@ function gotThread()
     			        		if(data.error_code && data.error_code === "0000")
     			        		{
     			        			displayMessage("Your login has expired. Please relog.", "red");
-    			        			//docCookies.removeItem("email"); 
-    			        			//docCookies.removeItem("this_access_token");
     			        			user_jo = null;
     			        			displayAsLoggedOut();
     			        		}
@@ -562,7 +560,7 @@ function prepareGetAndPopulateThreadPortion()
 		{
 			//alert("Thread had no children");
 			var main_div_string = "";
-			main_div_string = main_div_string + "<div class=\"no-comments-div\">";
+			main_div_string = main_div_string + "<div style=\"padding:25px\">";
 			main_div_string = main_div_string + "	No comments for this page. Write one!";
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\">";
@@ -903,6 +901,7 @@ function writeComment(feeditem_jo, dom_id)
 
 	// NOTE: I tried changing comment_id to a random string, but it broke the saved text mechanism.
 	
+	var writeReplyTD = false;
 	var tempstr = "";
 	var	numvotes = feeditem_jo.likes.length + feeditem_jo.dislikes.length;
 	tempstr = tempstr + "<table style=\"border:0px solid orange\">";
@@ -963,7 +962,7 @@ function writeComment(feeditem_jo, dom_id)
 		
 		/*if ((tabmode === "thread" || tabmode === "past") && (user_jo !== null && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
 		{
-			tempstr = tempstr + "		   <td class=\"comment-delete-td\"> ";
+			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + comment_id + "\">X</a> ";
 			tempstr = tempstr + "		   </td>";
 		}
@@ -994,16 +993,7 @@ function writeComment(feeditem_jo, dom_id)
 	  		tempstr = tempstr + "				</tr>";
 	  		tempstr = tempstr + "				<tr>";
 	  		tempstr = tempstr + "					<td id=\"reply_td_" + comment_id + "\" style=\"display:none;\"> ";
-	  		tempstr = tempstr + "						<form method=post action=\"#\">";
-	  		tempstr = tempstr + "							<div style=\"margin-right:auto;margin-left:auto;width:80%;\">"; 
-	  		tempstr = tempstr + "								<textarea style=\"color:black;width:98%;margin-bottom:2px;border: 1px solid #7c7c7c; border-radius:4px; padding:2px;\" id=\"comment_textarea_" + comment_id + "\"></textarea>";
-	  		tempstr = tempstr + "								<div id=\"char_count_and_submit_button_div_" + comment_id + "\" style=\"width:100px;height:16px;margin-left:auto;margin-right:0px;vertical-align:middle;display:none;\">";
-	  		tempstr = tempstr + "									<span id=\"comment_submission_progress_span_" + comment_id + "\" style=\"display:none;padding-right:3px\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>"; 
-	  		tempstr = tempstr + "									<span id=\"charsleft_" + comment_id + "\"></span>";
-	  		tempstr = tempstr + "									<span><input id=\"comment_submission_form_submit_button_" + comment_id + "\" class=\"comment-submit-button\" type=button value=\"Submit\"></input></span>";
-	  		tempstr = tempstr + "								</div>";
-	  		tempstr = tempstr + "							</div>";
-	  		tempstr = tempstr + "						</form>";
+	  		writeReplyTD = true;
 	  		tempstr = tempstr + "					</td>";
 	  		tempstr = tempstr + "				</tr>";
 	  	}
@@ -1014,6 +1004,10 @@ function writeComment(feeditem_jo, dom_id)
   	tempstr = tempstr + "</table>"
   	
 	$("#" + dom_id).html(tempstr);//OK
+  	
+  	if(writeReplyTD === true)
+  		writeCommentForm(comment_id, "reply_td_" + comment_id);
+  	
 	$("[id=author_picture_img_" + comment_id + "]").attr("src", feeditem_jo.author_picture);
 	var left_percentage = 0;
 	var center_percentage = 0;
@@ -1154,6 +1148,7 @@ function writeComment(feeditem_jo, dom_id)
 	if (tabmode === "thread")
 	{
 		$("#reply_link_" + comment_id).click({value: comment_id}, function(event) {
+			event.preventDefault();
 			if (user_jo !== null)
 			{
 				if(!$("#reply_td_" + event.data.value).is(":visible"))
@@ -1163,10 +1158,11 @@ function writeComment(feeditem_jo, dom_id)
 					if(currtext !== "Say something...")
 				 	{
 						// textarea has a scrollbar due to previous text, grow it
-				 		 if(has_scrollbar("comment_textarea_" + event.data.value))
-						 {
-							 $("#comment_textarea_" + event.data.value).trigger("keyup");
-						 }
+						alert("comment_textarea_" + event.data.value);
+						if(has_scrollbar("comment_textarea_" + event.data.value))
+						{
+							$("#comment_textarea_" + event.data.value).trigger("keyup");
+						}
 				 	}
 				}
 				else
@@ -1174,50 +1170,50 @@ function writeComment(feeditem_jo, dom_id)
 			}
 			else
 				displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
-			return false;
 		});
 			
-		createSubmissionFormSubmitButtonClickEvent(comment_id, user_jo);
+		/*createSubmissionFormSubmitButtonClickEvent(comment_id, user_jo);
 	 	createFocusEventForTextarea(comment_id, user_jo);
 	 	createBlurEventForTextarea(comment_id);
-	 	createKeyupEventForTextarea(comment_id, 500);
+	 	createKeyupEventForTextarea(comment_id, 500);*/
 		
 		$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) {
+			event.preventDefault();
 			likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
-			return false;
 		});
 	 		 
 		$("#dislike_img_" + comment_id).click({value: feeditem_jo.id}, function(event) {
+			event.preventDefault();
 			likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
-			return false;
 		});
 		
 		$("#comment_nuke_link_" + comment_id).click({value: feeditem_jo.id}, function(event) {
+			event.preventDefault();
 			var confirmbox = confirm("Nuke comment?\n(This action is permanent and risky.)");
 			if (confirmbox === true)
 				nukeComment(event.data.value);
-			return false;
 		});
 		
 		$("#comment_megadownvote_link_" + comment_id).click({value: feeditem_jo.id}, function(event) {
+			event.preventDefault();
 			var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
 			if (confirmbox === true)
 				megadownvoteComment(event.data.value);
-			return false;
 		});
 	}
 	
 	if (tabmode === "thread" || tabmode === "past")
 	{
 		$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) {
+			event.preventDefault();
 			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
 			if (confirmbox === true)
 				hideComment(event.data.value);
-			return false;
 		});
 	}
 	
 	$("[id=screenname_link_"+ comment_id + "]").click({value: feeditem_jo}, function(event) {
+		event.preventDefault();
 		viewProfile(event.data.value.author_screenname);
 	});
 }
@@ -1255,8 +1251,6 @@ function submitComment(parent) // submits comment and updates thread
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
-        			//docCookies.removeItem("email"); 
-        			//docCookies.removeItem("this_access_token");
         			user_jo = null;
         			updateLogstat();
         		}
@@ -1339,8 +1333,6 @@ function hideComment(inc_id) // submits comment and updates thread
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
-        			//docCookies.removeItem("email"); 
-        			//docCookies.removeItem("this_access_token");
         			user_jo = null;
         			updateLogstat();
         		}
@@ -1386,8 +1378,6 @@ function nukeComment(inc_id) // submits comment and updates thread
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
-        			//docCookies.removeItem("email"); 
-        			//docCookies.removeItem("this_access_token");
         			user_jo = null;
         			updateLogstat();
         		}
@@ -1430,8 +1420,6 @@ function megadownvoteComment(inc_id) // submits comment and updates thread
             	if(data.error_code && data.error_code === "0000")
         		{
         			displayMessage("Your login has expired. Please relog.", "red");
-        			//docCookies.removeItem("email"); 
-        			//docCookies.removeItem("this_access_token");
         			user_jo = null;
         			updateLogstat();
         		}
@@ -1455,15 +1443,16 @@ function megadownvoteComment(inc_id) // submits comment and updates thread
 
 function likeOrDislikeComment(id, like_or_dislike)
 {
+	var prev = ""; $("#like_img_" + id).attr("src");
 	if(like_or_dislike === "like")
 	{
+		prev = $("#like_img_" + id).attr("src");
 		$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_snake.gif"));
-		//alert("like snake");
 	}
 	else
 	{
+		prev = $("#dislike_img_" + id).attr("src");
 		$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_snake.gif"));
-		//alert("dislike snake");
 	}
 	if(user_jo != null)
 	{
@@ -1481,17 +1470,15 @@ function likeOrDislikeComment(id, like_or_dislike)
 			async: true,
 			success: function (data, status) {
 				if(like_or_dislike === "like")
-					$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_arrow.png"));
+					$("#like_img_" + id).attr("src", prev);
 				else
-					$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow.png"));
+					$("#dislike_img_" + id).attr("src", prev);
 				if (data.response_status === "error") 
 				{
 					displayMessage(data.message, "red", "message_div_" + id);
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
 	        			displayMessage("Your login has expired. Please relog.", "red");
-	        			//docCookies.removeItem("email"); 
-	        			//docCookies.removeItem("this_access_token");
 	        			user_jo = null;
 	        			updateLogstat();
 	        		}

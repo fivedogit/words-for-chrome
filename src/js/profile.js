@@ -59,8 +59,6 @@ function getProfile(screenname)
 	else
 	{
 		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading profile... please wait.</div>");//OK
-		var email = docCookies.getItem("email");
-		var this_access_token = docCookies.getItem("this_access_token");
 		$.ajax({
 		type: 'GET',
 		url: endpoint,
@@ -81,8 +79,6 @@ function getProfile(screenname)
         		{
             		//alert("getUserByScreenname returned code 0000");
         			displayMessage("Your login has expired. Please relog.", "red");
-        			docCookies.removeItem("email"); 
-        			docCookies.removeItem("this_access_token");
         			user_jo = null;
         			updateLogstat();
         		}
@@ -98,7 +94,7 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "		<table style=\"width:100%;\">";
             	main_div_string = main_div_string + "			<tr>";
             	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right\" id=\"large_avatar_td\">";
-            	main_div_string = main_div_string + "					<img class=\"rounded\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"height:128px;\">";
+            	main_div_string = main_div_string + "					<img style=\"border-radius: 4px;\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"height:128px;\">";
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
             	main_div_string = main_div_string + "					<table style=\"margin-right:auto;border-spacing:5px;\">";
@@ -278,7 +274,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left;vertical-align:top\">";
-					main_div_string = main_div_string + "								<img class=\"rounded\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
+					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
 					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\">Save</button>";
 					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "							</td>";
@@ -456,8 +452,6 @@ function getProfile(screenname)
 				        		{
 				            		//alert("setUserPreference:screenname returned code 0000");
 				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
 				        			user_jo = null;
 				        			updateLogstat();
 				        		}
@@ -591,8 +585,6 @@ function getProfile(screenname)
             				
             				$("#logout_confirmation_button").click(
                         			function () {
-                        				docCookies.removeItem("email");
-                        				docCookies.removeItem("this_access_token");
                         				email = null;
                         				this_access_token = null;
                         				user_jo = null;
@@ -668,8 +660,6 @@ function getProfile(screenname)
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
 				        			user_jo = null;
 				        			updateLogstat();
 				        		}
@@ -722,8 +712,6 @@ function getProfile(screenname)
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
 				        			user_jo = null;
 				        			updateLogstat();
 				        		}
@@ -768,8 +756,6 @@ function getProfile(screenname)
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
 				        			user_jo = null;
 				        			updateLogstat();
 				        		}
@@ -813,8 +799,6 @@ function getProfile(screenname)
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
 				        			user_jo = null;
 				        			updateLogstat();
 				        		}
@@ -858,8 +842,6 @@ function getProfile(screenname)
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
 				        			user_jo = null;
 				        			updateLogstat();
 				        		}
@@ -904,8 +886,6 @@ function getProfile(screenname)
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
 				        			user_jo = null;
 				        			updateLogstat();
 				        		}
@@ -949,8 +929,6 @@ function getProfile(screenname)
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			docCookies.removeItem("email"); 
-				        			docCookies.removeItem("this_access_token");
 				        			user_jo = null;
 				        			updateLogstat();
 				        		}

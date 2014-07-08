@@ -34,7 +34,7 @@
 	bs = bs + "</div>";
  	$("#words_div").html(bs);//OK
  
- 	writeTopLevelCommentForm();
+ 	writeCommentForm(currentURLhash, "tlcf_div_" + currentURLhash); // id_to_use, target_dom_id
  	
  	$("#words_logo_link").click(
  			function () {
@@ -187,38 +187,39 @@
  }
 
  
- function writeTopLevelCommentForm()
+ function writeCommentForm(id_to_use, target_dom_id)
  {
 	 var tlcf = "";
 	 tlcf = tlcf + "<form method=post action=\"#\">"; 
-		tlcf = tlcf + "<div style=\"margin-right:auto;margin-left:auto;width:80%;\" id=\"comment_submission_form_div_" + currentURLhash + "\" style=\"padding-top:6px\">"; 
+		tlcf = tlcf + "<div style=\"margin-right:auto;margin-left:auto;width:80%;\" id=\"comment_submission_form_div_" + id_to_use + "\" style=\"padding-top:6px\">"; 
 		var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
 		var charsleft = 500;
-		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + currentURLhash) 
+		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + id_to_use) 
 				&& docCookies.getItem("saved_text") != null && docCookies.getItem("saved_text").trim().length > 0)
 		{
 			var s_text = docCookies.getItem("saved_text");
-			tlcf = tlcf + "<textarea class=\"composition-textarea\" style=\"color:black\" id=\"comment_textarea_" + currentURLhash + "\">" + s_text + "</textarea>";
+			tlcf = tlcf + "<textarea class=\"composition-textarea\" style=\"color:black\" id=\"comment_textarea_" + id_to_use + "\">" + s_text + "</textarea>";
 			charsleft = 500 -  s_text.length;
 		}
 		else	
-			tlcf = tlcf + "<textarea class=\"composition-textarea\" style=\"height:22px;color:#aaa\" id=\"comment_textarea_" + currentURLhash + "\">Say something...</textarea>";
-		tlcf = tlcf + "	<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + currentURLhash + "\">";
-		tlcf = tlcf + "		<span style=\"display:none;padding-right:3px;\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
-		tlcf = tlcf + "		<span id=\"charsleft_" + currentURLhash + "\" style=\"margin-right:3px\">" + charsleft + "</span> ";
-		tlcf = tlcf + "		<span><input id=\"comment_submission_form_submit_button_" + currentURLhash + "\" class=\"comment-submit-button\" type=button value=\"Submit\"></input></span>";
+			tlcf = tlcf + "<textarea class=\"composition-textarea\" style=\"height:22px;color:#aaa\" id=\"comment_textarea_" + id_to_use + "\">Say something...</textarea>";
+		tlcf = tlcf + "	<div id=\"char_count_and_submit_button_div_" + id_to_use + "\" style=\"width:100px;height:16px;margin-left:auto;margin-right:0px;vertical-align:middle;display:none;margin-bottom:5px\">";
+		tlcf = tlcf + "		<span style=\"display:none;padding-right:3px;\" id=\"comment_submission_progress_span_" + id_to_use + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
+		tlcf = tlcf + "		<span id=\"charsleft_" + id_to_use + "\" style=\"margin-right:3px\">" + charsleft + "</span> ";
+		tlcf = tlcf + "		<span><input id=\"comment_submission_form_submit_button_" + id_to_use + "\" class=\"comment-submit-button\" type=button value=\"Submit\"></input></span>";
 		tlcf = tlcf + "	</div>";
 		tlcf = tlcf + "</div>";
 	tlcf = tlcf + "</form>";	
-	$("#tlcf_div_" + currentURLhash).html(tlcf);
+	alert("writing " + tlcf + " to " + target_dom_id);
+	$("#" + target_dom_id).html(tlcf);
 	
-	createSubmissionFormSubmitButtonClickEvent(currentURLhash, user_jo);
- 	createFocusEventForTextarea(currentURLhash, user_jo);
- 	createBlurEventForTextarea(currentURLhash);
- 	createKeyupEventForTextarea(currentURLhash, 500);
+	createSubmissionFormSubmitButtonClickEvent(id_to_use);
+ 	createFocusEventForTextarea(id_to_use);
+ 	createBlurEventForTextarea(id_to_use);
+ 	createKeyupEventForTextarea(id_to_use, 500);
  	
- 	if(charsleft < 500 && has_scrollbar("comment_textarea_" + currentURLhash)) // if saved text and scrollbars, grow
- 			$("#comment_textarea_" + currentURLhash).trigger("keyup");
+ 	if(charsleft < 500 && has_scrollbar("comment_textarea_" + id_to_use)) // if saved text and scrollbars, grow
+ 			$("#comment_textarea_" + id_to_use).trigger("keyup");
  }
 
  

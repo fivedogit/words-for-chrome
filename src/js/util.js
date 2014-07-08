@@ -293,22 +293,21 @@ function updateNotificationTabLinkImage()
 
 function displayMessage(inc_message, inc_color, dom_id, s)
 {
-if(typeof dom_id === "undefined" || dom_id === null)
-{
-	alert("unspecified dom_id for message");
-	dom_id = "message_div_" + currentURLhash;
-}
-var ms;
-if(s === null || !$.isNumeric(s) ||  Math.floor(s) != s) // not a number or not an integer 
-	ms = 3000;
-else
-	ms = s * 1000;
-if (typeof inc_color === "undefined" || inc_color === null)
-	inc_color = "red";
-$("#" + dom_id).css("color", inc_color);
-$("#" + dom_id).text(inc_message);
-$("#" + dom_id).show();
-setTimeout(function() { $("#" + dom_id).hide();}, ms);
+	if(typeof dom_id === "undefined" || dom_id === null)
+	{
+		dom_id = "message_div_" + currentURLhash;
+	}
+	var ms;
+	if(s === null || !$.isNumeric(s) ||  Math.floor(s) != s) // not a number or not an integer 
+		ms = 3000;
+	else
+		ms = s * 1000;
+	if (typeof inc_color === "undefined" || inc_color === null)
+		inc_color = "red";
+	$("#" + dom_id).css("color", inc_color);
+	$("#" + dom_id).text(inc_message);
+	$("#" + dom_id).show();
+	setTimeout(function() { $("#" + dom_id).hide();}, ms);
 }
 
 
@@ -397,14 +396,14 @@ function isValidThreadItemId(inc_id)
  *                                                                                                                     
  */
 
-function createSubmissionFormSubmitButtonClickEvent(id, this_user_jo)
+function createSubmissionFormSubmitButtonClickEvent(id)
 {
 	 $("#comment_submission_form_submit_button_" + id).click({id: id},
 			 function (event) {
 				 
 				 $("#comment_submission_form_submit_button_" + event.data.id).attr("disabled", "disabled");
 				 $("#comment_submission_progress_span_" + event.data.id).show();
-				 if (this_user_jo) 
+				 if (user_jo) 
 				 {
 					 // no need to check for comment rating here. Backend will let the user know on submit.
 					 if ($("#comment_textarea_" + event.data.id) && $("#comment_textarea_" + event.data.id).val() != "") 
@@ -467,19 +466,19 @@ function createBlurEventForTextarea(id)
 			});
 }
 
-function createFocusEventForTextarea(id, this_user_jo)
+function createFocusEventForTextarea(id)
 {
 	 $("#comment_textarea_" + id).focus({id: id},
 			 function (event) {
 		 
-		 if(this_user_jo === null)
+		 if(user_jo === null)
 		 {
 			 displayMessage("Unable to compose comment. You are not logged in.", "red", "message_div_" + event.data.id);
 			 $("#comment_textarea_" + event.data.id).trigger("blur");
 		 }
 		 else // user logged in and rating ok
 		 {	 
-			 if(this_user_jo.rating <= -5)
+			 if(user_jo.rating <= -5)
 			 {
 				 displayMessage("Unable to compose comment. Your comment rating is too low.", "red", "message_div_" + event.data.id);
 				 $("#comment_textarea_" + event.data.id).trigger("blur");

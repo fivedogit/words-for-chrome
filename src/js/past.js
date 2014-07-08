@@ -28,8 +28,6 @@ function getPastComments()
 	}
 	else
 	{
-		var email = docCookies.getItem("email");
-		var this_access_token = docCookies.getItem("this_access_token");
 		$.ajax({
 	        type: 'GET',
 	        url: endpoint,
@@ -48,8 +46,6 @@ function getPastComments()
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
 	        			displayMessage("Your login has expired. Please relog.", "red");
-	        			docCookies.removeItem("email"); 
-	        			docCookies.removeItem("this_access_token");
 	        			user_jo = null;
 	        			updateLogstat();
 	        		}

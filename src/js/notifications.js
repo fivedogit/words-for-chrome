@@ -64,8 +64,6 @@ function getNotifications()
 		} 
 
 		// now that the user has viewed this tab, reset activity count to 0
-		var email = docCookies.getItem("email");
-		var this_access_token = docCookies.getItem("this_access_token");
 		$.ajax({
 	        type: 'GET',
 	        url: endpoint,
@@ -84,8 +82,6 @@ function getNotifications()
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
 	        			displayMessage("Your login has expired. Please relog.", "red");
-	        			docCookies.removeItem("email"); 
-	        			docCookies.removeItem("this_access_token");
 	        			user_jo = null;
 	        			updateLogstat();
 	        		}
@@ -114,15 +110,12 @@ function doNotificationItem(item_id, dom_id)
 	// if like/dislike, update header, display parent
 	// if reply, update header, display parent and child
 	// if mention, update header, display child
-	var email = docCookies.getItem("email");
-	var this_access_token = docCookies.getItem("this_access_token");
-	
 	var item_random = makeid();
 	var parent_random = makeid();
 	var fids = ""; // feed item div string
 	fids = fids + "<table style=\"width:100%\">";
 	fids = fids + "	<tr>";
-	fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + item_random + "\">";
+	fids = fids + "		<td style=\"text-align:left;width:95%\" id=\"header_td_" + item_random + "\">";
 	fids = fids + "			<div style=\"text-align:center\"><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
 	fids = fids + "		</td>";
 	fids = fids + "		<td><a href=\"#\" id=\"notification_hide_link_" + item_random + "\" style=\"text-align:right\">hide</a></td>";
@@ -132,7 +125,7 @@ function doNotificationItem(item_id, dom_id)
 	fids = fids + "	<tr id=\"parent_tr_" + parent_random + "\" style=\"display:none\">";
 	fids = fids + "		<td id=\"indent_td_" +  parent_random + "\" style=\"width:0px\"></td>";
 	fids = fids + "		<td class=\"rotated-who-wrote\" id=\"you_wrote_td_" + parent_random + "\"></td>";
-	fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + parent_random + "\">";
+	fids = fids + "		<td style=\"padding:3px;\" id=\"notification_comment_td_" + parent_random + "\">";
 	fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 	fids = fids + "		</td>";
 	fids = fids + "	</tr>";
@@ -141,7 +134,7 @@ function doNotificationItem(item_id, dom_id)
 	fids = fids + "	<tr id=\"item_tr_" + item_random + "\" style=\"display:none\">";
 	fids = fids + "		<td id=\"indent_td_" +  item_random + "\" style=\"width:15px\"></td>";
 	fids = fids + "		<td class=\"rotated-who-wrote\" id=\"they_wrote_td_" + item_random + "\"></td>";
-	fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + item_random + "\">";
+	fids = fids + "		<td style=\"padding:3px;\" id=\"notification_comment_td_" + item_random + "\">";
 	fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 	fids = fids + "		</td>";
 	fids = fids + "	</tr>";
@@ -183,8 +176,6 @@ function doNotificationItem(item_id, dom_id)
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
 	        			displayMessage("Your login has expired. Please relog.", "red");
-	        			docCookies.removeItem("email"); 
-	        			docCookies.removeItem("this_access_token");
 	        			user_jo = null;
 	        			updateLogstat();
 	        		}
