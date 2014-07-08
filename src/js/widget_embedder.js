@@ -59,7 +59,6 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		if(!alreadyfound && elementInViewport(elem)) // when found for the first time, no scrolling necessary
 		{
 			alreadyfound = true;
-			alert("iv0");
 			initializeView();
 			doThreadTab();
 		}	
@@ -68,7 +67,6 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 			if(!alreadyfound && elementInViewport(elem)) // when found for the first time...
 			{
 				alreadyfound = true;
-				alert("iv1");
 				initializeView();
 				doThreadTab();
 			}	

@@ -502,6 +502,7 @@ function createFocusEventForTextarea(id)
 	 });
 }
 
+
 /*
 function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url)
 {	

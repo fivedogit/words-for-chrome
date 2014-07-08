@@ -210,7 +210,6 @@
 		tlcf = tlcf + "	</div>";
 		tlcf = tlcf + "</div>";
 	tlcf = tlcf + "</form>";	
-	alert("writing " + tlcf + " to " + target_dom_id);
 	$("#" + target_dom_id).html(tlcf);
 	
 	createSubmissionFormSubmitButtonClickEvent(id_to_use);
@@ -250,11 +249,17 @@ function displayLogstatAsLoggedOut() {
 		return;
 	}
 	var welcomearea = "";
-	welcomearea = welcomearea + "<table style=\"border-collapse:collapse;width:80px\">";
+	welcomearea = welcomearea + "<table style=\"margin-right:auto;margin-left:auto;width:auto;border:1px solid pink;border-spacing:5px;border-collapse:separate;\">";
 	welcomearea = welcomearea + "	<tr>";
-	welcomearea = welcomearea + "		<td style=\"text-align:right;padding-right:5px;vertical-align:middle;font-size:14px;color-white;font-face:bold;\">Login:</td>";
-	welcomearea = welcomearea + "		<td style=\"width:24px;padding-right:5px;padding-left:5px\"><a href=\"#\" id=\"google_login_link\"><img id=\"google_login_img\" src=\"images/google_button_24x24.png\"></a></td>";
-	welcomearea = welcomearea + "		<td style=\"width:24px\"><a href=\"#\" id=\"facebook_login_link\"><img id=\"facebook_login_img\" src=\"images/facebook_button_24x24.png\"></a></td>";
+	welcomearea = welcomearea + "		<td style=\"text-align:right;font-size:14px;font-face:bold;\">";
+	welcomearea = welcomearea + " 			Login:";
+	welcomearea = welcomearea + " 		</td>";
+	welcomearea = welcomearea + "		<td>";
+	welcomearea = welcomearea + " 			<a href=\"#\" id=\"google_login_link\"><img id=\"google_login_img\" style=\"width:24px;height:24px\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"></a>";
+	welcomearea = welcomearea + "		</td>";
+	welcomearea = welcomearea + "		<td>";
+	welcomearea = welcomearea + " 			<a href=\"#\" id=\"facebook_login_link\"><img id=\"facebook_login_img\" style=\"width:24px;height:24px\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"></a>";
+	welcomearea = welcomearea + " 		</td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
 	$("#logstat_td").html(welcomearea); //OK
@@ -264,7 +269,7 @@ function displayLogstatAsLoggedOut() {
 		temphtml = $("#header_div_top").html();//OK (getter)
 		$("#comment_submission_form_div_" + currentURLhash).hide();
 		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>WORDS cannot post on your behalf nor access any non-basic information.<br>Your WORDS identity is separate and anonymous.</span>");//OK
-		$("#google_login_img").attr("src","images/google_button_24x24_mo.png");
+		$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24_mo.png"));
 		$("#tab_tooltip_td").text("Login with Google");
 		return false;
 	});
@@ -273,7 +278,7 @@ function displayLogstatAsLoggedOut() {
 		$("#header_div_top").html(temphtml);//OK
 		if(tabmode === "thread")
 			$("#comment_submission_form_div_" + currentURLhash).show();
-		$("#google_login_img").attr("src","images/google_button_24x24.png");
+		$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24.png"));
 		if(tabmode === "thread")
 				$("#tab_tooltip_td").text("Comments");
 			else if(tabmode === "trending")
@@ -291,7 +296,7 @@ function displayLogstatAsLoggedOut() {
 		temphtml = $("#header_div_top").html();//OK (getter)
 		$("#comment_submission_form_div_" + currentURLhash).hide();
 		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>WORDS cannot post to Facebook nor access any non-basic information.<br>Your WORDS identity is separate and anonymous.</span>");//OK
-		$("#facebook_login_img").attr("src","images/facebook_button_24x24_mo.png");
+		$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24_mo.png"));
 		$("#tab_tooltip_td").text("Login with FB");
 		return false;
 	});
@@ -300,7 +305,7 @@ function displayLogstatAsLoggedOut() {
 		$("#header_div_top").html(temphtml);//OK
 		if(tabmode === "thread")
 			$("#comment_submission_form_div_" + currentURLhash).show();
-		$("#facebook_login_img").attr("src","images/facebook_button_24x24.png");
+		$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24.png"));
 		if(tabmode === "thread")
 				$("#tab_tooltip_td").text("Comments");
 			else if(tabmode === "trending")
@@ -316,9 +321,12 @@ function displayLogstatAsLoggedOut() {
 	
 	
 	$("#google_login_link").click(
-			function () {
+			function (event) {
+				alert("g");
+				event.preventDefault();
 				var currenttabid;
 				chrome.tabs.getSelected(null, function(tab) { 
+					alert("got selected");
 					currenttabid = tab.id; 
 					docCookies.setItem("last_tab_id", currenttabid, 31536e3);
 					// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
@@ -327,12 +335,14 @@ function displayLogstatAsLoggedOut() {
 					// or they have it and it HAS expired
 					// or they don't have it at all.
 					// NEW: JUST SEND USER TO RECEIVER, NO MATTER WHAT. LET RECEIVER HANDLE ALL ACCESS TOKEN VALIDITY JUDGEMENT AND RETRIEVAL
+					alert("creating");
 					chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=google"});
 				});
 			});
 	
 	$("#facebook_login_link").click(
-			function () {
+			function (event) {
+				event.preventDefault();
 				var currenttabid;
 				chrome.tabs.getSelected(null, function(tab) { 
 					currenttabid = tab.id; 
@@ -397,9 +407,8 @@ function displayLogstatAsLoggedIn() {
 								function (event) {
 									$("#header_div_top").html(event.data.prev);//OK
 									//alert(event.data.altuser.email + " " + event.data.altuser.this_access_token);
-									docCookies.setItem("email", event.data.altuser.email, 31536e3);
-									docCookies.setItem("this_access_token", event.data.altuser.this_access_token, 31536e3);
-									bg.getUser(false); // this is the ONLY synchronous getUser request bc this feature is only accessible by admins anyway
+									//bg.getUser(false); // this is the ONLY synchronous getUser request bc this feature is only accessible by admins anyway
+									//user_jo = get from background and reload?
 									displayLogstatAsLoggedIn();
 									return;
 								});
