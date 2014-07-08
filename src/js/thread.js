@@ -121,7 +121,7 @@ function gotThread()
     			        success: function (data, status) {
     			        	if(data.response_status === "success")
     			        	{
-    			        		$("#pagelike_img").attr("src", "images/star_16x16.png");
+    			        		$("#pagelike_img").attr("src", chrome.extension.getURL("images/star_16x16.png"));
     			        		if(thread_jo.combined_or_separated === "separated")	
     			        			displayMessage("Page liked.", "black");
     			        		else
@@ -130,7 +130,7 @@ function gotThread()
     			        	}
     			        	else if(data.response_status === "error")
     			        	{
-    			        		$("#pagelike_img").attr("src", "images/star_grayscale_16x16.png");
+    			        		$("#pagelike_img").attr("src", chrome.extension.getURL("images/star_grayscale_16x16.png"));
     			        		displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
     			        		if(data.error_code && data.error_code === "0000")
     			        		{
@@ -143,7 +143,7 @@ function gotThread()
     			        	}	
     			        },
     			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-    			        	$("#pagelike_img").attr("src", "images/star_grayscale_16x16.png");
+    			        	$("#pagelike_img").attr("src", chrome.extension.getURL("images/star_grayscale_16x16.png"));
     			        	displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
     			        	console.log(textStatus, errorThrown);
     			        }
@@ -172,7 +172,7 @@ function gotThread()
 		        	else if (data.response_status === "success")
 		        	{
 		        		if(data.response_value === true)
-		        			$("#pagelike_img").attr("src","images/star_16x16.png");
+		        			$("#pagelike_img").attr("src", chrome.extension.getURL("images/star_16x16.png"));
 		        	}
 		        },
 		        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -200,7 +200,7 @@ function gotThread()
 		        	else if (data.response_status === "success")
 		        	{
 		        		if(data.response_value === true)
-		        			$("#follow_img").attr("src","images/follow_on_12x16.png");
+		        			$("#follow_img").attr("src", chrome.extension.getURL("images/follow_on_12x16.png"));
 		        	}
 		        },
 		        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -274,7 +274,7 @@ function gotThread()
 	    			        success: function (data, status) {
 	    			        	if(data.response_status === "success")
 	    			        	{
-	    			        		$("#follow_img").attr("src", "images/follow_on_12x16.png");
+	    			        		$("#follow_img").attr("src", chrome.extension.getURL("images/follow_on_12x16.png"));
 	    			        		displayMessage("You are now following this page.", "black");
 	    			        	}
 	    			        	else if(data.response_status === "error")
@@ -306,7 +306,7 @@ function gotThread()
 	    			        success: function (data, status) {
 	    			        	if(data.response_status === "success")
 	    			        	{
-	    			        		$("#follow_img").attr("src", "images/follow_off_12x16.png");
+	    			        		$("#follow_img").attr("src", chrome.extension.getURL("images/follow_off_12x16.png"));
 	    			        		displayMessage("You are no longer following this page.", "black");
 	    			        	}
 	    			        	else if(data.response_status === "error")
@@ -352,7 +352,7 @@ function gotThread()
 						        	else if (data.response_status === "success")
 						        	{
 						        		displayMessage("Hostname separated.", "red", "message_div_" + currentURLhash);
-						        		$("#separated_or_combined_img").attr("src", "images/separated_icon.png");
+						        		$("#separated_or_combined_img").attr("src", chrome.extension.getURL("images/separated_icon.png"));
 						        	}
 						        },
 						        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -382,7 +382,7 @@ function gotThread()
 						        	else if (data.response_status === "success")
 						        	{
 						        		displayMessage("Hostname combined.", "red", "message_div_" + currentURLhash);
-						        		$("#separated_or_combined_img").attr("src", "images/combined_icon.png");
+						        		$("#separated_or_combined_img").attr("src", chrome.extension.getURL("images/combined_icon.png"));
 						        	}
 						        },
 						        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -579,10 +579,10 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "	</tr>";
 			main_div_string = main_div_string + "	<tr>";
 			main_div_string = main_div_string + "		<td id=\"most_active_pages_on_this_site_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
-			main_div_string = main_div_string + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+			main_div_string = main_div_string + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 			main_div_string = main_div_string + "		</td>";
 			main_div_string = main_div_string + "		<td id=\"most_liked_pages_on_this_site_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
-			main_div_string = main_div_string + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+			main_div_string = main_div_string + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 			main_div_string = main_div_string + "		</td>";
 			main_div_string = main_div_string + "	</tr>";
 			main_div_string = main_div_string + "</table>";
@@ -759,8 +759,8 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 			comment_div_string = comment_div_string + "<div id=\"comment_outer_container_div_" + comment_id + "\">";
 		comment_div_string = comment_div_string + "		    <div class=\"complete-horiz-line-div\" id=\"complete_horiz_line_div_" + comment_id + "\"></div>";
 		comment_div_string = comment_div_string + "		    <div class=\"message-div\" id=\"message_div_" + comment_id + "\" style=\"display:none\"></div>";
-		comment_div_string = comment_div_string + "				<div class=\"comment-div\" id=\"comment_div_" + comment_id + "\">";
-		comment_div_string = comment_div_string + "					<span style=\"padding:20px\"><img src=\"images/ajaxSnake.gif\"></span>";
+		comment_div_string = comment_div_string + "				<div style=\"padding: 5px;\" id=\"comment_div_" + comment_id + "\">";
+		comment_div_string = comment_div_string + "					<span style=\"padding:20px\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
 		comment_div_string = comment_div_string + "				</div>";
 		if(!$("#comment_outer_container_div_" + comment_id).length)
 			comment_div_string = comment_div_string + "</div>"; // end container div
@@ -905,12 +905,12 @@ function writeComment(feeditem_jo, dom_id)
 	
 	var tempstr = "";
 	var	numvotes = feeditem_jo.likes.length + feeditem_jo.dislikes.length;
+	tempstr = tempstr + "<table style=\"border:0px solid orange\">";
+	tempstr = tempstr + "	<tr>";
 	if (feeditem_jo.hidden === "true" || feeditem_jo.hidden === true)
 	{
-		tempstr = tempstr + "<table>";
-		tempstr = tempstr + "	<tr>";
-		tempstr = tempstr + "		<td style=\"vertical-align:top;width:48px;\">";
-		tempstr = tempstr + "			<table>";
+		tempstr = tempstr + "		<td style=\"vertical-align:top;width:48px;border:0px solid green\">";
+		tempstr = tempstr + "			<table style=\"border:0px solid red\">";
 		tempstr = tempstr + "				<tr>";
 		tempstr = tempstr + "					<td><img style=\"width:48px;height:48px;border-radius:4px\" src=\"" + chrome.extension.getURL("images/48avatar_ghosted.png") + "\"></td>";
 		tempstr = tempstr + "				</tr>";
@@ -919,17 +919,12 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "		<td style=\"padding:5px;vertical-align:middle;text-align:left\" >";
 		tempstr = tempstr + "			Comment deleted";
 		tempstr = tempstr + "		</td>";
-		tempstr = tempstr + "	</tr>";
-		tempstr = tempstr + "</table>";
 	}
 	else
 	{
-		tempstr = tempstr + "<table>";
-		tempstr = tempstr + "	<tr>";
-		
 		// show this user's info
-		tempstr = tempstr + "		<td style=\"vertical-align:top;width:48px;\"> <!-- avatar, left hand side -->"; 
-		tempstr = tempstr + "			<table>";
+		tempstr = tempstr + "		<td style=\"vertical-align:top;width:48px;border:0px solid green\"> <!-- avatar, left hand side -->"; 
+		tempstr = tempstr + "			<table style=\"border:0px solid red\">";
 		tempstr = tempstr + "				<tr>";
 		tempstr = tempstr + "					<td> ";
 		tempstr = tempstr + "						<img style=\"width:48px;height:48px;border-radius:4px\" id=\"author_picture_img_" + comment_id + "\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
@@ -949,13 +944,15 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "			</table>";
 		tempstr = tempstr + "		</td>";
 		tempstr = tempstr + "		<td> <!-- everything else, right-hand side -->";
-		tempstr = tempstr + "			<table>";
+		tempstr = tempstr + "			<table  style=\"border:0px solid purple\">";
 		tempstr = tempstr + "				<tr>";
 		tempstr = tempstr + "					<td style=\"vertical-align:middle;text-align:left;border:0px solid black\" > "; 
-		tempstr = tempstr + "						<table style=\"width:100%;float:left;border:0px solid black;vertical-align:middle;\">";
+		tempstr = tempstr + "						<table style=\"width:100%;float:left;border:0px solid brown;vertical-align:middle; border-collapse: separate\">";
 		tempstr = tempstr + "							<tr> ";
-		tempstr = tempstr + "		  					 	<td style=\"width:50%;vertical-align:middle\"><span id=\"screenname_span_" + comment_id + "\" style=\"padding:5px;color:blue\"></span> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span></td>";
-		tempstr = tempstr + "		  					 	<td style=\"width:100%\"></td>"; // separator
+		tempstr = tempstr + "		  					 	<td style=\"vertical-align:middle;text-align:left;border:0px solid pink;padding-left:5px\">";
+		tempstr = tempstr + "		  					 		<a href=\"#\" id=\"screenname_link_" + comment_id + "\"></a> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span>";
+		tempstr = tempstr + "		  					 	</td>";
+		//tempstr = tempstr + "		  					 	<td style=\"width:20%;border:0px solid cyan\"></td>"; // separator
 		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:green;text-align:right;vertical-align:middle;padding-right:3px\" id=\"comment_likes_count_td_" + comment_id + "\"></td>";
 		if (tabmode === "thread") 
         {
@@ -1012,10 +1009,10 @@ function writeComment(feeditem_jo, dom_id)
 	  	}
 	  	tempstr = tempstr + "			</table>";
 	  	tempstr = tempstr + "		</td>";
-	  	tempstr = tempstr + "	</tr>";
-	  	tempstr = tempstr + "</table>"
 	}
-	
+ 	tempstr = tempstr + "	</tr>";
+  	tempstr = tempstr + "</table>"
+  	
 	$("#" + dom_id).html(tempstr);//OK
 	$("[id=author_picture_img_" + comment_id + "]").attr("src", feeditem_jo.author_picture);
 	var left_percentage = 0;
@@ -1049,7 +1046,7 @@ function writeComment(feeditem_jo, dom_id)
 	$("[id=author_rating_center_td_" + comment_id + "]").css("width", center_percentage + "%");
 	$("[id=author_rating_center_td_" + comment_id + "]").css("background-color", ratingcolor);
 	$("[id=author_rating_right_td_" + comment_id + "]").css("width", right_percentage + "%");
-	$("[id=screenname_span_" + comment_id + "]").text(feeditem_jo.author_screenname);
+	$("[id=screenname_link_" + comment_id + "]").text(feeditem_jo.author_screenname);
 	$("[id=time_ago_span_" + comment_id + "]").text(feeditem_jo.time_ago);
 	$("[id=comment_likes_count_td_" + comment_id + "]").text(feeditem_jo.likes.length);
 	$("[id=comment_dislikes_count_td_" + comment_id + "]").text(feeditem_jo.dislikes.length);
@@ -1460,12 +1457,12 @@ function likeOrDislikeComment(id, like_or_dislike)
 {
 	if(like_or_dislike === "like")
 	{
-		$("#like_img_" + id).attr("src", "images/like_snake.gif");
+		$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_snake.gif"));
 		//alert("like snake");
 	}
 	else
 	{
-		$("#dislike_img_" + id).attr("src", "images/dislike_snake.gif");
+		$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_snake.gif"));
 		//alert("dislike snake");
 	}
 	if(user_jo != null)
@@ -1484,9 +1481,9 @@ function likeOrDislikeComment(id, like_or_dislike)
 			async: true,
 			success: function (data, status) {
 				if(like_or_dislike === "like")
-					$("#like_img_" + id).attr("src", "images/like_arrow.png");
+					$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_arrow.png"));
 				else
-					$("#dislike_img_" + id).attr("src", "images/dislike_arrow.png");
+					$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow.png"));
 				if (data.response_status === "error") 
 				{
 					displayMessage(data.message, "red", "message_div_" + id);
@@ -1515,9 +1512,9 @@ function likeOrDislikeComment(id, like_or_dislike)
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 				if(like_or_dislike === "like")
-					$("#like_img_" + id).attr("src", "images/like_arrow.png");
+					$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_arrow.png"));
 				else
-					$("#dislike_img_" + id).attr("src", "images/dislike_arrow.png");
+					$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow.png"));
 				displayMessage("Ajax error addCommentLikeOrDislike: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + id);
 				console.log(textStatus, errorThrown);
 			} 
@@ -1526,9 +1523,9 @@ function likeOrDislikeComment(id, like_or_dislike)
 	else
 	{
 		if(like_or_dislike === "like")
-			$("#like_img_" + id).attr("src", "images/like_arrow.png");
+			$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_arrow.png"));
 		else
-			$("#dislike_img_" + id).attr("src", "images/dislike_arrow.png");
+			$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow.png"));
 		displayMessage("Please login first.", "red", "message_div_" + id);
 	}		 
 }

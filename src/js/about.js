@@ -41,7 +41,7 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
-	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
+	if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
 		aboutmessage = aboutmessage + " - <a href=\"#\" id=\"share_to_gmail_link\">Gmail</a> ";
 	aboutmessage = aboutmessage + "</li>";
 	aboutmessage = aboutmessage + "<li>Rate 5 stars <a href=\"#\" id=\"rate_5_stars_link\">here</a></li>";
@@ -57,7 +57,7 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "</ol>";
 	aboutmessage = aboutmessage + "		</td>";
 	aboutmessage = aboutmessage + "		<td>";
-	aboutmessage = aboutmessage + "<figure style=\"width;150px\"><img src=\"images/happy_noanimation.gif\" style=\"border:1px solid black\"></img><figcaption style=\"font-size:10px;font-style:italic\">fivedogit, the developer.<br>Actual face.</figcaption></figure>";
+	aboutmessage = aboutmessage + "<figure style=\"width;150px\"><img src=\"" + chrome.extension.getURL("images/happy_noanimation.gif") + "\" style=\"border:1px solid black\"></img><figcaption style=\"font-size:10px;font-style:italic\">fivedogit, the developer.<br>Actual face.</figcaption></figure>";
 	aboutmessage = aboutmessage + "		</td>";
 	aboutmessage = aboutmessage + "	</tr>";
 	aboutmessage = aboutmessage + "</table>";
@@ -92,7 +92,7 @@ function doAboutTab(message)
 	noteImpressionAndCreateHandler("twittershare", "about", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
  	noteImpressionAndCreateHandler("googleplusshare", "about", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
  	noteImpressionAndCreateHandler("tumblrshare", "about", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
- 	if(typeof bg.user_jo !== undefined && bg.user_jo !== null && bg.user_jo.email !== "undefined" && bg.user_jo.email !== null && bg.user_jo.email.endsWith("@gmail.com"))
+ 	if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
  			noteImpressionAndCreateHandler("gmailshare", "about", "share_to_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=WORDS%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
 	
 	noteImpressionAndCreateHandler("coinbase2", "about", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");

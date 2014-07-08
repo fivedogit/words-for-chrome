@@ -724,7 +724,7 @@ function doFinished(from_registration, social_access_token)
             		message = message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
             		message = message + "		You are now logged in.";
             		message = message + "	</div>";
-            		message = message + "	<div id=\"image_choice_progress_div\"><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></div>";
+            		message = message + "	<div id=\"image_choice_progress_div\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>";
             		message = message + "	<div id=\"image_choice_div\" style=\"display:none\">";
             		message = message + " 		Use your " + capitalized_login_type  + " image as your WORDS profile pic?";
             		message = message + "		<table style=\"padding-top:10px;margin-right:auto;margin-left:auto\">";

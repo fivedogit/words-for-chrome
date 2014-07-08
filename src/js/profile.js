@@ -14,17 +14,17 @@ function viewProfile(screenname)
 {
 	tabmode = "profile";
 	//updateNotificationTabLinkImage();
-	$("#thread_tab_img").attr("src", "images/chat_gray.png");
-	$("#trending_tab_img").attr("src", "images/trending_gray.png");
+	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_gray.png"));
+	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_gray.png"));
 	updateNotificationTabLinkImage();
-	$("#past_tab_img").attr("src", "images/clock_gray.png");
-	$("#profile_tab_img").attr("src", "images/user_blue.png");
+	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
+	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_blue.png"));
 	
 	$("#utility_div").show();
 	$("#header_div_top").text("Profile");
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
-	if (bg.user_jo != null)
+	if (user_jo != null)
 	{	
 		getProfile(screenname);
 	}
@@ -48,7 +48,7 @@ function getProfile(screenname)
 {
 	var main_div_string = "";
 	var target_user_jo;
-	if (typeof bg.user_jo ==="undefined" || bg.user_jo === null) // not logged in nor was a target specified, 
+	if (typeof user_jo ==="undefined" || user_jo === null) // not logged in nor was a target specified, 
 	{									
 		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to see user profiles.</div>");//OK
 	}
@@ -67,7 +67,7 @@ function getProfile(screenname)
 		data: {
             method: "getUserByScreenname",
             email: email,             // this can be called with no email
-            this_access_token: this_access_token,   // this can be called with no this_access_token,bg.user_jo will just come back erroneous
+            this_access_token: this_access_token,   // this can be called with no this_access_token,user_jo will just come back erroneous
             screenname: screenname // the screenname of the user to get. Backend will determine if self, provide correct response
         },
         dataType: 'json',
@@ -83,7 +83,7 @@ function getProfile(screenname)
         			displayMessage("Your login has expired. Please relog.", "red");
         			docCookies.removeItem("email"); 
         			docCookies.removeItem("this_access_token");
-        			bg.user_jo = null;
+        			user_jo = null;
         			updateLogstat();
         		}
             }
@@ -291,7 +291,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "								<input type=text id=\"screenname_change_input\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td>";
-					main_div_string = main_div_string + "								<span style=\"margin-left:2px;border:0px black solid;display:none\" id=\"screenname_availability_span\"><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\"></span>";
+					main_div_string = main_div_string + "								<span style=\"margin-left:2px;border:0px black solid;display:none\" id=\"screenname_availability_span\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></span>";
 					main_div_string = main_div_string +	"							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
@@ -347,7 +347,7 @@ function getProfile(screenname)
             		$("#profile_page_seen_td").text("hidden");
             	}	
             	
-            	$("#avatar_img").attr("src", bg.user_jo.picture);
+            	$("#avatar_img").attr("src", user_jo.picture);
             	
             	$("#screenname_available_button").click(
             			function () 
@@ -458,7 +458,7 @@ function getProfile(screenname)
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
+				        			user_jo = null;
 				        			updateLogstat();
 				        		}
 				        	}
@@ -468,7 +468,7 @@ function getProfile(screenname)
 				        		setTimeout( function () { 
 									$("#screenname_result_td").text("");
 								}, 3000);
-				        		bg.user_jo.screenname = $("#screenname_change_input").val();
+				        		user_jo.screenname = $("#screenname_change_input").val();
 				        		displayLogstatAsLoggedIn(); //updateLogstat();
 				        		viewProfile($("#screenname_change_input").val());
 				        		$("#screenname_change_input").val("");
@@ -482,17 +482,17 @@ function getProfile(screenname)
 					});
             	});
 
-        		if(bg.user_jo.picture.indexOf("unicornify.appspot.com") != -1)
+        		if(user_jo.picture.indexOf("unicornify.appspot.com") != -1)
         			$("#use_unicorn_radio").prop('checked', true);
-        		else if(bg.user_jo.picture.indexOf("d=identicon") != -1)
+        		else if(user_jo.picture.indexOf("d=identicon") != -1)
         			$("#use_geometric_radio").prop('checked', true);
-        		else if(bg.user_jo.picture.indexOf("d=mm") != -1)
+        		else if(user_jo.picture.indexOf("d=mm") != -1)
         			$("#use_silhouette_radio").prop('checked', true);
-        		else if(bg.user_jo.picture.indexOf("d=retro") != -1)
+        		else if(user_jo.picture.indexOf("d=retro") != -1)
         			$("#use_retro_radio").prop('checked', true);
-        		else if(bg.user_jo.picture.indexOf("d=wavatar") != -1)
+        		else if(user_jo.picture.indexOf("d=wavatar") != -1)
         			$("#use_cartoonface_radio").prop('checked', true);
-        		else if(bg.user_jo.picture.indexOf("d=monsterid") != -1)
+        		else if(user_jo.picture.indexOf("d=monsterid") != -1)
         			$("#use_monster_radio").prop('checked', true);
         		
             	
@@ -527,7 +527,7 @@ function getProfile(screenname)
             		//alert("nyi image=" + $("#avatar_img").attr("src"));
             		$.ajax({
             			type: 'GET',
-            			url: bg.endpoint,
+            			url: endpoint,
             			data: {
             				method: "savePicture",
             				email: email,             
@@ -543,9 +543,9 @@ function getProfile(screenname)
             				}
             				else if(data.response_status === "success")
             				{
-            					bg.user_jo.picture = $("#avatar_img").attr("src");
-            					$("#large_avatar_img").attr("src", bg.user_jo.picture);
-				        		$("#logged_in_profile_img").attr("src", bg.user_jo.picture);
+            					user_jo.picture = $("#avatar_img").attr("src");
+            					$("#large_avatar_img").attr("src", user_jo.picture);
+				        		$("#logged_in_profile_img").attr("src", user_jo.picture);
             					$("#avatar_save_span").text(" saved");
             					setTimeout(function() {$("#avatar_save_span").text("");}, 2000);
             				}	
@@ -570,11 +570,11 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "	</tr>";
             				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:11px;font-style:italic\">";
-            				if(bg.user_jo.last_login_type === "google")
+            				if(user_jo.last_login_type === "google")
             				{
             					logoutmessage = logoutmessage + "To use a different Google account, click LOGOUT below, <b>restart your browser</b>, then log back in.";
             				}	
-            				else if(bg.user_jo.last_login_type === "facebook")
+            				else if(user_jo.last_login_type === "facebook")
             				{
             					logoutmessage = logoutmessage + "To use a different Facebook account, click LOGOUT below, <b>restart your browser</b>, then log back in.";
             				}	
@@ -595,7 +595,7 @@ function getProfile(screenname)
                         				docCookies.removeItem("this_access_token");
                         				email = null;
                         				this_access_token = null;
-                        				bg.user_jo = null;
+                        				user_jo = null;
                         				displayLogstatAsLoggedOut();
                         				doThreadTab();
                         			});
@@ -603,39 +603,39 @@ function getProfile(screenname)
             				return;
             			});
             
-            	if (bg.user_jo.overlay_size === 600)
+            	if (user_jo.overlay_size === 600)
             		$("#size_selector").val("wide");
-            	else if (bg.user_jo.overlay_size === 450)
+            	else if (user_jo.overlay_size === 450)
             		$("#size_selector").val("medium");
             	
-            	if (bg.user_jo.onlike === "email")
+            	if (user_jo.onlike === "email")
             		$("#onlike_selector").val("email");
-            	else if (bg.user_jo.onlike === "do nothing")
+            	else if (user_jo.onlike === "do nothing")
             		$("#onlike_selector").val("do nothing");
             	
-            	if (bg.user_jo.ondislike === "email")
+            	if (user_jo.ondislike === "email")
             		$("#ondislike_selector").val("email");
-            	else if (bg.user_jo.ondislike === "do nothing")
+            	else if (user_jo.ondislike === "do nothing")
             		$("#ondislike_selector").val("do nothing");
             	
-            	if (bg.user_jo.onreply === "email")
+            	if (user_jo.onreply === "email")
             		$("#onreply_selector").val("email");
-            	else if (bg.user_jo.onreply === "do nothing")
+            	else if (user_jo.onreply === "do nothing")
             		$("#onreply_selector").val("do nothing");
             	
-            	if (bg.user_jo.onmention === "email")
+            	if (user_jo.onmention === "email")
             		$("#onmention_selector").val("email");
-            	else if (bg.user_jo.onmention === "do nothing")
+            	else if (user_jo.onmention === "do nothing")
             		$("#onmention_selector").val("do nothing");
 
-            	if (bg.user_jo.onfollowcomment === "email")
+            	if (user_jo.onfollowcomment === "email")
             		$("#onfollowcomment_selector").val("email");
-            	else if (bg.user_jo.onfollowcomment === "do nothing")
+            	else if (user_jo.onfollowcomment === "do nothing")
             		$("#onfollowcomment_selector").val("do nothing");
             	
-            	if (bg.user_jo.emailpromos === "email")
+            	if (user_jo.emailpromos === "email")
             		$("#emailpromos_selector").val("email");
-            	else if (bg.user_jo.emailpromos === "do nothing")
+            	else if (user_jo.emailpromos === "do nothing")
             		$("#emailpromos_selector").val("do nothing");
             	
             	
@@ -657,10 +657,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("#size_result_td").text("Error: " + data.message);
-				        		// on error, reset the selector to the bg.user_jo value
-				        		if (bg.user_jo.overlay_size === 600)
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.overlay_size === 600)
 				            		$("#size_selector").val("wide");
-				            	else if (bg.user_jo.overlay_size === 450)
+				            	else if (user_jo.overlay_size === 450)
 				            		$("#size_selector").val("medium");
 				            	else
 				            		$("#size_selector").val("medium");
@@ -670,7 +670,7 @@ function getProfile(screenname)
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
+				        			user_jo = null;
 				        			updateLogstat();
 				        		}
 				        	}
@@ -678,12 +678,12 @@ function getProfile(screenname)
 				        	{
 				        		$("#size_result_td").text("updated");
 				        		if($("#size_selector").val() === "wide")
-				        			bg.user_jo.overlay_size = 600;
+				        			user_jo.overlay_size = 600;
 				        		else if($("#size_selector").val() === "medium")
-				        			bg.user_jo.overlay_size = 450;
+				        			user_jo.overlay_size = 450;
 				        		else
-				        			bg.user_jo.overlay_size = 450;
-				        		$("body").css("width", bg.user_jo.overlay_size + "px");
+				        			user_jo.overlay_size = 450;
+				        		$("body").css("width", user_jo.overlay_size + "px");
 				        	}
 				        	setTimeout(function(){$("#size_result_td").text("");},3000);
 				        }
@@ -713,10 +713,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("#onlike_result_td").text("Error: " + data.message);
-				        		// on error, reset the selector to the bg.user_jo value
-				        		if (bg.user_jo.onlike === "email")
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.onlike === "email")
 				            		$("#onlike_selector").val("email");
-				            	else if (bg.user_jo.onlike === "do nothing")
+				            	else if (user_jo.onlike === "do nothing")
 				            		$("#onlike_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
@@ -724,7 +724,7 @@ function getProfile(screenname)
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
+				        			user_jo = null;
 				        			updateLogstat();
 				        		}
 				        	}
@@ -759,10 +759,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("#ondislike_result_td").text("Error: " + data.message);
-				        		// on error, reset the selector to the bg.user_jo value
-				        		if (bg.user_jo.ondislike === "email")
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.ondislike === "email")
 				            		$("#ondislike_selector").val("email");
-				            	else if (bg.user_jo.ondislike === "do nothing")
+				            	else if (user_jo.ondislike === "do nothing")
 				            		$("#ondislike_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
@@ -770,7 +770,7 @@ function getProfile(screenname)
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
+				        			user_jo = null;
 				        			updateLogstat();
 				        		}
 				        	}
@@ -804,10 +804,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("#onreply_result_td").text("Error: " + data.message);
-				        		// on error, reset the selector to the bg.user_jo value
-				        		if (bg.user_jo.onreply === "email")
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.onreply === "email")
 				            		$("#onreply_selector").val("email");
-				            	else if (bg.user_jo.onreply === "do nothing")
+				            	else if (user_jo.onreply === "do nothing")
 				            		$("#onreply_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
@@ -815,7 +815,7 @@ function getProfile(screenname)
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
+				        			user_jo = null;
 				        			updateLogstat();
 				        		}
 				        	}
@@ -849,10 +849,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("#onmention_result_td").text("Error: " + data.message);
-				        		// on error, reset the selector to the bg.user_jo value
-				        		if (bg.user_jo.onmention === "email")
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.onmention === "email")
 				            		$("#onmention_selector").val("email");
-				            	else if (bg.user_jo.onmention === "do nothing")
+				            	else if (user_jo.onmention === "do nothing")
 				            		$("#onmention_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
@@ -860,7 +860,7 @@ function getProfile(screenname)
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
+				        			user_jo = null;
 				        			updateLogstat();
 				        		}
 				        	}
@@ -895,10 +895,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("#onfollowcomment_result_td").text("Error: " + data.message);
-				        		// on error, reset the selector to the bg.user_jo value
-				        		if (bg.user_jo.onfollowcomment === "email")
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.onfollowcomment === "email")
 				            		$("#onfollowcomment_selector").val("email");
-				            	else if (bg.user_jo.onfollowcomment === "do nothing")
+				            	else if (user_jo.onfollowcomment === "do nothing")
 				            		$("#onfollowcomment_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
@@ -906,7 +906,7 @@ function getProfile(screenname)
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
+				        			user_jo = null;
 				        			updateLogstat();
 				        		}
 				        	}
@@ -940,10 +940,10 @@ function getProfile(screenname)
 				        	if (data.response_status === "error")
 				        	{
 				        		$("#emailpromos_result_td").text("Error: " + data.message);
-				        		// on error, reset the selector to the bg.user_jo value
-				        		if (bg.user_jo.emailpromos === "email")
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.emailpromos === "email")
 				            		$("#emailpromos_selector").val("email");
-				            	else if (bg.user_jo.emailpromos === "do nothing")
+				            	else if (user_jo.emailpromos === "do nothing")
 				            		$("#emailpromos_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
 				            	if(data.error_code && data.error_code === "0000")
@@ -951,7 +951,7 @@ function getProfile(screenname)
 				        			displayMessage("Your login has expired. Please relog.", "red");
 				        			docCookies.removeItem("email"); 
 				        			docCookies.removeItem("this_access_token");
-				        			bg.user_jo = null;
+				        			user_jo = null;
 				        			updateLogstat();
 				        		}
 				        	}

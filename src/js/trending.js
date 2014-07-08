@@ -11,11 +11,11 @@
 function doTrendingTab()
 {
 	tabmode = "trending";
-	$("#thread_tab_img").attr("src", "images/chat_gray.png");
-	$("#trending_tab_img").attr("src", "images/trending_blue.png");
+	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_gray.png"));
+	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_blue.png"));
 	updateNotificationTabLinkImage();
-	$("#past_tab_img").attr("src", "images/clock_gray.png");
-	$("#profile_tab_img").attr("src", "images/user_gray.png");
+	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
+	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	//updateNotificationTabLinkImage();
 
 	$("#utility_div").show();
@@ -34,10 +34,10 @@ function doTrendingTab()
 	mds = mds + "	</tr>";
 	mds = mds + "	<tr>";
 	mds = mds + "		<td id=\"most_active_pages_td\" style=\"width:50%;vertical-align:top\">";
-	mds = mds + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+	mds = mds + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 	mds = mds + "		</td>";
 	mds = mds + "		<td id=\"most_liked_pages_td\" style=\"width:50%;vertical-align:top\">";
-	mds = mds + "<br><img src=\"images/ajaxSnake.gif\" style=\"width:16px;height16px;border:0px\">";
+	mds = mds + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 	mds = mds + "		</td>";
 	mds = mds + "	</tr>";
 	mds = mds + "</table>";
@@ -156,7 +156,7 @@ function drawTrendingChart(data, dom_id)
 		{
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"text-align:left;padding-top:3px;vertical-align:top;width:16px\">";
-			mds = mds + "			<img id=\"google_favicon_img_" + rand + "_" + x + "\" src=\"images/ajaxSnake.gif\" style=\"vertical-align:middle\"> ";
+			mds = mds + "			<img id=\"google_favicon_img_" + rand + "_" + x + "\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"vertical-align:middle\"> ";
 			mds = mds + "		</td>";
 			mds = mds + "		<td id=\"page_title_td_" + rand + "_" + x + "\" style=\"text-align:left;padding-top:3px;padding-left:3px;font-size:10px\">";
 			mds = mds + "		</td>";

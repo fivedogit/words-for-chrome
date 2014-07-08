@@ -28,20 +28,20 @@ function doNotificationsTab()
 
 function getNotifications()
 {
-	if (typeof bg.user_jo==="undefined" || bg.user_jo === null)
+	if (typeof user_jo==="undefined" || user_jo === null)
 	{
 		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to view your activity feed.</div>");//OK
 	}
 	else
 	{
 		
-		if (typeof bg.user_jo.activity_ids === "undefined" || bg.user_jo.activity_ids === null || bg.user_jo.activity_ids.length === 0)
+		if (typeof user_jo.activity_ids === "undefined" || user_jo.activity_ids === null || user_jo.activity_ids.length === 0)
 		{
 			$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">No activity to display.</div>");//OK
 		}
 		else
 		{
-			var sorted_activity_ids = bg.user_jo.activity_ids;
+			var sorted_activity_ids = user_jo.activity_ids;
 			sorted_activity_ids.sort(function(a,b){
 				a = fromOtherBaseToDecimal(62, a.substring(0,7));
 				b = fromOtherBaseToDecimal(62, b.substring(0,7));
@@ -51,16 +51,16 @@ function getNotifications()
 			for(var x=0; x < sorted_activity_ids.length; x++) 
 			{   
 				main_div_string = main_div_string + "<div class=\"complete-horiz-line-div\"></div>";
-				if(x < bg.user_jo.notification_count)
+				if(x < user_jo.notification_count)
 					main_div_string = main_div_string + "<div id=\"feeditem_div_" + x + "\" style=\"background-color:#fffed6;padding:5px;text-align:left;" + x + "\"></div>";
 				else
 					main_div_string = main_div_string + "<div id=\"feeditem_div_" + x + "\" style=\"padding:5px;text-align:left;" + x + "\"></div>";
 			}  
 			$("#main_div_" + currentURLhash).html(main_div_string); //OK
 		}
-		for(var x=0; x < bg.user_jo.activity_ids.length; x++) 
+		for(var x=0; x < user_jo.activity_ids.length; x++) 
 		{  
-			doNotificationItem(bg.user_jo.activity_ids[x], "feeditem_div_" + x);
+			doNotificationItem(user_jo.activity_ids[x], "feeditem_div_" + x);
 		} 
 
 		// now that the user has viewed this tab, reset activity count to 0
@@ -72,7 +72,7 @@ function getNotifications()
 	        data: {
 	            method: "resetActivityCount",
 	            email: email,             // this can be called with no email
-	            this_access_token: this_access_token   // this can be called with no this_access_token, bg.user_jo will just come back erroneous
+	            this_access_token: this_access_token   // this can be called with no this_access_token, user_jo will just come back erroneous
 	        },
 	        dataType: 'json',
 	        async: true,
@@ -86,15 +86,15 @@ function getNotifications()
 	        			displayMessage("Your login has expired. Please relog.", "red");
 	        			docCookies.removeItem("email"); 
 	        			docCookies.removeItem("this_access_token");
-	        			bg.user_jo = null;
+	        			user_jo = null;
 	        			updateLogstat();
 	        		}
 	            }
 	            else // on success reset the button image
 	            {
-	            	bg.user_jo.notification_count = 0;
+	            	user_jo.notification_count = 0;
 	            	updateNotificationTabLinkImage();
-	            	bg.doButtonGen(); // to avoid the reference to bg, we can just let this update on the next tab view
+	            	//bg.doButtonGen(); // to avoid the reference to bg, we can just let this update on the next tab view
 	            }
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -123,7 +123,7 @@ function doNotificationItem(item_id, dom_id)
 	fids = fids + "<table style=\"width:100%\">";
 	fids = fids + "	<tr>";
 	fids = fids + "		<td class=\"notification-header-td\" id=\"header_td_" + item_random + "\">";
-	fids = fids + "			<div style=\"text-align:center\"><img style=\"margin-top:16px;margin-bottom:16px\" src=\"images/ajaxSnake.gif\"></div>";
+	fids = fids + "			<div style=\"text-align:center\"><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
 	fids = fids + "		</td>";
 	fids = fids + "		<td><a href=\"#\" id=\"notification_hide_link_" + item_random + "\" style=\"text-align:right\">hide</a></td>";
 	fids = fids + "	</tr>";
@@ -133,7 +133,7 @@ function doNotificationItem(item_id, dom_id)
 	fids = fids + "		<td id=\"indent_td_" +  parent_random + "\" style=\"width:0px\"></td>";
 	fids = fids + "		<td class=\"rotated-who-wrote\" id=\"you_wrote_td_" + parent_random + "\"></td>";
 	fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + parent_random + "\">";
-	fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"images/ajaxSnake.gif\">";
+	fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 	fids = fids + "		</td>";
 	fids = fids + "	</tr>";
 	fids = fids + "</table>";
@@ -142,7 +142,7 @@ function doNotificationItem(item_id, dom_id)
 	fids = fids + "		<td id=\"indent_td_" +  item_random + "\" style=\"width:15px\"></td>";
 	fids = fids + "		<td class=\"rotated-who-wrote\" id=\"they_wrote_td_" + item_random + "\"></td>";
 	fids = fids + "		<td class=\"notification-comment-td\" id=\"notification_comment_td_" + item_random + "\">";
-	fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"images/ajaxSnake.gif\">";
+	fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 	fids = fids + "		</td>";
 	fids = fids + "	</tr>";
 	fids = fids + "</table>";
@@ -165,7 +165,7 @@ function doNotificationItem(item_id, dom_id)
 	        	if(data.response_status === "success")
 	        	{
 	        		// remove it locally, then repopulate the activity notifications page
-	        		var temp_act_ids = bg.user_jo.activity_ids;
+	        		var temp_act_ids = user_jo.activity_ids;
 	        		for(var x = 0; x < temp_act_ids.length; x++)
 	        		{
 	        			if(temp_act_ids[x] === removal_target)
@@ -174,7 +174,7 @@ function doNotificationItem(item_id, dom_id)
 	        				break;
 	        			}	
 	        		}	
-	        		bg.user_jo.activity_ids = temp_act_ids;
+	        		user_jo.activity_ids = temp_act_ids;
 	        		doNotificationsTab();
 	        	}
 	        	else if(data.response_status === "error")
@@ -185,7 +185,7 @@ function doNotificationItem(item_id, dom_id)
 	        			displayMessage("Your login has expired. Please relog.", "red");
 	        			docCookies.removeItem("email"); 
 	        			docCookies.removeItem("this_access_token");
-	        			bg.user_jo = null;
+	        			user_jo = null;
 	        			updateLogstat();
 	        		}
 	        	}	
@@ -270,7 +270,7 @@ function doNotificationItem(item_id, dom_id)
         	if(populate_item)
         	{
         		$("#item_tr_" + item_random).show();
-        		if(item_jo.author_screenname === bg.user_jo.screenname) // did the person mention himself? (this can't be a like/dislike/reply)
+        		if(item_jo.author_screenname === user_jo.screenname) // did the person mention himself? (this can't be a like/dislike/reply)
         			$("#they_wrote_td_" + item_random).text("You wrote:");
         		else
         			$("#they_wrote_td_" + item_random).text("They wrote:");
@@ -296,45 +296,6 @@ function doNotificationItem(item_id, dom_id)
         	        	{
         	        		$("#you_wrote_td_" + parent_random).text("You wrote:"); // if we're showing the parent, this is a reply or a like/dislike. 
         	        		writeComment(parent_jo, "notification_comment_td_" + parent_random);
-        	        		/*if(item_id.endsWith("C") && parent_jo.hidden === true)
-        	        		{
-        	        			// parent is hidden. We don't know who wrote it.
-        	        			if(item_jo.text.indexOf("@" + bg.user_jo.screenname) !== -1) // treat as a mention, although it may be mention-reply. No way of knowing.
-        	        			{
-        	        				$("#parent_tr_" + parent_random).hide();
-        	        				//$("#repliedto_or_mentioned_span_" + item_random).text("mentioned");
-        	        			}
-        	        			else // no mention, must be a reply.
-        	        			{
-        	        				$("#repliedto_or_mentioned_span_" + item_random).text("replied to");
-        	        				writeComment(parent_jo, "notification_comment_td_" + parent_random);
-            	        			$("#you_wrote_td_" + parent_random).text("You wrote:");
-        	        			}	
-        	        		}	
-        	        		else if(item_id.endsWith("C") && (parent_jo.author_screenname === bg.user_jo.screenname))
-        	        		{
-        	        			// this is a reply... show the parent
-        	        			//alert("this user wrote the parent, reply");
-        	        			$("#repliedto_or_mentioned_span_" + item_random).text("replied to");
-        	        			writeComment(parent_jo, "notification_comment_td_" + parent_random);
-        	        			$("#you_wrote_td_" + parent_random).text("You wrote:");
-        	        		}	
-        	        		else if(item_id.endsWith("C") && (parent_jo.author_screenname !== bg.user_jo.screenname))
-        	        		{
-        	        			// this is a mention only, hide the parent
-        	        			//alert("this user did not write the parent, mention");
-        	        			$("#repliedto_or_mentioned_span_" + item_random).text("mentioned");
-        	        			$("#parent_tr_" + parent_random).hide();
-        	        		}
-        	        		else if(item_id.endsWith("C"))
-        	        		{
-        	        			//alert("past valid C options");
-        	        		}
-        	        		else // this is a like or dislike, show parent
-        	        		{
-        	        			writeComment(parent_jo, "notification_comment_td_" + parent_random);
-        	        			$("#you_wrote_td_" + parent_random).text("You wrote:");
-        	        		}	*/
         	        	}
         	        },
         	        error: function (XMLHttpRequest, textStatus, errorThrown) {

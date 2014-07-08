@@ -4,17 +4,17 @@
 function doPastTab()
 {
 	tabmode = "past";
-	$("#thread_tab_img").attr("src", "images/chat_gray.png");
-	$("#trending_tab_img").attr("src", "images/trending_gray.png");
+	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_gray.png"));
+	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_gray.png"));
 	updateNotificationTabLinkImage();
-	$("#past_tab_img").attr("src", "images/clock_blue.png");
-	$("#profile_tab_img").attr("src", "images/user_gray.png");
+	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_blue.png"));
+	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	
 	$("#header_div_top").text("Your past comments");
 	$("#utility_div").show();
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
-	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\" id=\"loading_past_comments_div\">Loading your past comments... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"images/ajaxSnake.gif\"></div>");//OK
+	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\" id=\"loading_past_comments_div\">Loading your past comments... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
 	beginindex = 0;
 	endindex = 8;
 	getPastComments();
@@ -22,7 +22,7 @@ function doPastTab()
 
 function getPastComments()
 {
-	if (typeof bg.user_jo==="undefined" || bg.user_jo === null)
+	if (typeof user_jo==="undefined" || user_jo === null)
 	{
 		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to view your past comments.</div>");//OK
 	}
@@ -36,7 +36,7 @@ function getPastComments()
 	        data: {
 	            method: "getMyComments",
 	            email: email,             // this can be called with no email
-	            this_access_token: this_access_token   // this can be called with no this_access_token, bg.user_jo will just come back erroneous
+	            this_access_token: this_access_token   // this can be called with no this_access_token, user_jo will just come back erroneous
 	        },
 	        dataType: 'json',
 	        async: true,
@@ -50,7 +50,7 @@ function getPastComments()
 	        			displayMessage("Your login has expired. Please relog.", "red");
 	        			docCookies.removeItem("email"); 
 	        			docCookies.removeItem("this_access_token");
-	        			bg.user_jo = null;
+	        			user_jo = null;
 	        			updateLogstat();
 	        		}
 	            }
@@ -71,7 +71,7 @@ function getPastComments()
 	            		for(var x=beginindex; x < endindex && x < data.comments_ja.length; x++) 
 	        			{
 	            			main_div_string = main_div_string + "<div class=\"complete-horiz-line-div\"></div>";
-	            			main_div_string = main_div_string + "<div id=\"pastcomment_div_" + x + "\" style=\"padding:5px;text-align:center;" + x + "\"><img src=\"images/ajaxSnake.gif\"></div>";
+	            			main_div_string = main_div_string + "<div id=\"pastcomment_div_" + x + "\" style=\"padding:5px;text-align:center;" + x + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
 	            		}
 	            		if (x < data.comments_ja.length)
 	        				scrollable = 1;
@@ -121,7 +121,7 @@ function doPastCommentItem(item_id, dom_id)
         	fids = fids + "<table style=\"width:100%\">";
     		fids = fids + "	<tr>";
     		fids = fids + "		<td style=\"text-align:left;padding-bottom:5px\" id=\"pastcomment_header_td_" + item_random + "\">";
-    		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"images/ajaxSnake.gif\">";
+    		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
         	fids = fids + "		</td>";
         	fids = fids + "	</tr>";
         	fids = fids + "</table>";
@@ -130,7 +130,7 @@ function doPastCommentItem(item_id, dom_id)
     		fids = fids + "		<td class=\"rotated-who-wrote\" id=\"you_wrote_" + item_random + "\">";
     		fids = fids + "		</td>";
     		fids = fids + "		<td id=\"pastcomment_body_td_" + item_random + "\">";
-    		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"images/ajaxSnake.gif\">";
+    		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
     		fids = fids + "		</td>";
     		fids = fids + "	</tr>";
     		fids = fids + "</table>";

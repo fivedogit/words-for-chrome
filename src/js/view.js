@@ -70,13 +70,13 @@
  			});
 
  	$("#trending_tab_link").mouseover(
- 			function () {
+ 			function (event) {
  				$("#tab_tooltip_td").text("Trending");
- 				return false;
+ 				event.preventDefault();
  			});
 
  	$("#trending_tab_link").mouseout(
- 			function () {
+ 			function (event) {
  				if(tabmode === "thread")
  					$("#tab_tooltip_td").text("Comments");
  				else if(tabmode === "trending")
@@ -87,13 +87,13 @@
  					$("#tab_tooltip_td").text("Your past comments");
  				else if(tabmode === "profile")
  					$("#tab_tooltip_td").text("Profile/Settings");
- 				return false;
+ 				event.preventDefault();
  			});
 
  	$("#trending_tab_link").click(
- 			function () {
+ 			function (event) {
+ 				event.preventDefault();
  				doTrendingTab();
- 				return false;
  			});
 
  	$("#notifications_tab_link").mouseover(
@@ -118,9 +118,9 @@
  			});
 
  	$("#notifications_tab_link").click(
- 			function () {
+ 			function (event) {
+ 				event.preventDefault();
  				doNotificationsTab();
- 				return false;
  			});
 
 	$("#past_tab_link").mouseover(
@@ -145,12 +145,12 @@
  			});
 
  	$("#past_tab_link").click(
- 			function () {
- 				if(bg.user_jo == null || bg.user_jo.screenname == null)
+ 			function (event) {
+ 				event.preventDefault();
+ 				if(user_jo == null || user_jo.screenname == null)
  					doPastTab();
  				else
- 					doPastTab(bg.user_jo.screenname);
- 				return false;
+ 					doPastTab(user_jo.screenname);
  			});
  	
  	$("#profile_tab_link").mouseover(
@@ -175,12 +175,12 @@
  			});
 
  	$("#profile_tab_link").click(
- 			function () {
- 				if(bg.user_jo == null || bg.user_jo.screenname == null)
+ 			function (event) {
+ 				event.preventDefault();
+ 				if(user_jo == null || user_jo.screenname == null)
  					viewProfile();
  				else
- 					viewProfile(bg.user_jo.screenname);
- 				return false;
+ 					viewProfile(user_jo.screenname);
  			});
  	
  	updateLogstat(user_jo);
@@ -204,7 +204,7 @@
 		else	
 			tlcf = tlcf + "<textarea class=\"composition-textarea\" style=\"height:22px;color:#aaa\" id=\"comment_textarea_" + currentURLhash + "\">Say something...</textarea>";
 		tlcf = tlcf + "	<div class=\"char-count-and-submit-button-div\" id=\"char_count_and_submit_button_div_" + currentURLhash + "\">";
-		tlcf = tlcf + "		<span style=\"display:none;padding-right:3px;\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"images/ajaxSnake.gif\"></span>";
+		tlcf = tlcf + "		<span style=\"display:none;padding-right:3px;\" id=\"comment_submission_progress_span_" + currentURLhash + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
 		tlcf = tlcf + "		<span id=\"charsleft_" + currentURLhash + "\" style=\"margin-right:3px\">" + charsleft + "</span> ";
 		tlcf = tlcf + "		<span><input id=\"comment_submission_form_submit_button_" + currentURLhash + "\" class=\"comment-submit-button\" type=button value=\"Submit\"></input></span>";
 		tlcf = tlcf + "	</div>";
@@ -357,7 +357,7 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td style=\"width:32px;\">";
 	welcomearea = welcomearea + "			<span id=\"logged_in_profile_image_span\">";
-	welcomearea = welcomearea + "				<img style=\"height:32px;width:32px;border-radius:4px\" id=\"logged_in_profile_img\" src=\"images/ajaxSnake.gif\">";
+	welcomearea = welcomearea + "				<img style=\"height:32px;width:32px;border-radius:4px\" id=\"logged_in_profile_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 	welcomearea = welcomearea + "			</span>";
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\" style=\"text-align:left;padding-left:3px;\">";

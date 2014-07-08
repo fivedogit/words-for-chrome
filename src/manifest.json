@@ -23,7 +23,18 @@
         "run_at": "document_end"
     },{
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["/js/jquery-1.8.2.min.js", "/js/widget_embedder.js", "/js/view.js", "/js/util.js", "/js/thread.js"],
+        "js": [
+        	"/js/jquery-1.8.2.min.js", 
+        	"/js/widget_embedder.js", 
+        	"/js/view.js", 
+        	"/js/util.js", 
+        	"/js/thread.js", 
+        	"/js/trending.js", 
+        	"/js/notifications.js",
+        	"/js/past.js", 
+        	"/js/profile.js", 
+        	"/js/about.js"
+        	],
         "css": ["/css/both.css"],
         "run_at": "document_end"
     }],
