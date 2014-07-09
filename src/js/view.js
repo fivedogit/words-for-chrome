@@ -1,8 +1,8 @@
 //INITIALIZE THE BASE HTML FOR THE WORDS VIEW along with all of its event triggers (mouseover + mouseout + click for each tab button + comment form events focus, blur, submit and keyup (charcount))
  function initializeView()
  {
- 	var bs = ""; // body string to be inserted into words_div  (which resides just inside <body>. Why not just use <body>? So this can be used as page injection. Can't override existing body there.
- 	bs = bs + "<table style=\"width:100%;background-image:url('" + chrome.extension.getURL("images/outlets2X.png") + "');color:white;border: 1px solid yellow\" class=\"white-links\">";
+	 var bs = ""; // body string to be inserted into words_div  (which resides just inside <body>. Why not just use <body>? So this can be used as page injection. Can't override existing body there.
+ 	 bs = bs + "<table style=\"width:100%;background-image:url('" + chrome.extension.getURL("images/outlets2X.png") + "');color:white;border: 1px solid yellow\" class=\"white-links\">";
  		bs = bs + "<tr>";
  			bs = bs + "<td style=\"text-align:left;padding-left:5px;padding-top:5px;\">"; // small words logo td
  			bs = bs + "		<a href=\"#\" id=\"words_logo_link\"><img src=\"" + chrome.extension.getURL("images/words_logo_125x24.png") + "\"></img></a>";
@@ -24,10 +24,10 @@
  			bs = bs + "</td>";
  		bs = bs + "</tr>";
  	bs = bs + "</table>";
- 	bs = bs + "<div id=\"utility_div_" + currentURLhash + "\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X_light.png") + "');padding-top:10px;padding-bottom:10px;border-top: 1px solid #ddd;\">";
- 	bs = bs + "	<div id=\"header_div_top\" style=\"font-size:14px;font-weight:bold;display:none;padding-bottom:5px;\"></div>"; // make unique with currentURLhash?
+ 	bs = bs + "<div id=\"utility_div_" + currentURLhash + "\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X_light.png") + "');padding-top:7px;padding-bottom:7px;border-top: 1px solid #ddd;\">";
+ 	bs = bs + "	<div id=\"header_div_top\" style=\"font-size:14px;font-weight:bold;display:none;\"></div>"; // make unique with currentURLhash?
  	bs = bs + "	<div class=\"message-div\" id=\"message_div_" + currentURLhash + "\" style=\"display:none;padding-bottom:5px\"></div>";
- 	bs = bs + "	<div id=\"tlcf_div_" + currentURLhash + "\">something</div>";
+ 	bs = bs + "	<div id=\"tlcf_div_" + currentURLhash + "\"></div>";
  	bs = bs + "</div>";
 	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><div style=\"padding:20px\"></div></div>";
 	bs = bs + "<div id=\"footer_div\" class=\"white-links\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X.png") + "');padding:13px 5px 13px 5px;color:white;\">";
@@ -37,9 +37,9 @@
  	writeCommentForm(currentURLhash, "tlcf_div_" + currentURLhash); // id_to_use, target_dom_id
  	
  	$("#words_logo_link").click(
- 			function () {
+ 			function (event) {
+ 				event.preventDefault();
  				doAboutTab();
- 				return false;
  			});
 
  	$("#thread_tab_link").mouseover(
@@ -64,19 +64,19 @@
  			});
 
  	$("#thread_tab_link").click(
- 			function () {
+ 			function (event) {
+ 				event.preventDefault();
  				doThreadTab();
- 				return false;
  			});
 
  	$("#trending_tab_link").mouseover(
  			function (event) {
- 				$("#tab_tooltip_td").text("Trending");
  				event.preventDefault();
+ 				$("#tab_tooltip_td").text("Trending");
  			});
 
  	$("#trending_tab_link").mouseout(
- 			function (event) {
+ 			function () {
  				if(tabmode === "thread")
  					$("#tab_tooltip_td").text("Comments");
  				else if(tabmode === "trending")
@@ -87,7 +87,6 @@
  					$("#tab_tooltip_td").text("Your past comments");
  				else if(tabmode === "profile")
  					$("#tab_tooltip_td").text("Profile/Settings");
- 				event.preventDefault();
  			});
 
  	$("#trending_tab_link").click(
@@ -147,10 +146,7 @@
  	$("#past_tab_link").click(
  			function (event) {
  				event.preventDefault();
- 				if(user_jo == null || user_jo.screenname == null)
- 					doPastTab();
- 				else
- 					doPastTab(user_jo.screenname);
+ 				doPastTab();
  			});
  	
  	$("#profile_tab_link").mouseover(
@@ -177,10 +173,7 @@
  	$("#profile_tab_link").click(
  			function (event) {
  				event.preventDefault();
- 				if(user_jo == null || user_jo.screenname == null)
- 					viewProfile();
- 				else
- 					viewProfile(user_jo.screenname);
+ 				viewProfile(user_jo.screenname);
  			});
  	
  	updateLogstat(user_jo);
@@ -322,39 +315,50 @@ function displayLogstatAsLoggedOut() {
 	
 	$("#google_login_link").click(
 			function (event) {
-				alert("g");
 				event.preventDefault();
-				var currenttabid;
-				chrome.tabs.getSelected(null, function(tab) { 
-					alert("got selected");
-					currenttabid = tab.id; 
-					docCookies.setItem("last_tab_id", currenttabid, 31536e3);
-					// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
-					// (which is why the button was shown in the first place)
-					// Right now the user either has the social_access_token and it hasn't expired yet
-					// or they have it and it HAS expired
-					// or they don't have it at all.
-					// NEW: JUST SEND USER TO RECEIVER, NO MATTER WHAT. LET RECEIVER HANDLE ALL ACCESS TOKEN VALIDITY JUDGEMENT AND RETRIEVAL
-					alert("creating");
-					chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=google"});
-				});
+				if(chrome.tabs)
+				{	
+					var currenttabid;
+					chrome.tabs.getSelected(null, function(tab) { 
+						currenttabid = tab.id; 
+						docCookies.setItem("last_tab_id", currenttabid, 31536e3);
+						// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
+						// (which is why the button was shown in the first place)
+						// Right now the user either has the social_access_token and it hasn't expired yet
+						// or they have it and it HAS expired
+						// or they don't have it at all.
+						// NEW: JUST SEND USER TO RECEIVER, NO MATTER WHAT. LET RECEIVER HANDLE ALL ACCESS TOKEN VALIDITY JUDGEMENT AND RETRIEVAL
+						chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=google"});
+					});
+				}
+				else
+				{
+					window.open(chrome.extension.getURL("receiver.html") + "?login_type=google");
+				}		
 			});
 	
 	$("#facebook_login_link").click(
 			function (event) {
 				event.preventDefault();
-				var currenttabid;
-				chrome.tabs.getSelected(null, function(tab) { 
-					currenttabid = tab.id; 
-					docCookies.setItem("last_tab_id", currenttabid, 31536e3);
-					// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
-					// (which is why the button was shown in the first place)
-					// Right now the user either has the social_access_token and it hasn't expired yet
-					// or they have it and it HAS expired
-					// or they don't have it at all.
-					// NEW: JUST SEND USER TO RECEIVER, NO MATTER WHAT. LET RECEIVER HANDLE ALL ACCESS TOKEN VALIDITY JUDGEMENT AND RETRIEVAL
-					chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=facebook"});
-				});
+				if(chrome.tabs)
+				{	
+					var currenttabid;
+					chrome.tabs.getSelected(null, function(tab) { 
+						currenttabid = tab.id; 
+						docCookies.setItem("last_tab_id", currenttabid, 31536e3);
+						// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
+						// (which is why the button was shown in the first place)
+						// Right now the user either has the social_access_token and it hasn't expired yet
+						// or they have it and it HAS expired
+						// or they don't have it at all.
+						// NEW: JUST SEND USER TO RECEIVER, NO MATTER WHAT. LET RECEIVER HANDLE ALL ACCESS TOKEN VALIDITY JUDGEMENT AND RETRIEVAL
+						chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=facebook"});
+					});
+				}
+				else
+				{
+					window.open(chrome.extension.getURL("receiver.html") + "?login_type=facebook");
+				}
 			});
 }
 

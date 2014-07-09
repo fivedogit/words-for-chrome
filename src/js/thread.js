@@ -28,27 +28,32 @@ function doThreadTab()
 	
 	if(isValidURLFormation(currentURL))
 	{
-		gotThread();
-		// temporarily removing the possibility that the thread hasn't been retrieved yet.
-		/*
-		if((typeof thread_jo === "undefined" || thread_jo === null) && bg.threadstatus !== 0) // overlay has been loaded, but thread is still being retrieved
+		if(chrome.tabs) // this is the overlay
 		{
-			var url_at_function_call = currentURL;
-			// wait for thread to load
-			$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Retrieving thread...</div>");//OK
-			gotThread_wedge_for_ntj(url_at_function_call);
-			// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
+			if((typeof thread_jo === "undefined" || thread_jo === null))// && bg.threadstatus !== 0) // overlay has been loaded, but thread is still being retrieved
+			{
+				var url_at_function_call = currentURL;
+				// wait for thread to load
+				$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Retrieving thread... <img id=\"google_favicon_img_" + currentURLhash + "\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
+				gotThread_wedge_for_ntj(url_at_function_call);
+				// the difference between this wedge and the other one is that this one does not animate (or two animations would be happening on top of each other)
+			}
+			/*
+			else if(thread_jo === null && bg.threadstatus === 0) // overlay has loaded but thread_jo is null -- this happens when using the inspector, and possibly other scenarios
+			{
+				var main_div_string = "<div style=\"padding:20px\">Could not display thread.<br>";
+				main_div_string = main_div_string + "		Try switching tabs or reloading the page, then clicking the WORDS button again.</div>"; // , hostname must contain a \".\" and lack a \":\".
+				$("#main_div_" + currentURLhash).html(main_div_string);//OK
+			}*/
+			else if(thread_jo !== null && bg.threadstatus === 0) 
+			{
+				gotThread();
+			}
 		}
-		else if(thread_jo === null && bg.threadstatus === 0) // overlay has loaded but thread_jo is null -- this happens when using the inspector, and possibly other scenarios
-		{
-			var main_div_string = "<div style=\"padding:20px\">Could not display thread.<br>";
-			main_div_string = main_div_string + "		Try switching tabs or reloading the page, then clicking the WORDS button again.</div>"; // , hostname must contain a \".\" and lack a \":\".
-			$("#main_div_" + currentURLhash).html(main_div_string);//OK
-		}
-		else if(thread_jo !== null && bg.threadstatus === 0) 
+		else // this is the embedded widget
 		{
 			gotThread();
-		}*/
+		}
 	}
 	else // not a valid URL formation
 	{
@@ -104,50 +109,50 @@ function gotThread()
 		
 		getPageLikes(which_like_type);
 		
-		$("#pagelike_img").click(
-	 			function () {
-	 				$("#pagelike_img").attr("src", chrome.extension.getURL("images/ajaxSnake.gif"));
-	 				$.ajax({
-    			        type: 'GET',
-    			        url: endpoint,
-    			        data: {
-    			        	email: email,
-    			        	this_access_token: this_access_token,
-    			            method: likepage_method,
-    			            url: currentURL
-    			        },
-    			        dataType: 'json',
-    			        async: true,
-    			        success: function (data, status) {
-    			        	if(data.response_status === "success")
-    			        	{
-    			        		$("#pagelike_img").attr("src", chrome.extension.getURL("images/star_16x16.png"));
-    			        		if(thread_jo.combined_or_separated === "separated")	
-    			        			displayMessage("Page liked.", "black");
-    			        		else
-    			        			displayMessage("Site liked.", "black");
-    			        		getPageLikes(which_like_type);
-    			        	}
-    			        	else if(data.response_status === "error")
-    			        	{
-    			        		$("#pagelike_img").attr("src", chrome.extension.getURL("images/star_grayscale_16x16.png"));
-    			        		displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
-    			        		if(data.error_code && data.error_code === "0000")
-    			        		{
-    			        			displayMessage("Your login has expired. Please relog.", "red");
-    			        			user_jo = null;
-    			        			displayAsLoggedOut();
-    			        		}
-    			        	}	
-    			        },
-    			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-    			        	$("#pagelike_img").attr("src", chrome.extension.getURL("images/star_grayscale_16x16.png"));
-    			        	displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
-    			        	console.log(textStatus, errorThrown);
-    			        }
-    				});
-	 				return false;
-	 			});
+		$("#pagelike_img").click( function (event) {
+			event.preventDefault();
+			var prev = $("#pagelike_img").attr("src");
+			$("#pagelike_img").attr("src", chrome.extension.getURL("images/ajaxSnake.gif"));
+			$.ajax({
+				type: 'GET',
+				url: endpoint,
+				data: {
+					email: email,
+					this_access_token: this_access_token,
+					method: likepage_method,
+					url: currentURL
+				},
+				dataType: 'json',
+				async: true,
+				success: function (data, status) {
+					if(data.response_status === "success")
+					{
+						$("#pagelike_img").attr("src", chrome.extension.getURL("images/star_16x16.png"));
+						if(thread_jo.combined_or_separated === "separated")	
+							displayMessage("Page liked.", "black");
+						else
+							displayMessage("Site liked.", "black");
+						getPageLikes(which_like_type);
+					}
+					else if(data.response_status === "error")
+					{
+						$("#pagelike_img").attr("src", prev);
+						displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
+						if(data.error_code && data.error_code === "0000")
+						{
+							displayMessage("Your login has expired. Please relog.", "red");
+							user_jo = null;
+							displayAsLoggedOut();
+						}
+					}	
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					$("#pagelike_img").attr("src", prev);
+					displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
+					console.log(textStatus, errorThrown);
+				}
+			});
+		});
 	 	
 		if(user_jo !== null)
 		{
@@ -252,184 +257,185 @@ function gotThread()
 	 				return false;
 	 			});
 	 	
-	 	$("#follow_img").click(
-	 			function (event) {
-	 				var previous_src = $("#follow_img").attr("src");
-	 				$("#follow_img").attr("src", "images/ajaxSnake.gif");
-	 				if(previous_src.indexOf("off") != -1)
-	 				{	
-	 					$.ajax({
-	    			        type: 'GET',
-	    			        url: endpoint,
-	    			        data: {
-	    			        	email: email,
-	    			        	this_access_token: this_access_token,
-	    			            method: "followPage",
-	    			            url: currentURL
-	    			        },
-	    			        dataType: 'json',
-	    			        async: true,
-	    			        success: function (data, status) {
-	    			        	if(data.response_status === "success")
-	    			        	{
-	    			        		$("#follow_img").attr("src", chrome.extension.getURL("images/follow_on_12x16.png"));
-	    			        		displayMessage("You are now following this page.", "black");
-	    			        	}
-	    			        	else if(data.response_status === "error")
-	    			        	{
-	    			        		$("#follow_img").attr("src", previous_src);
-	    			        		displayMessage("Unable to follow page. " + data.message, "red");
-	    			        	}	
-	    			        },
-	    			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	    			        	$("#follow_img").attr("src", previous_src);
-	    			        	displayMessage("Unable to follow page. (AJAX)", "red");
-	    			        	console.log(textStatus, errorThrown);
-	    			        }
-	    				});
+	 	$("#follow_img").click( function (event) {
+	 		event.preventDefault();
+	 		var previous_src = $("#follow_img").attr("src");
+	 		$("#follow_img").attr("src", "images/ajaxSnake.gif");
+	 		if(previous_src.indexOf("off") != -1)
+	 		{	
+	 			$.ajax({
+	 				type: 'GET',
+	 				url: endpoint,
+	 				data: {
+	 					email: email,
+	 					this_access_token: this_access_token,
+	 					method: "followPage",
+	 					url: currentURL
+	 				},
+	 				dataType: 'json',
+	 				async: true,
+	 				success: function (data, status) {
+	 					if(data.response_status === "success")
+	 					{
+	 						$("#follow_img").attr("src", chrome.extension.getURL("images/follow_on_12x16.png"));
+	 						displayMessage("You are now following this page.", "black");
+	 					}
+	 					else if(data.response_status === "error")
+	 					{
+	 						$("#follow_img").attr("src", previous_src);
+	 						displayMessage("Unable to follow page. " + data.message, "red");
+	 					}	
+	 				},
+	 				error: function (XMLHttpRequest, textStatus, errorThrown) {
+	 					$("#follow_img").attr("src", previous_src);
+	 					displayMessage("Unable to follow page. (AJAX)", "red");
+	 					console.log(textStatus, errorThrown);
 	 				}
-	 				else
-	 				{
-	 					$.ajax({
-	    			        type: 'GET',
-	    			        url: endpoint,
-	    			        data: {
-	    			        	email: email,
-	    			        	this_access_token: this_access_token,
-	    			            method: "unfollowPage",
-	    			            url: currentURL
-	    			        },
-	    			        dataType: 'json',
-	    			        async: true,
-	    			        success: function (data, status) {
-	    			        	if(data.response_status === "success")
-	    			        	{
-	    			        		$("#follow_img").attr("src", chrome.extension.getURL("images/follow_off_12x16.png"));
-	    			        		displayMessage("You are no longer following this page.", "black");
-	    			        	}
-	    			        	else if(data.response_status === "error")
-	    			        	{
-	    			        		$("#follow_img").attr("src", previous_src);
-	    			        		displayMessage("Unable to unfollow page. " + data.message, "red");
-	    			        	}	
-	    			        },
-	    			        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	    			        	$("#follow_img").attr("src", previous_src);
-	    			        	displayMessage("Unable to unfollow page. (ajax)", "red", "message_div_" + currentURLhash);
-	    			        	console.log(textStatus, errorThrown);
-	    			        }
-	    				});
-	 				}	
-	 				event.preventDefault();
 	 			});
+	 		}
+	 		else
+	 		{
+	 			$.ajax({
+	 				type: 'GET',
+	 				url: endpoint,
+	 				data: {
+	 					email: email,
+	 					this_access_token: this_access_token,
+	 					method: "unfollowPage",
+	 					url: currentURL
+	 				},
+	 				dataType: 'json',
+	 				async: true,
+	 				success: function (data, status) {
+	 					if(data.response_status === "success")
+	 					{
+	 						$("#follow_img").attr("src", chrome.extension.getURL("images/follow_off_12x16.png"));
+	 						displayMessage("You are no longer following this page.", "black");
+	 					}
+	 					else if(data.response_status === "error")
+	 					{
+	 						$("#follow_img").attr("src", previous_src);
+	 						displayMessage("Unable to unfollow page. " + data.message, "red");
+	 					}	
+	 				},
+	 				error: function (XMLHttpRequest, textStatus, errorThrown) {
+	 					$("#follow_img").attr("src", previous_src);
+	 					displayMessage("Unable to unfollow page. (ajax)", "red", "message_div_" + currentURLhash);
+	 					console.log(textStatus, errorThrown);
+	 				}
+	 			});
+	 		}	
+	 	});
 	 	
-		
+	 	
 	 	if(user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
 	 	{
-	 		$("#separated_or_combined_img").click(
-					function () {
-						//alert($("#separated_or_combined_img").attr("src"));
-						if($("#separated_or_combined_img").attr("src").indexOf("combined") != -1)
-		 				{	
-							$.ajax({
-						        type: 'GET',
-						        url: endpoint,
-						        data: {
-						            method: "separateHostname",
-						            url: currentURL,
-						            email: email,
-						            this_access_token: this_access_token
-						        },
-						        dataType: 'json',
-						        async: true,
-						        success: function (data, status) {
-						        	if (data.response_status === "error")
-						        	{
-						        		// if someone clicks this without proper admin credentials, just fail silently as if nothing happened.
-						        	}
-						        	else if (data.response_status === "success")
-						        	{
-						        		displayMessage("Hostname separated.", "red", "message_div_" + currentURLhash);
-						        		$("#separated_or_combined_img").attr("src", chrome.extension.getURL("images/separated_icon.png"));
-						        	}
-						        },
-						        error: function (XMLHttpRequest, textStatus, errorThrown) {
-						        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
-						            console.log(textStatus, errorThrown);
-						        } 
-							});
-		 				}
-						else // the img source is separated
-						{
-							$.ajax({
-						        type: 'GET',
-						        url: endpoint,
-						        data: {
-						            method: "combineHostname",
-						            url: currentURL,
-						            email: email,
-						            this_access_token: this_access_token
-						        },
-						        dataType: 'json',
-						        async: true,
-						        success: function (data, status) {
-						        	if (data.response_status === "error")
-						        	{
-						        		// if someone clicks this without proper admin credentials, just fail silently as if nothing happened.
-						        	}
-						        	else if (data.response_status === "success")
-						        	{
-						        		displayMessage("Hostname combined.", "red", "message_div_" + currentURLhash);
-						        		$("#separated_or_combined_img").attr("src", chrome.extension.getURL("images/combined_icon.png"));
-						        	}
-						        },
-						        error: function (XMLHttpRequest, textStatus, errorThrown) {
-						        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
-						            console.log(textStatus, errorThrown);
-						        } 
-							});
-						}	
-					});
+	 		$("#separated_or_combined_img").click( function (event) {
+	 			event.preventDefault();
+	 			//alert($("#separated_or_combined_img").attr("src"));
+	 			if($("#separated_or_combined_img").attr("src").indexOf("combined") != -1)
+	 			{	
+	 				$.ajax({
+	 					type: 'GET',
+	 					url: endpoint,
+	 					data: {
+	 						method: "separateHostname",
+	 						url: currentURL,
+	 						email: email,
+	 						this_access_token: this_access_token
+	 					},
+	 					dataType: 'json',
+	 					async: true,
+	 					success: function (data, status) {
+	 						if (data.response_status === "error")
+	 						{
+	 							// if someone clicks this without proper admin credentials, just fail silently as if nothing happened.
+	 						}
+	 						else if (data.response_status === "success")
+	 						{
+	 							displayMessage("Hostname separated.", "red", "message_div_" + currentURLhash);
+	 							$("#separated_or_combined_img").attr("src", chrome.extension.getURL("images/separated_icon.png"));
+	 						}
+	 					},
+	 					error: function (XMLHttpRequest, textStatus, errorThrown) {
+	 						// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+	 						console.log(textStatus, errorThrown);
+	 					} 
+	 				});
+	 			}
+	 			else // the img source is separated
+	 			{
+	 				$.ajax({
+	 					type: 'GET',
+	 					url: endpoint,
+	 					data: {
+	 						method: "combineHostname",
+	 						url: currentURL,
+	 						email: email,
+	 						this_access_token: this_access_token
+	 					},
+	 					dataType: 'json',
+	 					async: true,
+	 					success: function (data, status) {
+	 						if (data.response_status === "error")
+	 						{
+	 							// if someone clicks this without proper admin credentials, just fail silently as if nothing happened.
+	 						}
+	 						else if (data.response_status === "success")
+	 						{
+	 							displayMessage("Hostname combined.", "red", "message_div_" + currentURLhash);
+	 							$("#separated_or_combined_img").attr("src", chrome.extension.getURL("images/combined_icon.png"));
+	 						}
+	 					},
+	 					error: function (XMLHttpRequest, textStatus, errorThrown) {
+	 						// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+	 						console.log(textStatus, errorThrown);
+	 					} 
+	 				});
+	 			}	
+	 		});
 	 		
-			$("#set_sqsp").click(
-					function () {
-						$.ajax({
-					        type: 'GET',
-					        url: endpoint,
-					        data: {
-					            method: "setSignificantQSP",
-					            url: currentURL,
-					            sqsp: $("#sqsp").val(),
-					            email: email,
-					            this_access_token: this_access_token
-					        },
-					        dataType: 'json',
-					        async: true,
-					        success: function (data, status) {
-					        	if (data.response_status === "error")
-					        	{
-					        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
-					        	}
-					        	else if (data.response_status === "success")
-					        	{
-					        		displayMessage("sqsp set", "red", "message_div_" + currentURLhash);
-					        	}
-					        },
-					        error: function (XMLHttpRequest, textStatus, errorThrown) {
-					        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
-					            console.log(textStatus, errorThrown);
-					        } 
-						});
-					});
+	 		$("#set_sqsp").click( function (event) {
+	 			event.preventDefault();
+	 			$.ajax({
+	 				type: 'GET',
+	 				url: endpoint,
+	 				data: {
+	 					method: "setSignificantQSP",
+	 					url: currentURL,
+	 					sqsp: $("#sqsp").val(),
+	 					email: email,
+	 					this_access_token: this_access_token
+	 				},
+	 				dataType: 'json',
+	 				async: true,
+	 				success: function (data, status) {
+	 					if (data.response_status === "error")
+	 					{
+	 						displayMessage(data.message, "red", "message_div_" + currentURLhash);
+	 					}
+	 					else if (data.response_status === "success")
+	 					{
+	 						displayMessage("sqsp set", "red", "message_div_" + currentURLhash);
+	 					}
+	 				},
+	 				error: function (XMLHttpRequest, textStatus, errorThrown) {
+	 					// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+	 					console.log(textStatus, errorThrown);
+	 				} 
+	 			});
+	 		});
 		}
 		
-		$("#combined_img").mouseover(
+		$("#separated_or_combined_img").mouseover(
 	 			function () {
-	 				$("#tab_tooltip_td").text("Combined threads");
-	 				return false;
+	 				if($("#separated_or_combined_img").attr("src").indexOf("combined") !== -1)
+	 					$("#tab_tooltip_td").text("Combined threads");
+	 				else
+	 					$("#tab_tooltip_td").text("Separated threads");
 	 			});
 
-	 	$("#combined_img").mouseout(
+	 	$("#separated_or_combined_img").mouseout(
 	 			function () {
 	 				if(tabmode === "thread")
 	 					$("#tab_tooltip_td").text("Comments");
@@ -439,26 +445,6 @@ function gotThread()
 	 					$("#tab_tooltip_td").text("Notifications");
 	 				else if(tabmode === "profile")
 	 					$("#tab_tooltip_td").text("Profile/Settings");
-	 				return false;
-	 			});
-	 	
-	 	$("#separated_img").mouseover(
-	 			function () {
-	 				$("#tab_tooltip_td").text("Separated threads");
-	 				return false;
-	 			});
-
-	 	$("#separated_img").mouseout(
-	 			function () {
-	 				if(tabmode === "thread")
-	 					$("#tab_tooltip_td").text("Comments");
-	 				else if(tabmode === "trending")
-	 					$("#tab_tooltip_td").text("Trending");
-	 				else if(tabmode === "notifications")
-	 					$("#tab_tooltip_td").text("Notifications");
-	 				else if(tabmode === "profile")
-	 					$("#tab_tooltip_td").text("Profile/Settings");
-	 				return false;
 	 			});
 		beginindex = 0;
 		endindex = 8;

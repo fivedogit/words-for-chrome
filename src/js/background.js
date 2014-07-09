@@ -1,3 +1,19 @@
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+	  if(request.method === "logout")
+	  {
+		  docCookies.removeItem("email");
+		  docCookies.removeItem("this_access_token");
+		  sendResponse({message: "goodbye"});
+	  }  
+	  if(request.method === "getVersion")
+	  {
+		  var details = chrome.app.getDetails();
+		  var version = details.version;
+		  sendResponse({version: version});
+	  }  
+  });
+
 var style = document.createElement('style'); 
 var style_str =  "@font-face {";
 style_str = style_str + "font-family: \"Silkscreen\";";
@@ -76,7 +92,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 			}	
 		});
 	}
-	else if (changeInfo.status === "complete") // also fires at "complete", which I'm ignoring here. Only need one (this one).
+	else if (changeInfo.status === "complete") 
 	{
 		//alert("onupdated complete");
 		chrome.tabs.getSelected(null, function(tab) { // only follow through if the updating tab is the same as the selected tab, don't want background tabs reloading and wrecking stuff
@@ -90,7 +106,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 					chrome.tabs.getSelected(null, function(tab) { 
 						var email = docCookies.getItem("email");
 						var this_access_token = docCookies.getItem("this_access_token");
-						chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL, email: email, this_access_token: this_access_token}, function(response) { });
+						waitAndSend(email,this_access_token);
 					});
 				}
 			}
@@ -116,13 +132,26 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 				chrome.tabs.getSelected(null, function(tab) { 
 					var email = docCookies.getItem("email");
 					var this_access_token = docCookies.getItem("this_access_token");
-					chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL, email: email, this_access_token: this_access_token}, function(response) { });
+					waitAndSend(email,this_access_token);
 				});
 			}
 		}
 	});
 }); 
 
+function waitAndSend(email, this_access_token)
+{
+	setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}
+	else{
+		//alert("waited, but thread still not ready");
+	}
+	},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150);
+}
+
+function andGo(email, this_access_token)
+{
+	chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL, email: email, this_access_token: this_access_token}, function(response) { });
+}
 
 function doButtonGen()
 {

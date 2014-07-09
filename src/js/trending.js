@@ -23,7 +23,7 @@ function doTrendingTab()
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var mds = "";  // main div string
-	mds = mds + "<table style=\"padding:10px\">";
+	mds = mds + "<table>";
 	mds = mds + "	<tr>";
 	mds = mds + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
 	mds = mds + "Most active pages";
@@ -33,10 +33,10 @@ function doTrendingTab()
 	mds = mds + "		</td>";
 	mds = mds + "	</tr>";
 	mds = mds + "	<tr>";
-	mds = mds + "		<td id=\"most_active_pages_td\" style=\"width:50%;vertical-align:top\">";
+	mds = mds + "		<td id=\"most_active_pages_td\" style=\"width:50%;padding:10px;vertical-align:top\">";
 	mds = mds + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 	mds = mds + "		</td>";
-	mds = mds + "		<td id=\"most_liked_pages_td\" style=\"width:50%;vertical-align:top\">";
+	mds = mds + "		<td id=\"most_liked_pages_td\" style=\"width:50%;padding:10px;vertical-align:top\">";
 	mds = mds + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 	mds = mds + "		</td>";
 	mds = mds + "	</tr>";

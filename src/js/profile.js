@@ -24,9 +24,12 @@ function viewProfile(screenname)
 	$("#header_div_top").text("Profile");
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
-	if (user_jo != null)
+	if (user_jo !== null)
 	{	
-		getProfile(screenname);
+		if(screenname !== null)
+			getProfile(screenname); // get the specified profile (mine or someone else's)
+		else
+			getProfile(user_jo.screenname); // get my own profile by default
 	}
 	else
 	{
@@ -345,88 +348,88 @@ function getProfile(screenname)
             	
             	$("#avatar_img").attr("src", user_jo.picture);
             	
-            	$("#screenname_available_button").click(
-            			function () 
-            			{
-            		         	$("#screenname_availability_span").show();
-            					if ($("#screenname_change_input").val().length <= 0) 
+            	$("#screenname_available_button").click( function (event) {
+            		event.preventDefault();
+            		$("#screenname_availability_span").show();
+            		if ($("#screenname_change_input").val().length <= 0) 
+            		{
+            			$("#screenname_availability_span").css("color","red");
+            			$("#screenname_availability_span").text("Blank");
+            			return;
+            		} 
+            		else if ($("#screenname_change_input").val().length < 6) 
+            		{
+            			$("#screenname_availability_span").css("color","red");
+            			$("#screenname_availability_span").text("Too short");
+            			return;
+            		} 
+            		else 
+            		{
+            			var response_object;
+            			$.ajax({
+            				type: 'GET',
+            				url: endpoint,
+            				data: {
+            					method: "isScreennameAvailable",
+            					screenname: $("#screenname_change_input").val()
+            				},
+            				dataType: 'json',
+            				async: true,
+            				success: function (data, status) 
+            				{
+            					response_object = data;
+            					if (response_object.response_status === "error") 
             					{
             						$("#screenname_availability_span").css("color","red");
-            						$("#screenname_availability_span").text("Blank");
-            						return;
+            						$("#screenname_availability_span").text("Error");
+            						setTimeout( function () { 
+            							$("#screenname_availability_span").text("");
+            						}, 3000);
             					} 
-            					else if ($("#screenname_change_input").val().length < 6) 
+            					else if (response_object.response_status === "success") 
             					{
-            						$("#screenname_availability_span").css("color","red");
-            						$("#screenname_availability_span").text("Too short");
-            						return;
-            					} 
-            					else 
-            					{
-            						var response_object;
-            						$.ajax({
-            							type: 'GET',
-            							url: endpoint,
-            							data: {
-            								method: "isScreennameAvailable",
-            								screenname: $("#screenname_change_input").val()
-            							},
-            							dataType: 'json',
-            							async: true,
-            							success: function (data, status) 
-            							{
-            								response_object = data;
-            								if (response_object.response_status === "error") 
-            								{
-            									$("#screenname_availability_span").css("color","red");
-            									$("#screenname_availability_span").text("Error");
-            									setTimeout( function () { 
-        											$("#screenname_availability_span").text("");
-        										}, 3000);
-            								} 
-            								else if (response_object.response_status === "success") 
-            								{
-            									if (response_object.screenname_available === "true") 
-            									{
-            										$("#screenname_availability_span").css("color","green");
-            										$("#screenname_availability_span").text("Available");
-            										setTimeout( function () { 
-            											$("#screenname_availability_span").text("");
-            										}, 3000);
-            									}
-            									else if (response_object.screenname_available === "false") 
-            									{
-            										$("#screenname_availability_span").css("color","red");
-            										$("#screenname_availability_span").text("Unavailable");
-            										setTimeout( function () { 
-            											$("#screenname_availability_span").text("");
-            										}, 3000);
-            									}
-            									else
-            									{
-            										$("#screenname_availability_span").css("color","red");
-            										$("#screenname_availability_span").text("Error. Value !t/f.");
-            										setTimeout( function () { 
-            											$("#screenname_availability_span").text("");
-            										}, 3000);
-            									}
-            								}
-            								else
-            								{
-            									//alert("weird. response_status not error or success.");
-            								}
-            								return;
-            							},
-            							error: function (XMLHttpRequest, textStatus, errorThrown) 
-            							{
-            								console.log(textStatus, errorThrown);
-            							}
-            						});
-            						return;
+            						if (response_object.screenname_available === "true") 
+            						{
+            							$("#screenname_availability_span").css("color","green");
+            							$("#screenname_availability_span").text("Available");
+            							setTimeout( function () { 
+            								$("#screenname_availability_span").text("");
+            							}, 3000);
+            						}
+            						else if (response_object.screenname_available === "false") 
+            						{
+            							$("#screenname_availability_span").css("color","red");
+            							$("#screenname_availability_span").text("Unavailable");
+            							setTimeout( function () { 
+            								$("#screenname_availability_span").text("");
+            							}, 3000);
+            						}
+            						else
+            						{
+            							$("#screenname_availability_span").css("color","red");
+            							$("#screenname_availability_span").text("Error. Value !t/f.");
+            							setTimeout( function () { 
+            								$("#screenname_availability_span").text("");
+            							}, 3000);
+            						}
             					}
-            				});				
+            					else
+            					{
+            						//alert("weird. response_status not error or success.");
+            					}
+            					return;
+            				},
+            				error: function (XMLHttpRequest, textStatus, errorThrown) 
+            				{
+            					console.log(textStatus, errorThrown);
+            				}
+            			});
+            			return;
+            		}
+            	});				
             	
-            	$("#screenname_submit_button").click(function () {
+            	$("#screenname_submit_button").click(function (event) {
+            		event.preventDefault();
             		$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -490,35 +493,41 @@ function getProfile(screenname)
         			$("#use_monster_radio").prop('checked', true);
         		
             	
-            	$("#use_geometric_radio").click(function () {
+            	$("#use_geometric_radio").click(function (event) {
+            		event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
             	});
-            	$("#use_monster_radio").click(function () {
+            	$("#use_monster_radio").click(function (event) {
+            		event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
             	});
-            	$("#use_cartoonface_radio").click(function () {
+            	$("#use_cartoonface_radio").click(function (event) {
+            		event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
             	});
-            	$("#use_retro_radio").click(function () {
+            	$("#use_retro_radio").click(function (event) {
+            		event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
             	});
-            	$("#use_unicorn_radio").click(function () {
+            	$("#use_unicorn_radio").click(function (event) {
+            		event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
             		$("#unicorn_wait_span").text("Wait...");
             		setTimeout(function() {$("#unicorn_wait_span").text("");}, 2000);
             	});
-            	$("#use_silhouette_radio").click(function () {
+            	$("#use_silhouette_radio").click(function (event) {
+            		event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
             	});
             	
-            	$("#avatar_save_button").click(function () {
-            		//alert("nyi image=" + $("#avatar_img").attr("src"));
+            	$("#avatar_save_button").click(function (event) {
+            		event.preventDefault();
             		$.ajax({
             			type: 'GET',
             			url: endpoint,
@@ -552,8 +561,8 @@ function getProfile(screenname)
             		});  
             	});
             	
-            	$("#logout_link").click(
-            			function () {
+            	$("#logout_link").click( function (event) {
+            				event.preventDefault();
             				var logoutmessage = "<div>";
             				logoutmessage = logoutmessage + "<table style=\"margin-right:auto;margin-left:auto;border-spacing:20px\">";
             				logoutmessage = logoutmessage + "	<tr>";
@@ -583,15 +592,15 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "</div>";
             				$("#main_div_" + currentURLhash).html(logoutmessage);//OK
             				
-            				$("#logout_confirmation_button").click(
-                        			function () {
-                        				email = null;
-                        				this_access_token = null;
-                        				user_jo = null;
-                        				displayLogstatAsLoggedOut();
-                        				doThreadTab();
+            				$("#logout_confirmation_button").click( function (event) {
+                        				event.preventDefault();
+                        				 chrome.runtime.sendMessage({method: "logout"}, function(response) {
+                        					  alert(response.message);
+                        					  user_jo = null;
+                        					  initializeView();
+                        					  doThreadTab();
+                        				 });
                         			});
-            			
             				return;
             			});
             

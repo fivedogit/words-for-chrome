@@ -13,14 +13,14 @@
 function doAboutTab(message) 
 {
 	tabmode = "about";
-	$("#thread_tab_img").attr("src", "images/chat_gray.png");
-	$("#trending_tab_img").attr("src", "images/trending_gray.png");
+	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_gray.png"));
+	$("#trending_tab_img").attr("src",  chrome.extension.getURL("images/trending_gray.png"));
 	updateNotificationTabLinkImage();
-	$("#past_tab_img").attr("src", "images/clock_gray.png");
-	$("#profile_tab_img").attr("src", "images/user_gray.png");
-	var details = chrome.app.getDetails();
-    var version = details.version;
-	$("#header_div_top").text("About WORDS (version " + version + ")");
+	$("#past_tab_img").attr("src",  chrome.extension.getURL("images/clock_gray.png"));
+	$("#profile_tab_img").attr("src",  chrome.extension.getURL("images/user_gray.png"));
+	chrome.runtime.sendMessage({method: "getVersion"}, function(response) {
+		  $("#header_div_top").text("About WORDS (version " + response.version + ")");
+	});
 	$("#header_div_top").show();
 	$("#comment_submission_form_div_" + currentURLhash).hide();
 	var aboutmessage = "";
@@ -71,6 +71,7 @@ function doAboutTab(message)
 	$("#main_div_" + currentURLhash).html(aboutmessage); //OK
 	
 	$("a").click(function(event) {
+		// do not prevent default?
 		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
 		{
 			event.processed = true;

@@ -6,6 +6,7 @@ var user_jo;
 var thread_jo;
 var currentURL;
 var currentURLhash;
+var currentHostname;
 var email;
 var this_access_token;
 var scrollable = 0;
@@ -33,19 +34,24 @@ function elementInViewport(el) {
 
 chrome.extension.onMessage.addListener(function(request, sender, callback)
 {
-	currentURLhash = fromDecimalToOtherBase(62,hashFnv32a(request.currentURL));
-	currentURL = request.currentURL;
-	if(request.user_jo !== null)
-	{
-		email = request.email;
-		this_access_token = request.this_access_token;
-	}	
-	user_jo = request.user_jo;
-	thread_jo = request.thread_jo;
 	if (request.action === "embedWORDS")
 	{
+		currentURLhash = fromDecimalToOtherBase(62,hashFnv32a(request.currentURL));
+		currentURL = request.currentURL;
+		currentHostname = currentURL.substring(currentURL.indexOf("://") + 3, currentURL.indexOf("/", currentURL.indexOf("://") + 3));
+		if (currentHostname.indexOf(".", currentHostname.indexOf(".")+1) === -1) // only has one "." assume www.
+			 currentHostname = "www." + currentHostname;
+		
+		if(request.user_jo !== null)
+		{
+			email = request.email;
+			this_access_token = request.this_access_token;
+		}	
+		user_jo = request.user_jo;
+		thread_jo = request.thread_jo;
 		var alreadyfound = false;
 		var elem = document.getElementById("comments-container"); // the document is finished, find the comments-container
+		
 		if(typeof elem !== "undefined" && elem !== null)
 		{	
 			elem.innerHTML = ""; // blank it.
@@ -54,6 +60,7 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		else
 		{
 			elem = document.getElementById("words_div");
+			elem.innerHTML = ""; // blank it.
 		}
 		
 		if(!alreadyfound && elementInViewport(elem)) // when found for the first time, no scrolling necessary

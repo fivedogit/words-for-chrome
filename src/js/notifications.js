@@ -142,6 +142,7 @@ function doNotificationItem(item_id, dom_id)
 	$("#" + dom_id).html(fids);//OK
 	
 	$("#notification_hide_link_" + item_random).click({id: item_id, item_random: item_random}, function(event) {
+		event.preventDefault();
 		var removal_target = event.data.id;
 		$.ajax({
 	        type: 'GET',
@@ -186,7 +187,6 @@ function doNotificationItem(item_id, dom_id)
 	        	console.log(textStatus, errorThrown);
 	        }
 		});
-		return false;
 	});	
 	
 	var item_jo = null;
@@ -253,6 +253,7 @@ function doNotificationItem(item_id, dom_id)
     			{	
     				$("#screenname_link_" + item_random).text(item_jo.author_screenname);
         			$("#screenname_link_" + item_random).click({author_screenname: item_jo.author_screenname}, function(event) {
+        				event.preventDefault();
         		 		viewProfile(event.data.author_screenname);
         		 	});
     			}
