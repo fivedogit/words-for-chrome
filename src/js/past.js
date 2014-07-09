@@ -10,10 +10,11 @@ function doPastTab()
 	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_blue.png"));
 	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	
-	$("#header_div_top").text("Your past comments");
-	$("#utility_div").show();
-	$("#header_div_top").show();
-	$("#comment_submission_form_div_" + currentURLhash).hide();
+	$("#utility_header_td").text("Your past comments");
+	
+	$("#utility_message_td").hide();
+	$("#utility_csf_td").hide();
+	
 	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\" id=\"loading_past_comments_div\">Loading your past comments... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
 	beginindex = 0;
 	endindex = 8;
@@ -42,7 +43,7 @@ function getPastComments()
 	            if (data.response_status === "error") 
 	            {
 	            	$("#loading_past_comments_div").text("Error retrieving past comments.");
-	            	displayMessage(data.message, "red", "message_div_" + currentURLhash);
+	            	displayMessage(data.message, "red", "utility_message_td");
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
 	        			displayMessage("Your login has expired. Please relog.", "red");
@@ -91,7 +92,7 @@ function getPastComments()
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
 	        	$("#main_div_" + currentURLhash).text("");
-	        	displayMessage("Ajax alert for getMyComments method.", "red", "message_div_" + currentURLhash);
+	        	displayMessage("Ajax alert for getMyComments method.", "red", "utility_message_td");
 	            console.log(textStatus, errorThrown);
 	        } 
 		});

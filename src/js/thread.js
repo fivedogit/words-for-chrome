@@ -19,10 +19,9 @@ function doThreadTab()
 	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
 	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	
-	$("#utility_div").show();
-	$("#header_div_top").text("Comment thread");
-	$("#header_div_top").show();
-	$("#comment_submission_form_div_" + currentURLhash).show();
+	$("#utility_header_td").text("Comment thread");
+	$("#utility_message_td").hide();
+	$("#utility_csf_td").show();
 	
 	$("#main_div_" + currentURLhash).text("");
 	
@@ -89,7 +88,7 @@ function gotThread()
 		
 		
 		// like/dislike indicator here
-		$("#header_div_top").html(happy);//OK
+		$("#utility_header_td").html(happy);//OK
 		
 		
 		$("#google_favicon_img_" + currentURLhash).attr("src", "http://www.google.com/s2/favicons?domain=" + thread_jo.significant_designation);
@@ -137,7 +136,7 @@ function gotThread()
 					else if(data.response_status === "error")
 					{
 						$("#pagelike_img").attr("src", prev);
-						displayMessage(data.message, "red", "message_div_" + currentURLhash, 5);
+						displayMessage(data.message, "red", "utility_message_td", 5);
 						if(data.error_code && data.error_code === "0000")
 						{
 							displayMessage("Your login has expired. Please relog.", "red");
@@ -148,7 +147,7 @@ function gotThread()
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 					$("#pagelike_img").attr("src", prev);
-					displayMessage("Unable to like page. (ajax)", "red", "message_div_" + currentURLhash);
+					displayMessage("Unable to like page. (ajax)", "red", "utility_message_td");
 					console.log(textStatus, errorThrown);
 				}
 			});
@@ -320,7 +319,7 @@ function gotThread()
 	 				},
 	 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 	 					$("#follow_img").attr("src", previous_src);
-	 					displayMessage("Unable to unfollow page. (ajax)", "red", "message_div_" + currentURLhash);
+	 					displayMessage("Unable to unfollow page. (ajax)", "red", "utility_message_td");
 	 					console.log(textStatus, errorThrown);
 	 				}
 	 			});
@@ -353,7 +352,7 @@ function gotThread()
 	 						}
 	 						else if (data.response_status === "success")
 	 						{
-	 							displayMessage("Hostname separated.", "red", "message_div_" + currentURLhash);
+	 							displayMessage("Hostname separated.", "red", "utility_message_td");
 	 							$("#separated_or_combined_img").attr("src", chrome.extension.getURL("images/separated_icon.png"));
 	 						}
 	 					},
@@ -383,7 +382,7 @@ function gotThread()
 	 						}
 	 						else if (data.response_status === "success")
 	 						{
-	 							displayMessage("Hostname combined.", "red", "message_div_" + currentURLhash);
+	 							displayMessage("Hostname combined.", "red", "utility_message_td");
 	 							$("#separated_or_combined_img").attr("src", chrome.extension.getURL("images/combined_icon.png"));
 	 						}
 	 					},
@@ -412,11 +411,11 @@ function gotThread()
 	 				success: function (data, status) {
 	 					if (data.response_status === "error")
 	 					{
-	 						displayMessage(data.message, "red", "message_div_" + currentURLhash);
+	 						displayMessage(data.message, "red", "utility_message_td");
 	 					}
 	 					else if (data.response_status === "success")
 	 					{
-	 						displayMessage("sqsp set", "red", "message_div_" + currentURLhash);
+	 						displayMessage("sqsp set", "red", "utility_message_td");
 	 					}
 	 				},
 	 				error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -598,15 +597,15 @@ function prepareGetAndPopulateThreadPortion()
 					}
 					else if (data.response_status === "error") 
 					{
-						displayMessage(data.message, "red", "message_div_" + currentURLhash);
+						displayMessage(data.message, "red", "utility_message_td");
 					}
 					else
 					{
-						displayMessage("getMostActivePagesForThisHostname invalid response", "red", "message_div_" + currentURLhash);
+						displayMessage("getMostActivePagesForThisHostname invalid response", "red", "utility_message_td");
 					}
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					displayMessage("AJAX error getting trending info.", "red", "message_div_" + currentURLhash);
+					displayMessage("AJAX error getting trending info.", "red", "utility_message_td");
 					console.log(textStatus, errorThrown);
 				} 
 			});
@@ -637,15 +636,15 @@ function prepareGetAndPopulateThreadPortion()
 					}
 					else if (data.response_status === "error") 
 					{
-						displayMessage(data.message, "red", "message_div_" + currentURLhash);
+						displayMessage(data.message, "red", "utility_message_td");
 					}
 					else
 					{
-						displayMessage("getMostLikedPagesForThisHostname invalid response", "red", "message_div_" + currentURLhash);
+						displayMessage("getMostLikedPagesForThisHostname invalid response", "red", "utility_message_td");
 					}
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					displayMessage("AJAX error getting trending info.", "red", "message_div_" + currentURLhash);
+					displayMessage("AJAX error getting trending info.", "red", "utility_message_td");
 					console.log(textStatus, errorThrown);
 				} 
 			});
@@ -1231,7 +1230,7 @@ function submitComment(parent) // submits comment and updates thread
 	        if (data.response_status === "error") 
 	        {
 	        	//if (parent_to_submit.indexOf(".") !== -1) // on server-fail of toplevel form comm submission, reenable submit button and remove spinner
-		    	//	displayMessage(data.message, "red", "message_div_" + currentURLhash);
+		    	//	displayMessage(data.message, "red", "utility_message_td");
 	        	//else
 	        	displayMessage(data.message, "red", "message_div_" + parent);
             	if(data.error_code && data.error_code === "0000")
@@ -1278,7 +1277,7 @@ function submitComment(parent) // submits comment and updates thread
 	        	docCookies.removeItem("saved_text_dom_id");
 	        	
 	        	//if(parent.indexOf(".") !== -1) // toplevel
-	        	//	displayMessage("Comment posted.", "black", "message_div_" + currentURLhash);
+	        	//	displayMessage("Comment posted.", "black", "utility_message_td");
 	        	//else 
 	        	displayMessage("Comment posted.", "black", "message_div_" + parent);
 				

@@ -18,10 +18,11 @@ function doTrendingTab()
 	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	//updateNotificationTabLinkImage();
 
-	$("#utility_div").show();
-	$("#header_div_top").html("Activity across the Web <span id=\"trending_activity_hours_span\"></span>"); //OK
-	$("#header_div_top").show();
-	$("#comment_submission_form_div_" + currentURLhash).hide();
+	$("#utility_header_td").html("Activity across the Web <span id=\"trending_activity_hours_span\"></span>"); //OK
+	
+	$("#utility_message_td").hide();
+	$("#utility_csf_td").hide();
+	
 	var mds = "";  // main div string
 	mds = mds + "<table>";
 	mds = mds + "	<tr>";
@@ -63,7 +64,7 @@ function getTrendingActivity()
 			}
 			else if (data.response_status === "error") 
 			{
-				displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				displayMessage(data.message, "red", "utility_message_td");
 				return;
 			}
 			else
@@ -73,7 +74,7 @@ function getTrendingActivity()
 			}
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown) {
-			displayMessage("AJAX error getting most active pages info.", "red", "message_div_" + currentURLhash);
+			displayMessage("AJAX error getting most active pages info.", "red", "utility_message_td");
 			console.log(textStatus, errorThrown);
 			return;
 		} 
@@ -95,7 +96,7 @@ function getTrendingActivity()
 			}
 			else if (data.response_status === "error") 
 			{
-				displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				displayMessage(data.message, "red", "utility_message_td");
 				return;
 			}
 			else
@@ -105,7 +106,7 @@ function getTrendingActivity()
 			}
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown) {
-			displayMessage("AJAX error getting most liked pages info.", "red", "message_div_" + currentURLhash);
+			displayMessage("AJAX error getting most liked pages info.", "red", "utility_message_td");
 			console.log(textStatus, errorThrown);
 			return;
 		} 

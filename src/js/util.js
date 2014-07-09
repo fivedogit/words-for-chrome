@@ -295,7 +295,7 @@ function displayMessage(inc_message, inc_color, dom_id, s)
 {
 	if(typeof dom_id === "undefined" || dom_id === null)
 	{
-		dom_id = "message_div_" + currentURLhash;
+		dom_id = "utility_message_td";
 	}
 	var ms;
 	if(s === null || !$.isNumeric(s) ||  Math.floor(s) != s) // not a number or not an integer 
@@ -458,7 +458,7 @@ function createBlurEventForTextarea(id)
 			function (event) {
 				if($("#comment_textarea_" + event.data.id).val() === "") // if the user has written anything, leave the composition + submission area the way it is
 				{
-					$("#comment_textarea_" + event.data.id).css("height", "22px");			// set it back to normal height
+					$("#comment_textarea_" + event.data.id).css("height", "30px");			// set it back to normal height
 					$("#comment_textarea_" + event.data.id).val("Say something..."); // set the default wording
 					$("#char_count_and_submit_button_div_" + event.data.id).hide();			// hide the charcount and submit area
 					$("#comment_textarea_" + event.data.id).css("color", "#aaa");			// reset the text to gray
@@ -503,7 +503,7 @@ function createFocusEventForTextarea(id)
 }
 
 
-/*
+
 function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url)
 {	
 	//alert("noting impression");
@@ -671,9 +671,9 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 	 {
 		 //
 	 } 
- }*/
+ }
  
- /*	var footerstr = "";
+ 	var footerstr = "";
 	var shown_softlaunchmsg = docCookies.getItem("shown_softlaunchmsg");
 	var firstrun_msg_index = docCookies.getItem("firstrun_msg_index")*1; 
 	if(false) //bg.msfe_according_to_backend >= 1402266600000 && bg.msfe_according_to_backend < 1402300800000 && (shown_softlaunchmsg === null || firstrun_msg_index > 5)) // June 8th 6:30pm EST - June 9th 4am PST est
@@ -746,7 +746,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 		else
 		{
 			var randomint = -1;
-			if(typeof bg.footer_random_pool !== "undefined" && bg.footer_random_pool !== null && bg.footer_random_pool > 0)
+			if(typeof bg.footer_random_pool !== "undefined" && bg.footer_random_pool !== null && bg.footer_random_pool > 0) // FIXME
 				randomint = Math.floor(Math.random() * bg.footer_random_pool);
 			else
 				randomint = Math.floor(Math.random() * 50);
@@ -818,6 +818,6 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 				noteImpressionAndCreateHandler("twitter_persacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/fivedogit");
 			}
 		}
-	}*/
+	}
 
 

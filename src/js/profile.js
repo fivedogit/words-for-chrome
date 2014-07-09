@@ -20,10 +20,11 @@ function viewProfile(screenname)
 	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
 	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_blue.png"));
 	
-	$("#utility_div").show();
-	$("#header_div_top").text("Profile");
-	$("#header_div_top").show();
-	$("#comment_submission_form_div_" + currentURLhash).hide();
+	$("#utility_header_td").text("Profile");
+	
+	$("#utility_message_td").hide();
+	$("#utility_csf_td").hide();
+	
 	if (user_jo !== null)
 	{	
 		if(screenname !== null)
@@ -76,7 +77,7 @@ function getProfile(screenname)
         success: function (data, status) {
             if (data.response_status === "error")
             {
-            	displayMessage(data.message, "red", "message_div_" + currentURLhash);
+            	displayMessage(data.message, "red", "utility_message_td");
             	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Unable to retrieve profile.</div>");//OK
             	if(data.error_code && data.error_code === "0000")
         		{
@@ -100,7 +101,7 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "					<img style=\"border-radius: 4px;\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"height:128px;\">";
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
-            	main_div_string = main_div_string + "					<table style=\"margin-right:auto;border-spacing:5px;\">";
+            	main_div_string = main_div_string + "					<table style=\"margin-right:auto;border-spacing:5px;border-collapse:separate;\">";
             	if (target_user_jo.email)
             		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span> <a href=\"#\" id=\"logout_link\">Log out</a></td></tr>";
             	else
@@ -137,7 +138,7 @@ function getProfile(screenname)
                 	main_div_string = main_div_string + "			</tr>";
                 	main_div_string = main_div_string + "			<tr>";
                 	main_div_string = main_div_string + "				<td>";
-                	main_div_string = main_div_string + "					<table style=\"margin-right:auto;margin-left:auto;border-spacing:5px\">";
+                	main_div_string = main_div_string + "					<table style=\"margin-right:auto;margin-left:auto;border-collapse:separate;border-spacing:5px\">";
                 	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Overlay size:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"size_selector\">";
@@ -277,31 +278,43 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left;vertical-align:top\">";
-					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
-					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\">Save</button>";
+					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;48px;height:48px\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
+					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\" class=\"standardized-button\" >Save</button>";
 					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
-					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold\">";
+					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
 					main_div_string = main_div_string + "							 Change screenname:<br><span style=\"font-weight:normal\">Letters and numbers only,<br>starting with a letter</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "								<input type=text id=\"screenname_change_input\">";
+					main_div_string = main_div_string + "								<table>";
+					main_div_string = main_div_string + "									<tr>";
+					main_div_string = main_div_string + "										<td>";
+					main_div_string = main_div_string + "											<input type=text id=\"screenname_change_input\">";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "									</tr>";
+					main_div_string = main_div_string + "									<tr>";
+					main_div_string = main_div_string + "										<td style=\"text-align:center\">";
+					main_div_string = main_div_string + "											<a href=\"#\" id=\"screenname_available_link\">available?</a> - ";
+					main_div_string = main_div_string + "											<a href=\"#\" id=\"screenname_submit_link\">submit</a>";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "									</tr>";
+					main_div_string = main_div_string + "								</table>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td>";
-					main_div_string = main_div_string + "								<span style=\"margin-left:2px;border:0px black solid;display:none\" id=\"screenname_availability_span\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></span>";
+					main_div_string = main_div_string + "								<table>";
+					main_div_string = main_div_string + "									<tr>";
+					main_div_string = main_div_string + "										<td>";
+					main_div_string = main_div_string + "											<span style=\"margin-left:2px;border:0px black solid;display:none\" id=\"screenname_availability_span\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></span>";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "									</tr>";
+					main_div_string = main_div_string + "									<tr>";
+					main_div_string = main_div_string + "										<td style=\"text-align:left\" id=\"screenname_result_td\">";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "									</tr>";
+					main_div_string = main_div_string + "								</table>";
 					main_div_string = main_div_string +	"							</td>";
-					main_div_string = main_div_string + "						</tr>";
-					main_div_string = main_div_string + "						<tr>";
-					main_div_string = main_div_string + "							<td>";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "								<input type=button id=\"screenname_available_button\" value=\"available?\" style=\"width:78px\">";
-					main_div_string = main_div_string + "								<input type=button id=\"screenname_submit_button\" value=\"submit\" style=\"width:78px\">";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"screenname_result_td\">";
-					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
                 	main_div_string = main_div_string + "					</table>";
                 	main_div_string = main_div_string + "				</td>";
@@ -348,7 +361,7 @@ function getProfile(screenname)
             	
             	$("#avatar_img").attr("src", user_jo.picture);
             	
-            	$("#screenname_available_button").click( function (event) {
+            	$("#screenname_available_link").click( function (event) {
             		event.preventDefault();
             		$("#screenname_availability_span").show();
             		if ($("#screenname_change_input").val().length <= 0) 
@@ -428,7 +441,7 @@ function getProfile(screenname)
             		}
             	});				
             	
-            	$("#screenname_submit_button").click(function (event) {
+            	$("#screenname_submit_link").click(function (event) {
             		event.preventDefault();
             		$.ajax({
 						type: 'GET',
@@ -450,7 +463,7 @@ function getProfile(screenname)
 								setTimeout( function () { 
 									$("#screenname_result_td").text("");
 								}, 3000);
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				            		//alert("setUserPreference:screenname returned code 0000");
@@ -564,7 +577,7 @@ function getProfile(screenname)
             	$("#logout_link").click( function (event) {
             				event.preventDefault();
             				var logoutmessage = "<div>";
-            				logoutmessage = logoutmessage + "<table style=\"margin-right:auto;margin-left:auto;border-spacing:20px\">";
+            				logoutmessage = logoutmessage + "<table style=\"margin-right:auto;margin-left:auto;border-spacing:20px;border-collapse:separate\">";
             				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:14px\">";
             				logoutmessage = logoutmessage + "You have chosen to log out of WORDS.";
@@ -585,7 +598,7 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "	</tr>";
             				logoutmessage = logoutmessage + "	<tr>";
             				logoutmessage = logoutmessage + "		<td style=\"text-align:center;font-size:15px\">";
-            				logoutmessage = logoutmessage + "			<button id=\"logout_confirmation_button\">LOGOUT</button>";
+            				logoutmessage = logoutmessage + "			<button id=\"logout_confirmation_button\" class=\"standardized-button\">Logout</button>";
             				logoutmessage = logoutmessage + "		</td>";
             				logoutmessage = logoutmessage + "	</tr>";
             				logoutmessage = logoutmessage + "</table>";
@@ -665,7 +678,7 @@ function getProfile(screenname)
 				            		$("#size_selector").val("medium");
 				            	else
 				            		$("#size_selector").val("medium");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
@@ -717,7 +730,7 @@ function getProfile(screenname)
 				            		$("#onlike_selector").val("email");
 				            	else if (user_jo.onlike === "do nothing")
 				            		$("#onlike_selector").val("do nothing");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
@@ -761,7 +774,7 @@ function getProfile(screenname)
 				            		$("#ondislike_selector").val("email");
 				            	else if (user_jo.ondislike === "do nothing")
 				            		$("#ondislike_selector").val("do nothing");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
@@ -804,7 +817,7 @@ function getProfile(screenname)
 				            		$("#onreply_selector").val("email");
 				            	else if (user_jo.onreply === "do nothing")
 				            		$("#onreply_selector").val("do nothing");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
@@ -847,7 +860,7 @@ function getProfile(screenname)
 				            		$("#onmention_selector").val("email");
 				            	else if (user_jo.onmention === "do nothing")
 				            		$("#onmention_selector").val("do nothing");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
@@ -891,7 +904,7 @@ function getProfile(screenname)
 				            		$("#onfollowcomment_selector").val("email");
 				            	else if (user_jo.onfollowcomment === "do nothing")
 				            		$("#onfollowcomment_selector").val("do nothing");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
@@ -934,7 +947,7 @@ function getProfile(screenname)
 				            		$("#emailpromos_selector").val("email");
 				            	else if (user_jo.emailpromos === "do nothing")
 				            		$("#emailpromos_selector").val("do nothing");
-				        		displayMessage(data.message, "red", "message_div_" + currentURLhash);
+				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
 				        			displayMessage("Your login has expired. Please relog.", "red");
@@ -958,7 +971,7 @@ function getProfile(screenname)
         
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-        	displayMessage("Ajax error setUserPreference: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + currentURLhash);
+        	displayMessage("Ajax error setUserPreference: text=" + textStatus + " and error=" + errorThrown, "red", "utility_message_td");
             console.log(textStatus, errorThrown);
         } 
 	});

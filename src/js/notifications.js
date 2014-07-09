@@ -18,10 +18,11 @@ function doNotificationsTab()
 	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
 	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	
-	$("#header_div_top").text("Notification Feed");
-	$("#utility_div").show();
-	$("#header_div_top").show();
-	$("#comment_submission_form_div_" + currentURLhash).hide();
+	$("#utility_header_td").text("Notification Feed");
+	
+	$("#utility_message_td").hide();
+	$("#utility_csf_td").hide();
+
 	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading activity feed... please wait.</div>");//OK
 	getNotifications();
 }
@@ -78,7 +79,7 @@ function getNotifications()
 
 	            if (data.response_status === "error") 
 	            {
-	            	displayMessage(data.message, "red", "message_div_" + currentURLhash);
+	            	displayMessage(data.message, "red", "utility_message_td");
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
 	        			displayMessage("Your login has expired. Please relog.", "red");
@@ -94,7 +95,7 @@ function getNotifications()
 	            }
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	displayMessage("Ajax alert for resetActivity method.", "red", "message_div_" + currentURLhash);
+	        	displayMessage("Ajax alert for resetActivity method.", "red", "utility_message_td");
 	            console.log(textStatus, errorThrown);
 	        } 
 		});

@@ -6,11 +6,18 @@ chrome.runtime.onMessage.addListener(
 		  docCookies.removeItem("this_access_token");
 		  sendResponse({message: "goodbye"});
 	  }  
-	  if(request.method === "getVersion")
+	  else if(request.method === "getVersion")
 	  {
 		  var details = chrome.app.getDetails();
 		  var version = details.version;
 		  sendResponse({version: version});
+	  }  
+	  else if(request.method === "switchUser")
+	  {
+		  docCookies.setItem("email", request.email);
+		  docCookies.setItem("this_access_token", request.this_access_token);
+		  getUser(false);
+		  waitAndSend(request.email, request.this_access_token);
 	  }  
   });
 

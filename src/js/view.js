@@ -24,17 +24,17 @@
  			bs = bs + "</td>";
  		bs = bs + "</tr>";
  	bs = bs + "</table>";
- 	bs = bs + "<div id=\"utility_div_" + currentURLhash + "\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X_light.png") + "');padding-top:7px;padding-bottom:7px;border-top: 1px solid #ddd;\">";
- 	bs = bs + "	<div id=\"header_div_top\" style=\"font-size:14px;font-weight:bold;display:none;\"></div>"; // make unique with currentURLhash?
- 	bs = bs + "	<div class=\"message-div\" id=\"message_div_" + currentURLhash + "\" style=\"display:none;padding-bottom:5px\"></div>";
- 	bs = bs + "	<div id=\"tlcf_div_" + currentURLhash + "\"></div>";
- 	bs = bs + "</div>";
+ 	bs = bs + "<table id=\"utility_table_" + currentURLhash + "\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X_light.png") + "')\">";
+ 	bs = bs + "	<tr><td id=\"utility_header_td\" style=\"font-size:14px;font-weight:bold;padding:8px;border:1px solid red\"></td></tr>"; // make unique with currentURLhash?
+ 	bs = bs + "	<tr><td id=\"utility_message_td\" style=\"padding:8px;border:1px solid green\"></td></tr>";
+ 	bs = bs + "	<tr><td id=\"utility_csf_td\" style=\"padding:8px;vertical-align:middle;border:1px solid blue\"></td></tr>"; // csf = comment submission form
+ 	bs = bs + "</table>";
 	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><div style=\"padding:20px\"></div></div>";
 	bs = bs + "<div id=\"footer_div\" class=\"white-links\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X.png") + "');padding:13px 5px 13px 5px;color:white;\">";
 	bs = bs + "</div>";
  	$("#words_div").html(bs);//OK
  
- 	writeCommentForm(currentURLhash, "tlcf_div_" + currentURLhash); // id_to_use, target_dom_id
+ 	writeCommentForm(currentURLhash, "utility_csf_td"); // id_to_use, target_dom_id
  	
  	$("#words_logo_link").click(
  			function (event) {
@@ -182,28 +182,30 @@
  
  function writeCommentForm(id_to_use, target_dom_id)
  {
-	 var tlcf = "";
-	 tlcf = tlcf + "<form method=post action=\"#\">"; 
-		tlcf = tlcf + "<div style=\"margin-right:auto;margin-left:auto;width:80%;\" id=\"comment_submission_form_div_" + id_to_use + "\" style=\"padding-top:6px\">"; 
+	 var csf_str = "";
+	 csf_str = csf_str + "<form method=post action=\"#\">"; 
+		csf_str = csf_str + "<div style=\"margin-right:auto;margin-left:auto;width:80%;\" id=\"comment_submission_form_div_" + id_to_use + "\" style=\"\">"; 
 		var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
 		var charsleft = 500;
+		csf_str = csf_str + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + id_to_use + "\">";
 		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + id_to_use) 
 				&& docCookies.getItem("saved_text") != null && docCookies.getItem("saved_text").trim().length > 0)
 		{
 			var s_text = docCookies.getItem("saved_text");
-			tlcf = tlcf + "<textarea class=\"composition-textarea\" style=\"color:black\" id=\"comment_textarea_" + id_to_use + "\">" + s_text + "</textarea>";
+			csf_str = csf_str + s_text;
 			charsleft = 500 -  s_text.length;
 		}
 		else	
-			tlcf = tlcf + "<textarea class=\"composition-textarea\" style=\"height:22px;color:#aaa\" id=\"comment_textarea_" + id_to_use + "\">Say something...</textarea>";
-		tlcf = tlcf + "	<div id=\"char_count_and_submit_button_div_" + id_to_use + "\" style=\"width:100px;height:16px;margin-left:auto;margin-right:0px;vertical-align:middle;display:none;margin-bottom:5px\">";
-		tlcf = tlcf + "		<span style=\"display:none;padding-right:3px;\" id=\"comment_submission_progress_span_" + id_to_use + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
-		tlcf = tlcf + "		<span id=\"charsleft_" + id_to_use + "\" style=\"margin-right:3px\">" + charsleft + "</span> ";
-		tlcf = tlcf + "		<span><input id=\"comment_submission_form_submit_button_" + id_to_use + "\" class=\"comment-submit-button\" type=button value=\"Submit\"></input></span>";
-		tlcf = tlcf + "	</div>";
-		tlcf = tlcf + "</div>";
-	tlcf = tlcf + "</form>";	
-	$("#" + target_dom_id).html(tlcf);
+			csf_str = csf_str + "Say something...";
+		csf_str = csf_str + "</textarea>";
+		csf_str = csf_str + "	<div id=\"char_count_and_submit_button_div_" + id_to_use + "\" style=\"width:110px;margin-left:auto;margin-right:0px;vertical-align:middle;display:none;\">";
+		csf_str = csf_str + "		<span style=\"display:none;padding-right:6px\" id=\"comment_submission_progress_span_" + id_to_use + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
+		csf_str = csf_str + "		<span id=\"charsleft_" + id_to_use + "\" style=\"padding-right:6px\">" + charsleft + "</span> ";
+		csf_str = csf_str + "		<span><input id=\"comment_submission_form_submit_button_" + id_to_use + "\" class=\"standardized-button\" type=button value=\"Submit\"></input></span>";
+		csf_str = csf_str + "	</div>";
+		csf_str = csf_str + "</div>";
+	csf_str = csf_str + "</form>";	
+	$("#" + target_dom_id).html(csf_str);
 	
 	createSubmissionFormSubmitButtonClickEvent(id_to_use);
  	createFocusEventForTextarea(id_to_use);
@@ -259,16 +261,16 @@ function displayLogstatAsLoggedOut() {
 
 	var temphtml = "";
 	$("#google_login_img").mouseover( function() {
-		temphtml = $("#header_div_top").html();//OK (getter)
+		temphtml = $("#utility_header_td").html();//OK (getter)
 		$("#comment_submission_form_div_" + currentURLhash).hide();
-		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>WORDS cannot post on your behalf nor access any non-basic information.<br>Your WORDS identity is separate and anonymous.</span>");//OK
+		$("#utility_header_td").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>WORDS cannot post on your behalf nor access any non-basic information.<br>Your WORDS identity is separate and anonymous.</span>");//OK
 		$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24_mo.png"));
 		$("#tab_tooltip_td").text("Login with Google");
 		return false;
 	});
 	$("#google_login_img").mouseout( function() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
-		$("#header_div_top").html(temphtml);//OK
+		$("#utility_header_td").html(temphtml);//OK
 		if(tabmode === "thread")
 			$("#comment_submission_form_div_" + currentURLhash).show();
 		$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24.png"));
@@ -286,16 +288,16 @@ function displayLogstatAsLoggedOut() {
 	});
 	
 	$("#facebook_login_img").mouseover( function() {
-		temphtml = $("#header_div_top").html();//OK (getter)
+		temphtml = $("#utility_header_td").html();//OK (getter)
 		$("#comment_submission_form_div_" + currentURLhash).hide();
-		$("#header_div_top").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>WORDS cannot post to Facebook nor access any non-basic information.<br>Your WORDS identity is separate and anonymous.</span>");//OK
+		$("#utility_header_td").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>WORDS cannot post to Facebook nor access any non-basic information.<br>Your WORDS identity is separate and anonymous.</span>");//OK
 		$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24_mo.png"));
 		$("#tab_tooltip_td").text("Login with FB");
 		return false;
 	});
 	$("#facebook_login_img").mouseout( function() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
-		$("#header_div_top").html(temphtml);//OK
+		$("#utility_header_td").html(temphtml);//OK
 		if(tabmode === "thread")
 			$("#comment_submission_form_div_" + currentURLhash).show();
 		$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24.png"));
@@ -391,9 +393,9 @@ function displayLogstatAsLoggedIn() {
 	
 	if(typeof user_jo.alts !== "undefined" && user_jo.alts != null)
 	{
-		$("#alt_dropdown_img").click(
-				function () {
-					var prev = $("#header_div_top").html();//OK (getter)
+		$("#alt_dropdown_img").click( function (event) {
+					event.preventDefault();
+					var prev = $("#utility_header_td").html();//OK (getter)
 					var alts_counter = 0;
 					var str = "";
 					while(alts_counter < user_jo.alts.length)
@@ -402,20 +404,28 @@ function displayLogstatAsLoggedIn() {
 						alts_counter++;
 					}	
 					str = str.substring(0, str.length - 2);
-					$("#header_div_top").html(str);//OK
+					$("#utility_header_td").html(str);//OK
 					alts_counter = 0;
 					while(alts_counter < user_jo.alts.length)
 					{
 						$("#user_" + alts_counter + "_link").text(user_jo.alts[alts_counter].screenname);
-						$("#user_" + alts_counter + "_link").click({altuser: user_jo.alts[alts_counter], prev: prev},
-								function (event) {
-									$("#header_div_top").html(event.data.prev);//OK
-									//alert(event.data.altuser.email + " " + event.data.altuser.this_access_token);
-									//bg.getUser(false); // this is the ONLY synchronous getUser request bc this feature is only accessible by admins anyway
-									//user_jo = get from background and reload?
-									displayLogstatAsLoggedIn();
-									return;
-								});
+						$("#user_" + alts_counter + "_link").click({altuser: user_jo.alts[alts_counter], prev: prev}, function (event) {
+							event.preventDefault();
+							$("#utility_header_td").html(event.data.prev);//OK
+							alert("email=" + event.data.altuser.email);
+							alert("this_access_token=" + event.data.altuser.this_access_token);
+							chrome.runtime.sendMessage({method: "switchUser", email: event.data.altuser.email, this_access_token: event.data.altuser.this_access_token}, function(response) {
+								alert(response.message);
+								/*user_jo = null;
+								initializeView();
+								doThreadTab();*/
+							});
+							//alert(event.data.altuser.email + " " + event.data.altuser.this_access_token);
+							//bg.getUser(false); // this is the ONLY synchronous getUser request bc this feature is only accessible by admins anyway
+							//user_jo = get from background and reload?
+							//displayLogstatAsLoggedIn();
+							return;
+						});
 						alts_counter++;
 					}	
 					return;

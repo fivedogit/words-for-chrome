@@ -19,55 +19,56 @@ function doAboutTab(message)
 	$("#past_tab_img").attr("src",  chrome.extension.getURL("images/clock_gray.png"));
 	$("#profile_tab_img").attr("src",  chrome.extension.getURL("images/user_gray.png"));
 	chrome.runtime.sendMessage({method: "getVersion"}, function(response) {
-		  $("#header_div_top").text("About WORDS (version " + response.version + ")");
+		  $("#utility_header_td").text("About WORDS (version " + response.version + ")");
 	});
-	$("#header_div_top").show();
-	$("#comment_submission_form_div_" + currentURLhash).hide();
+	
+	$("#utility_message_td").hide();
+	$("#utility_csf_td").hide();
+	
 	var aboutmessage = "";
-	aboutmessage = aboutmessage + "<div style=\"text-align:left;font-size:12px;padding:10px\">";
 	aboutmessage = aboutmessage + "<table>";
 	aboutmessage = aboutmessage + "	<tr>";
-	aboutmessage = aboutmessage + "		<td style=\"text-align:left\">";
-	aboutmessage = aboutmessage + "<p style=\"font-size:14px;font-weight:bold\">Better comments everywhere</p>";
-	aboutmessage = aboutmessage + "<p>Web commenting is broken. Too many accounts/logins, too many trolls, not enough privacy, too much censorship.</p>";
-	aboutmessage = aboutmessage + "<p>Together we can fix it.</p>";
-	aboutmessage = aboutmessage + "<hr>";
-	aboutmessage = aboutmessage + "<p  style=\"font-size:14px;font-weight:bold\">Ways you can help:</p>";
-	aboutmessage = aboutmessage + "<ol>";
-	aboutmessage = aboutmessage + "<li>Write a comment. Seriously.</li>";
-	aboutmessage = aboutmessage + "<li>";
-	aboutmessage = aboutmessage + "Share WORDS: ";
+	aboutmessage = aboutmessage + "		<td style=\"text-align:left;padding:10px\">";
+	aboutmessage = aboutmessage + "<span style=\"font-size:14px;font-weight:bold\">Better comments everywhere</span><br><br>";
+	aboutmessage = aboutmessage + "Web commenting is broken. Too many accounts/logins, too many trolls, not enough privacy, too much censorship.<br><br>";
+	aboutmessage = aboutmessage + "Together we can fix it.";
+	aboutmessage = aboutmessage + "		</td>";
+	aboutmessage = aboutmessage + "		<td rowspan=2 style=\"padding:35px\">";
+	aboutmessage = aboutmessage + "<table><tr><td><img src=\"" + chrome.extension.getURL("images/happy_noanimation.gif") + "\" style=\"border:1px solid black\"></img></td></tr><tr><td style=\"font-style:italic\">fivedogit, the developer.<br>Actual face.</td></tr></table>";
+	aboutmessage = aboutmessage + "		</td>";
+	aboutmessage = aboutmessage + "	</tr>";
+	aboutmessage = aboutmessage + "	<tr>";
+	aboutmessage = aboutmessage + "		<td style=\"text-align:left;border-top:1px solid #ddd;padding:10px\">";
+	aboutmessage = aboutmessage + "<span style=\"font-size:14px;font-weight:bold\">Ways you can help:</span><br><br>";
+	aboutmessage = aboutmessage + "1. Write a comment. Seriously.<br>";
+	aboutmessage = aboutmessage + "2. Share WORDS: ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_facebook_link\">Facebook</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_twitter_link\">Twitter</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_googleplus_link\">G+</a> - ";
 	aboutmessage = aboutmessage + "<a href=\"#\" id=\"share_to_tumblr_link\">Tumblr</a>";
 	if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
 		aboutmessage = aboutmessage + " - <a href=\"#\" id=\"share_to_gmail_link\">Gmail</a> ";
-	aboutmessage = aboutmessage + "</li>";
-	aboutmessage = aboutmessage + "<li>Rate 5 stars <a href=\"#\" id=\"rate_5_stars_link\">here</a></li>";
-	aboutmessage = aboutmessage + "<li>Report bugs to <a href=\"#\" id=\"fivedogit_link\">@fivedogit</a></li>";
-	aboutmessage = aboutmessage + "<li>Donate Bitcoins to keep the servers running ";
+	aboutmessage = aboutmessage + "<br>";
+	aboutmessage = aboutmessage + "3. Rate 5 stars <a href=\"#\" id=\"rate_5_stars_link\">here</a><br>";
+	aboutmessage = aboutmessage + "4. Report bugs to <a href=\"#\" id=\"fivedogit_link\">@fivedogit</a><br>";
+	aboutmessage = aboutmessage + "5. Donate Bitcoins to keep the servers running ";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_10_link\" >$10</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_20_link\" >$20</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_50_link\" >$50</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";
-	aboutmessage = aboutmessage + "</li>";
-	aboutmessage = aboutmessage + "</ol>";
 	aboutmessage = aboutmessage + "		</td>";
-	aboutmessage = aboutmessage + "		<td>";
-	aboutmessage = aboutmessage + "<figure style=\"width;150px\"><img src=\"" + chrome.extension.getURL("images/happy_noanimation.gif") + "\" style=\"border:1px solid black\"></img><figcaption style=\"font-size:10px;font-style:italic\">fivedogit, the developer.<br>Actual face.</figcaption></figure>";
+	aboutmessage = aboutmessage + "	</tr>";
+	aboutmessage = aboutmessage + "	<tr>";
+	aboutmessage = aboutmessage + "		<td colspan=2 style=\"text-align:left;border-top:1px solid #ddd;padding:10px\">";
+	aboutmessage = aboutmessage + "WORDS DOES NOT TRACK and is open source for verification. The code is available here:<br><br>";
+	aboutmessage = aboutmessage + "github.com/fivedogit/words-backend<br>";
+	aboutmessage = aboutmessage + "github.com/fivedogit/words-for-chrome<br><br>";
+	aboutmessage = aboutmessage + "Enjoy! Follow <a href=\"#\" id=\"words4chrome_link\">@words4chrome</a> or me, <a href=\"#\" id=\"fivedogit_link2\">@fivedogit</a>. Feedback welcome!";
 	aboutmessage = aboutmessage + "		</td>";
 	aboutmessage = aboutmessage + "	</tr>";
 	aboutmessage = aboutmessage + "</table>";
-
-	aboutmessage = aboutmessage + "<hr>";
-	aboutmessage = aboutmessage + "<p>WORDS DOES NOT TRACK and is open source for verification. The code is available here:</p>";
-	aboutmessage = aboutmessage + "<p>github.com/fivedogit/words-backend<br>";
-	aboutmessage = aboutmessage + "github.com/fivedogit/words-for-chrome</p>";
-	aboutmessage = aboutmessage + "<p>Enjoy! Follow <a href=\"#\" id=\"words4chrome_link\">@words4chrome</a> or me, <a href=\"#\" id=\"fivedogit_link2\">@fivedogit</a>. Feedback welcome!</p>";
-	aboutmessage = aboutmessage + "</div>";
 	$("#main_div_" + currentURLhash).html(aboutmessage); //OK
 	
 	$("a").click(function(event) {
