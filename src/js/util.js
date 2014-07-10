@@ -746,10 +746,10 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 		else
 		{
 			var randomint = -1;
-			if(typeof bg.footer_random_pool !== "undefined" && bg.footer_random_pool !== null && bg.footer_random_pool > 0) // FIXME
+		/*	if(typeof bg.footer_random_pool !== "undefined" && bg.footer_random_pool !== null && bg.footer_random_pool > 0) // FIXME
 				randomint = Math.floor(Math.random() * bg.footer_random_pool);
-			else
-				randomint = Math.floor(Math.random() * 50);
+			else*/
+			randomint = Math.floor(Math.random() * 50);
 			if(randomint === 0)
 			{
 				var footerstr = "";

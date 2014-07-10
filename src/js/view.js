@@ -173,7 +173,10 @@
  	$("#profile_tab_link").click(
  			function (event) {
  				event.preventDefault();
- 				viewProfile(user_jo.screenname);
+ 				if(user_jo === null)
+ 					viewProfile(null);
+ 				else
+ 					viewProfile(user_jo.screenname);
  			});
  	
  	updateLogstat(user_jo);
@@ -262,7 +265,7 @@ function displayLogstatAsLoggedOut() {
 	var temphtml = "";
 	$("#google_login_img").mouseover( function() {
 		temphtml = $("#utility_header_td").html();//OK (getter)
-		$("#comment_submission_form_div_" + currentURLhash).hide();
+		$("#utility_csf_td").hide();
 		$("#utility_header_td").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Google login is used for email verification ONLY.<br>WORDS cannot post on your behalf nor access any non-basic information.<br>Your WORDS identity is separate and anonymous.</span>");//OK
 		$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24_mo.png"));
 		$("#tab_tooltip_td").text("Login with Google");
@@ -272,7 +275,7 @@ function displayLogstatAsLoggedOut() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
 		$("#utility_header_td").html(temphtml);//OK
 		if(tabmode === "thread")
-			$("#comment_submission_form_div_" + currentURLhash).show();
+			$("#utility_csf_td").show();
 		$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24.png"));
 		if(tabmode === "thread")
 				$("#tab_tooltip_td").text("Comments");
@@ -289,7 +292,7 @@ function displayLogstatAsLoggedOut() {
 	
 	$("#facebook_login_img").mouseover( function() {
 		temphtml = $("#utility_header_td").html();//OK (getter)
-		$("#comment_submission_form_div_" + currentURLhash).hide();
+		$("#utility_csf_td").hide();
 		$("#utility_header_td").html("<span style=\"font-size:12px;font-weight:normal;color:black\"><b>Privacy first!</b> - Facebook login is used for email verification ONLY.<br>WORDS cannot post to Facebook nor access any non-basic information.<br>Your WORDS identity is separate and anonymous.</span>");//OK
 		$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24_mo.png"));
 		$("#tab_tooltip_td").text("Login with FB");
@@ -299,7 +302,7 @@ function displayLogstatAsLoggedOut() {
 		// if the login button has been clicked, then the temphtml is wrong, we need to set it to the value BEFORE the value was clicked, which was saved earlier on click event.
 		$("#utility_header_td").html(temphtml);//OK
 		if(tabmode === "thread")
-			$("#comment_submission_form_div_" + currentURLhash).show();
+			$("#utility_csf_td").show();
 		$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24.png"));
 		if(tabmode === "thread")
 				$("#tab_tooltip_td").text("Comments");

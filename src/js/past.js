@@ -15,7 +15,7 @@ function doPastTab()
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
-	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\" id=\"loading_past_comments_div\">Loading your past comments... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
+	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading your past comments... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
 	beginindex = 0;
 	endindex = 8;
 	getPastComments();
@@ -42,7 +42,7 @@ function getPastComments()
 	        success: function (data, status) {
 	            if (data.response_status === "error") 
 	            {
-	            	$("#loading_past_comments_div").text("Error retrieving past comments.");
+	            	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Error retrieving past comments.</div>");
 	            	displayMessage(data.message, "red", "utility_message_td");
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
@@ -53,9 +53,9 @@ function getPastComments()
 	            }
 	            else
 	            { 
+	            	$("#main_div_" + currentURLhash).html("");
 	            	if(typeof data.comments_ja !== "undefined" && data.comments_ja !== null && data.comments_ja.length > 0)
 	            	{
-	            		$("#loading_past_comments_div").hide();
 	            		var sorted_comments_ja = data.comments_ja;
 	            		sorted_comments_ja.sort(function(a,b){
 	        				a = fromOtherBaseToDecimal(62, a.substring(0,7));
@@ -86,7 +86,7 @@ function getPastComments()
 	            	}
 	            	else
 	            	{
-	            		$("#loading_past_comments_div").text("No past comments.");
+	            		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">No past comments.</div>");
 	            	}
 	            }
 	        },

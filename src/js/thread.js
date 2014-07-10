@@ -57,7 +57,7 @@ function doThreadTab()
 	else // not a valid URL formation
 	{
 		beginindex = 0;
-		$("#comment_submission_form_div_" + currentURLhash).hide();
+		$("#utility_csf_td").hide();
 		var main_div_string = "<div style=\"padding:20px\">Commenting for non-websites is currently disabled.<br>";
 		main_div_string = main_div_string + "		(URL must start with \"http\".)</div>"; // , hostname must contain a \".\" and lack a \":\".
 		$("#main_div_" + currentURLhash).html(main_div_string);//OK
@@ -945,7 +945,7 @@ function writeComment(feeditem_jo, dom_id)
         }
 		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:red;text-align:left;vertical-align:middle;padding-left:3px\" id=\"comment_dislikes_count_td_" + comment_id + "\"></td>";
 		
-		/*if ((tabmode === "thread" || tabmode === "past") && (user_jo !== null && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
+		if ((tabmode === "thread" || tabmode === "past") && (user_jo !== null && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
 		{
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + comment_id + "\">X</a> ";
@@ -959,7 +959,7 @@ function writeComment(feeditem_jo, dom_id)
 			tempstr = tempstr + "		   <td class=\"comment-megadownvote-td\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
 			tempstr = tempstr + "		   </td>";
-		}	*/
+		}	
 		
 		tempstr = tempstr + "							</tr>";
 		tempstr = tempstr + "  						</table>";
@@ -1289,7 +1289,7 @@ function submitComment(parent) // submits comment and updates thread
 	    },
 	    error: function (XMLHttpRequest, textStatus, errorThrown) {
 	    	displayMessage("Ajax error addComment: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + id);
-       	 	$("#comment_submission_form_div_" + parent).hide();
+       	 	//$("#comment_submission_form_div_" + parent).hide();
        	 	$("#comment_submission_form_submit_button_" + parent).removeAttr("disabled");
        	 	$("#comment_submission_progress_span_" + parent).hide();
 	        console.log(textStatus, errorThrown);

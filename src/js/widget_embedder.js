@@ -12,25 +12,50 @@ var this_access_token;
 var scrollable = 0;
 var tabmode = "thread";
 
+/*
 function elementInViewport(el) {
-	  var top = el.offsetTop;
-	  var left = el.offsetLeft;
-	  var width = el.offsetWidth;
-	  var height = el.offsetHeight;
 
-	  while(el.offsetParent) {
-	    el = el.offsetParent;
-	    top += el.offsetTop;
-	    left += el.offsetLeft;
-	  }
+    //special bonus for those using jQuery
+    if (el instanceof jQuery) {
+        el = el[0];
+    }
 
-	  return (
-	    top >= window.pageYOffset &&
-	    left >= window.pageXOffset &&
-	    (top + height) <= (window.pageYOffset + window.innerHeight) &&
-	    (left + width) <= (window.pageXOffset + window.innerWidth)
-	  );
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && 
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}*/
+
+function elementInViewport (el) {
+
+    var r, html;
+    if ( !el || 1 !== el.nodeType ) { return false; }
+    html = document.documentElement;
+    r = el.getBoundingClientRect();
+
+    return ( !!r 
+      && r.bottom >= 0 
+      && r.right >= 0 
+      && r.top <= html.clientHeight 
+      && r.left <= html.clientWidth 
+    );
+
+}
+
+$(document).ready(function() {
+	var elem = document.getElementById("comments-container"); // the document is finished, find the comments-container
+	if(typeof elem !== "undefined" && elem !== null)
+	{	
+		elem.innerHTML = ""; // blank it.
+		document.getElementById("comments-container").setAttribute("id", "words_div");
+		$("#words_div").css("height", "650px");
+		$("#words_div").css("overflow", "auto");
 	}
+});
 
 chrome.extension.onMessage.addListener(function(request, sender, callback)
 {
@@ -56,6 +81,8 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		{	
 			elem.innerHTML = ""; // blank it.
 			document.getElementById("comments-container").setAttribute("id", "words_div");
+			$("#words_div").css("height", "650px");
+			$("#words_div").css("overflow", "auto");
 		}
 		else
 		{
