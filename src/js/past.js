@@ -15,6 +15,8 @@ function doPastTab()
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
+	$("#footer_div").html("");
+	
 	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\" id=\"loading_past_comments_div\">Loading your past comments... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
 	beginindex = 0;
 	endindex = 15;

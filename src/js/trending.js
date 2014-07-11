@@ -23,6 +23,8 @@ function doTrendingTab()
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
+	$("#footer_div").html("");
+	
 	var mds = "";  // main div string
 	mds = mds + "<table>";
 	mds = mds + "	<tr>";

@@ -1071,21 +1071,23 @@ function writeComment(feeditem_jo, dom_id)
 	
 	if(tabmode === "thread")
 	{	
-		var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
-		var charsleft = 500;
-		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + comment_id) 
-				&& docCookies.getItem("saved_text") != null && docCookies.getItem("saved_text").trim().length > 0)
-		{
-			var s_text = docCookies.getItem("saved_text");
-			charsleft = 500 -  s_text.length;
-			$("#comment_textarea_" + comment_id).text(s_text);
-		}
-		else	
-		{
-			$("#comment_textarea_" + comment_id).css("color", "#aaa");
-			$("#comment_textarea_" + comment_id).text("Say something...");
-		}
-		$("#charsleft_" + comment_id).text(charsleft);
+		 chrome.runtime.sendMessage({method: "getSavedText"}, function(response) {
+			 var saved_text = response.saved_text;
+			 var saved_text_dom_id = response.saved_text_dom_id;
+			 var charsleft = 500;
+			 if(saved_text_dom_id !== null && saved_text_dom_id === ("comment_textarea_" + comment_id) 
+					 && saved_text !== null && saved_text.trim().length > 0)
+			 {
+				 charsleft = 500 -  saved_text.length;
+				 $("#comment_textarea_" + comment_id).text(saved_text);
+			 }
+			 else	
+			 {
+				 $("#comment_textarea_" + comment_id).css("color", "#aaa");
+				 $("#comment_textarea_" + comment_id).text("Say something...");
+			 }
+			 $("#charsleft_" + comment_id).text(charsleft);
+		 });
 	}
 	
 	$("a").click(function(event) {
@@ -1173,7 +1175,7 @@ function writeComment(feeditem_jo, dom_id)
 					if(currtext !== "Say something...")
 				 	{
 						// textarea has a scrollbar due to previous text, grow it
-						alert("comment_textarea_" + event.data.value);
+						//alert("comment_textarea_" + event.data.value);
 						if(has_scrollbar("comment_textarea_" + event.data.value))
 						{
 							$("#comment_textarea_" + event.data.value).trigger("keyup");
@@ -1298,8 +1300,10 @@ function submitComment(parent, message_element) // submits comment and updates t
 	        	$("#comment_textarea_" + parent).css("color", "#aaa");			// reset the text to gray
 	        	$("#comment_submission_form_submit_button_" + parent).removeAttr('disabled');
 		    	
-	        	docCookies.removeItem("saved_text");		// on success, removed the saved text cookies
-	        	docCookies.removeItem("saved_text_dom_id");
+	        	// on success, remove any saved text
+	        	 chrome.runtime.sendMessage({method: "setSavedText", saved_text: null, saved_text_dom_id: null}, function(response) {
+					  //alert(response.message);
+				 });
 	        	
 	        	//if(parent.indexOf(".") !== -1) // toplevel
 	        	//	displayMessage("Comment posted.", "black", "utility_message_td");

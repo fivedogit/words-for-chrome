@@ -180,35 +180,43 @@
  			});
  	
  	updateLogstat(user_jo);
+ 	writeFooterMessage();
  }
 
  
  function writeCommentForm(id_to_use, target_dom_id, message_element)
  {
 	 var csf_str = "";
+	 var charsleft = 500;
 	 csf_str = csf_str + "<form method=post action=\"#\">"; 
 		csf_str = csf_str + "<div style=\"margin-right:auto;margin-left:auto;width:80%;\" id=\"comment_submission_form_div_" + id_to_use + "\" style=\"\">"; 
-		var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
-		var charsleft = 500;
-		csf_str = csf_str + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + id_to_use + "\">";
-		if(saved_text_dom_id != null && saved_text_dom_id === ("comment_textarea_" + id_to_use) 
-				&& docCookies.getItem("saved_text") != null && docCookies.getItem("saved_text").trim().length > 0)
-		{
-			var s_text = docCookies.getItem("saved_text");
-			csf_str = csf_str + s_text;
-			charsleft = 500 -  s_text.length;
-		}
-		else	
-			csf_str = csf_str + "Say something...";
+		csf_str = csf_str + "<textarea class=\"composition-textarea\" id=\"comment_textarea_" + id_to_use + "\">Say something...";
 		csf_str = csf_str + "</textarea>";
 		csf_str = csf_str + "	<div id=\"char_count_and_submit_button_div_" + id_to_use + "\" style=\"width:110px;margin-left:auto;margin-right:0px;vertical-align:middle;display:none;\">";
 		csf_str = csf_str + "		<span style=\"display:none;padding-right:6px\" id=\"comment_submission_progress_span_" + id_to_use + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
-		csf_str = csf_str + "		<span id=\"charsleft_" + id_to_use + "\" style=\"padding-right:6px\">" + charsleft + "</span> ";
+		csf_str = csf_str + "		<span id=\"charsleft_" + id_to_use + "\" style=\"padding-right:6px\"></span> ";
 		csf_str = csf_str + "		<span><input id=\"comment_submission_form_submit_button_" + id_to_use + "\" class=\"standardized-button\" type=button value=\"Submit\"></input></span>";
 		csf_str = csf_str + "	</div>";
 		csf_str = csf_str + "</div>";
 	csf_str = csf_str + "</form>";	
 	$("#" + target_dom_id).html(csf_str);
+
+	chrome.runtime.sendMessage({method: "getSavedText"}, function(response) {
+		 var saved_text = response.saved_text;
+		 var saved_text_dom_id = response.saved_text_dom_id;
+		 if(saved_text_dom_id !== null && saved_text_dom_id === ("comment_textarea_" + id_to_use) 
+				 && saved_text !== null && saved_text.trim().length > 0)
+		 {
+			 charsleft = 500 -  saved_text.length;
+			 $("#comment_textarea_" + id_to_use).text(saved_text);
+		 }
+		 else	
+		 {
+			 $("#comment_textarea_" + id_to_use).css("color", "#aaa");
+			 $("#comment_textarea_" + id_to_use).text("Say something...");
+		 }
+		 $("#charsleft_" + id_to_use).text(charsleft);
+	 });
 	
 	createSubmissionFormSubmitButtonClickEvent(id_to_use, message_element);
  	createFocusEventForTextarea(id_to_use, message_element);
@@ -326,7 +334,9 @@ function displayLogstatAsLoggedOut() {
 					var currenttabid;
 					chrome.tabs.getSelected(null, function(tab) { 
 						currenttabid = tab.id; 
-						docCookies.setItem("last_tab_id", currenttabid, 31536e3);
+						 chrome.runtime.sendMessage({method: "setLastTabID", last_tab_id: currenttabid}, function(response) {
+							  //alert(response.message);
+						 });
 						// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
 						// (which is why the button was shown in the first place)
 						// Right now the user either has the social_access_token and it hasn't expired yet
@@ -350,7 +360,9 @@ function displayLogstatAsLoggedOut() {
 					var currenttabid;
 					chrome.tabs.getSelected(null, function(tab) { 
 						currenttabid = tab.id; 
-						docCookies.setItem("last_tab_id", currenttabid, 31536e3);
+						chrome.runtime.sendMessage({method: "setLastTabID", last_tab_id: currenttabid}, function(response) {
+							  //alert(response.message);
+						 });
 						// at this point, the user has clicked the login button because email/this_access_token didn't exist or wasn't valid
 						// (which is why the button was shown in the first place)
 						// Right now the user either has the social_access_token and it hasn't expired yet
@@ -440,5 +452,141 @@ function displayLogstatAsLoggedIn() {
 				viewProfile(user_jo.screenname);
 				return;
 			});
+}
+
+function writeFooterMessage() {
+	 //alert("selfex overlay");
+	var footerstr = "";
+	if(false) //bg.msfe_according_to_backend >= 1402266600000 && bg.msfe_according_to_backend < 1402300800000 && (shown_softlaunchmsg === null || firstrun_msg_index > 5)) // June 8th 6:30pm EST - June 9th 4am PST est
+	{
+		footerstr = footerstr + "Preview Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a>";
+		//footerstr = footerstr + ", <a href=\"#\" style=\"color:#baff00\" id=\"product_hunt_link\">Product Hunt</a>";
+		footerstr = footerstr + " and <a href=\"#\" style=\"color:#baff00\" id=\"reddit_link\">Reddit</a>!";
+		$("#footer_div").html(footerstr);
+		var hn_url = "http://news.ycombinator.com";
+		$.ajax({
+			type: 'GET',
+			url: endpoint,
+			data: {
+				method: "getHNURL",
+			},
+			dataType: 'json',
+			async: false,
+			timeout: 2000,
+			success: function (data, status) {
+				if(data.response_status === "error")
+				{
+					// fail silently and use default url
+				}
+				else if(data.response_status === "success")
+				{
+					hn_url = data.url;
+				}	
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				console.log(textStatus, errorThrown);
+				displayMessage("AJAX error getting HN url", "red");
+			} 
+		}); 			
+		noteImpressionAndCreateHandler("hn", "footer", "hn_link", hn_url);
+		var reddit_url = "http://reddit.com";
+		$.ajax({
+			type: 'GET',
+			url: endpoint,
+			data: {
+				method: "getRURL",
+			},
+			dataType: 'json',
+			async: false,
+			timeout: 2000,
+			success: function (data, status) {
+				if(data.response_status === "error")
+				{
+					// fail silently and use default url
+				}
+				else if(data.response_status === "success")
+				{
+					reddit_url = data.url;
+				}	
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				console.log(textStatus, errorThrown);
+				displayMessage("AJAX error getting R url", "red");
+			} 
+		}); 			
+		noteImpressionAndCreateHandler("reddit", "footer", "reddit_link", reddit_url);
+		//noteImpressionAndCreateHandler("producthunt", "footer", "product_hunt_link", "http://www.producthunt.com/");
+	}
+	else // not soft launch day
+	{
+			randomint = Math.floor(Math.random() * 50);
+			if(randomint === 0)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "If you get a moment, a <a href=\"#\" id=\"rate_5_stars_link\" style=\"color:#baff00\">five star rating</a> would be greatly appreciated.";
+				$("#footer_div").html(footerstr);
+				if(navigator.userAgent.indexOf("OPR/") !== -1)
+					noteImpressionAndCreateHandler("operastore", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
+				else
+					noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+			}	
+			else if(randomint === 1)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Follow WORDS on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
+				$("#footer_div").html(footerstr);
+				noteImpressionAndCreateHandler("facebook_apppage", "footer", "follow_on_facebook_link", "https://www.facebook.com/pages/WORDS/232380660289924");
+				noteImpressionAndCreateHandler("twitter_mainacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/words4chrome");
+			}
+			else if(randomint === 2)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Spread the WORDS! ";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_googleplus_link\" >G+</a>";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_tumblr_link\" >Tumblr</a>";
+				if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_gmail_link\" >Gmail</a>";
+				$("#footer_div").html(footerstr);
+				
+				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
+				noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+				noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
+				if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+					noteImpressionAndCreateHandler("gmailshare", "footer", "share_to_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
+			}
+			else if(randomint === 3)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Remember: Appropriate downvoting isn't \"mean\" -- <span style=\"color:#ffde00\">it's necessary</span>.";
+				$("#footer_div").html(footerstr);
+			}
+			else if(randomint === 4)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Support WORDS with Bitcoin: ";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_10_link\" >$10</a>";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_20_link\" >$20</a>";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_50_link\" >$50</a>";
+				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";
+				$("#footer_div").html(footerstr);
+				noteImpressionAndCreateHandler("coinbase2", "footer", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");
+				noteImpressionAndCreateHandler("coinbase5", "footer", "coinbase_5_link", "https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41");
+				noteImpressionAndCreateHandler("coinbase10", "footer", "coinbase_10_link", "https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca");
+				noteImpressionAndCreateHandler("coinbase20", "footer", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
+				noteImpressionAndCreateHandler("coinbase50", "footer", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
+			}
+			else if(randomint === 5)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Find a site that should be separated? Give me a heads up on Twitter <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">@fivedogit</a>.";
+				$("#footer_div").html(footerstr);
+				noteImpressionAndCreateHandler("twitter_persacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/fivedogit");
+			}
+	}
 }
 

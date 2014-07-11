@@ -23,6 +23,8 @@ function doNotificationsTab()
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 
+	$("#footer_div").html("");
+	
 	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading activity feed... please wait.</div>");//OK
 	getNotifications();
 }

@@ -25,6 +25,8 @@ function viewProfile(screenname)
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
+	$("#footer_div").html("");
+	
 	if (user_jo !== null)
 	{	
 		if(screenname !== null)
@@ -608,7 +610,7 @@ function getProfile(screenname)
             				$("#logout_confirmation_button").click( function (event) {
                         				event.preventDefault();
                         				 chrome.runtime.sendMessage({method: "logout"}, function(response) {
-                        					  alert(response.message);
+                        					  //alert(response.message);
                         					  user_jo = null;
                         					  initializeView();
                         					  doThreadTab();

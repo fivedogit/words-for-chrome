@@ -39,40 +39,6 @@ function fromDecimalToOtherBase ( base, decimalNumber ) {
     return tempVal.substring(tempVal.length - 7);
 }
 
-//need to include this here because it resides in buttongen.js on the extension itself
-var docCookies = {
-		  getItem: function (sKey) {
-		    if (!sKey || !this.hasItem(sKey)) { return null; }
-		    return unescape(document.cookie.replace(new RegExp("(?:^|.*;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*"), "$1"));
-		  },
-		  setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
-		    if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return; }
-		    var sExpires = "";
-		    if (vEnd) {
-		      switch (vEnd.constructor) {
-		        case Number:
-		          sExpires = vEnd === Infinity ? "; expires=Tue, 19 Jan 2038 03:14:07 GMT" : "; max-age=" + vEnd;
-		          break;
-		        case String:
-		          sExpires = "; expires=" + vEnd;
-		          break;
-		        case Date:
-		          sExpires = "; expires=" + vEnd.toGMTString();
-		          break;
-		      }
-		    }
-		    document.cookie = escape(sKey) + "=" + escape(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
-		  },
-		  removeItem: function (sKey, sPath) {
-		    if (!sKey || !this.hasItem(sKey)) { return; }
-		    document.cookie = escape(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (sPath ? "; path=" + sPath : "");
-		  },
-		  hasItem: function (sKey) {
-		    return (new RegExp("(?:^|;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
-		  },
-		};
-
-
 function hashFnv32a(str, asString, seed) {
     var i, l,
         hval = (seed === undefined) ? 0x811c9dc5 : seed;
@@ -439,8 +405,10 @@ function createKeyupEventForTextarea(id, charlimit){
 				 if($("#comment_textarea_" + event.data.id).val().length > 500)
 					 $("#comment_textarea_" + event.data.id).val($("#comment_textarea_" + event.data.id).val().substring(0,charlimit));
 				 $("#charsleft_" + event.data.id).text(charlimit - $("#comment_textarea_" + event.data.id).val().length);
-				 docCookies.setItem("saved_text", $("#comment_textarea_" + event.data.id).val(), 31536e3);
-				 docCookies.setItem("saved_text_dom_id", "comment_textarea_" + event.data.id, 31536e3);
+				 
+				 chrome.runtime.sendMessage({method: "setSavedText", saved_text: $("#comment_textarea_" + event.data.id).val(), saved_text_dom_id: "comment_textarea_" + event.data.id}, function(response) {
+					  //alert(response.message);
+				 });
 			 }
 	 );
 }
@@ -565,13 +533,13 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 			 });
  }
  
-
+/*
  function doFirstrunFooterMsg(firstrun_msg_index)
  {
 	 var footerstr = "";
 	 if(firstrun_msg_index === 0)
 	 {
-		 docCookies.setItem("firstrun_msg_index", 1, 31536e3);
+		 chrome.runtime.sendMessage({method: "setFirstRunMessageIndex", firstrun_msg_index: 1}, function(response) {});
 		 footerstr = footerstr + "Welcome to WORDS. I’m <a href=\"#\" id=\"fivedogit_link\" style=\"color:#baff00\">@fivedogit</a>, the developer. This footer space is where I say things.<span style=\"font-size:9px;margin-left:10px\">(1/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
 		 $("#footer_div").html(footerstr);
 		 noteImpressionAndCreateHandler("twitter_persacct", "footer", "fivedogit_link", "http://www.twitter.com/fivedogit");
@@ -579,21 +547,24 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 	 }	 
 	 else if(firstrun_msg_index === 1)
 	 {
-		 docCookies.setItem("firstrun_msg_index", 2, 31536e3);
+		 chrome.runtime.sendMessage({method: "setFirstRunMessageIndex", firstrun_msg_index: 2}, function(response) {
+		 });
 		 footerstr = footerstr + "First, thank you for trying WORDS. Together, we can make <span style=\"color:#47dfff\">civilized comments</span> a reality.<span style=\"font-size:9px;margin-left:10px\">(2/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
 		 $("#footer_div").html(footerstr);
 		 $("#next_link").click(function(event){ doFirstrunFooterMsg(2); });
 	 }	
 	 else if(firstrun_msg_index === 2)
 	 {
-		 docCookies.setItem("firstrun_msg_index", 3, 31536e3);
+		 chrome.runtime.sendMessage({method: "setFirstRunMessageIndex", firstrun_msg_index: 3}, function(response) {
+		 });
 		 footerstr = footerstr + "But for WORDS to reach its potential, we’re going to need more <span style=\"color:#ffde00\">intelligent people</span> to join us.<span style=\"font-size:9px;margin-left:10px\">(3/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
 		 $("#footer_div").html(footerstr);
 		 $("#next_link").click(function(event){ doFirstrunFooterMsg(3); });
 	 }	
 	 else if(firstrun_msg_index === 3)
 	 {
-		 docCookies.setItem("firstrun_msg_index", 4, 31536e3);
+		 chrome.runtime.sendMessage({method: "setFirstRunMessageIndex", firstrun_msg_index: 4}, function(response) {
+		 });
 		 footerstr = footerstr + "So please tell your friends about WORDS: ";
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>";
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
@@ -614,7 +585,8 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 	 }
 	 else if(firstrun_msg_index === 4)
 	 {
-		 docCookies.setItem("firstrun_msg_index", 5, 31536e3);
+		 chrome.runtime.sendMessage({method: "setFirstRunMessageIndex", firstrun_msg_index: 5}, function(response) {
+		 });
 		 footerstr = footerstr + "Additionally, a <a href=\"#\" id=\"rate_5_stars_link\" style=\"color:#baff00\">five star rating</a> would be enormously helpful.";
 		 footerstr = footerstr + "<span style=\"font-size:9px;margin-left:10px\">(5/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
 		 $("#footer_div").html(footerstr);
@@ -626,14 +598,14 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 	 }
 	 else if(firstrun_msg_index === 5)
 	 {
-		 docCookies.setItem("firstrun_msg_index", 6, 31536e3);
+		 chrome.runtime.sendMessage({method: "setFirstRunMessageIndex", firstrun_msg_index: 6}, function(response) {});
 		 footerstr = footerstr + "That's all for now. Thanks again and I look forward to great discussions!<span style=\"font-size:9px;margin-left:10px\">(6/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
 		 $("#footer_div").html(footerstr);
 		 $("#next_link").click(function(event){ doFirstrunFooterMsg(6); });
 	 }
 	 else if(firstrun_msg_index === 6)
 	 {
-		 docCookies.setItem("firstrun_msg_index", 7, 31536e3);
+		 chrome.runtime.sendMessage({method: "setFirstRunMessageIndex", firstrun_msg_index: 7}, function(response) {});
 		 footerstr = footerstr + "<span style=\"margin-left:15px\">RATE:</span> <a href=\"#\" id=\"rate_5_stars_link\" style=\"color:#baff00\">5 stars</a>";
 		 footerstr = footerstr + "<span style=\"margin-left:15px\">SHARE:</span>";
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>";
@@ -662,153 +634,4 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 	 {
 		 //
 	 } 
- }
- 
- 	var footerstr = "";
-	var shown_softlaunchmsg = docCookies.getItem("shown_softlaunchmsg");
-	var firstrun_msg_index = docCookies.getItem("firstrun_msg_index")*1; 
-	if(false) //bg.msfe_according_to_backend >= 1402266600000 && bg.msfe_according_to_backend < 1402300800000 && (shown_softlaunchmsg === null || firstrun_msg_index > 5)) // June 8th 6:30pm EST - June 9th 4am PST est
-	{
-		docCookies.setItem("shown_softlaunchmsg", "yes", 31536e3);
-		footerstr = footerstr + "Preview Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a>";
-		//footerstr = footerstr + ", <a href=\"#\" style=\"color:#baff00\" id=\"product_hunt_link\">Product Hunt</a>";
-		footerstr = footerstr + " *AND* <a href=\"#\" style=\"color:#baff00\" id=\"reddit_link\">Reddit</a>!";
-		$("#footer_div").html(footerstr);
-		var hn_url = "http://news.ycombinator.com";
-		$.ajax({
-			type: 'GET',
-			url: endpoint,
-			data: {
-				method: "getHNURL",
-			},
-			dataType: 'json',
-			async: false,
-			timeout: 2000,
-			success: function (data, status) {
-				if(data.response_status === "error")
-				{
-					// fail silently and use default url
-				}
-				else if(data.response_status === "success")
-				{
-					hn_url = data.url;
-				}	
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				console.log(textStatus, errorThrown);
-				displayMessage("AJAX error getting HN url", "red");
-			} 
-		}); 			
-		noteImpressionAndCreateHandler("hn", "footer", "hn_link", hn_url);
-		var reddit_url = "http://reddit.com";
-		$.ajax({
-			type: 'GET',
-			url: endpoint,
-			data: {
-				method: "getRURL",
-			},
-			dataType: 'json',
-			async: false,
-			timeout: 2000,
-			success: function (data, status) {
-				if(data.response_status === "error")
-				{
-					// fail silently and use default url
-				}
-				else if(data.response_status === "success")
-				{
-					reddit_url = data.url;
-				}	
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				console.log(textStatus, errorThrown);
-				displayMessage("AJAX error getting R url", "red");
-			} 
-		}); 			
-		noteImpressionAndCreateHandler("reddit", "footer", "reddit_link", reddit_url);
-		//noteImpressionAndCreateHandler("producthunt", "footer", "product_hunt_link", "http://www.producthunt.com/");
-	}
-	else // not soft launch day
-	{
-		if(typeof firstrun_msg_index === "undefined" || firstrun_msg_index === null)
-			doFirstrunFooterMsg(0);
-		else if(firstrun_msg_index < 7)
-			doFirstrunFooterMsg(firstrun_msg_index*1);
-		else
-		{
-			var randomint = -1;
-		/*	if(typeof bg.footer_random_pool !== "undefined" && bg.footer_random_pool !== null && bg.footer_random_pool > 0) // FIXME
-				randomint = Math.floor(Math.random() * bg.footer_random_pool);
-			else*/
-			randomint = Math.floor(Math.random() * 50);
-			if(randomint === 0)
-			{
-				var footerstr = "";
-				footerstr = footerstr + "If you get a moment, a <a href=\"#\" id=\"rate_5_stars_link\" style=\"color:#baff00\">five star rating</a> would be greatly appreciated.";
-				$("#footer_div").html(footerstr);
-				if(navigator.userAgent.indexOf("OPR/") !== -1)
-					noteImpressionAndCreateHandler("operastore", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
-				else
-					noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
-			}	
-			else if(randomint === 1)
-			{
-				var footerstr = "";
-				footerstr = footerstr + "Follow WORDS on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
-				$("#footer_div").html(footerstr);
-				noteImpressionAndCreateHandler("facebook_apppage", "footer", "follow_on_facebook_link", "https://www.facebook.com/pages/WORDS/232380660289924");
-				noteImpressionAndCreateHandler("twitter_mainacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/words4chrome");
-			}
-			else if(randomint === 2)
-			{
-				var footerstr = "";
-				footerstr = footerstr + "Spread the WORDS! ";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_googleplus_link\" >G+</a>";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_tumblr_link\" >Tumblr</a>";
-				if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
-					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_gmail_link\" >Gmail</a>";
-				$("#footer_div").html(footerstr);
-				
-				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
-				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
-				noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
-				noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
-				if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
-					noteImpressionAndCreateHandler("gmailshare", "footer", "share_to_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
-			}
-			else if(randomint === 3)
-			{
-				var footerstr = "";
-				footerstr = footerstr + "Remember: Appropriate downvoting isn't \"mean\" -- <span style=\"color:#ffde00\">it's necessary</span>.";
-				$("#footer_div").html(footerstr);
-			}
-			else if(randomint === 4)
-			{
-				var footerstr = "";
-				footerstr = footerstr + "Support WORDS with Bitcoin: ";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_10_link\" >$10</a>";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_20_link\" >$20</a>";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_50_link\" >$50</a>";
-				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";
-				$("#footer_div").html(footerstr);
-				noteImpressionAndCreateHandler("coinbase2", "footer", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");
-				noteImpressionAndCreateHandler("coinbase5", "footer", "coinbase_5_link", "https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41");
-				noteImpressionAndCreateHandler("coinbase10", "footer", "coinbase_10_link", "https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca");
-				noteImpressionAndCreateHandler("coinbase20", "footer", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
-				noteImpressionAndCreateHandler("coinbase50", "footer", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
-			}
-			else if(randomint === 5)
-			{
-				var footerstr = "";
-				footerstr = footerstr + "Find a site that should be separated? Give me a heads up on Twitter <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">@fivedogit</a>.";
-				$("#footer_div").html(footerstr);
-				noteImpressionAndCreateHandler("twitter_persacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/fivedogit");
-			}
-		}
-	}
-
-
+ }*/

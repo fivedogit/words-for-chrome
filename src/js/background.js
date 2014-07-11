@@ -4,7 +4,7 @@ chrome.runtime.onMessage.addListener(
 	  {
 		  docCookies.removeItem("email");
 		  docCookies.removeItem("this_access_token");
-		  sendResponse({message: "goodbye"});
+		  sendResponse({message: "You are now logged out of WORDS."});
 	  }  
 	  else if(request.method === "getVersion")
 	  {
@@ -14,12 +14,76 @@ chrome.runtime.onMessage.addListener(
 	  }  
 	  else if(request.method === "switchUser")
 	  {
-		  docCookies.setItem("email", request.email);
-		  docCookies.setItem("this_access_token", request.this_access_token);
+		  docCookies.setItem("email", request.email, 31536e3);
+		  docCookies.setItem("this_access_token", request.this_access_token, 31536e3);
 		  getUser(false);
 		  waitAndSend(request.email, request.this_access_token);
 	  }  
+	  else if(request.method == "getAllowedHostnames")
+	  {
+		  sendResponse({allowed_hostnames: allowed_hostnames});
+	  }
+	  else if(request.method == "setSavedText")
+	  {
+		  //alert("saving text", request.saved_text);
+		  docCookies.setItem("saved_text", request.saved_text);
+		  docCookies.setItem("saved_text_dom_id", request.saved_text_dom_id);
+	  }  
+	  else if(request.method == "getSavedText")
+	  {
+		 //alert("bg says: getting saved text");
+		 var saved_text = docCookies.getItem("saved_text");
+		 var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
+		// alert("bg says: " + saved_text_dom_id + " and " + saved_text);
+		 sendResponse({saved_text: saved_text, saved_text_dom_id: saved_text_dom_id});
+	  }  
+	  else if(request.method == "setLastTabID") // don't need a getter for this as the receiver page can get this directly from cookie
+	  {
+		  docCookies.setItem("last_tab_id", request.last_tab_id);
+	  }  
+	/*  else if(request.method == "setFirstRunMessageIndex") // don't need a getter for this as the receiver page can get this directly from cookie
+	  {
+		  docCookies.setItem("firstrun_msg_index", request.firstrun_msg_index);
+	  }  
+	  else if(request.method == "getFirstRunMessageIndex") // don't need a getter for this as the receiver page can get this directly from cookie
+	  {
+		  var firstrun_msg_index = docCookies.getItem("firstrun_msg_index");
+		  sendResponse({firstrun_msg_index: firstrun_msg_index});
+	  }*/  
   });
+
+//need to include this here because it resides in buttongen.js on the extension itself
+var docCookies = {
+		  getItem: function (sKey) {
+		    if (!sKey || !this.hasItem(sKey)) { return null; }
+		    return unescape(document.cookie.replace(new RegExp("(?:^|.*;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*"), "$1"));
+		  },
+		  setItem: function (sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+		    if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return; }
+		    var sExpires = "";
+		    if (vEnd) {
+		      switch (vEnd.constructor) {
+		        case Number:
+		          sExpires = vEnd === Infinity ? "; expires=Tue, 19 Jan 2038 03:14:07 GMT" : "; max-age=" + vEnd;
+		          break;
+		        case String:
+		          sExpires = "; expires=" + vEnd;
+		          break;
+		        case Date:
+		          sExpires = "; expires=" + vEnd.toGMTString();
+		          break;
+		      }
+		    }
+		    document.cookie = escape(sKey) + "=" + escape(sValue) + sExpires + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "") + (bSecure ? "; secure" : "");
+		  },
+		  removeItem: function (sKey, sPath) {
+		    if (!sKey || !this.hasItem(sKey)) { return; }
+		    document.cookie = escape(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (sPath ? "; path=" + sPath : "");
+		  },
+		  hasItem: function (sKey) {
+		    return (new RegExp("(?:^|;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+		  },
+		};
 
 var style = document.createElement('style'); 
 var style_str =  "@font-face {";
@@ -217,10 +281,8 @@ function getThread(url_at_function_call, updatebutton)
             	else  // ajax success, url still correct, no error from server...
             	{
             		msfe_according_to_backend = data.msfe;
-            		if(typeof data.footer_random_pool !== "undefined" && data.footer_random_pool !== null && $.isNumeric(data.footer_random_pool) && (data.footer_random_pool%1 === 0))
-            		{
-            			footer_random_pool = data.footer_random_pool;
-            		}
+            		allowed_hostnames = data.allowed_hostnames;
+            		footer_random_pool = data.footer_random_pool;
             		loc_thread_jo = data.thread_jo;
             		threadstatus=0;
             	}
