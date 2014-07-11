@@ -72,20 +72,39 @@ function gotThread()
 	{
 		var url_to_use = getSmartCutURL(thread_jo.significant_designation, 60);
 		var happy = "";
+		happy = happy + "<table style=\"margin-left:auto;margin-right:auto;width:auto;border:0px solid red\">";
+		happy = happy + "	<tr>";
+		happy = happy + "		<td style=\"padding-right:3px\">";
 		happy = happy + "<img id=\"google_favicon_img_" + currentURLhash + "\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"> ";
+		happy = happy + "		</td>";
+		happy = happy + "		<td style=\"padding-right:3px\">";
 		if(thread_jo.combined_or_separated === "combined")
 			happy = happy + "<img id=\"separated_or_combined_img\" src=\"" + chrome.extension.getURL("images/combined_icon.png") + "\"> ";
 		else
 			happy = happy + "<img id=\"separated_or_combined_img\" src=\"" + chrome.extension.getURL("images/separated_icon.png") + "\"> ";
+		happy = happy + "		</td>";
+		happy = happy + "		<td style=\"padding-right:3px\">";
 		happy = happy + "<span id=\"url_span_" + currentURLhash + "\" style=\"font-family:arial;font-size:12px;padding-right:6px;\"></span>";
+		happy = happy + "		</td>";
+		happy = happy + "		<td style=\"padding-right:3px\">";
 		happy = happy + "<img id=\"follow_img\" src=\"" + chrome.extension.getURL("images/follow_off_12x16.png") + "\" style=\"padding-right:6px;\">";
-		happy = happy + "<img id=\"pagelike_img\" src=\"" + chrome.extension.getURL("images/star_grayscale_16x16.png") + "\" style=\"padding-right:1px;\"><span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
+		happy = happy + "		</td>";
+		happy = happy + "		<td style=\"padding-right:3px\">";
+		happy = happy + "<img id=\"pagelike_img\" src=\"" + chrome.extension.getURL("images/star_grayscale_16x16.png") + "\" style=\"padding-right:1px;\">";
+		happy = happy + "		</td>";
+		happy = happy + "		<td>";
+		happy = happy + "<span style=\"color:green\" id=\"num_pagelikes_span\"></span>";
+		happy = happy + "		</td>";
+		
 		if(thread_jo.combined_or_separated === "separated" && user_jo !== null && typeof user_jo.permission_level !== "undefined" 
 			&& user_jo.permission_level !== null && user_jo.permission_level === "admin")
 		{
+			happy = happy + "		<td style=\"padding-left:3px\">";
 			happy = happy + " <input style=\"width:24px\" id=\"sqsp\"> <a href=\"#\" id=\"set_sqsp\">s</a>";
+			happy = happy + "		</td>";
 		}	
-		
+		happy = happy + "	</tr>";
+		happy = happy + "</table>";
 		
 		// like/dislike indicator here
 		$("#utility_header_td").html(happy);//OK
@@ -545,8 +564,8 @@ function prepareGetAndPopulateThreadPortion()
 		{
 			//alert("Thread had no children");
 			var main_div_string = "";
-			main_div_string = main_div_string + "<div style=\"padding:25px\">";
-			main_div_string = main_div_string + "	No comments for this page. Write one!";
+			main_div_string = main_div_string + "<div style=\"padding:25px;font-size:22px;font-weight:bold\">";
+			main_div_string = main_div_string + "	There are no comments for this page yet. Write one!";
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\">";
 			main_div_string = main_div_string + "	<img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (<span id=\"num_hours_span\"></span> hrs)";
@@ -673,7 +692,19 @@ function prepareGetAndPopulateThreadPortion()
 			
 			// if we've reached the end, show "end of comments" message
 			if (x < thread_jo.children.length)
+			{
 				scrollable = 1;
+				if(!chrome.tabs)
+				{	
+					var tempstr = "";
+					if(thread_jo.children.length - x === 1)
+		 				tempstr = tempstr + (thread_jo.children.length - x) + " more comment... ";
+		 			else
+		 				tempstr = tempstr + (thread_jo.children.length - x) + " more comments... ";
+		 			tempstr = tempstr + "use <img style=\"width:20px;height:20px;vertical-align:middle\" src=\"" + chrome.extension.getURL("images/blank_button.png") + "\"> <img style=\"width:16px;height:16px;vertical-align:middle\" src=\"" + chrome.extension.getURL("images/arrow_ne.png") + "\">";
+		 			$("#footer_div").html(tempstr);
+				}
+			}
 			else if(x === thread_jo.children.length)
 			{
 				scrollable = 0;
@@ -933,10 +964,9 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "					<td style=\"vertical-align:middle;text-align:left;border:0px solid black\" > "; 
 		tempstr = tempstr + "						<table style=\"width:100%;float:left;border:0px solid brown;vertical-align:middle; border-collapse: separate\">";
 		tempstr = tempstr + "							<tr> ";
-		tempstr = tempstr + "		  					 	<td style=\"vertical-align:middle;text-align:left;border:0px solid pink;padding-left:5px\">";
+		tempstr = tempstr + "		  					 	<td style=\"vertical-align:middle;text-align:left;padding-left:5px\">";
 		tempstr = tempstr + "		  					 		<a href=\"#\" id=\"screenname_link_" + comment_id + "\"></a> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span>";
 		tempstr = tempstr + "		  					 	</td>";
-		//tempstr = tempstr + "		  					 	<td style=\"width:20%;border:0px solid cyan\"></td>"; // separator
 		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:green;text-align:right;vertical-align:middle;padding-right:3px\" id=\"comment_likes_count_td_" + comment_id + "\"></td>";
 		if (tabmode === "thread") 
         {
@@ -953,10 +983,10 @@ function writeComment(feeditem_jo, dom_id)
 		}
 		if(tabmode === "thread" && user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
 		{
-			tempstr = tempstr + "		   <td class=\"comment-nuke-td\"> ";
+			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + comment_id + "\">N!</a> ";
 			tempstr = tempstr + "		   </td>";
-			tempstr = tempstr + "		   <td class=\"comment-megadownvote-td\"> ";
+			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
 			tempstr = tempstr + "		   </td>";
 		}	
@@ -966,7 +996,7 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "					</td>";
 		tempstr = tempstr + "				</tr>";
 		tempstr = tempstr + "				<tr>";
-		tempstr = tempstr + "					<td style=\"padding:5px;vertical-align:top;text-align:left\" id=\"comment_text_td_" + comment_id + "\"> "; //  class=\"comment-text-td\"
+		tempstr = tempstr + "					<td style=\"padding:5px;vertical-align:top;text-align:left;line-height:14px\" id=\"comment_text_td_" + comment_id + "\"> "; //  class=\"comment-text-td\"
 	  	tempstr = tempstr + "					</td>";
 	  	tempstr = tempstr + "				</tr>";
 		if (tabmode === "thread" && (($("#comment_div_" + feeditem_jo.id).css("margin-left").replace("px","")*1) < 125)) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
@@ -991,7 +1021,7 @@ function writeComment(feeditem_jo, dom_id)
 	$("#" + dom_id).html(tempstr);//OK
   	
   	if(writeReplyTD === true)
-  		writeCommentForm(comment_id, "reply_td_" + comment_id);
+  		writeCommentForm(comment_id, "reply_td_" + comment_id, "message_div_" + comment_id);
   	
 	$("[id=author_picture_img_" + comment_id + "]").attr("src", feeditem_jo.author_picture);
 	var left_percentage = 0;
@@ -1156,11 +1186,6 @@ function writeComment(feeditem_jo, dom_id)
 			else
 				displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
 		});
-			
-		/*createSubmissionFormSubmitButtonClickEvent(comment_id, user_jo);
-	 	createFocusEventForTextarea(comment_id, user_jo);
-	 	createBlurEventForTextarea(comment_id);
-	 	createKeyupEventForTextarea(comment_id, 500);*/
 		
 		$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) {
 			event.preventDefault();
@@ -1205,7 +1230,7 @@ function writeComment(feeditem_jo, dom_id)
 
 // to submit a comment, we only need to know the id of the parent to which this new comment will be attached, right?
 
-function submitComment(parent) // submits comment and updates thread
+function submitComment(parent, message_element) // submits comment and updates thread
 {
 	var text = $("#comment_textarea_" + parent).val();
 	//alert("submitting comment");
@@ -1232,10 +1257,10 @@ function submitComment(parent) // submits comment and updates thread
 	        	//if (parent_to_submit.indexOf(".") !== -1) // on server-fail of toplevel form comm submission, reenable submit button and remove spinner
 		    	//	displayMessage(data.message, "red", "utility_message_td");
 	        	//else
-	        	displayMessage(data.message, "red", "message_div_" + parent);
+	        	displayMessage(data.message, "red", message_element);
             	if(data.error_code && data.error_code === "0000")
         		{
-        			displayMessage("Your login has expired. Please relog.", "red");
+        			displayMessage("Your login has expired. Please relog.", "red", message_element);
         			user_jo = null;
         			updateLogstat();
         		}
@@ -1265,7 +1290,7 @@ function submitComment(parent) // submits comment and updates thread
 		    	}
 	        	
 	        	// on success, reset the form stuff
-	        	$("#comment_textarea_" + parent).css("height", "22px");			// set it back to normal height
+	        	$("#comment_textarea_" + parent).css("height", "30px");			// set it back to normal height
 	        	$("#comment_textarea_" + parent).val("Say something..."); // set the default wording
 	        	$("#char_count_and_submit_button_div_" + parent).hide();			// hide the charcount and submit area
 	        	if(parent.length === 11) // not toplevel
@@ -1279,7 +1304,7 @@ function submitComment(parent) // submits comment and updates thread
 	        	//if(parent.indexOf(".") !== -1) // toplevel
 	        	//	displayMessage("Comment posted.", "black", "utility_message_td");
 	        	//else 
-	        	displayMessage("Comment posted.", "black", "message_div_" + parent);
+	        	displayMessage("Comment posted.", "black", message_element);
 				
 	        	if(parent.length !== 11) // toplevel
 					doThreadItem(data.comment.id, parent, "newcomment");
@@ -1288,7 +1313,7 @@ function submitComment(parent) // submits comment and updates thread
 	        }
 	    },
 	    error: function (XMLHttpRequest, textStatus, errorThrown) {
-	    	displayMessage("Ajax error addComment: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + id);
+	    	displayMessage("Ajax error addComment: text=" + textStatus + " and error=" + errorThrown, "red", message_element);
        	 	//$("#comment_submission_form_div_" + parent).hide();
        	 	$("#comment_submission_form_submit_button_" + parent).removeAttr("disabled");
        	 	$("#comment_submission_progress_span_" + parent).hide();

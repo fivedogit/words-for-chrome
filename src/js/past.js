@@ -15,7 +15,7 @@ function doPastTab()
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
-	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading your past comments... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
+	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\" id=\"loading_past_comments_div\">Loading your past comments... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
 	beginindex = 0;
 	endindex = 8;
 	getPastComments();
@@ -42,7 +42,7 @@ function getPastComments()
 	        success: function (data, status) {
 	            if (data.response_status === "error") 
 	            {
-	            	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Error retrieving past comments.</div>");
+	            	$("#loading_past_comments_div").text("Error retrieving past comments.");
 	            	displayMessage(data.message, "red", "utility_message_td");
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
@@ -53,8 +53,8 @@ function getPastComments()
 	            }
 	            else
 	            { 
-	            	$("#main_div_" + currentURLhash).html("");
-	            	if(typeof data.comments_ja !== "undefined" && data.comments_ja !== null && data.comments_ja.length > 0)
+	            	$("#loading_past_comments_div").remove();
+            		if(typeof data.comments_ja !== "undefined" && data.comments_ja !== null && data.comments_ja.length > 0)
 	            	{
 	            		var sorted_comments_ja = data.comments_ja;
 	            		sorted_comments_ja.sort(function(a,b){
@@ -86,7 +86,7 @@ function getPastComments()
 	            	}
 	            	else
 	            	{
-	            		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">No past comments.</div>");
+	            		$("#loading_past_comments_div").text("No past comments.");
 	            	}
 	            }
 	        },
@@ -136,10 +136,10 @@ function doPastCommentItem(item_id, dom_id)
     		var headerstring = "";
     		headerstring = headerstring + "<img id=\"google_favicon_" + item_random + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_random + "\" href=\"#\"></a>";
 			$("#pastcomment_header_td_" + item_random).html(headerstring);//OK
-			$("#google_favicon_" + item_random).css("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
+			$("#google_favicon_" + item_random).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
 			$("#pseudo_link_" + item_random).attr("href", item_jo.pseudo_url);
 			$("#pseudo_link_" + item_random).text(url_to_use);
-			$("#you_wrote_" + item_random).text("You wrote:");
+			$("#you_wrote_" + item_random).text("You wrote");
     		writeComment(item_jo, "pastcomment_body_td_" + item_random);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {

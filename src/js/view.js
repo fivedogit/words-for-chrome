@@ -2,14 +2,14 @@
  function initializeView()
  {
 	 var bs = ""; // body string to be inserted into words_div  (which resides just inside <body>. Why not just use <body>? So this can be used as page injection. Can't override existing body there.
- 	 bs = bs + "<table style=\"width:100%;background-image:url('" + chrome.extension.getURL("images/outlets2X.png") + "');color:white;border: 1px solid yellow\" class=\"white-links\">";
+ 	 bs = bs + "<table style=\"width:100%;background-image:url('" + chrome.extension.getURL("images/outlets2X.png") + "');color:white;\" class=\"white-links\">";
  		bs = bs + "<tr>";
- 			bs = bs + "<td style=\"text-align:left;padding-left:5px;padding-top:5px;\">"; // small words logo td
+ 			bs = bs + "<td style=\"text-align:left;padding:8px 8px 5px 8px\">"; // small words logo td
  			bs = bs + "		<a href=\"#\" id=\"words_logo_link\"><img src=\"" + chrome.extension.getURL("images/words_logo_125x24.png") + "\"></img></a>";
  			bs = bs + "</td>";
- 			bs = bs + "<td id=\"logstat_td\"></td>";
- 			bs = bs + "<td style=\"text-align:right\">"; // tabs td
- 				bs = bs + "<table style=\"width:120px;line-height:14px;margin:2px 2px 2px auto;border:1px solid cyan\">"; // tabs table
+ 			bs = bs + "<td id=\"logstat_td\" style=\"padding:8px 8px 5px 8px\"></td>";
+ 			bs = bs + "<td style=\"text-align:right;padding:8px 8px 5px 8px\">"; // tabs td
+ 				bs = bs + "<table style=\"width:120px;line-height:14px;margin:2px 2px 2px auto;\">"; // tabs table
  					bs = bs + "<tr>";
  						bs = bs + "<td><a href=\"#\" id=\"thread_tab_link\"><img id=\"thread_tab_img\" src=\"" + chrome.extension.getURL("images/chat_blue.png") + "\"></img></a></td>";
  					    bs = bs + "<td><a href=\"#\" id=\"trending_tab_link\"><img id=\"trending_tab_img\" src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img></a></td>"; 
@@ -25,16 +25,16 @@
  		bs = bs + "</tr>";
  	bs = bs + "</table>";
  	bs = bs + "<table id=\"utility_table_" + currentURLhash + "\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X_light.png") + "')\">";
- 	bs = bs + "	<tr><td id=\"utility_header_td\" style=\"font-size:14px;font-weight:bold;padding:8px;border:1px solid red\"></td></tr>"; // make unique with currentURLhash?
- 	bs = bs + "	<tr><td id=\"utility_message_td\" style=\"padding:8px;border:1px solid green\"></td></tr>";
- 	bs = bs + "	<tr><td id=\"utility_csf_td\" style=\"padding:8px;vertical-align:middle;border:1px solid blue\"></td></tr>"; // csf = comment submission form
+ 	bs = bs + "	<tr><td id=\"utility_header_td\" style=\"font-size:14px;font-weight:bold;padding:8px 0px 8px 0px;\"></td></tr>"; // make unique with currentURLhash?
+ 	bs = bs + "	<tr><td id=\"utility_message_td\" style=\"padding:0px 0px 8px 0px;display:none\"></td></tr>";
+ 	bs = bs + "	<tr><td id=\"utility_csf_td\" style=\"padding:0px 0px 8px 0px;vertical-align:middle;\"></td></tr>"; // csf = comment submission form
  	bs = bs + "</table>";
 	bs = bs + "<div id=\"main_div_" + currentURLhash + "\"><div style=\"padding:20px\"></div></div>";
 	bs = bs + "<div id=\"footer_div\" class=\"white-links\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X.png") + "');padding:13px 5px 13px 5px;color:white;\">";
 	bs = bs + "</div>";
  	$("#words_div").html(bs);//OK
  
- 	writeCommentForm(currentURLhash, "utility_csf_td"); // id_to_use, target_dom_id
+ 	writeCommentForm(currentURLhash, "utility_csf_td", "utility_message_td"); // id_to_use, target_dom_id
  	
  	$("#words_logo_link").click(
  			function (event) {
@@ -183,7 +183,7 @@
  }
 
  
- function writeCommentForm(id_to_use, target_dom_id)
+ function writeCommentForm(id_to_use, target_dom_id, message_element)
  {
 	 var csf_str = "";
 	 csf_str = csf_str + "<form method=post action=\"#\">"; 
@@ -210,8 +210,8 @@
 	csf_str = csf_str + "</form>";	
 	$("#" + target_dom_id).html(csf_str);
 	
-	createSubmissionFormSubmitButtonClickEvent(id_to_use);
- 	createFocusEventForTextarea(id_to_use);
+	createSubmissionFormSubmitButtonClickEvent(id_to_use, message_element);
+ 	createFocusEventForTextarea(id_to_use, message_element);
  	createBlurEventForTextarea(id_to_use);
  	createKeyupEventForTextarea(id_to_use, 500);
  	
@@ -247,7 +247,7 @@ function displayLogstatAsLoggedOut() {
 		return;
 	}
 	var welcomearea = "";
-	welcomearea = welcomearea + "<table style=\"margin-right:auto;margin-left:auto;width:auto;border:1px solid pink;border-spacing:5px;border-collapse:separate;\">";
+	welcomearea = welcomearea + "<table style=\"margin-right:auto;margin-left:auto;width:auto;border-spacing:5px;border-collapse:separate;\">";
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td style=\"text-align:right;font-size:14px;font-face:bold;\">";
 	welcomearea = welcomearea + " 			Login:";
@@ -373,7 +373,7 @@ function displayLogstatAsLoggedIn() {
 		return;
 	}
 	var welcomearea = "";
-	welcomearea = welcomearea + "<table style=\"margin-right:auto;margin-left:auto;width:auto;border:1px solid pink\">";
+	welcomearea = welcomearea + "<table style=\"margin-right:auto;margin-left:auto;width:auto;\">";
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td style=\"width:32px;\">";
 	welcomearea = welcomearea + "			<span id=\"logged_in_profile_image_span\">";

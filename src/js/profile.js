@@ -139,7 +139,7 @@ function getProfile(screenname)
                 	main_div_string = main_div_string + "			<tr>";
                 	main_div_string = main_div_string + "				<td>";
                 	main_div_string = main_div_string + "					<table style=\"margin-right:auto;margin-left:auto;border-collapse:separate;border-spacing:5px\">";
-                	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Overlay size:</td>";
+                	/*main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Overlay size:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"size_selector\">";
 					main_div_string = main_div_string + "							  <option value=\"medium\">medium (450px across)</option>";
@@ -148,7 +148,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"size_result_td\">";
 					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "						</tr>";
+					main_div_string = main_div_string + "						</tr>";*/
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On like:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onlike_selector\">";
@@ -617,10 +617,10 @@ function getProfile(screenname)
             				return;
             			});
             
-            	if (user_jo.overlay_size === 600)
+            	/*if (user_jo.overlay_size === 600)
             		$("#size_selector").val("wide");
             	else if (user_jo.overlay_size === 450)
-            		$("#size_selector").val("medium");
+            		$("#size_selector").val("medium");*/
             	
             	if (user_jo.onlike === "email")
             		$("#onlike_selector").val("email");
@@ -654,7 +654,7 @@ function getProfile(screenname)
             	
             	
             	
-            	$("#size_selector").change(function () {
+            /*	$("#size_selector").change(function () {
 					$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -706,7 +706,7 @@ function getProfile(screenname)
 				            console.log(textStatus, errorThrown);
 				        }
 					});
-            	});
+            	});*/
             	
             	$("#onlike_selector").change(function () {
 					$.ajax({

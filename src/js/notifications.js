@@ -247,7 +247,7 @@ function doNotificationItem(item_id, dom_id)
         		}	
         		headerstring = headerstring + "<img id=\"google_favicon_" + item_random + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_random + "\" href=\"#\"></a>";
     			$("#header_td_" + item_random).html(headerstring);//OK
-    			$("#google_favicon_" + item_random).css("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
+    			$("#google_favicon_" + item_random).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
     			$("#pseudo_link_" + item_random).attr("href", item_jo.pseudo_url);
     			$("#pseudo_link_" + item_random).text(url_to_use);
     			if(!item_id.endsWith("D"))
@@ -264,9 +264,9 @@ function doNotificationItem(item_id, dom_id)
         	{
         		$("#item_tr_" + item_random).show();
         		if(item_jo.author_screenname === user_jo.screenname) // did the person mention himself? (this can't be a like/dislike/reply)
-        			$("#they_wrote_td_" + item_random).text("You wrote:");
+        			$("#they_wrote_td_" + item_random).text("You wrote");
         		else
-        			$("#they_wrote_td_" + item_random).text("They wrote:");
+        			$("#they_wrote_td_" + item_random).text("They wrote");
         		if(!populate_parent)
         			$("#indent_td_" +  item_random).css("width", "0px"); // if not populating parent (happens with mention only), move item all the way to the left
         		writeComment(item_jo, "notification_comment_td_" + item_random);
@@ -287,7 +287,7 @@ function doNotificationItem(item_id, dom_id)
         	        	parent_jo = data.item;
         	        	if(data.response_status === "success")
         	        	{
-        	        		$("#you_wrote_td_" + parent_random).text("You wrote:"); // if we're showing the parent, this is a reply or a like/dislike. 
+        	        		$("#you_wrote_td_" + parent_random).text("You wrote"); // if we're showing the parent, this is a reply or a like/dislike. 
         	        		writeComment(parent_jo, "notification_comment_td_" + parent_random);
         	        	}
         	        },

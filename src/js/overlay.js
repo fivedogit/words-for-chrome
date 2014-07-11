@@ -12,6 +12,21 @@ var email;
 var this_access_token;
 var tabmode = "thread";
 
+$(window).scroll(function() {
+	if ($(window).scrollTop() + $(window).height() === $(document).height()) {
+		if (scrollable === 1)
+		{
+			scrollable = 0;
+			beginindex = beginindex + 8; 
+			endindex = endindex + 8;
+			if(tabmode === "thread")
+				prepareGetAndPopulateThreadPortion();
+			else if(tabmode === "past")
+				getPastComments();
+		}
+	}
+});
+
 //when the overlay's html page has loaded, do this
 document.addEventListener('DOMContentLoaded', function () {
 	 chrome.tabs.getSelected(null, function(tab) {
@@ -22,10 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			 currentHostname = "www." + currentHostname;
 		 
 		 initializeView();
-		 if (typeof bg.user_jo.overlay_size !== "undefined" && bg.user_jo.overlay_size !== null)
+		/* if (user_jo !== null && typeof user_jo.overlay_size !== "undefined" && user_jo.overlay_size !== null)
 		 {	
-			 $("body").css("width", bg.user_jo.overlay_size + "px");
-		 }
+			 $("body").css("width", user_jo.overlay_size + "px");
+		 }*/
 		 
 		 // need a valid email/this_access_token to do the rest
 		 email = docCookies.getItem("email");

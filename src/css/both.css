@@ -17,6 +17,7 @@ div#words_div a:visited {color:purple; text-decoration:underline; }  /* visited 
 div#words_div a:hover {color:blue; text-decoration:underline;}  /* mouse over link */
 div#words_div a:active {color:red; text-decoration:underline;}  /* selected link */
 
+
 div#words_div {
     background-color:white; 
     width: 100%;
@@ -26,6 +27,10 @@ div#words_div {
     font-size: 11px;
     line-height:17px;
     color:black;
+}
+
+div#words_div img {
+	display: inline
 }
 
 div#words_div span {
@@ -60,6 +65,7 @@ div#words_div td {
     margin: 0;
     text-align: center;
     border: 0;
+    vertical-align:middle
    /* border: 1px solid black*/
 }
 
@@ -228,7 +234,9 @@ div#words_div div.complete-horiz-line-div {
 
 div#words_div .rotated-who-wrote {
 	width:34px;
-	text-align:right;
+	text-align:center;
+	line-height:9px;
+	border: 0px solid black;
 	-webkit-transform: rotate(-90deg);
     -webkit-transform-origin: 50% 50%;
 }

@@ -12,23 +12,6 @@ var this_access_token;
 var scrollable = 0;
 var tabmode = "thread";
 
-/*
-function elementInViewport(el) {
-
-    //special bonus for those using jQuery
-    if (el instanceof jQuery) {
-        el = el[0];
-    }
-
-    var rect = el.getBoundingClientRect();
-
-    return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && 
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-}*/
 
 function elementInViewport (el) {
 
@@ -45,17 +28,30 @@ function elementInViewport (el) {
     );
 
 }
-
+/*
 $(document).ready(function() {
-	var elem = document.getElementById("comments-container"); // the document is finished, find the comments-container
-	if(typeof elem !== "undefined" && elem !== null)
+	var elem = null;
+		elem = document.getElementById("words_div"); // the document is finished, find the comments-container
+	if(elem === null)
+		elem = document.getElementById("comments-container"); // the document is finished, find the comments-container
+	if(elem === null)
+		elem = document.getElementById("comments"); // the document is finished, find the comments-container
+	if(elem === null)
+		elem = document.getElementById("disqus_thread"); // the document is finished, find the comments-container
+	
+	if(typeof elem !== "undefined" && elem !== null && elem.id !== "words_div")
 	{	
+		//alert("0 " + elem.id);
 		elem.innerHTML = ""; // blank it.
-		document.getElementById("comments-container").setAttribute("id", "words_div");
-		$("#words_div").css("height", "650px");
-		$("#words_div").css("overflow", "auto");
+		elem.setAttribute("id", "words_div");
+		//$("#words_div").css("height", "650px");
+		//$("#words_div").css("overflow", "auto");
 	}
-});
+	else
+	{
+		// do nothing
+	}
+});*/
 
 chrome.extension.onMessage.addListener(function(request, sender, callback)
 {
@@ -66,7 +62,7 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		currentHostname = currentURL.substring(currentURL.indexOf("://") + 3, currentURL.indexOf("/", currentURL.indexOf("://") + 3));
 		if (currentHostname.indexOf(".", currentHostname.indexOf(".")+1) === -1) // only has one "." assume www.
 			 currentHostname = "www." + currentHostname;
-		
+
 		if(request.user_jo !== null)
 		{
 			email = request.email;
@@ -75,30 +71,38 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		user_jo = request.user_jo;
 		thread_jo = request.thread_jo;
 		var alreadyfound = false;
-		var elem = document.getElementById("comments-container"); // the document is finished, find the comments-container
 		
-		if(typeof elem !== "undefined" && elem !== null)
+		var elem = null;
+		elem = document.getElementById("words_div"); // the document is finished, find the comments-container
+		/*if(elem === null)
+			elem = document.getElementById("comments-container"); // the document is finished, find the comments-container
+		if(elem === null)
+			elem = document.getElementById("comments"); // the document is finished, find the comments-container
+		if(elem === null)
+			elem = document.getElementById("disqus_thread"); // the document is finished, find the comments-container
+		
+		if(typeof elem !== "undefined" && elem !== null && elem.id !== "words_div")
 		{	
+			//alert("1 " + elem.id);
 			elem.innerHTML = ""; // blank it.
-			document.getElementById("comments-container").setAttribute("id", "words_div");
-			$("#words_div").css("height", "650px");
-			$("#words_div").css("overflow", "auto");
+			elem.setAttribute("id", "words_div");
+			//$("#words_div").css("height", "650px");
+			//$("#words_div").css("overflow", "auto");
 		}
 		else
 		{
-			elem = document.getElementById("words_div");
-			elem.innerHTML = ""; // blank it.
-		}
-		
-		if(!alreadyfound && elementInViewport(elem)) // when found for the first time, no scrolling necessary
+			// do nothing
+		}*/
+
+		if(elem !== null && !alreadyfound && elementInViewport(elem)) // when found for the first time, no scrolling necessary
 		{
 			alreadyfound = true;
 			initializeView();
 			doThreadTab();
 		}	
-		
+
 		window.onscroll = function(){  // when scrolling, look for it
-			if(!alreadyfound && elementInViewport(elem)) // when found for the first time...
+			if(elem !== null && !alreadyfound && elementInViewport(elem)) // when found for the first time...
 			{
 				alreadyfound = true;
 				initializeView();
@@ -108,4 +112,3 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		return;
 	}
 });			
-

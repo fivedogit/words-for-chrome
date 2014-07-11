@@ -32,12 +32,14 @@ document.documentElement.appendChild(style);
 var currentURL = "";
 var currentTitle = "";
 var currentId = "";
+var currentHostname = "";
 var t_jo;
 var threadstatus = 0;
 var top="???";
 var bottom="???";
 var msfe_according_to_backend = (new Date).getTime(); // set to local machine time to start... will be reset to backend time by first thread call.
-var footer_random_pool = 12; // start at 12, let backend change
+var footer_random_pool = 50; // start at 50, let backend change
+var allowed_hostnames = ["www.techcrunch.com", "www.venturebeat.com", "www.wired.com"];
 
 (function() {
 	getUser(); // user_jo should always be null when this is called
@@ -46,7 +48,7 @@ var footer_random_pool = 12; // start at 12, let backend change
 		currentURL = tab.url;
 		currentTitle = tab.title;
 		currentId = tab.id;
-		
+		currentHostname = getStandardizedHostname(currentURL);
 		var canvas = document.getElementById("button_canvas");
 		var context = canvas.getContext("2d");
 		context.fillStyle = "#ffffff";
@@ -88,6 +90,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 					currentURL = updatingtab.url;
 					currentTitle = updatingtab.title;
 					currentId = tab.id;
+					currentHostname = getStandardizedHostname(currentURL);
 					drawTTUButton("   ", "   "); // clear out what's there now
 					doButtonGen();
 				}
@@ -106,10 +109,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 			if(updatingtab.url === tab.url) // the one that's updating is the one we're looking at. good. proceed
 			{
 				// if the page in the current tab is updating or changing, always do the TC embed check 
-				if(currentURL.indexOf("http://www.techcrunch.com/") === 0 || currentURL.indexOf("https://www.techcrunch.com/")  === 0 ||
-						currentURL.indexOf("http://techcrunch.com/")  === 0 || currentURL.indexOf("https://techcrunch.com/")  === 0 )
+				if(allowed_hostnames.indexOf(currentHostname) !== -1)
 				{
-					//alert("sending from update");
+					//alert("updated: " + currentHostname);
 					chrome.tabs.getSelected(null, function(tab) { 
 						var email = docCookies.getItem("email");
 						var this_access_token = docCookies.getItem("this_access_token");
@@ -130,12 +132,12 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 			currentURL = tab.url;
 			currentTitle = tab.title;
 			currentId = tab.id;
+			currentHostname = getStandardizedHostname(currentURL);
 			drawTTUButton("   ", "   "); // clear out anything that's there now
 			doButtonGen();
-			if(currentURL.indexOf("http://www.techcrunch.com/") === 0 || currentURL.indexOf("https://www.techcrunch.com/")  === 0 ||
-					currentURL.indexOf("http://techcrunch.com/")  === 0 || currentURL.indexOf("https://techcrunch.com/")  === 0 )
+			if(allowed_hostnames.indexOf(currentHostname) !== -1)
 			{
-				//alert("sending msg");
+				//alert("activated: " + currentHostname);
 				chrome.tabs.getSelected(null, function(tab) { 
 					var email = docCookies.getItem("email");
 					var this_access_token = docCookies.getItem("this_access_token");

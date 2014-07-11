@@ -17,11 +17,18 @@
      "background": {
         "page": "background.html"
     },
-    "content_scripts": [{
+    "content_scripts": [
+    {
+        "matches": ["http://*/*", "https://*/*"],
+        "js": ["/js/di.js"],
+        "run_at": "document_idle"
+    },
+    {
         "matches": ["http://www.words4chrome.com/*"],
         "js": ["/js/already_installed.js"],
         "run_at": "document_end"
-    },{
+    },
+    {
         "matches": ["http://*/*", "https://*/*"],
         "js": [
         	"/js/jquery-1.8.2.min.js", 

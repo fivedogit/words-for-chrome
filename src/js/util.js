@@ -96,6 +96,15 @@ function getHost(loc_url)
 	return parser.host;
 }
 
+function getStandardizedHostname(inc_url)
+{
+	var h = getHost(inc_url);
+	var count = (h.split(".").length - 1);
+	if(count === 1)
+		h = "www." + h;
+	return h;
+}
+
 // do we want to check for double #?
 function isValidURLFormation(inc_url)
 {
@@ -310,22 +319,6 @@ function displayMessage(inc_message, inc_color, dom_id, s)
 	setTimeout(function() { $("#" + dom_id).hide();}, ms);
 }
 
-
-$(window).scroll(function() {
-	if ($(window).scrollTop() + $(window).height() === $(document).height()) {
-		if (scrollable === 1)
-		{
-			scrollable = 0;
-			beginindex = beginindex + 8; 
-			endindex = endindex + 8;
-			if(tabmode === "thread")
-				prepareGetAndPopulateThreadPortion();
-			else if(tabmode === "past")
-				getPastComments();
-		}
-	}
-});
-
 function doNewtabClick(h)
 {
 // 	try to find h
@@ -396,9 +389,9 @@ function isValidThreadItemId(inc_id)
  *                                                                                                                     
  */
 
-function createSubmissionFormSubmitButtonClickEvent(id)
+function createSubmissionFormSubmitButtonClickEvent(id, message_element)
 {
-	 $("#comment_submission_form_submit_button_" + id).click({id: id},
+	 $("#comment_submission_form_submit_button_" + id).click({id: id, message_element: message_element},
 			 function (event) {
 				 
 				 $("#comment_submission_form_submit_button_" + event.data.id).attr("disabled", "disabled");
@@ -409,19 +402,19 @@ function createSubmissionFormSubmitButtonClickEvent(id)
 					 if ($("#comment_textarea_" + event.data.id) && $("#comment_textarea_" + event.data.id).val() != "") 
 					 {
 						 // event.data.id may be "top", which will be handled in submitComment();
-						 submitComment(event.data.id); // the "event.data.id" of this current comment (or hpqsp) will become the "parent" after the jump as it is the parent to which the new comment will be attached
+						 submitComment(event.data.id, message_element); // the "event.data.id" of this current comment (or hpqsp) will become the "parent" after the jump as it is the parent to which the new comment will be attached
 						 // what happens to the visibility of the submission area depends on error/success
 					 } 
 					 else 
 					 {
-						 displayMessage("Unable to post empty comment.", "red", "message_div_" + event.data.id);
+						 displayMessage("Unable to post empty comment.", "red", event.data.message_element);
 						 $("#progress_span_" + event.data.id).hide();
 						 $("#comment_submission_form_submit_button_" + event.data.id).removeAttr('disabled');
 					 }
 				 } 
 				 else // user isn't logged in. Not sure they're seeing this form in the first place. They shouldn't be.
 				 {
-					 displayMessage("Unable to post comment. You are not logged in.", "red", "message_div_" + event.data.id); // USER SHOULD NOT SEE THIS MESSAGE. SHOULD BE WARNED OF LOGGEDOUT STATUS MUCH EARLIER
+					 displayMessage("Unable to post comment. You are not logged in.", "red", event.data.message_element); // USER SHOULD NOT SEE THIS MESSAGE. SHOULD BE WARNED OF LOGGEDOUT STATUS MUCH EARLIER
 					 $("#progress_span_" + event.data.id).hide();
 					 $("#comment_submission_form_submit_button_" + event.data.id).removeAttr('disabled');
 				 }
@@ -466,21 +459,19 @@ function createBlurEventForTextarea(id)
 			});
 }
 
-function createFocusEventForTextarea(id)
+function createFocusEventForTextarea(id, message_element)
 {
-	 $("#comment_textarea_" + id).focus({id: id},
-			 function (event) {
-		 
-		 if(user_jo === null)
+	 $("#comment_textarea_" + id).focus({id: id, message_element: message_element}, function (event) {
+		 if(typeof user_jo === "undefined" || user_jo === null)
 		 {
-			 displayMessage("Unable to compose comment. You are not logged in.", "red", "message_div_" + event.data.id);
+			 displayMessage("Unable to compose comment. You are not logged in.", "red", event.data.message_element);
 			 $("#comment_textarea_" + event.data.id).trigger("blur");
 		 }
 		 else // user logged in and rating ok
 		 {	 
 			 if(user_jo.rating <= -5)
 			 {
-				 displayMessage("Unable to compose comment. Your comment rating is too low.", "red", "message_div_" + event.data.id);
+				 displayMessage("Unable to compose comment. Your comment rating is too low.", "red", event.data.message_element);
 				 $("#comment_textarea_" + event.data.id).trigger("blur");
 			 }
 			 else
@@ -608,7 +599,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_googleplus_link\" >G+</a>";
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_tumblr_link\" >Tumblr</a>";
-		 if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+		 if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
 			 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_gmail_link\" >Gmail</a>";
 		 footerstr = footerstr + "<span style=\"font-size:9px;margin-left:10px\">(4/6)</span> <a href=\"#\" style=\"font-size:9px\" id=\"next_link\">next>></a>";
 		 $("#footer_div").html(footerstr);
@@ -617,7 +608,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 		 noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
 		 noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
 		 noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
-		 if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+		 if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
 			 noteImpressionAndCreateHandler("gmailshare", "footer", "share_to_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
 		 $("#next_link").click(function(event){ doFirstrunFooterMsg(4); });
 	 }
@@ -649,7 +640,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_googleplus_link\" >G+</a>";
 		 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_tumblr_link\" >Tumblr</a>";
-		 if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+		 if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
 			 footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_gmail_link\" >Gmail</a>";
 		 footerstr = footerstr + "<span style=\"margin-left:15px\">FOLLOW: ";
 		 footerstr = footerstr + "<a href=\"#\" id=\"twitter_mainacct_link\" style=\"color:#baff00\">@words4chrome</a>";
@@ -662,7 +653,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 		 noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
 		 noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
 		 noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
-		 if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+		 if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
 			 noteImpressionAndCreateHandler("gmailshare", "footer", "share_to_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
 		 noteImpressionAndCreateHandler("twitter_mainacct", "footer", "twitter_mainacct_link", "http://www.twitter.com/words4chrome");
 		 $("#next_link").click(function(event){ doFirstrunFooterMsg(5); });
@@ -776,7 +767,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_googleplus_link\" >G+</a>";
 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_tumblr_link\" >Tumblr</a>";
-				if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+				if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
 					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_gmail_link\" >Gmail</a>";
 				$("#footer_div").html(footerstr);
 				
@@ -784,7 +775,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
 				noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
 				noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
-				if(typeof user_jo !== undefined && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
+				if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email !== "undefined" && user_jo.email !== null && user_jo.email.endsWith("@gmail.com"))
 					noteImpressionAndCreateHandler("gmailshare", "footer", "share_to_gmail_link", "https://mail.google.com/mail/?view=cm&fs=1&su=Words%20for%20Chrome&body=Hey%2C%20I%20thought%20you%20might%20like%20this.%20It%27s%20a%20new%20kind%20of%20web%20commenting%20system%20that%20protects%20privacy%20and%20keeps%20out%20the%20crazies.%20%0A%0Ahttp%3A%2F%2Fwww.words4chrome.com%0A%0AYou%20can%20download%20Chrome%20if%20you%20don%27t%20already%20have%20it.%0A%0AEnjoy!");
 			}
 			else if(randomint === 3)
