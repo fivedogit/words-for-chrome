@@ -17,8 +17,8 @@ $(window).scroll(function() {
 		if (scrollable === 1)
 		{
 			scrollable = 0;
-			beginindex = beginindex + 8; 
-			endindex = endindex + 8;
+			beginindex = beginindex + 15; 
+			endindex = endindex + 15;
 			if(tabmode === "thread")
 				prepareGetAndPopulateThreadPortion();
 			else if(tabmode === "past")

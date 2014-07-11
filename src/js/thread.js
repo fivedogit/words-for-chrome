@@ -465,7 +465,7 @@ function gotThread()
 	 					$("#tab_tooltip_td").text("Profile/Settings");
 	 			});
 		beginindex = 0;
-		endindex = 8;
+		endindex = 15;
 		prepareGetAndPopulateThreadPortion();
 	}
 }
