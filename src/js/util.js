@@ -77,12 +77,10 @@ function isValidURLFormation(inc_url)
 	var validurl = true;
 	if (typeof inc_url === "undefined" || inc_url === null || inc_url === "")
 	{
-		console.log("isValidURLFormation(): inc_url was undefined, null or blank");
 		validurl = false;
 	}
 	else if((inc_url.substring(0,7) !== "http://") && (inc_url.substring(0,8) !== "https://"))
 	{
-		console.log("isValidURLFormation(): inc_url did not start with http(s)://");
 		validurl = false;
 	}
 	else
@@ -90,12 +88,10 @@ function isValidURLFormation(inc_url)
 		var host = getHost(inc_url);
 		if(host.indexOf(":") != -1)
 		{
-			console.log("isValidURLFormation(): inc_url contained \":\"");
 			validurl = false;
 		}	
 		else if (host.indexOf(".") == -1)
 		{
-			console.log("isValidURLFormation(): did not contain \".\"");
 			validurl = false;
 		}
 		else

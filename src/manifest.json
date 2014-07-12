@@ -19,17 +19,12 @@
     },
     "content_scripts": [
     {
-        "matches": ["http://*/*", "https://*/*"],
+        "matches": ["http://techcrunch.com/*"],
         "js": ["/js/di.js"],
         "run_at": "document_idle"
     },
     {
-        "matches": ["http://www.words4chrome.com/*"],
-        "js": ["/js/already_installed.js"],
-        "run_at": "document_end"
-    },
-    {
-        "matches": ["http://*/*", "https://*/*"],
+        "matches": ["http://techcrunch.com/*"],
         "js": [
         	"/js/jquery-1.8.2.min.js", 
         	"/js/widget_embedder.js", 

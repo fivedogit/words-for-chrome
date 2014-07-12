@@ -19,10 +19,10 @@ chrome.runtime.onMessage.addListener(
 		  getUser(false);
 		  waitAndSend(request.email, request.this_access_token);
 	  }  
-	  else if(request.method == "getAllowedHostnames")
+	  /*else if(request.method == "getAllowedHostnames")
 	  {
 		  sendResponse({allowed_hostnames: allowed_hostnames});
-	  }
+	  }*/
 	  else if(request.method == "setSavedText")
 	  {
 		  //alert("saving text", request.saved_text);
@@ -103,7 +103,7 @@ var top="???";
 var bottom="???";
 var msfe_according_to_backend = (new Date).getTime(); // set to local machine time to start... will be reset to backend time by first thread call.
 var footer_random_pool = 50; // start at 50, let backend change
-var allowed_hostnames = ["www.techcrunch.com", "www.venturebeat.com", "www.wired.com"];
+var allowed_hostnames;
 
 (function() {
 	getUser(); // user_jo should always be null when this is called
@@ -144,11 +144,9 @@ function getColorHexStringFromRGB(r, g, b)
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 	if (changeInfo.status === "loading") // also fires at "complete", which I'm ignoring here. Only need one (this one).
 	{
-		//alert("updating");
 		chrome.tabs.getSelected(null, function(tab) { // only follow through if the updating tab is the same as the selected tab, don't want background tabs reloading and wrecking stuff
 			if(updatingtab.url === tab.url) // the one that's updating is the one we're looking at. good. proceed
 			{
-				//alert("updating current");
 				if(currentURL !== tab.url) //  && tab.url.indexOf("chrome-extension://") !== 0) // only do this if the update is of a new url, no point in reloading the existing url again
 				{	
 					currentURL = updatingtab.url;
@@ -173,7 +171,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 			if(updatingtab.url === tab.url) // the one that's updating is the one we're looking at. good. proceed
 			{
 				// if the page in the current tab is updating or changing, always do the TC embed check 
-				if(allowed_hostnames.indexOf(currentHostname) !== -1)
+				//if(allowed_hostnames.indexOf(currentHostname) !== -1)
+				if(currentHostname === "www.techcrunch.com")
 				{
 					//alert("updated: " + currentHostname);
 					chrome.tabs.getSelected(null, function(tab) { 
@@ -192,14 +191,14 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 		getUser(); // get user on every valid tab change. This updates notifications and logstat (do not getUser on random page updates)
 		if(typeof tab.url !== "undefined" && tab.url !== null && tab.url !== "")
 		{
-			//alert("tab activation event tab.url=" + tab.url);
 			currentURL = tab.url;
 			currentTitle = tab.title;
 			currentId = tab.id;
 			currentHostname = getStandardizedHostname(currentURL);
 			drawTTUButton("   ", "   "); // clear out anything that's there now
 			doButtonGen();
-			if(allowed_hostnames.indexOf(currentHostname) !== -1)
+			//if(allowed_hostnames.indexOf(currentHostname) !== -1)
+			if(currentHostname === "www.techcrunch.com")
 			{
 				//alert("activated: " + currentHostname);
 				chrome.tabs.getSelected(null, function(tab) { 
@@ -282,6 +281,17 @@ function getThread(url_at_function_call, updatebutton)
             	{
             		msfe_according_to_backend = data.msfe;
             		allowed_hostnames = data.allowed_hostnames;
+            		//var keys = Object.keys(allowed_hostnames);
+            		//alert(keys);
+            	/*	var x = 0;
+            		allowed_hostnames = {};
+            		corresponding_element_ids = [];
+            		while(x < raw_allowed_hostnames.length)
+            		{
+            			allowed_hostnames.push(raw_allowed_hostnames[x].substring(0,raw_allowed_hostnames[x].indexOf("/")));
+            			corresponding_element_ids.push(raw_allowed_hostnames[x].substring(raw_allowed_hostnames[x].indexOf("/")+1));
+            			x++;
+            		}*/	
             		footer_random_pool = data.footer_random_pool;
             		loc_thread_jo = data.thread_jo;
             		threadstatus=0;

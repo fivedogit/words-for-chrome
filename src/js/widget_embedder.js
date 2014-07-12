@@ -12,7 +12,6 @@ var this_access_token;
 var scrollable = 0;
 var tabmode = "thread";
 
-
 function elementInViewport (el) {
 
     var r, html;
