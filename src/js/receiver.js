@@ -178,7 +178,7 @@ else
 	}	
 	else if(code === null)
 	{
-		displayMessage("Requesting login permission from " + capitalized_login_type + "... ", "black");
+		displayMessage("Requesting login permission from " + capitalized_login_type + ". A popup window should appear momentarily.", "black");
 		$("#progress_tr").show();
 		
 		if(login_type === "google")
