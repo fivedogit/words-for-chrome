@@ -74,19 +74,22 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "</table>";
 	$("#main_div_" + currentURLhash).html(aboutmessage); //OK
 	
-	$("a").click(function(event) {
-		// do not prevent default?
+	// don't think I need this. All the <a>s here have click handlers
+/*	$("a").click(function(event) {  event.preventDefault();
 		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
 		{
 			event.processed = true;
-			var c = $(this).attr('class');
-			if(c == "newtab")
-			{
-				var h = $(this).attr('href');
-				doNewtabClick(h);
+			if(chrome.tabs)
+			{	
+				var c = $(this).attr('class');
+				if(c == "newtab")
+				{
+					var h = $(this).attr('href');
+					doNewtabClick(h);
+				}
 			}
 		}
-	});
+	});*/
 	
 	if(navigator.userAgent.indexOf("OPR/") !== -1)
 		noteImpressionAndCreateHandler("operastore", "about", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");

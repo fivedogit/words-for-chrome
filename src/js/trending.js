@@ -224,7 +224,7 @@ function drawTrendingChart(data, dom_id)
 	}
 	
 	
-	$("a").click(function(event) {
+	$("a").click(function(event) { event.preventDefault();
 		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
 		{
 			event.processed = true;
@@ -232,7 +232,10 @@ function drawTrendingChart(data, dom_id)
 			if(c == "newtab")
 			{
 				var h = $(this).attr('href');
-				doNewtabClick(h);
+				if(chrome.tabs)
+					doNewtabClick(h);
+				else
+					window.location = h;
 			}
 		}
 	});

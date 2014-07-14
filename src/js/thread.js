@@ -127,8 +127,7 @@ function gotThread()
 		
 		getPageLikes(which_like_type);
 		
-		$("#pagelike_img").click( function (event) {
-			event.preventDefault();
+		$("#pagelike_img").click( function (event) { event.preventDefault();
 			var prev = $("#pagelike_img").attr("src");
 			$("#pagelike_img").attr("src", chrome.extension.getURL("images/ajaxSnake.gif"));
 			$.ajax({
@@ -275,8 +274,7 @@ function gotThread()
 	 				return false;
 	 			});
 	 	
-	 	$("#follow_img").click( function (event) {
-	 		event.preventDefault();
+	 	$("#follow_img").click( function (event) { event.preventDefault();
 	 		var previous_src = $("#follow_img").attr("src");
 	 		$("#follow_img").attr("src", "images/ajaxSnake.gif");
 	 		if(previous_src.indexOf("off") != -1)
@@ -348,8 +346,7 @@ function gotThread()
 	 	
 	 	if(user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
 	 	{
-	 		$("#separated_or_combined_img").click( function (event) {
-	 			event.preventDefault();
+	 		$("#separated_or_combined_img").click( function (event) { event.preventDefault();
 	 			//alert($("#separated_or_combined_img").attr("src"));
 	 			if($("#separated_or_combined_img").attr("src").indexOf("combined") != -1)
 	 			{	
@@ -413,8 +410,7 @@ function gotThread()
 	 			}	
 	 		});
 	 		
-	 		$("#set_sqsp").click( function (event) {
-	 			event.preventDefault();
+	 		$("#set_sqsp").click( function (event) { event.preventDefault();
 	 			$.ajax({
 	 				type: 'GET',
 	 				url: endpoint,
@@ -1090,7 +1086,7 @@ function writeComment(feeditem_jo, dom_id)
 		 });
 	}
 	
-	$("a").click(function(event) {
+	$("a").click(function(event) { event.preventDefault();
 		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
 		{
 			event.processed = true;
@@ -1098,7 +1094,10 @@ function writeComment(feeditem_jo, dom_id)
 			if(c == "newtab")
 			{
 				var h = $(this).attr('href');
-				doNewtabClick(h);
+				if(chrome.tabs)
+					doNewtabClick(h);
+				else
+					window.location = h;
 			}
 		}
 	});
@@ -1164,8 +1163,7 @@ function writeComment(feeditem_jo, dom_id)
 	
 	if (tabmode === "thread")
 	{
-		$("#reply_link_" + comment_id).click({value: comment_id}, function(event) {
-			event.preventDefault();
+		$("#reply_link_" + comment_id).click({value: comment_id}, function(event) { event.preventDefault();
 			if (user_jo !== null)
 			{
 				if(!$("#reply_td_" + event.data.value).is(":visible"))
@@ -1189,25 +1187,21 @@ function writeComment(feeditem_jo, dom_id)
 				displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
 		});
 		
-		$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) {
-			event.preventDefault();
+		$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
 			likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
 		});
 	 		 
-		$("#dislike_img_" + comment_id).click({value: feeditem_jo.id}, function(event) {
-			event.preventDefault();
+		$("#dislike_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
 			likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
 		});
 		
-		$("#comment_nuke_link_" + comment_id).click({value: feeditem_jo.id}, function(event) {
-			event.preventDefault();
+		$("#comment_nuke_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
 			var confirmbox = confirm("Nuke comment?\n(This action is permanent and risky.)");
 			if (confirmbox === true)
 				nukeComment(event.data.value);
 		});
 		
-		$("#comment_megadownvote_link_" + comment_id).click({value: feeditem_jo.id}, function(event) {
-			event.preventDefault();
+		$("#comment_megadownvote_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
 			var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
 			if (confirmbox === true)
 				megadownvoteComment(event.data.value);
@@ -1216,16 +1210,14 @@ function writeComment(feeditem_jo, dom_id)
 	
 	if (tabmode === "thread" || tabmode === "past")
 	{
-		$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) {
-			event.preventDefault();
+		$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
 			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
 			if (confirmbox === true)
 				hideComment(event.data.value);
 		});
 	}
 	
-	$("[id=screenname_link_"+ comment_id + "]").click({value: feeditem_jo}, function(event) {
-		event.preventDefault();
+	$("[id=screenname_link_"+ comment_id + "]").click({value: feeditem_jo}, function(event) { event.preventDefault();
 		viewProfile(event.data.value.author_screenname);
 	});
 }

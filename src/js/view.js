@@ -36,9 +36,7 @@
 
  	writeCommentForm(currentURLhash, "utility_csf_td", "utility_message_td"); // id_to_use, target_dom_id
 
- 	$("#words_logo_link").click(
- 			function (event) {
- 				event.preventDefault();
+ 	$("#words_logo_link").click( function (event) {	event.preventDefault();
  				doAboutTab();
  			});
 
@@ -63,9 +61,7 @@
  				return false;
  			});
 
- 	$("#thread_tab_link").click(
- 			function (event) {
- 				event.preventDefault();
+ 	$("#thread_tab_link").click( function (event) {	event.preventDefault();
  				doThreadTab();
  			});
 
@@ -89,9 +85,7 @@
  					$("#tab_tooltip_td").text("Profile/Settings");
  			});
 
- 	$("#trending_tab_link").click(
- 			function (event) {
- 				event.preventDefault();
+ 	$("#trending_tab_link").click( function (event) {	event.preventDefault();
  				doTrendingTab();
  			});
 
@@ -116,10 +110,11 @@
  				return false;
  			});
 
- 	$("#notifications_tab_link").click(
- 			function (event) {
- 				event.preventDefault();
+ 	$("#notifications_tab_link").click( function (event) {	event.preventDefault();
  				doNotificationsTab();
+ 				chrome.runtime.sendMessage({method: "redrawButton"}, function(response) {
+					  //alert(response.message);
+				 });
  			});
 
 	$("#past_tab_link").mouseover(
@@ -143,9 +138,7 @@
  				return false;
  			});
 
- 	$("#past_tab_link").click(
- 			function (event) {
- 				event.preventDefault();
+ 	$("#past_tab_link").click( function (event) {	event.preventDefault();
  				doPastTab();
  			});
  	
@@ -170,9 +163,7 @@
  				return false;
  			});
 
- 	$("#profile_tab_link").click(
- 			function (event) {
- 				event.preventDefault();
+ 	$("#profile_tab_link").click( function (event) {	event.preventDefault();
  				if(user_jo === null)
  					viewProfile(null);
  				else
@@ -326,9 +317,7 @@ function displayLogstatAsLoggedOut() {
 	});
 	
 	
-	$("#google_login_link").click(
-			function (event) {
-				event.preventDefault();
+	$("#google_login_link").click(function (event) { event.preventDefault();
 				if(chrome.tabs)
 				{	
 					var currenttabid;
@@ -352,9 +341,7 @@ function displayLogstatAsLoggedOut() {
 				}		
 			});
 	
-	$("#facebook_login_link").click(
-			function (event) {
-				event.preventDefault();
+	$("#facebook_login_link").click(function (event) { event.preventDefault();
 				if(chrome.tabs)
 				{	
 					var currenttabid;
@@ -408,8 +395,7 @@ function displayLogstatAsLoggedIn() {
 	
 	if(typeof user_jo.alts !== "undefined" && user_jo.alts != null)
 	{
-		$("#alt_dropdown_img").click( function (event) {
-					event.preventDefault();
+		$("#alt_dropdown_img").click(function (event) { event.preventDefault();
 					var prev = $("#utility_header_td").html();//OK (getter)
 					var alts_counter = 0;
 					var str = "";
@@ -424,8 +410,7 @@ function displayLogstatAsLoggedIn() {
 					while(alts_counter < user_jo.alts.length)
 					{
 						$("#user_" + alts_counter + "_link").text(user_jo.alts[alts_counter].screenname);
-						$("#user_" + alts_counter + "_link").click({altuser: user_jo.alts[alts_counter], prev: prev}, function (event) {
-							event.preventDefault();
+						$("#user_" + alts_counter + "_link").click({altuser: user_jo.alts[alts_counter], prev: prev}, function (event) { event.preventDefault();
 							$("#utility_header_td").html(event.data.prev);//OK
 							chrome.runtime.sendMessage({method: "switchUser", email: event.data.altuser.email, this_access_token: event.data.altuser.this_access_token}, function(response) {
 								email = response.email;
@@ -443,10 +428,8 @@ function displayLogstatAsLoggedIn() {
 				});
 	}	
 	
-	$("#screenname_link").click(
-			function () {
+	$("#screenname_link").click(function (event) { event.preventDefault();
 				viewProfile(user_jo.screenname);
-				return;
 			});
 }
 

@@ -19,10 +19,16 @@ chrome.runtime.onMessage.addListener(
 		  getUser(false);
 		  sendResponse({email:request.email, this_access_token:request.this_access_token, thread_jo: t_jo, user_jo: user_jo});
 	  }  
-	  /*else if(request.method == "getAllowedHostnames")
+	  else if(request.method == "redrawButton")
 	  {
-		  sendResponse({allowed_hostnames: allowed_hostnames});
-	  }*/
+		  //alert("redrawing button");
+		  //alert(JSON.stringify(t_jo));
+		  //alert("with " + t_jo.top + " and " + t_jo.bottom);
+		  if(typeof t_jo === "undefined" || t_jo === null || typeof t_jo.top === "undefined" || typeof t_jo.bottom === "undefined" || t_jo.top === null || t_jo.bottom === null)
+			  drawTTUButton("0","1Y");
+		  else
+			  drawTTUButton(t_jo.top, t_jo.bottom);
+	  }
 	  else if(request.method == "setSavedText")
 	  {
 		  //alert("saving text", request.saved_text);

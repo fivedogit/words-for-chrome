@@ -363,8 +363,7 @@ function getProfile(screenname)
             	
             	$("#avatar_img").attr("src", user_jo.picture);
             	
-            	$("#screenname_available_link").click( function (event) {
-            		event.preventDefault();
+            	$("#screenname_available_link").click( function (event) { event.preventDefault();
             		$("#screenname_availability_span").show();
             		if ($("#screenname_change_input").val().length <= 0) 
             		{
@@ -443,8 +442,7 @@ function getProfile(screenname)
             		}
             	});				
             	
-            	$("#screenname_submit_link").click(function (event) {
-            		event.preventDefault();
+            	$("#screenname_submit_link").click(function (event) { event.preventDefault();
             		$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -508,41 +506,34 @@ function getProfile(screenname)
         			$("#use_monster_radio").prop('checked', true);
         		
             	
-            	$("#use_geometric_radio").click(function (event) {
-            		event.preventDefault();
+            	$("#use_geometric_radio").click(function (event) { event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
             	});
-            	$("#use_monster_radio").click(function (event) {
-            		event.preventDefault();
+            	$("#use_monster_radio").click(function (event) { event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
             	});
-            	$("#use_cartoonface_radio").click(function (event) {
-            		event.preventDefault();
+            	$("#use_cartoonface_radio").click(function (event) { event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
             	});
-            	$("#use_retro_radio").click(function (event) {
-            		event.preventDefault();
+            	$("#use_retro_radio").click(function (event) { event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
             	});
-            	$("#use_unicorn_radio").click(function (event) {
-            		event.preventDefault();
+            	$("#use_unicorn_radio").click(function (event) { event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
             		$("#unicorn_wait_span").text("Wait...");
             		setTimeout(function() {$("#unicorn_wait_span").text("");}, 2000);
             	});
-            	$("#use_silhouette_radio").click(function (event) {
-            		event.preventDefault();
+            	$("#use_silhouette_radio").click(function (event) { event.preventDefault();
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
             	});
             	
-            	$("#avatar_save_button").click(function (event) {
-            		event.preventDefault();
+            	$("#avatar_save_button").click(function (event) { event.preventDefault();
             		$.ajax({
             			type: 'GET',
             			url: endpoint,
@@ -576,8 +567,7 @@ function getProfile(screenname)
             		});  
             	});
             	
-            	$("#logout_link").click( function (event) {
-            				event.preventDefault();
+            	$("#logout_link").click( function (event) { event.preventDefault();
             				var logoutmessage = "<div>";
             				logoutmessage = logoutmessage + "<table style=\"margin-right:auto;margin-left:auto;border-spacing:20px;border-collapse:separate\">";
             				logoutmessage = logoutmessage + "	<tr>";
@@ -607,8 +597,7 @@ function getProfile(screenname)
             				logoutmessage = logoutmessage + "</div>";
             				$("#main_div_" + currentURLhash).html(logoutmessage);//OK
             				
-            				$("#logout_confirmation_button").click( function (event) {
-                        				event.preventDefault();
+            				$("#logout_confirmation_button").click( function (event) { event.preventDefault();
                         				 chrome.runtime.sendMessage({method: "logout"}, function(response) {
                         					  //alert(response.message);
                         					  user_jo = null;

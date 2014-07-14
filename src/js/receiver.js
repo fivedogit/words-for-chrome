@@ -103,8 +103,7 @@ if(logout !== null)
 	logout_msg = logout_msg + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 	logout_msg = logout_msg + "</div>";
 	$("#message_td").html(logout_msg);
-	$("#close_this_tab_link").click( function (event) {
-		event.preventDefault();
+	$("#close_this_tab_link").click( function (event) { event.preventDefault();
 		chrome.tabs.getSelected(null, function(tab) { 
 			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
@@ -142,8 +141,7 @@ else
 		google_cancel_message = google_cancel_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 		google_cancel_message = google_cancel_message + "</div>";
 		$("#message_td").html(google_cancel_message);
-		$("#close_this_tab_link").click( function (event) {
-			event.preventDefault();
+		$("#close_this_tab_link").click( function (event) { event.preventDefault();
 			chrome.tabs.getSelected(null, function(tab) { 
 				var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 				chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
@@ -166,8 +164,7 @@ else
 		facebook_cancel_message = facebook_cancel_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 		facebook_cancel_message = facebook_cancel_message + "</div>";
 		$("#message_td").html(facebook_cancel_message);
-		$("#close_this_tab_link").click( function (event) {
-			event.preventDefault();
+		$("#close_this_tab_link").click( function (event) { event.preventDefault();
 			chrome.tabs.getSelected(null, function(tab) { 
 				var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 				chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
@@ -210,8 +207,7 @@ else
 					google_close_message = google_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 					google_close_message = google_close_message + "</div>";
 					$("#message_td").html(google_close_message);
-					$("#close_this_tab_link").click( function (event) { 
-		event.preventDefault();
+					$("#close_this_tab_link").click( function (event) { event.preventDefault();
 						chrome.tabs.getSelected(null, function(tab) { 
 							var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 							chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
@@ -263,8 +259,7 @@ else
 					facebook_close_message = facebook_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 					facebook_close_message = facebook_close_message + "</div>";
 					$("#message_td").html(facebook_close_message);
-					$("#close_this_tab_link").click( function (event) { 
-		event.preventDefault();
+					$("#close_this_tab_link").click( function (event) { event.preventDefault();
 						chrome.tabs.getSelected(null, function(tab) { 
 							var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 							chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
@@ -323,8 +318,7 @@ else
 						msg = msg + "<div style=\"margin-right:auto;margin-left:auto;width:360px;padding:15px;font-style:italic\">If you're having trouble or want to switch Facebook accounts, <b>try restarting your browser</b> and logging back in.<br><br><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>";
 						$("#registration_form_td").html(msg);//OK
 						$("#registration_form_td").show();
-						$("#close_this_tab_link").click( function (event) { 
-		event.preventDefault();
+						$("#close_this_tab_link").click( function (event) { event.preventDefault();
 							chrome.tabs.getSelected(null, function(tab) { 
 								var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 								chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
@@ -339,8 +333,7 @@ else
 						msg = msg + "<div style=\"margin-right:auto;margin-left:auto;width:360px;padding:15px;font-style:italic\">If you're having trouble or want to switch Google accounts, <b>try restarting your browser</b> and logging back in.<br><br><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>";
 						$("#registration_form_td").html(msg);//OK
 						$("#registration_form_td").show();
-						$("#close_this_tab_link").click( function (event) { 
-		event.preventDefault();
+						$("#close_this_tab_link").click( function (event) { event.preventDefault();
 							chrome.tabs.getSelected(null, function(tab) { 
 								var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 								chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
@@ -443,8 +436,7 @@ function login(login_type, social_access_token, social_access_token_expires)
 				displayMessage(data.message, "red");
 				$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
 				$("#registration_form_td").show();
-				$("#close_this_tab_link").click( function (event) { 
-		event.preventDefault();
+				$("#close_this_tab_link").click( function (event) { event.preventDefault();
 					chrome.tabs.getSelected(null, function(tab) { 
 						chrome.tabs.remove(tab.id);
 					});
@@ -526,50 +518,41 @@ function showRegistration(picture, login_type, email, social_access_token)
 	$("#registration_email_td").text(email);
 	$("#registration_form_td").show();
 	
-	$("#use_google_radio").click(function (event) {
-		event.preventDefault();
+	$("#use_google_radio").click(function (event) { event.preventDefault();
 		$("#avatar_img").attr("src", picture);
 	});
-	$("#use_facebook_radio").click(function (event) {
-		event.preventDefault();
+	$("#use_facebook_radio").click(function (event) { event.preventDefault();
 		$("#avatar_img").attr("src", picture );
 	});
-	$("#use_geometric_radio").click(function (event) {
-		event.preventDefault();
+	$("#use_geometric_radio").click(function (event) { event.preventDefault();
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
 	});
-	$("#use_monster_radio").click(function (event) {
-		event.preventDefault();
+	$("#use_monster_radio").click(function (event) { event.preventDefault();
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
 	});
-	$("#use_cartoonface_radio").click(function (event) {
-		event.preventDefault();
+	$("#use_cartoonface_radio").click(function (event) { event.preventDefault();
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
 	});
-	$("#use_retro_radio").click(function (event) {
-		event.preventDefault();
+	$("#use_retro_radio").click(function (event) { event.preventDefault();
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
 	});
-	$("#use_unicorn_radio").click(function (event) {
-		event.preventDefault();
+	$("#use_unicorn_radio").click(function (event) { event.preventDefault();
 		var g = guid();
 		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
 		$("#unicorn_wait_span").text("Wait...");
 		setTimeout(function() {$("#unicorn_wait_span").text("");}, 2000);
 	});
-	$("#use_silhouette_radio").click(function (event) {
-		event.preventDefault();
+	$("#use_silhouette_radio").click(function (event) { event.preventDefault();
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
 	});
 	//EVENT HANDLERS
 
-	$("#not_you_link").click(function (event) {
-		event.preventDefault();
+	$("#not_you_link").click(function (event) { event.preventDefault();
 		docCookies.removeItem("email");
 		docCookies.removeItem("last_tab_id");
 		docCookies.removeItem("this_access_token");
@@ -577,16 +560,14 @@ function showRegistration(picture, login_type, email, social_access_token)
 		$("#registration_form_td").show();
 		$("#message_td").text("The existing user information has been removed. Please start the login process again.");
 		
-		$("#close_this_tab_link").click( function (event) { 
-			event.preventDefault();
+		$("#close_this_tab_link").click( function (event) { event.preventDefault();
 			chrome.tabs.getSelected(null, function(tab) { 
 				chrome.tabs.remove(tab.id);
 			});
 		});
 	});
 	
-	$("#registration_screenname_button").click( function (event) {
-		event.preventDefault();
+	$("#registration_screenname_button").click( function (event) { event.preventDefault();
 		$("#screenname_availability_span").text("Checking...");
 		if ($("#registration_screenname_input").val().length <= 0) 
 		{
@@ -655,8 +636,7 @@ function showRegistration(picture, login_type, email, social_access_token)
 		}
 	});					
 		
-	$("#registration_submit_button").click( function (event) {	
-		event.preventDefault();
+	$("#registration_submit_button").click( function (event) {	event.preventDefault();
 		if($("#registration_screenname_input").val() === "")
 		{
 			displayMessage("Choose a screenname.", "red");
@@ -855,8 +835,7 @@ function doFinished(from_registration, social_access_token)
             			} 
             		});  
             		
-            		$("#yes_link").click( 	function (event) {
-        				event.preventDefault();
+            		$("#yes_link").click( function (event) { event.preventDefault();
             			$.ajax({
                 			type: 'GET',
                 			url: bg.endpoint,
@@ -877,8 +856,7 @@ function doFinished(from_registration, social_access_token)
                 		});  
             			doReallyFinished();
             		});
-            		$("#no_link").click( 	function (event) {
-        				event.preventDefault();
+            		$("#no_link").click( 	function (event) { event.preventDefault();
             			doReallyFinished();
             		});
         		}
@@ -922,8 +900,7 @@ function doReallyFinished()
 	$("#registration_form_td").html(str);//OK
 	$("#registration_form_td").show();
 	
-	$("#close_this_tab_link").click( function (event) { 
-		event.preventDefault();
+	$("#close_this_tab_link").click( function (event) { event.preventDefault();
 		chrome.tabs.getSelected(null, function(tab) { 
 			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});

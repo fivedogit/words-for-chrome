@@ -353,9 +353,7 @@ function isValidThreadItemId(inc_id)
 
 function createSubmissionFormSubmitButtonClickEvent(id, message_element)
 {
-	 $("#comment_submission_form_submit_button_" + id).click({id: id, message_element: message_element},
-			 function (event) {
-				 
+	 $("#comment_submission_form_submit_button_" + id).click({id: id, message_element: message_element}, function (event) { event.preventDefault();
 				 $("#comment_submission_form_submit_button_" + event.data.id).attr("disabled", "disabled");
 				 $("#comment_submission_progress_span_" + event.data.id).show();
 				 if (user_jo) 
@@ -380,13 +378,11 @@ function createSubmissionFormSubmitButtonClickEvent(id, message_element)
 					 $("#progress_span_" + event.data.id).hide();
 					 $("#comment_submission_form_submit_button_" + event.data.id).removeAttr('disabled');
 				 }
-				 return false;
 			 });
 }
 
 function createKeyupEventForTextarea(id, charlimit){
-	 $("#comment_textarea_" + id).keyup({id: id},
-			 function (event) {
+	 $("#comment_textarea_" + id).keyup({id: id}, function (event) {
 				 if(has_scrollbar("comment_textarea_" + event.data.id))
 				 {
 					 var currentheight = $("#comment_textarea_" + event.data.id).css("height");
@@ -411,8 +407,7 @@ function createKeyupEventForTextarea(id, charlimit){
 
 function createBlurEventForTextarea(id)
 {
-	 $("#comment_textarea_" + id).blur({id: id},
-			function (event) {
+	 $("#comment_textarea_" + id).blur({id: id}, function (event) {
 				if($("#comment_textarea_" + event.data.id).val() === "") // if the user has written anything, leave the composition + submission area the way it is
 				{
 					$("#comment_textarea_" + event.data.id).css("height", "30px");			// set it back to normal height
@@ -521,11 +516,12 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
  function createHandler(id, dom_id, inc_url)
  {
 	// alert("creating handler with id=" + id + " and dom_id=" + dom_id + " and inc_url=" + inc_url);
-	 $("#" + dom_id).click(
-			 function () {
-				 chrome.tabs.create({url:inc_url});
+	 $("#" + dom_id).click( function (event) { event.preventDefault();
+	 			 if(chrome.tabs)
+	 				 chrome.tabs.create({url:inc_url});
+	 			 else
+	 				 window.location = inc_url;
 				 noteConversion(id);
-				 return false;
 			 });
  }
  
