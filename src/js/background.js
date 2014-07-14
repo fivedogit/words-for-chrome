@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(
 		  docCookies.setItem("email", request.email, 31536e3);
 		  docCookies.setItem("this_access_token", request.this_access_token, 31536e3);
 		  getUser(false);
-		  waitAndSend(request.email, request.this_access_token);
+		  sendResponse({email:request.email, this_access_token:request.this_access_token, thread_jo: t_jo, user_jo: user_jo});
 	  }  
 	  /*else if(request.method == "getAllowedHostnames")
 	  {
@@ -222,7 +222,7 @@ function waitAndSend(email, this_access_token)
 
 function andGo(email, this_access_token)
 {
-	chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL, email: email, this_access_token: this_access_token}, function(response) { });
+	chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL, email: email, this_access_token: this_access_token, msfe_according_to_backend: msfe_according_to_backend}, function(response) { });
 }
 
 function doButtonGen()
@@ -281,17 +281,6 @@ function getThread(url_at_function_call, updatebutton)
             	{
             		msfe_according_to_backend = data.msfe;
             		allowed_hostnames = data.allowed_hostnames;
-            		//var keys = Object.keys(allowed_hostnames);
-            		//alert(keys);
-            	/*	var x = 0;
-            		allowed_hostnames = {};
-            		corresponding_element_ids = [];
-            		while(x < raw_allowed_hostnames.length)
-            		{
-            			allowed_hostnames.push(raw_allowed_hostnames[x].substring(0,raw_allowed_hostnames[x].indexOf("/")));
-            			corresponding_element_ids.push(raw_allowed_hostnames[x].substring(raw_allowed_hostnames[x].indexOf("/")+1));
-            			x++;
-            		}*/	
             		footer_random_pool = data.footer_random_pool;
             		loc_thread_jo = data.thread_jo;
             		threadstatus=0;
@@ -481,10 +470,14 @@ function drawTTUButton(top, bottom) {
 function getUser(retrieve_asynchronously)
 {
 	var async = true;
-	if(retrieve_asynchronously != null && retrieve_asynchronously == false)
+	if(retrieve_asynchronously !== null && retrieve_asynchronously === false)
+	{
 		async = false;
+		//alert("async=" + async);
+	}
 	var email = docCookies.getItem("email");
 	var this_access_token = docCookies.getItem("this_access_token");
+	//alert("getUser with email=" + email + " and tat=" + this_access_token);
 	if(email !== null && email.length >=6 && this_access_token !== null && this_access_token.length == 32)// the shortest possible email length is x@b.co = 6.
 	{
 		//alert("bg.getUserSelf()");

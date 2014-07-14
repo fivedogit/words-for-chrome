@@ -33,9 +33,9 @@
 	bs = bs + "<div id=\"footer_div\" class=\"white-links\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X.png") + "');padding:13px 5px 13px 5px;color:white;\">";
 	bs = bs + "</div>";
  	$("#words_div").html(bs);//OK
- 
+
  	writeCommentForm(currentURLhash, "utility_csf_td", "utility_message_td"); // id_to_use, target_dom_id
- 	
+
  	$("#words_logo_link").click(
  			function (event) {
  				event.preventDefault();
@@ -427,18 +427,14 @@ function displayLogstatAsLoggedIn() {
 						$("#user_" + alts_counter + "_link").click({altuser: user_jo.alts[alts_counter], prev: prev}, function (event) {
 							event.preventDefault();
 							$("#utility_header_td").html(event.data.prev);//OK
-							alert("email=" + event.data.altuser.email);
-							alert("this_access_token=" + event.data.altuser.this_access_token);
 							chrome.runtime.sendMessage({method: "switchUser", email: event.data.altuser.email, this_access_token: event.data.altuser.this_access_token}, function(response) {
-								alert(response.message);
-								/*user_jo = null;
+								email = response.email;
+								this_access_token = response.this_access_token;
+								user_jo = response.user_jo;
+								thread_jo = response.thread_jo;
 								initializeView();
-								doThreadTab();*/
+								doThreadTab();
 							});
-							//alert(event.data.altuser.email + " " + event.data.altuser.this_access_token);
-							//bg.getUser(false); // this is the ONLY synchronous getUser request bc this feature is only accessible by admins anyway
-							//user_jo = get from background and reload?
-							//displayLogstatAsLoggedIn();
 							return;
 						});
 						alts_counter++;
@@ -455,9 +451,8 @@ function displayLogstatAsLoggedIn() {
 }
 
 function writeFooterMessage() {
-	 //alert("selfex overlay");
 	var footerstr = "";
-	if(false) //bg.msfe_according_to_backend >= 1402266600000 && bg.msfe_according_to_backend < 1402300800000 && (shown_softlaunchmsg === null || firstrun_msg_index > 5)) // June 8th 6:30pm EST - June 9th 4am PST est
+	if(false)//msfe_according_to_backend > 1405269560000 && msfe_according_to_backend < 1405353600000)
 	{
 		footerstr = footerstr + "Preview Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a>";
 		//footerstr = footerstr + ", <a href=\"#\" style=\"color:#baff00\" id=\"product_hunt_link\">Product Hunt</a>";
@@ -533,7 +528,7 @@ function writeFooterMessage() {
 			else if(randomint === 1)
 			{
 				var footerstr = "";
-				footerstr = footerstr + "Follow WORDS on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
+				footerstr = footerstr + "I want to hear your feedback on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
 				$("#footer_div").html(footerstr);
 				noteImpressionAndCreateHandler("facebook_apppage", "footer", "follow_on_facebook_link", "https://www.facebook.com/pages/WORDS/232380660289924");
 				noteImpressionAndCreateHandler("twitter_mainacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/words4chrome");
@@ -560,12 +555,6 @@ function writeFooterMessage() {
 			else if(randomint === 3)
 			{
 				var footerstr = "";
-				footerstr = footerstr + "Remember: Appropriate downvoting isn't \"mean\" -- <span style=\"color:#ffde00\">it's necessary</span>.";
-				$("#footer_div").html(footerstr);
-			}
-			else if(randomint === 4)
-			{
-				var footerstr = "";
 				footerstr = footerstr + "Support WORDS with Bitcoin: ";
 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
 				footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
@@ -580,13 +569,55 @@ function writeFooterMessage() {
 				noteImpressionAndCreateHandler("coinbase20", "footer", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
 				noteImpressionAndCreateHandler("coinbase50", "footer", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
 			}
+			else if(randomint === 4)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Remember: <span style=\"color:#ffde00\">Appropriate downvoting</span> is necessary for maintaining quality discussions. Do your part!";
+				$("#footer_div").html(footerstr);
+			}
 			else if(randomint === 5)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "<span style=\"color:#ffde00\">\"I agree.\"</span> or <span style=\"color:#ffde00\">\"Me too!\"</span> should be upvotes, not comments. Downvote them.";
+				$("#footer_div").html(footerstr);
+			}
+			else if(randomint === 6)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Comments with <span style=\"color:#ffde00\">poor punctuation</span> should be downvoted. We're better than that.";
+				$("#footer_div").html(footerstr);
+			}
+			else if(randomint === 7)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Name-calling, racism, sexism, etc should be <span style=\"color:#ffde00\">aggressively downvoted</span> and otherwise <span style=\"color:#ffde00\">ignored</span>. Don't fuel the fire.";
+				$("#footer_div").html(footerstr);
+			}
+			else if(randomint === 8)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Upvotes mean \"I agree\" or \"I like\". Downvotes mean \"This is inappropriate\" and <span style=\"color:#ffde00\">should not</span> be used for disagreement.";
+				$("#footer_div").html(footerstr);
+			}
+			else if(randomint === 9)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Downvote inappropriate <span style=\"color:#ffde00\">religious</span> or <span style=\"color:#ffde00\">political</span> rants.";
+				$("#footer_div").html(footerstr);
+			}
+			else if(randomint === 10)
+			{
+				var footerstr = "";
+				footerstr = footerstr + "Users with a high downvote ratio will be <span style=\"color:#ffde00\">silenced</span> for 7 days and have their existing comments <span style=\"color:#ffde00\">deleted</span>.";
+				$("#footer_div").html(footerstr);
+			}
+			/*else if(randomint === 5)
 			{
 				var footerstr = "";
 				footerstr = footerstr + "Find a site that should be separated? Give me a heads up on Twitter <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">@fivedogit</a>.";
 				$("#footer_div").html(footerstr);
 				noteImpressionAndCreateHandler("twitter_persacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/fivedogit");
-			}
+			}*/
 	}
 }
 

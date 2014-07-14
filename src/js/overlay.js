@@ -11,6 +11,7 @@ var endindex;
 var email;
 var this_access_token;
 var tabmode = "thread";
+var msfe_according_to_backend = bg.msfe_according_to_backend;
 
 $(window).scroll(function() {
 	if ($(window).scrollTop() + $(window).height() === $(document).height()) {
@@ -37,11 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			 currentHostname = "www." + currentHostname;
 		 
 		 initializeView();
-		/* if (user_jo !== null && typeof user_jo.overlay_size !== "undefined" && user_jo.overlay_size !== null)
-		 {	
-			 $("body").css("width", user_jo.overlay_size + "px");
-		 }*/
-		 
 		 // need a valid email/this_access_token to do the rest
 		 email = bg.docCookies.getItem("email");
 		 this_access_token = bg.docCookies.getItem("this_access_token");

@@ -11,6 +11,7 @@ var email;
 var this_access_token;
 var scrollable = 0;
 var tabmode = "thread";
+var msfe_according_to_backend = 0;
 
 function elementInViewport (el) {
 
@@ -37,7 +38,8 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		currentHostname = currentURL.substring(currentURL.indexOf("://") + 3, currentURL.indexOf("/", currentURL.indexOf("://") + 3));
 		if (currentHostname.indexOf(".", currentHostname.indexOf(".")+1) === -1) // only has one "." assume www.
 			 currentHostname = "www." + currentHostname;
-
+		msfe_according_to_backend = request.msfe_according_to_backend;
+		
 		if(request.user_jo !== null)
 		{
 			email = request.email;
