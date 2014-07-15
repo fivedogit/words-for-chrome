@@ -579,7 +579,7 @@ function writeFooterMessage() {
 			else if(randomint === 8)
 			{
 				var footerstr = "";
-				footerstr = footerstr + "Upvotes mean \"I agree\" or \"I like\". Downvotes mean \"This is inappropriate\" and <span style=\"color:#ffde00\">should not</span> be used for disagreement.";
+				footerstr = footerstr + "Downvotes mean \"This is inappropriate\" and <span style=\"color:#ffde00\">should not</span> be used for mere disagreement.";
 				$("#footer_div").html(footerstr);
 			}
 			else if(randomint === 9)
