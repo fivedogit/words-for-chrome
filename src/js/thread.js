@@ -411,6 +411,7 @@ function gotThread()
 	 		});
 	 		
 	 		$("#set_sqsp").click( function (event) { event.preventDefault();
+	 			//alert("sending " + currentURL);
 	 			$.ajax({
 	 				type: 'GET',
 	 				url: endpoint,
@@ -435,6 +436,7 @@ function gotThread()
 	 				},
 	 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 	 					// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+	 					displayMessage("AJAX error", "red", "utility_message_td");
 	 					console.log(textStatus, errorThrown);
 	 				} 
 	 			});
@@ -938,7 +940,7 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "			<table style=\"border:0px solid red\">";
 		tempstr = tempstr + "				<tr>";
 		tempstr = tempstr + "					<td> ";
-		tempstr = tempstr + "						<img style=\"width:48px;height:48px;border-radius:4px\" id=\"author_picture_img_" + comment_id + "\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+		tempstr = tempstr + "						<img style=\"width:48px;height:48px;border-radius:4px;background-size:48px 48px;background-image:url('" + chrome.extension.getURL("images/image_blocked.png") + "');\" alt=\"test\" id=\"author_picture_img_" + comment_id + "\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 		tempstr = tempstr + "					</td>";
 		tempstr = tempstr + "				</tr>";			
 		tempstr = tempstr + "				<tr>";

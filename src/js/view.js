@@ -376,7 +376,7 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td style=\"width:32px;\">";
 	welcomearea = welcomearea + "			<span id=\"logged_in_profile_image_span\">";
-	welcomearea = welcomearea + "				<img style=\"height:32px;width:32px;border-radius:4px\" id=\"logged_in_profile_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+	welcomearea = welcomearea + "				<img style=\"height:32px;width:32px;border-radius:4px;background-size:32px 32px;background-image:url('" + chrome.extension.getURL("images/image_blocked.png") + "');\" id=\"logged_in_profile_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 	welcomearea = welcomearea + "			</span>";
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\" style=\"text-align:left;padding-left:3px;\">";
@@ -396,36 +396,37 @@ function displayLogstatAsLoggedIn() {
 	if(typeof user_jo.alts !== "undefined" && user_jo.alts != null)
 	{
 		$("#alt_dropdown_img").click(function (event) { event.preventDefault();
-					var prev = $("#utility_header_td").html();//OK (getter)
-					var alts_counter = 0;
-					var str = "";
-					while(alts_counter < user_jo.alts.length)
-					{
-						str = str + "<a href=\"#\" id=\"user_" + alts_counter + "_link\"></a> - ";
-						alts_counter++;
-					}	
-					str = str.substring(0, str.length - 2);
-					$("#utility_header_td").html(str);//OK
-					alts_counter = 0;
-					while(alts_counter < user_jo.alts.length)
-					{
-						$("#user_" + alts_counter + "_link").text(user_jo.alts[alts_counter].screenname);
-						$("#user_" + alts_counter + "_link").click({altuser: user_jo.alts[alts_counter], prev: prev}, function (event) { event.preventDefault();
-							$("#utility_header_td").html(event.data.prev);//OK
-							chrome.runtime.sendMessage({method: "switchUser", email: event.data.altuser.email, this_access_token: event.data.altuser.this_access_token}, function(response) {
-								email = response.email;
-								this_access_token = response.this_access_token;
-								user_jo = response.user_jo;
-								thread_jo = response.thread_jo;
-								initializeView();
-								doThreadTab();
-							});
-							return;
-						});
-						alts_counter++;
-					}	
-					return;
-				});
+		var prev = $("#utility_header_td").html();//OK (getter)
+		var alts_counter = 0;
+		var str = "";
+		while(alts_counter < user_jo.alts.length)
+		{
+			str = str + "<a href=\"#\" id=\"user_" + alts_counter + "_link\"></a> - ";
+			alts_counter++;
+		}	
+		str = str.substring(0, str.length - 2);
+		$("#utility_header_td").html(str);//OK
+		alts_counter = 0;
+		while(alts_counter < user_jo.alts.length)
+		{
+			$("#user_" + alts_counter + "_link").text(user_jo.alts[alts_counter].screenname);
+			$("#user_" + alts_counter + "_link").click({altuser: user_jo.alts[alts_counter], prev: prev}, function (event) { event.preventDefault();
+			$("#utility_header_td").html(event.data.prev);//OK
+			//alert("email=" + event.data.altuser.email + " and tat=" + event.data.altuser.this_access_token);
+			chrome.runtime.sendMessage({method: "switchUser", email: event.data.altuser.email, this_access_token: event.data.altuser.this_access_token}, function(response) {
+				email = response.email;
+				this_access_token = response.this_access_token;
+				user_jo = response.user_jo;
+				thread_jo = response.thread_jo;
+				initializeView();
+				doThreadTab();
+			});
+			return;
+			});
+			alts_counter++;
+		}	
+		return;
+		});
 	}	
 	
 	$("#screenname_link").click(function (event) { event.preventDefault();
@@ -435,7 +436,7 @@ function displayLogstatAsLoggedIn() {
 
 function writeFooterMessage() {
 	var footerstr = "";
-	if(false)//msfe_according_to_backend > 1405269560000 && msfe_according_to_backend < 1405353600000)
+	if(msfe_according_to_backend > 1405886400000 && msfe_according_to_backend < 1405951200000)
 	{
 		footerstr = footerstr + "Preview Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a>";
 		//footerstr = footerstr + ", <a href=\"#\" style=\"color:#baff00\" id=\"product_hunt_link\">Product Hunt</a>";
@@ -573,7 +574,7 @@ function writeFooterMessage() {
 			else if(randomint === 7)
 			{
 				var footerstr = "";
-				footerstr = footerstr + "Name-calling, racism, sexism, etc should be <span style=\"color:#ffde00\">aggressively downvoted</span> and otherwise <span style=\"color:#ffde00\">ignored</span>. Don't fuel the fire.";
+				footerstr = footerstr + "Name-calling, racism, sexism, etc should be <span style=\"color:#ffde00\">downvoted</span> and otherwise <span style=\"color:#ffde00\">ignored</span>. Don't fuel the fire.";
 				$("#footer_div").html(footerstr);
 			}
 			else if(randomint === 8)
@@ -591,16 +592,15 @@ function writeFooterMessage() {
 			else if(randomint === 10)
 			{
 				var footerstr = "";
-				footerstr = footerstr + "Users with a high downvote ratio will be <span style=\"color:#ffde00\">silenced</span> for 7 days and have their existing comments <span style=\"color:#ffde00\">deleted</span>.";
+				footerstr = footerstr + "Users with too many downvotes will be <span style=\"color:#ffde00\">silenced</span> for 7 days and have their existing comments <span style=\"color:#ffde00\">deleted</span>.";
 				$("#footer_div").html(footerstr);
 			}
-			/*else if(randomint === 5)
+			else if(randomint === 11)
 			{
 				var footerstr = "";
-				footerstr = footerstr + "Find a site that should be separated? Give me a heads up on Twitter <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">@fivedogit</a>.";
+				footerstr = footerstr + "Trolling is downvote-worthy. <span style=\"color:#ffde00\">So is engaging with them.</span>";
 				$("#footer_div").html(footerstr);
-				noteImpressionAndCreateHandler("twitter_persacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/fivedogit");
-			}*/
+			}
 	}
 }
 

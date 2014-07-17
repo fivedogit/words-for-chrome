@@ -114,6 +114,7 @@ if(logout !== null)
 }	
 else
 {	
+	//alert("receiver mode !== logout");
 	var code = getParameterByName("code");
 	var login_type = getParameterByName("login_type");
 	var capitalized_login_type = "Unknown";
@@ -127,7 +128,7 @@ else
 		client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
 	else //fb
 	    client_id = "271212039709142";
-	if(login_type === "google" && code === "undefined") // if google the user clicks "cancel" 
+	if(login_type === "google" && code === "undefined") // if google user clicks "cancel" 
 	{
 		$("#progress_tr").hide();
 		var google_cancel_message = "";
@@ -150,7 +151,7 @@ else
 			});
 		});
 	}	
-	else if(login_type === "facebook" && code === "undefined") // if google the user clicks "cancel" 
+	else if(login_type === "facebook" && code === "undefined") // if facebook user clicks "cancel" 
 	{
 		$("#progress_tr").hide();
 		var facebook_cancel_message = "";
@@ -175,6 +176,7 @@ else
 	}	
 	else if(code === null)
 	{
+		//alert("receiver: no code");
 		displayMessage("Requesting login permission from " + capitalized_login_type + ". A popup window should appear momentarily.", "black");
 		$("#progress_tr").show();
 		
@@ -290,6 +292,7 @@ else
 	}	
 	else if(code !== null && code !== "")
 	{
+		//alert("receiver: code exists");
 		// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
 		//alert("parsing code, going to getAccessTokenFromAuthorizationCode with redirect_uri=" + getParameterByName("redirect_uri"));
 		displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
@@ -367,6 +370,7 @@ else
 					}
 					else if(data.show_registration === "false" && data.login_type === "facebook")
 					{
+						//alert("receiver: fb login success, showing no registration, going to doFinished()");
 						docCookies.setItem("email", data.email, 31536e3);
 			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 			    		doFinished(false, data.facebook_access_token);
@@ -378,6 +382,7 @@ else
 					}
 					else if(data.show_registration === "false" && data.login_type === "google")
 					{
+						//alert("receiver: g+ login success, showing no registration, going to doFinished()");
 						docCookies.setItem("email", data.email, 31536e3);
 			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 			    		doFinished(false, data.google_access_token);
@@ -404,6 +409,7 @@ function parseRedirectFragment(fragment) {
     return values;
   }
 
+// UM... is this even used? FIXME
 function login(login_type, social_access_token, social_access_token_expires)
 {
 	$("#progress_tr").show();
@@ -702,11 +708,9 @@ function showRegistration(picture, login_type, email, social_access_token)
 
 function doFinished(from_registration, social_access_token)
 {
+	//alert("receiver: doFinished from_reg=" + from_registration);
 	// we've gotten the login return, now we need to get the user before we can safely say, 
 	displayMessage("Identify verified. Loading WORDS user info... ", "black");
-	
-	// the only reason we MIGHT need these again is for changing images
-	// there is probably a better way, meaning these can be deleted immediately upon login
 	
 	$("#progress_tr").show();
 	//alert("receiver getUserSelf()");
@@ -737,19 +741,21 @@ function doFinished(from_registration, social_access_token)
         	else if (data.response_status === "success") 
         	{	
         		$("#progress_tr").hide();
+        		//alert("receiver: getUserSelf success");
         		if(data.user_jo) { 	bg.user_jo = data.user_jo; }
         		
         		if(from_registration === false) // don't ask them if they've just come from registration
         		{	
+        			//alert("receiver: asking about ");
         			var message = "";
             		message = message + "<div style=\"width:360px;padding:15px\">";
-            		message = message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
+            		message = message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:30px\">";
             		message = message + "		You are now logged in.";
             		message = message + "	</div>";
             		message = message + "	<div id=\"image_choice_progress_div\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>";
             		message = message + "	<div id=\"image_choice_div\" style=\"display:none\">";
             		message = message + " 		Use your " + capitalized_login_type  + " image as your WORDS profile pic?";
-            		message = message + "		<table style=\"padding-top:10px;margin-right:auto;margin-left:auto\">";
+            		message = message + "		<table style=\"padding-top:0px;margin-right:auto;margin-left:auto\">";
             		message = message + "			<tr>";
             		message = message + "				<td style=\"text-align:center;padding-right:10px\">";
             		message = message + "					<table style=\"padding-top:10px;margin-right:auto;margin-left:auto\">";
@@ -790,10 +796,24 @@ function doFinished(from_registration, social_access_token)
             		message = message + "					</table>";
             		message = message + "				</td>";
             		message = message + "			</tr>";
+            		message = message + "			<tr>";
+            		message = message + "				<td colspan=2 style=\"text-align:center;padding-top:20px;font-style:italic;font-size:11px\">";
+            		message = message + " 					If these are the same, simply <a href=\"#\" id=\"close_this_tab_link\">close this tab</a>. If you've recently changed your profile pic, it may take time to update here.";
+            		message = message + "				</td>";
+            		message = message + "			</tr>";
             		message = message + "		</table>";
             		message = message + "	</div>";
             		message = message + "</div>";
             		$("#message_td").html(message);
+            		
+            		$("#close_this_tab_link").click( function (event) { event.preventDefault();
+            		chrome.tabs.getSelected(null, function(tab) { 
+            			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+            			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+            			docCookies.removeItem("last_tab_id");
+            			chrome.tabs.remove(tab.id);
+            			});
+            		});
             		
             		var social_pic = null;
             		$.ajax({

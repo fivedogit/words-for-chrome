@@ -100,7 +100,7 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "		<table style=\"width:100%;\">";
             	main_div_string = main_div_string + "			<tr>";
             	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right\" id=\"large_avatar_td\">";
-            	main_div_string = main_div_string + "					<img style=\"border-radius: 4px;\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\" style=\"height:128px;\">";
+            	main_div_string = main_div_string + "					<img style=\"border-radius: 4px;height:128px;background-size:128px 128px;background-image:url('" + chrome.extension.getURL("images/image_blocked.png") + "');\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\">";
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
             	main_div_string = main_div_string + "					<table style=\"margin-right:auto;border-spacing:5px;border-collapse:separate;\">";
@@ -141,16 +141,6 @@ function getProfile(screenname)
                 	main_div_string = main_div_string + "			<tr>";
                 	main_div_string = main_div_string + "				<td>";
                 	main_div_string = main_div_string + "					<table style=\"margin-right:auto;margin-left:auto;border-collapse:separate;border-spacing:5px\">";
-                	/*main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Overlay size:</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "							<select id=\"size_selector\">";
-					main_div_string = main_div_string + "							  <option value=\"medium\">medium (450px across)</option>";
-					main_div_string = main_div_string + "							  <option value=\"wide\">wide (600px across)</option>";
-					main_div_string = main_div_string + "							</select>";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"size_result_td\">";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "						</tr>";*/
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On like:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onlike_selector\">";
@@ -219,6 +209,14 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
 					main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto\">";
+				/*	main_div_string = main_div_string + "<tr>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "		<input id=\"use_social_radio\" type=\"radio\" name=\"picture_type\" value=\"social\">";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_social_wording_td\">";
+					main_div_string = main_div_string + "		Social";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "</tr>";*/
 					main_div_string = main_div_string + "<tr>";
 					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "		<input id=\"use_geometric_radio\" type=\"radio\" name=\"picture_type\" value=\"geometric\">";
@@ -280,7 +278,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left;vertical-align:top\">";
-					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;48px;height:48px\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
+					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;48px;height:48px;background-size:48px 48px;background-image:url('" + chrome.extension.getURL("images/image_blocked.png") + "');\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
 					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\" class=\"standardized-button\" >Save</button>";
 					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "							</td>";
@@ -492,7 +490,18 @@ function getProfile(screenname)
 					});
             	});
 
-        		if(user_jo.picture.indexOf("unicornify.appspot.com") != -1)
+            	/*if(user_jo.picture.indexOf("graph.facebook.com") != -1)
+            	{
+            		$("#use_social_radio").prop('checked', true);
+            		$("#use_social_wording_td").text("Facebook");
+            	}
+            	else if(user_jo.picture.indexOf("googleusercontent.com") != -1)
+            	{
+            		$("#use_social_radio").prop('checked', true);
+            		$("#use_social_wording_td").text("Google");
+            	}
+            	*/ 
+            	if(user_jo.picture.indexOf("unicornify.appspot.com") != -1)
         			$("#use_unicorn_radio").prop('checked', true);
         		else if(user_jo.picture.indexOf("d=identicon") != -1)
         			$("#use_geometric_radio").prop('checked', true);
@@ -505,30 +514,32 @@ function getProfile(screenname)
         		else if(user_jo.picture.indexOf("d=monsterid") != -1)
         			$("#use_monster_radio").prop('checked', true);
         		
-            	
-            	$("#use_geometric_radio").click(function (event) { event.preventDefault();
+            	/*$("#use_social_radio").click(function (event) { 
+        			alert("user wants to use social. Get URL from backend and go from there.");
+            	});*/
+            	$("#use_geometric_radio").click(function (event) {
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
             	});
-            	$("#use_monster_radio").click(function (event) { event.preventDefault();
+            	$("#use_monster_radio").click(function (event) { 
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
             	});
-            	$("#use_cartoonface_radio").click(function (event) { event.preventDefault();
+            	$("#use_cartoonface_radio").click(function (event) {
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
             	});
-            	$("#use_retro_radio").click(function (event) { event.preventDefault();
+            	$("#use_retro_radio").click(function (event) { 
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
             	});
-            	$("#use_unicorn_radio").click(function (event) { event.preventDefault();
+            	$("#use_unicorn_radio").click(function (event) {
             		var g = guid();
             		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
             		$("#unicorn_wait_span").text("Wait...");
             		setTimeout(function() {$("#unicorn_wait_span").text("");}, 2000);
             	});
-            	$("#use_silhouette_radio").click(function (event) { event.preventDefault();
+            	$("#use_silhouette_radio").click(function (event) { 
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
             	});
@@ -608,11 +619,6 @@ function getProfile(screenname)
             				return;
             			});
             
-            	/*if (user_jo.overlay_size === 600)
-            		$("#size_selector").val("wide");
-            	else if (user_jo.overlay_size === 450)
-            		$("#size_selector").val("medium");*/
-            	
             	if (user_jo.onlike === "email")
             		$("#onlike_selector").val("email");
             	else if (user_jo.onlike === "do nothing")
@@ -642,62 +648,6 @@ function getProfile(screenname)
             		$("#emailpromos_selector").val("email");
             	else if (user_jo.emailpromos === "do nothing")
             		$("#emailpromos_selector").val("do nothing");
-            	
-            	
-            	
-            /*	$("#size_selector").change(function () {
-					$.ajax({
-						type: 'GET',
-						url: endpoint,
-						data: {
-				            method: "setUserPreference",
-				            email: email,             
-				            this_access_token: this_access_token,  
-				            which: "overlay_size",
-				            value: $("#size_selector").val() 
-				        },
-				        dataType: 'json',
-				        async: true,
-				        success: function (data, status) {
-				        	if (data.response_status === "error")
-				        	{
-				        		$("#size_result_td").text("Error: " + data.message);
-				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.overlay_size === 600)
-				            		$("#size_selector").val("wide");
-				            	else if (user_jo.overlay_size === 450)
-				            		$("#size_selector").val("medium");
-				            	else
-				            		$("#size_selector").val("medium");
-				        		displayMessage(data.message, "red", "utility_message_td");
-				            	if(data.error_code && data.error_code === "0000")
-				        		{
-				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			user_jo = null;
-				        			updateLogstat();
-				        		}
-				        	}
-				        	else
-				        	{
-				        		$("#size_result_td").text("updated");
-				        		if($("#size_selector").val() === "wide")
-				        			user_jo.overlay_size = 600;
-				        		else if($("#size_selector").val() === "medium")
-				        			user_jo.overlay_size = 450;
-				        		else
-				        			user_jo.overlay_size = 450;
-				        		$("body").css("width", user_jo.overlay_size + "px");
-				        	}
-				        	setTimeout(function(){$("#size_result_td").text("");},3000);
-				        }
-				        ,
-				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#size_result_td").text("ajax error");
-				        	setTimeout(function(){$("#size_result_td").text("");},3000);
-				            console.log(textStatus, errorThrown);
-				        }
-					});
-            	});*/
             	
             	$("#onlike_selector").change(function () {
 					$.ajax({
