@@ -562,9 +562,14 @@ function prepareGetAndPopulateThreadPortion()
 		{
 			//alert("Thread had no children");
 			var main_div_string = "";
-			main_div_string = main_div_string + "<div style=\"padding:25px;font-size:22px;font-weight:bold\">";
-			main_div_string = main_div_string + "	There are no comments for this page yet. Write one!";
+			main_div_string = main_div_string + "<div style=\"padding:25px 25px 0px 25px;font-size:22px;font-weight:bold\">";
+			main_div_string = main_div_string + "	There are no comments for this page yet.";
 			main_div_string = main_div_string + "</div>";
+			main_div_string = main_div_string + "<div style=\"padding:25px;font-size:12px;font-style:italic\">";
+			main_div_string = main_div_string + "	<span style=\"font-weight:bold\">NOTE:</span> WORDS is brand new. Feel free to comment anywhere you like,<br>but most of the early activity is on <a class=\"newtab\" href=\"http://www.techcrunch.com\">techcrunch.com</a>.";
+			main_div_string = main_div_string + "</div>";
+			main_div_string = main_div_string + "<div id=\"trending_div\"></div>";
+			/*
 			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\">";
 			main_div_string = main_div_string + "	<img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (<span id=\"num_hours_span\"></span> hrs)";
 			main_div_string = main_div_string + "</div>";
@@ -585,9 +590,11 @@ function prepareGetAndPopulateThreadPortion()
 			main_div_string = main_div_string + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 			main_div_string = main_div_string + "		</td>";
 			main_div_string = main_div_string + "	</tr>";
-			main_div_string = main_div_string + "</table>";
+			main_div_string = main_div_string + "</table>";*/
 			$("#main_div_" + currentURLhash).html(main_div_string);//OK
+			drawTrendingTable(currentHostname, 10, "trending_div");
 			
+			/*
 			$.ajax({
 				type: 'GET',
 				url: endpoint,
@@ -664,7 +671,7 @@ function prepareGetAndPopulateThreadPortion()
 					displayMessage("AJAX error getting trending info.", "red", "utility_message_td");
 					console.log(textStatus, errorThrown);
 				} 
-			});
+			});*/
 			
 			noteThreadView(true); // was empty
 		}

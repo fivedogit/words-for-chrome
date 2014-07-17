@@ -25,7 +25,7 @@ function doTrendingTab()
 	
 	$("#footer_div").html("");
 	
-	var mds = "";  // main div string
+	/*var mds = "";  // main div string
 	mds = mds + "<table>";
 	mds = mds + "	<tr>";
 	mds = mds + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
@@ -44,17 +44,52 @@ function doTrendingTab()
 	mds = mds + "		</td>";
 	mds = mds + "	</tr>";
 	mds = mds + "</table>";
-	$("#main_div_" + currentURLhash).html(mds); //OK
+	$("#main_div_" + currentURLhash).html(mds); //OK*/
+	drawTrendingTable(null, 10, "main_div_" + currentURLhash);
 	getTrendingActivity(); // initial window, choices
 }
 
-function getTrendingActivity()
+function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
 {
+	var compstr = "";  // main div string
+	compstr = compstr + "<table>";
+	if(hostname_or_null === null)
+	{
+		$("#utility_header_td").html("Activity across the Web <span id=\"trending_activity_hours_span\"></span>"); //OK
+	}	
+	else
+	{
+		compstr = compstr + "	<tr>";
+		compstr = compstr + "		<td colspan=2 style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;border-top:1px solid black\" id=\"trending_on_this_site_td\">";
+		compstr = compstr + "			Activity for <img src=\"http://www.google.com/s2/favicons?domain=" + hostname_or_null + "\" style=\"vertical-align:middle\"> " + hostname_or_null + " <span id=\"trending_activity_hours_span\"></span>";
+		compstr = compstr + "		</td>";
+		compstr = compstr + "	</tr>";
+	}	
+	compstr = compstr + "	<tr>";
+	compstr = compstr + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
+	compstr = compstr + "Most active pages";
+	compstr = compstr + "		</td>";
+	compstr = compstr + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
+	compstr = compstr + "Most liked pages";
+	compstr = compstr + "		</td>";
+	compstr = compstr + "	</tr>";
+	compstr = compstr + "	<tr>";
+	compstr = compstr + "		<td id=\"most_active_pages_td\" style=\"width:50%;padding:10px;vertical-align:top\">";
+	compstr = compstr + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
+	compstr = compstr + "		</td>";
+	compstr = compstr + "		<td id=\"most_liked_pages_td\" style=\"width:50%;padding:10px;vertical-align:top\">";
+	compstr = compstr + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
+	compstr = compstr + "		</td>";
+	compstr = compstr + "	</tr>";
+	compstr = compstr + "</table>";
+	$("#" + target_dom_id).html(compstr);
+	
 	$.ajax({
 		type: 'GET',
 		url: endpoint,
 		data: {
-			method: "getMostActivePages"
+			method: "getMostActivePages",
+			hostname: hostname_or_null
 		},
 		dataType: 'json',
 		async: true,
@@ -86,7 +121,8 @@ function getTrendingActivity()
 		type: 'GET',
 		url: endpoint,
 		data: {
-			method: "getMostLikedPages"
+			method: "getMostLikedPages",
+			hostname: hostname_or_null
 		},
 		dataType: 'json',
 		async: true,
@@ -113,6 +149,7 @@ function getTrendingActivity()
 			return;
 		} 
 	});
+	
 }
 
 function drawTrendingChart(data, dom_id)
