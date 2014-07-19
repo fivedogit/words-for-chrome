@@ -25,59 +25,40 @@ function doTrendingTab()
 	
 	$("#footer_div").html("");
 	
-	/*var mds = "";  // main div string
-	mds = mds + "<table>";
-	mds = mds + "	<tr>";
-	mds = mds + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
-	mds = mds + "Most active pages";
-	mds = mds + "		</td>";
-	mds = mds + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
-	mds = mds + "Most liked pages";
-	mds = mds + "		</td>";
-	mds = mds + "	</tr>";
-	mds = mds + "	<tr>";
-	mds = mds + "		<td id=\"most_active_pages_td\" style=\"width:50%;padding:10px;vertical-align:top\">";
-	mds = mds + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
-	mds = mds + "		</td>";
-	mds = mds + "		<td id=\"most_liked_pages_td\" style=\"width:50%;padding:10px;vertical-align:top\">";
-	mds = mds + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
-	mds = mds + "		</td>";
-	mds = mds + "	</tr>";
-	mds = mds + "</table>";
-	$("#main_div_" + currentURLhash).html(mds); //OK*/
-	drawTrendingTable(null, 10, "main_div_" + currentURLhash);
+	drawTrendingTable(null, 20, "main_div_" + currentURLhash);
 	getTrendingActivity(); // initial window, choices
 }
 
 function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
 {
 	var compstr = "";  // main div string
-	compstr = compstr + "<table>";
 	if(hostname_or_null === null)
 	{
 		$("#utility_header_td").html("Activity across the Web <span id=\"trending_activity_hours_span\"></span>"); //OK
+		compstr = compstr + "<table style=\"background-color:#fff;display:none\" id=\"trending_table\">";
 	}	
 	else
 	{
+		compstr = compstr + "<table style=\"background-color:#ebebeb;display:none\" id=\"trending_table\">";
 		compstr = compstr + "	<tr>";
-		compstr = compstr + "		<td colspan=2 style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;border-top:1px solid black\" id=\"trending_on_this_site_td\">";
+		compstr = compstr + "		<td colspan=2 style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;border-top:1px solid #ddd\" id=\"trending_on_this_site_td\">";
 		compstr = compstr + "			Activity for <img src=\"http://www.google.com/s2/favicons?domain=" + hostname_or_null + "\" style=\"vertical-align:middle\"> " + hostname_or_null + " <span id=\"trending_activity_hours_span\"></span>";
 		compstr = compstr + "		</td>";
 		compstr = compstr + "	</tr>";
 	}	
 	compstr = compstr + "	<tr>";
-	compstr = compstr + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
+	compstr = compstr + "		<td style=\"width:50%;padding:5px;vertical-align:top;text-align:center;font-weight:bold\">";
 	compstr = compstr + "Most active pages";
 	compstr = compstr + "		</td>";
-	compstr = compstr + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
+	compstr = compstr + "		<td style=\"width:50%;padding:5px;vertical-align:top;text-align:center;font-weight:bold\">";
 	compstr = compstr + "Most liked pages";
 	compstr = compstr + "		</td>";
 	compstr = compstr + "	</tr>";
 	compstr = compstr + "	<tr>";
-	compstr = compstr + "		<td id=\"most_active_pages_td\" style=\"width:50%;padding:10px;vertical-align:top\">";
+	compstr = compstr + "		<td id=\"most_active_pages_td\" style=\"width:50%;padding:0px 8px 8px 8px;vertical-align:top\">";
 	compstr = compstr + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 	compstr = compstr + "		</td>";
-	compstr = compstr + "		<td id=\"most_liked_pages_td\" style=\"width:50%;padding:10px;vertical-align:top\">";
+	compstr = compstr + "		<td id=\"most_liked_pages_td\" style=\"width:50%;padding:0px 8px 8px 8px;vertical-align:top\">";
 	compstr = compstr + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
 	compstr = compstr + "		</td>";
 	compstr = compstr + "	</tr>";
@@ -96,7 +77,9 @@ function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
 		success: function (data, status) {
 			if (data.response_status === "success") 
 			{
-				drawTrendingChart(data, "most_active_pages_td");
+				if(typeof data.trendingactivity_ja !== "undefined" && data.trendingactivity_ja !== null && data.trendingactivity_ja.length > 0)
+					$("#trending_table").show();
+				drawTrendingChart(data, number_of_results, "most_active_pages_td");
 				$("#trending_activity_hours_span").text("(" + data.num_hours + " hrs)");
 			}
 			else if (data.response_status === "error") 
@@ -129,7 +112,9 @@ function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
 		success: function (data, status) {
 			if (data.response_status === "success") 
 			{
-				drawTrendingChart(data, "most_liked_pages_td");
+				if(typeof data.trendingactivity_ja !== "undefined" && data.trendingactivity_ja !== null && data.trendingactivity_ja.length > 0)
+					$("#trending_table").show();
+				drawTrendingChart(data, number_of_results, "most_liked_pages_td");
 				$("#trending_activity_hours_span").text("(" + data.num_hours + " hrs)");
 			}
 			else if (data.response_status === "error") 
@@ -152,13 +137,13 @@ function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
 	
 }
 
-function drawTrendingChart(data, dom_id)
+function drawTrendingChart(data, number_of_results, dom_id)
 {
 	
 	var mds = "";
 	var rand = makeid();
 	// did the system find ANY activity at all? In any window? If not, say so.
-	if(typeof data.trendingactivity_ja === "undefined" || data.trendingactivity_ja === null)
+	if(typeof data.trendingactivity_ja === "undefined" || data.trendingactivity_ja === null  || data.trendingactivity_ja.length === 0)
 	{
 		mds = mds + "<table>";
 		mds = mds + "	<tr>";
@@ -166,16 +151,9 @@ function drawTrendingChart(data, dom_id)
 		mds = mds + " No data.";
 		mds = mds + "		</td>";
 		mds = mds + "	</tr>";
-	}	
-	// what about for the window we want to see?
-	else if(typeof data.trendingactivity_ja === "undefined" || data.trendingactivity_ja === null || data.trendingactivity_ja.length === 0)
-	{
-		mds = mds + "<table>";
-		mds = mds + "	<tr>";
-		mds = mds + "		<td style=\"text-align:center;padding:8px;font-size:12px\">";
-		mds = mds + " 			No data in the past " + data.num_hours + " hours. ";
-		mds = mds + "		</td>";
-		mds = mds + "	</tr>";
+		mds = mds + "</table>";
+		$("#" + dom_id).html(mds);//OK
+		return;
 	}	
 	// There is activity in the window we want to see
 	else
@@ -192,7 +170,7 @@ function drawTrendingChart(data, dom_id)
 		});
 		data.trendingactivity_ja = trendingmap;
 		mds = mds + "<table style=\"width:100%;\">";
-		for(var x = 0; x < data.trendingactivity_ja.length; x++)
+		for(var x = 0; x < data.trendingactivity_ja.length && x < number_of_results; x++)
 		{
 			mds = mds + "	<tr>";
 			mds = mds + "		<td style=\"text-align:left;padding-top:3px;vertical-align:top;width:16px\">";
@@ -207,21 +185,21 @@ function drawTrendingChart(data, dom_id)
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 			mds = mds + "	<tr>";
-			mds = mds + "		<td colspan=2 style=\"padding-bottom:5px;line-height:10px\">";
+			mds = mds + "		<td colspan=2 style=\"padding-bottom:5px;line-height:3px\">";
 			mds = mds + "			<table>";
 			mds = mds + "				<tr>";
-			mds = mds + "					<td id=\"orange_left_" + rand + "_" + x + "\" style=\"height:10px;border:1px solid black;background-color:orange;width:50%\"></td>";
-			mds = mds + "					<td id=\"count_" + rand + "_" + x + "\" style=\"height:10px;text-align:left;padding-left:3px\"></td>";
+			mds = mds + "					<td id=\"orange_left_" + rand + "_" + x + "\" style=\"height:3px;border:1px solid black;background-color:orange;width:50%\"></td>";
+			mds = mds + "					<td id=\"count_" + rand + "_" + x + "\" style=\"height:3px;text-align:left;padding-left:3px\"></td>";
 			mds = mds + "				</tr>";
 			mds = mds + "			</table>";
 			mds = mds + "		</td>";
 			mds = mds + "	</tr>";
 		}	
+		mds = mds + "</table>";
+		$("#" + dom_id).html(mds);//OK
 	}
-	mds = mds + "</table>";
 	
-	$("#" + dom_id).html(mds);//OK
-	
+	//alert(JSON.stringify(data.trendingactivity_ja));
 	for(var x = 0; x < data.trendingactivity_ja.length; x++)
 	{
 		// google favicon

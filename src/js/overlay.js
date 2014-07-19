@@ -12,6 +12,7 @@ var email;
 var this_access_token;
 var tabmode = "thread";
 var msfe_according_to_backend = bg.msfe_according_to_backend;
+var comcount = bg.comcount;
 
 $(window).scroll(function() {
 	if ($(window).scrollTop() + $(window).height() === $(document).height()) {

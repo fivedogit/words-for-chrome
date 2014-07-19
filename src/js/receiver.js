@@ -410,6 +410,7 @@ function parseRedirectFragment(fragment) {
   }
 
 // UM... is this even used? FIXME
+/*
 function login(login_type, social_access_token, social_access_token_expires)
 {
 	$("#progress_tr").show();
@@ -485,7 +486,7 @@ function login(login_type, social_access_token, social_access_token_expires)
 			displayMessage("Could not log you in. Network connection? (AJAX)", "red");
 		} 
 	});  
-}
+}*/
 
 function guid() {
 	  function s4() {

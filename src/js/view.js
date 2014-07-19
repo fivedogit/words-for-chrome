@@ -24,7 +24,7 @@
  			bs = bs + "</td>";
  		bs = bs + "</tr>";
  	bs = bs + "</table>";
- 	bs = bs + "<table id=\"utility_table_" + currentURLhash + "\" style=\"background-image:url('" + chrome.extension.getURL("images/outlets2X_light.png") + "')\">";
+ 	bs = bs + "<table id=\"utility_table_" + currentURLhash + "\" style=\"background-color:#ddd;border-bottom:1px solid #ccc\">";//background-image:url('" + chrome.extension.getURL("images/outlets2X_light.png") + "')\">";
  	bs = bs + "	<tr><td id=\"utility_header_td\" style=\"font-size:14px;font-weight:bold;padding:8px 0px 8px 0px;\"></td></tr>"; // make unique with currentURLhash?
  	bs = bs + "	<tr><td id=\"utility_message_td\" style=\"padding:0px 0px 8px 0px;display:none\"></td></tr>";
  	bs = bs + "	<tr><td id=\"utility_csf_td\" style=\"padding:0px 0px 8px 0px;vertical-align:middle;\"></td></tr>"; // csf = comment submission form
@@ -379,12 +379,12 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "				<img style=\"height:32px;width:32px;border-radius:4px;background-size:32px 32px;background-image:url('" + chrome.extension.getURL("images/image_blocked.png") + "');\" id=\"logged_in_profile_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 	welcomearea = welcomearea + "			</span>";
 	welcomearea = welcomearea + "		</td>";
-	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\" style=\"text-align:left;padding-left:3px;\">";
+	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\" style=\"text-align:left;padding-left:3px;color:white\">";
 	welcomearea = welcomearea + "			<a href=\"#\" id=\"screenname_link\"></a>";
 	
 	if(typeof user_jo.alts !== "undefined" && user_jo.alts !== null)
 	{
-		welcomearea = welcomearea + " <img id=\"alt_dropdown_img\" src=\"" + chrome.extension.getURL("images/dropdown_triangle.png") + "\">";
+		welcomearea = welcomearea + " <img id=\"alt_dropdown_img\" src=\"" + chrome.extension.getURL("images/dropdown_triangle.png") + "\"> " + comcount;
 	}	
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "	</tr>";
@@ -598,7 +598,7 @@ function writeFooterMessage() {
 			else if(randomint === 11)
 			{
 				var footerstr = "";
-				footerstr = footerstr + "Trolling is downvote-worthy. <span style=\"color:#ffde00\">So is engaging with them.</span>";
+				footerstr = footerstr + "Trolling is downvote-worthy. <span style=\"color:#ffde00\">So is engaging them.</span>";
 				$("#footer_div").html(footerstr);
 			}
 	}

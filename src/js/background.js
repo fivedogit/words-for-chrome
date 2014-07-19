@@ -108,8 +108,8 @@ var threadstatus = 0;
 var top="???";
 var bottom="???";
 var msfe_according_to_backend = (new Date).getTime(); // set to local machine time to start... will be reset to backend time by first thread call.
-var footer_random_pool = 50; // start at 50, let backend change
 var allowed_hostnames;
+var comcount = 0;
 
 (function() {
 	getUser(); // user_jo should always be null when this is called
@@ -228,7 +228,7 @@ function waitAndSend(email, this_access_token)
 
 function andGo(email, this_access_token)
 {
-	chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL, email: email, this_access_token: this_access_token, msfe_according_to_backend: msfe_according_to_backend}, function(response) { });
+	chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL, email: email, this_access_token: this_access_token, msfe_according_to_backend: msfe_according_to_backend, comcount:comcount}, function(response) { });
 }
 
 function doButtonGen()
@@ -286,8 +286,8 @@ function getThread(url_at_function_call, updatebutton)
             	else  // ajax success, url still correct, no error from server...
             	{
             		msfe_according_to_backend = data.msfe;
+            		comcount = data.comcount;
             		allowed_hostnames = data.allowed_hostnames;
-            		footer_random_pool = data.footer_random_pool;
             		loc_thread_jo = data.thread_jo;
             		threadstatus=0;
             	}

@@ -562,117 +562,32 @@ function prepareGetAndPopulateThreadPortion()
 		{
 			//alert("Thread had no children");
 			var main_div_string = "";
-			main_div_string = main_div_string + "<div style=\"padding:25px 25px 0px 25px;font-size:22px;font-weight:bold\">";
+			main_div_string = main_div_string + "<div style=\"padding:25px;font-size:22px;font-weight:bold\">";
 			main_div_string = main_div_string + "	There are no comments for this page yet.";
-			main_div_string = main_div_string + "</div>";
-			main_div_string = main_div_string + "<div style=\"padding:25px;font-size:12px;font-style:italic\">";
-			main_div_string = main_div_string + "	<span style=\"font-weight:bold\">NOTE:</span> WORDS is brand new. Feel free to comment anywhere you like,<br>but most of the early activity is on <a class=\"newtab\" href=\"http://www.techcrunch.com\">techcrunch.com</a>.";
+			if(!(currentHostname === "techcrunch.com" || currentHostname === "www.techcrunch.com"))
+			{
+				main_div_string = main_div_string + "	<div style=\"padding-top:25px;font-size:12px;font-style:italic;font-weight:normal\">";
+				main_div_string = main_div_string + "		<span style=\"font-weight:bold;\">NOTE:</span> WORDS is brand new. Feel free to comment anywhere you like,<br>";
+				main_div_string = main_div_string + "		but most of the early activity is on <a href=\"#\" id=\"tc_link\">techcrunch.com</a>.<br>";
+				main_div_string = main_div_string + "	</div>";
+				main_div_string = main_div_string + "	<div style=\"padding-top:25px;font-size:12px;font-style:italic;font-weight:normal\">";
+				main_div_string = main_div_string + "	    Try the <a href=\"#\" id=\"supplemental_trending_link\"><img style=\"vertical-align:middle\" src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></a> trending tab.";
+				main_div_string = main_div_string + "	</div>";
+			}
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div id=\"trending_div\"></div>";
-			/*
-			main_div_string = main_div_string + "<div style=\"text-align:center;font-size:13px;padding-top:10px;padding-bottom:3px;display:none;border-top:1px solid black\" id=\"trending_on_this_site_div\">";
-			main_div_string = main_div_string + "	<img src=\"http://www.google.com/s2/favicons?domain=" + currentURL + "\" style=\"vertical-align:middle\"> " + currentHostname + " (<span id=\"num_hours_span\"></span> hrs)";
-			main_div_string = main_div_string + "</div>";
-			main_div_string = main_div_string + "<table id=\"trending_for_this_site_table\" style=\"display:none\">";
-			main_div_string = main_div_string + "	<tr>";
-			main_div_string = main_div_string + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
-			main_div_string = main_div_string + "Most active pages";
-			main_div_string = main_div_string + "		</td>";
-			main_div_string = main_div_string + "		<td style=\"width:50%;padding:10px;vertical-align:top;text-align:center;font-weight:bold\">";
-			main_div_string = main_div_string + "Most liked pages";
-			main_div_string = main_div_string + "		</td>";
-			main_div_string = main_div_string + "	</tr>";
-			main_div_string = main_div_string + "	<tr>";
-			main_div_string = main_div_string + "		<td id=\"most_active_pages_on_this_site_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
-			main_div_string = main_div_string + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
-			main_div_string = main_div_string + "		</td>";
-			main_div_string = main_div_string + "		<td id=\"most_liked_pages_on_this_site_td\" style=\"width:50%;padding:6px;vertical-align:top\">";
-			main_div_string = main_div_string + "<br><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\">";
-			main_div_string = main_div_string + "		</td>";
-			main_div_string = main_div_string + "	</tr>";
-			main_div_string = main_div_string + "</table>";*/
 			$("#main_div_" + currentURLhash).html(main_div_string);//OK
-			drawTrendingTable(currentHostname, 10, "trending_div");
-			
-			/*
-			$.ajax({
-				type: 'GET',
-				url: endpoint,
-				data: {
-					method: "getMostActivePagesForThisHostname",
-					url: currentURL // let the backend figure out the hostname, authoritatively
-				},
-				dataType: 'json',
-				async: true,
-				success: function (data, status) {
-					if (data.response_status === "success") 
-					{
-						if(typeof data.trendingactivity_ja == "undefined" || data.trendingactivity_ja == null)
-						{
-							$("#other_pages_on_this_site_div").hide();
-						}
-						else
-						{
-							$("#num_hours_span").text(data.num_hours);
-							$("#trending_on_this_site_div").show();
-							$("#trending_for_this_site_table").show();
-							drawTrendingChart(data, "most_active_pages_on_this_site_td");
-						}
-					}
-					else if (data.response_status === "error") 
-					{
-						displayMessage(data.message, "red", "utility_message_td");
-					}
-					else
-					{
-						displayMessage("getMostActivePagesForThisHostname invalid response", "red", "utility_message_td");
-					}
-				},
-				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					displayMessage("AJAX error getting trending info.", "red", "utility_message_td");
-					console.log(textStatus, errorThrown);
-				} 
+			$("#supplemental_trending_link").click( function (event) {	event.preventDefault();
+				doTrendingTab();
 			});
-			
-			$.ajax({
-				type: 'GET',
-				url: endpoint,
-				data: {
-					method: "getMostLikedPagesForThisHostname",
-					url: currentURL // let the backend figure out the hostname, authoritatively
-						// for right now, backend is doing 6, 12, 24, 48, but frontend should specify what it wants, right?
-				},
-				dataType: 'json',
-				async: true,
-				success: function (data, status) {
-					if (data.response_status === "success") 
-					{
-						if(typeof data.trendingactivity_ja == "undefined" || data.trendingactivity_ja == null)
-						{
-							$("#other_pages_on_this_site_div").hide();
-						}
-						else
-						{
-							$("#trending_on_this_site_div").show();
-							$("#trending_for_this_site_table").show();
-							drawTrendingChart(data, "most_liked_pages_on_this_site_td");
-						}
-					}
-					else if (data.response_status === "error") 
-					{
-						displayMessage(data.message, "red", "utility_message_td");
-					}
-					else
-					{
-						displayMessage("getMostLikedPagesForThisHostname invalid response", "red", "utility_message_td");
-					}
-				},
-				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					displayMessage("AJAX error getting trending info.", "red", "utility_message_td");
-					console.log(textStatus, errorThrown);
-				} 
-			});*/
-			
+			if(!(currentHostname === "techcrunch.com" || currentHostname === "www.techcrunch.com"))
+			{
+				$("#tc_link").click( function (event) {	event.preventDefault();
+					chrome.tabs.create({url: "http://techcrunch.com"}); 
+				});
+			}
+
+			drawTrendingTable(currentHostname, 4, "trending_div");
 			noteThreadView(true); // was empty
 		}
 		else // if (bg.threadstatus === 0) // the last thread has come in (with children), now populate

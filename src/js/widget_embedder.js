@@ -12,6 +12,7 @@ var this_access_token;
 var scrollable = 0;
 var tabmode = "thread";
 var msfe_according_to_backend = 0;
+var comcount = 0;
 
 function elementInViewport (el) {
 
@@ -39,6 +40,7 @@ chrome.extension.onMessage.addListener(function(request, sender, callback)
 		if (currentHostname.indexOf(".", currentHostname.indexOf(".")+1) === -1) // only has one "." assume www.
 			 currentHostname = "www." + currentHostname;
 		msfe_according_to_backend = request.msfe_according_to_backend;
+		comcount = request.comcount;
 		
 		if(request.user_jo !== null)
 		{
