@@ -525,35 +525,35 @@ function showRegistration(picture, login_type, email, social_access_token)
 	$("#registration_email_td").text(email);
 	$("#registration_form_td").show();
 	
-	$("#use_google_radio").click(function (event) { event.preventDefault();
+	$("#use_google_radio").click(function (event) { 
 		$("#avatar_img").attr("src", picture);
 	});
-	$("#use_facebook_radio").click(function (event) { event.preventDefault();
+	$("#use_facebook_radio").click(function (event) { 
 		$("#avatar_img").attr("src", picture );
 	});
-	$("#use_geometric_radio").click(function (event) { event.preventDefault();
+	$("#use_geometric_radio").click(function (event) { 
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
 	});
-	$("#use_monster_radio").click(function (event) { event.preventDefault();
+	$("#use_monster_radio").click(function (event) { 
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
 	});
-	$("#use_cartoonface_radio").click(function (event) { event.preventDefault();
+	$("#use_cartoonface_radio").click(function (event) { 
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
 	});
-	$("#use_retro_radio").click(function (event) { event.preventDefault();
+	$("#use_retro_radio").click(function (event) { 
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
 	});
-	$("#use_unicorn_radio").click(function (event) { event.preventDefault();
+	$("#use_unicorn_radio").click(function (event) { 
 		var g = guid();
 		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
 		$("#unicorn_wait_span").text("Wait...");
 		setTimeout(function() {$("#unicorn_wait_span").text("");}, 2000);
 	});
-	$("#use_silhouette_radio").click(function (event) { event.preventDefault();
+	$("#use_silhouette_radio").click(function (event) { 
 		var g = guid();
 		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
 	});
@@ -913,7 +913,7 @@ function doReallyFinished()
 	var str = "";
 	str = str + "<div style=\"width:360px;padding:15px;border-top:1px solid black\">";
 	str = str + "<p style=\"font-weight:bold;text-align:left\">Remember to downvote the following:</p>";
-	str = str + "<p style=\"text-align:left\">Racism, trolling, general meanness, comments that should be upvotes instead (e.g. \"I love this site\", \"Me too!\"), out-of-place political/religious discussion, name-calling or profanity aimed at another user, lolspeak and aggressively shoddy spelling/punctuation.</p>";
+	str = str + "<p style=\"text-align:left\">Racism, trolling, general meanness, comments that should be upvotes instead (e.g. \"I love this site\", \"Me too!\"), out-of-place political/religious discussion, lolspeak and shoddy spelling/punctuation.</p>";
 	str = str + "<p style=\"font-weight:bold;text-align:center\">Have fun and be nice!</p></div>";
 	
 	// end tips html formation
