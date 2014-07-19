@@ -552,6 +552,7 @@ function writeFooterMessage() {
 				noteImpressionAndCreateHandler("coinbase10", "footer", "coinbase_10_link", "https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca");
 				noteImpressionAndCreateHandler("coinbase20", "footer", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
 				noteImpressionAndCreateHandler("coinbase50", "footer", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
+				noteImpressionAndCreateHandler("coinbase100", "footer", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");
 			}
 			else if(randomint === 4)
 			{
