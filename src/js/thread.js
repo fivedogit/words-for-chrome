@@ -1188,11 +1188,12 @@ function submitComment(parent, message_element) // submits comment and updates t
 	        } 
 	        else 
 	        {
+	        	$("#comment_submission_progress_span_" + parent).hide();
+	        	$("#charsleft_" + parent).text("500");
 	        	if(parent.length !== 11) // toplevel
 		    	{
 	        		//alert("Success. And this is a toplevel.");
 		    		$("#comment_submission_form_submit_button_" + parent).removeAttr("disabled");
-		    		$("#comment_submission_progress_span_" + parent).hide();
 		    		if(!thread_jo.children) // if the main thread jo was empty before, create it with one item, this new one and empty the main_div to receive it
 					{
 		    			//alert("Thread had no children. making thread_jo.children out of the new comment.");
