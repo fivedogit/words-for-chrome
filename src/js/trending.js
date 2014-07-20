@@ -239,7 +239,7 @@ function drawTrendingChart(data, number_of_results, dom_id)
 	}
 	
 	
-	$("a").click(function(event) { event.preventDefault();
+	$("a").click(function(event) {
 		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
 		{
 			event.processed = true;
