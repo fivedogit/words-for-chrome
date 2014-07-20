@@ -100,7 +100,7 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "		<table style=\"width:100%;\">";
             	main_div_string = main_div_string + "			<tr>";
             	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right\" id=\"large_avatar_td\">";
-            	main_div_string = main_div_string + "					<img style=\"border-radius: 4px;height:128px;background-size:128px 128px;background-image:url('" + chrome.extension.getURL("images/image_blocked.png") + "');\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\">";
+            	main_div_string = main_div_string + "					<img style=\"border-radius: 4px;height:128px;\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\">";
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
             	main_div_string = main_div_string + "					<table style=\"margin-right:auto;border-spacing:5px;border-collapse:separate;\">";
@@ -278,7 +278,7 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left;vertical-align:top\">";
-					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;48px;height:48px;background-size:48px 48px;background-image:url('" + chrome.extension.getURL("images/image_blocked.png") + "');\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
+					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;48px;height:48px;\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
 					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\" class=\"standardized-button\" >Save</button>";
 					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "							</td>";

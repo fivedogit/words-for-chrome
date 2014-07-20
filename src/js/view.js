@@ -376,7 +376,7 @@ function displayLogstatAsLoggedIn() {
 	welcomearea = welcomearea + "	<tr>";
 	welcomearea = welcomearea + "		<td style=\"width:32px;\">";
 	welcomearea = welcomearea + "			<span id=\"logged_in_profile_image_span\">";
-	welcomearea = welcomearea + "				<img style=\"height:32px;width:32px;border-radius:4px;background-size:32px 32px;background-image:url('" + chrome.extension.getURL("images/image_blocked.png") + "');\" id=\"logged_in_profile_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+	welcomearea = welcomearea + "				<img style=\"height:32px;width:32px;border-radius:4px;\" id=\"logged_in_profile_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 	welcomearea = welcomearea + "			</span>";
 	welcomearea = welcomearea + "		</td>";
 	welcomearea = welcomearea + "		<td id=\"logstat_screenname_td\" style=\"text-align:left;padding-left:3px;color:white\">";
