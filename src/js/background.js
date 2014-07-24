@@ -47,6 +47,13 @@ chrome.runtime.onMessage.addListener(
 	  {
 		  docCookies.setItem("last_tab_id", request.last_tab_id);
 	  }  
+	  else if(request.method == "getReplaceTechcrunch") // don't need a getter for this as the receiver page can get this directly from cookie
+	  {
+		  if(typeof user_jo !== "undefined" && user_jo !== null && typeof user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace === "no")
+			  sendResponse({techcrunch_replace: "no"});
+		  else
+			  sendResponse({techcrunch_replace: "yes"});
+	  }  
 	/*  else if(request.method == "setFirstRunMessageIndex") // don't need a getter for this as the receiver page can get this directly from cookie
 	  {
 		  docCookies.setItem("firstrun_msg_index", request.firstrun_msg_index);
@@ -181,11 +188,15 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 				if(currentHostname === "www.techcrunch.com")
 				{
 					//alert("updated: " + currentHostname);
-					chrome.tabs.getSelected(null, function(tab) { 
-						var email = docCookies.getItem("email");
-						var this_access_token = docCookies.getItem("this_access_token");
-						waitAndSend(email,this_access_token);
-					});
+					// if user_jo.tc_replace is not "no", then replace it. (i.e. default is "yes, replace")
+					if(!(typeof user_jo !== "undefined" && user_jo !== null && typeof user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace === "no"))
+					{	
+						chrome.tabs.getSelected(null, function(tab) { 
+							var email = docCookies.getItem("email");
+							var this_access_token = docCookies.getItem("this_access_token");
+							waitAndSend(email,this_access_token);
+						});
+					}
 				}
 			}
 		});
@@ -207,11 +218,15 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 			if(currentHostname === "www.techcrunch.com")
 			{
 				//alert("activated: " + currentHostname);
-				chrome.tabs.getSelected(null, function(tab) { 
-					var email = docCookies.getItem("email");
-					var this_access_token = docCookies.getItem("this_access_token");
-					waitAndSend(email,this_access_token);
-				});
+				// if user_jo.tc_replace is not "no", then replace it. (i.e. default is "yes, replace")
+				if(!(typeof user_jo !== "undefined" && user_jo !== null && typeof user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace === "no"))
+				{	
+					chrome.tabs.getSelected(null, function(tab) { 
+						var email = docCookies.getItem("email");
+						var this_access_token = docCookies.getItem("this_access_token");
+						waitAndSend(email,this_access_token);
+					});
+				}
 			}
 		}
 	});

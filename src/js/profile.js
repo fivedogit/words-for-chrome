@@ -201,6 +201,16 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"emailpromos_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
+					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Replace Facebook<br>on TechCrunch:</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "							<select id=\"techcrunch_replace_selector\">";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"yes\">Yes</option>";
+					main_div_string = main_div_string + "							  <option value=\"no\">No</option>";
+					main_div_string = main_div_string + "							</select>";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"techcrunch_replace_result_td\">";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
 					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
 					main_div_string = main_div_string + "								Change avatar:<br>";
@@ -648,6 +658,57 @@ function getProfile(screenname)
             		$("#emailpromos_selector").val("email");
             	else if (user_jo.emailpromos === "do nothing")
             		$("#emailpromos_selector").val("do nothing");
+            	
+            	if (typeof user_jo.techcrunch_replace !== "undefined" && user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace === "no")
+            		$("#techcrunch_replace_selector").val("no");
+            	else
+            		$("#techcrunch_replace_selector").val("yes");
+            	
+            	$("#techcrunch_replace_selector").change(function () {
+					$.ajax({
+						type: 'GET',
+						url: endpoint,
+						data: {
+				            method: "setUserPreference",
+				            email: email,             
+				            this_access_token: this_access_token,  
+				            which: "techcrunch_replace",
+				            value: $("#techcrunch_replace_selector").val() 
+				        },
+				        dataType: 'json',
+				        async: true,
+				        success: function (data, status) {
+				        	if (data.response_status === "error")
+				        	{
+				        		$("#techcrunch_replace_result_td").text("Error: " + data.message);
+				        		// on error, reset the selector to the user_jo value
+				        		if (typeof user_jo.techcrunch_replace !== "undefined" && user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace === "no")
+				            		$("#techcrunch_replace_selector").val("no");
+				            	else
+				            		$("#techcrunch_replace_selector").val("yes");
+				        		displayMessage(data.message, "red", "utility_message_td");
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
+				        	else
+				        	{
+				        		$("#techcrunch_replace_result_td").text("updated");
+				        		user_jo.techcrunch_replace = $("#techcrunch_replace_selector").val();
+				        	}
+				        	setTimeout(function(){$("#techcrunch_replace_result_td").text("");},3000);
+				        }
+				        ,
+				        error: function (XMLHttpRequest, textStatus, errorThrown) {
+				        	$("#techcrunch_replace_result_td").text("ajax error");
+				        	setTimeout(function(){$("#techcrunch_replace_result_td").text("");},3000);
+				            console.log(textStatus, errorThrown);
+				        }
+					});
+            	});
             	
             	$("#onlike_selector").change(function () {
 					$.ajax({

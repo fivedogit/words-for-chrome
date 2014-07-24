@@ -417,7 +417,7 @@ function displayLogstatAsLoggedIn() {
 				email = response.email;
 				this_access_token = response.this_access_token;
 				user_jo = response.user_jo;
-				thread_jo = response.thread_jo;
+				//thread_jo = response.thread_jo;
 				initializeView();
 				doThreadTab();
 			});
