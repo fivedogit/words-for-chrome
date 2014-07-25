@@ -66,7 +66,7 @@ div#words_div td {
     text-align: center;
     border: 0;
     vertical-align:middle
-   /* border: 1px solid black*/
+    border: 1px solid black
 }
 
 div#words_div input {

@@ -677,13 +677,8 @@ function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "
 		}
 		else 
 		{
-			//alert("parent=" + parent);
 			parent_outer_container_div = "comment_outer_container_div_" + parent;
-			//alert("parent_outer_container_div=" + parent_outer_container_div);
 			parent_comment_div = "comment_div_" + parent;
-			//alert("getting indent from parent_comment_div=" + parent_comment_div);
-			//indent = ($("#" + parent_comment_div).css("margin-left").replace("px", "")*1) + 25;
-			//alert("indent=" + indent);
 		}	
 		// This is the main thread item (comment) structure. We have a blank container around the actual visible comment.
 		// That's so we can .after, .before, .append and .prepend to both the comment itself (replies) as well 
@@ -888,28 +883,28 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "		  					 		<a href=\"#\" id=\"screenname_link_" + comment_id + "\"></a> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span>";
 		tempstr = tempstr + "		  					 	</td>";
 		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:green;text-align:right;vertical-align:middle;padding-right:3px\" id=\"comment_likes_count_td_" + comment_id + "\"></td>";
-		if (tabmode === "thread") 
-        {
+		//if (tabmode === "thread") 
+       // {
 			tempstr = tempstr + "	       						<td style=\"width:19px;height:19px;vertical-align:middle;\"><img style=\"height:19px;width:19px\" src=\"" + chrome.extension.getURL("images/like_arrow.png") + "\" id=\"like_img_" + comment_id + "\"></td>";
 			tempstr = tempstr + "	       						<td style=\"width:19px;height:19px;vertical-align:middle;\"><img style=\"height:19px;width:19px\" src=\"" + chrome.extension.getURL("images/dislike_arrow.png") + "\" id=\"dislike_img_" + comment_id + "\"></td>";
-        }
+       // }
 		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:red;text-align:left;vertical-align:middle;padding-left:3px\" id=\"comment_dislikes_count_td_" + comment_id + "\"></td>";
 		
-		if ((tabmode === "thread" || tabmode === "past") && (user_jo !== null && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
-		{
+		//if ((tabmode === "thread" || tabmode === "past") && (user_jo !== null && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
+		//{
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + comment_id + "\">X</a> ";
 			tempstr = tempstr + "		   </td>";
-		}
-		if(tabmode === "thread" && user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
-		{
+		//}
+		//if(tabmode === "thread" && user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
+		//{
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + comment_id + "\">N!</a> ";
 			tempstr = tempstr + "		   </td>";
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
 			tempstr = tempstr + "		   </td>";
-		}	
+	//	}	
 		
 		tempstr = tempstr + "							</tr>";
 		tempstr = tempstr + "  						</table>";
@@ -919,8 +914,8 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "					<td style=\"padding:5px;vertical-align:top;text-align:left;line-height:14px\" id=\"comment_text_td_" + comment_id + "\"> "; //  class=\"comment-text-td\"
 	  	tempstr = tempstr + "					</td>";
 	  	tempstr = tempstr + "				</tr>";
-		if (tabmode === "thread" && (($("#comment_div_" + feeditem_jo.id).css("margin-left").replace("px","")*1) < 125)) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
-	  	{
+		//if ((tabmode === "thread" || tabmode === "notifications") && (($("#comment_div_" + feeditem_jo.id).css("margin-left").replace("px","")*1) < 125)) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
+	  	//{
 			tempstr = tempstr + "				<tr>";
 	  		tempstr = tempstr + "					<td style=\"padding:6px;text-align:left\"> ";
 	  		tempstr = tempstr + "							<a href=\"#\" id=\"reply_link_" + comment_id + "\"><b>Reply</b></a>";
@@ -931,7 +926,7 @@ function writeComment(feeditem_jo, dom_id)
 	  		writeReplyTD = true;
 	  		tempstr = tempstr + "					</td>";
 	  		tempstr = tempstr + "				</tr>";
-	  	}
+	  //	}
 	  	tempstr = tempstr + "			</table>";
 	  	tempstr = tempstr + "		</td>";
 	}
@@ -980,35 +975,26 @@ function writeComment(feeditem_jo, dom_id)
 	$("[id=comment_likes_count_td_" + comment_id + "]").text(feeditem_jo.likes.length);
 	$("[id=comment_dislikes_count_td_" + comment_id + "]").text(feeditem_jo.dislikes.length);
 	
-	//printURLsAndIndexes(feeditem_jo.text);
 	var linkified_div = getLinkifiedDiv(feeditem_jo.text);
-	/*var text_with_brs = feeditem_jo.text;
-   	text_with_brs =	text_with_brs.replace(/\n/g, '<br />');
-  	var text_with_links = replaceURLWithHTMLLinks(text_with_brs);*/
-  	//tempstr = tempstr + text_with_links;
 	$("[id=comment_text_td_" + comment_id + "]").html(linkified_div);
-	//$("[id=comment_text_td_" + comment_id + "]").html(feeditem_jo.text); //OPERA-REVIEW
 	
-	if(tabmode === "thread")
-	{	
-		 chrome.runtime.sendMessage({method: "getSavedText"}, function(response) {
-			 var saved_text = response.saved_text;
-			 var saved_text_dom_id = response.saved_text_dom_id;
-			 var charsleft = 500;
-			 if(saved_text_dom_id !== null && saved_text_dom_id === ("comment_textarea_" + comment_id) 
-					 && saved_text !== null && saved_text.trim().length > 0)
-			 {
-				 charsleft = 500 -  saved_text.length;
-				 $("#comment_textarea_" + comment_id).text(saved_text);
-			 }
-			 else	
-			 {
-				 $("#comment_textarea_" + comment_id).css("color", "#aaa");
-				 $("#comment_textarea_" + comment_id).text("Say something...");
-			 }
-			 $("#charsleft_" + comment_id).text(charsleft);
-		 });
-	}
+	chrome.runtime.sendMessage({method: "getSavedText"}, function(response) {
+		 var saved_text = response.saved_text;
+		 var saved_text_dom_id = response.saved_text_dom_id;
+		 var charsleft = 500;
+		 if(saved_text_dom_id !== null && saved_text_dom_id === ("comment_textarea_" + comment_id) 
+				 && saved_text !== null && saved_text.trim().length > 0)
+		 {
+			 charsleft = 500 -  saved_text.length;
+			 $("#comment_textarea_" + comment_id).text(saved_text);
+		 }
+		 else	
+		 {
+			 $("#comment_textarea_" + comment_id).css("color", "#aaa");
+			 $("#comment_textarea_" + comment_id).text("Say something...");
+		 }
+		 $("#charsleft_" + comment_id).text(charsleft);
+	 });	 
 	
 	$("a").click(function(event) {
 		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
@@ -1085,63 +1071,68 @@ function writeComment(feeditem_jo, dom_id)
 		});
 	}
 	
-	if (tabmode === "thread")
-	{
-		$("#reply_link_" + comment_id).click({value: comment_id}, function(event) { event.preventDefault();
-			if (user_jo !== null)
+	$("#reply_link_" + comment_id).click({value: comment_id}, function(event) { 
+		event.preventDefault();
+		if (user_jo !== null)
+		{
+			if(!$("#reply_td_" + event.data.value).is(":visible"))
 			{
-				if(!$("#reply_td_" + event.data.value).is(":visible"))
-				{
-					$("#reply_td_" + event.data.value).show();
-					var currtext = $("#comment_textarea_" + event.data.value).val();
-					if(currtext !== "Say something...")
-				 	{
-						// textarea has a scrollbar due to previous text, grow it
-						//alert("comment_textarea_" + event.data.value);
-						if(has_scrollbar("comment_textarea_" + event.data.value))
-						{
-							$("#comment_textarea_" + event.data.value).trigger("keyup");
-						}
-				 	}
-				}
-				else
-					$("#reply_td_" + event.data.value).hide();
+				$("#reply_td_" + event.data.value).show();
+				var currtext = $("#comment_textarea_" + event.data.value).val();
+				if(currtext !== "Say something...")
+			 	{
+					// textarea has a scrollbar due to previous text, grow it
+					//alert("comment_textarea_" + event.data.value);
+					if(has_scrollbar("comment_textarea_" + event.data.value))
+					{
+						$("#comment_textarea_" + event.data.value).trigger("keyup");
+					}
+			 	}
 			}
 			else
-				displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
-		});
-		
-		$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
-			likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
-		});
-	 		 
-		$("#dislike_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
-			likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
-		});
-		
-		$("#comment_nuke_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
-			var confirmbox = confirm("Nuke comment?\n(This action is permanent and risky.)");
-			if (confirmbox === true)
-				nukeComment(event.data.value);
-		});
-		
-		$("#comment_megadownvote_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
-			var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
-			if (confirmbox === true)
-				megadownvoteComment(event.data.value);
-		});
-	}
+			{
+				$("#reply_td_" + event.data.value).hide();
+			}
+		}
+		else
+		{
+			displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
+		}
+	});
+
+	$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+		event.preventDefault();
+		likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
+	});
+		 
+	$("#dislike_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+		event.preventDefault();
+		likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
+	});
+
+	$("#comment_nuke_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+		event.preventDefault();
+		var confirmbox = confirm("Nuke comment?\n(This action is permanent and risky.)");
+		if (confirmbox === true)
+			nukeComment(event.data.value);
+	});
+
+	$("#comment_megadownvote_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+		event.preventDefault();
+		var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
+		if (confirmbox === true)
+			megadownvoteComment(event.data.value);
+	});
+
+	$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+		event.preventDefault();
+		var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
+		if (confirmbox === true)
+			hideComment(event.data.value);
+	});
 	
-	if (tabmode === "thread" || tabmode === "past")
-	{
-		$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { event.preventDefault();
-			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
-			if (confirmbox === true)
-				hideComment(event.data.value);
-		});
-	}
-	
-	$("[id=screenname_link_"+ comment_id + "]").click({value: feeditem_jo}, function(event) { event.preventDefault();
+	$("[id=screenname_link_"+ comment_id + "]").click({value: feeditem_jo}, function(event) { 
+		event.preventDefault();
 		viewProfile(event.data.value.author_screenname);
 	});
 }

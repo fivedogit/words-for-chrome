@@ -122,7 +122,9 @@ else
 		capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
 
 	var client_id = "";
-	if(login_type === "google" && chrome.runtime.id === "mpefojdpeaiaepbgjjmnanepdkhoeeii")
+	if(login_type === "google" && chrome.runtime.id === "oeajbelghhnkmnpjhgefcoagpgfdhckb") //workstation
+		client_id = "591907226969-hlrhounbesss1hmemh20c7q7dk0jd8pl.apps.googleusercontent.com";
+	else if(login_type === "google" && chrome.runtime.id === "mpefojdpeaiaepbgjjmnanepdkhoeeii") //laptop
 		client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
 	else if(login_type === "google" && chrome.runtime.id === "lgdfecngaioibcmfbfpeeddgkjfdpgij")
 		client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
@@ -198,6 +200,7 @@ else
 			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
 				if (chrome.runtime.lastError) { // if google and the user clicks the X to close the perm window
 					$("#progress_tr").hide();
+					alert(JSON.stringify(chrome.runtime.lastError));
 					var google_close_message = "";
 					google_close_message = google_close_message + "<div style=\"width:360px;padding:15px\">";
 					google_close_message = google_close_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";

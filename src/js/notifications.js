@@ -25,8 +25,29 @@ function doNotificationsTab()
 
 	$("#footer_div").html("");
 	
-	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Loading activity feed... please wait.</div>");//OK
+	$("#main_div_" + currentURLhash).html("");//OK
 	getNotifications();
+}
+
+function writeUnifiedCommentContainer(id_to_use, dom_id, action) // main_div_HASH, append/before/after/prepend, etc
+{
+	var unified = "";
+	unified = unified + "<div id=\"container_div_" + id_to_use + "\" style=\"background-color:white\">";
+	unified = unified + "	<div id=\"horizline_div_" + id_to_use + "\" class=\"complete-horiz-line-div\"></div>";
+	unified = unified + "	<div id=\"message_div_" + id_to_use + "\" style=\"display:none\"></div>";
+	unified = unified + "	<div id=\"header_div_" + id_to_use + "\" style=\"display:none\"></div>";
+	unified = unified + "	<div id=\"parent_div_" + id_to_use + "\" style=\"display:none\"></div>";
+	unified = unified + "	<div id=\"comment_div_" + id_to_use + "\"> comment here </div>";
+	unified = unified + "	<div id=\"child_div_" + id_to_use + "\" style=\"display:none\"></div>";
+	unified = unified + "</div>";
+	if(action === "append")
+		$("#" + dom_id).append(unified);
+	else if(action === "prepend")
+		$("#" + dom_id).prepend(unified);
+	else if(action === "after")
+		$("#" + dom_id).after(unified);
+	else if(action === "before")
+		$("#" + dom_id).before(unified);
 }
 
 function getNotifications()
@@ -50,20 +71,20 @@ function getNotifications()
 				b = fromOtherBaseToDecimal(62, b.substring(0,7));
 				return b - a;
 			});
-			var main_div_string = "";
+			
 			for(var x=0; x < sorted_activity_ids.length; x++) 
-			{   
-				main_div_string = main_div_string + "<div class=\"complete-horiz-line-div\"></div>";
+			{  
+				writeUnifiedCommentContainer(sorted_activity_ids[x], "main_div_" + currentURLhash, "append");
+				
 				if(x < user_jo.notification_count)
-					main_div_string = main_div_string + "<div id=\"feeditem_div_" + x + "\" style=\"background-color:#fffed6;padding:5px;text-align:left;" + x + "\"></div>";
-				else
-					main_div_string = main_div_string + "<div id=\"feeditem_div_" + x + "\" style=\"padding:5px;text-align:left;" + x + "\"></div>";
-			}  
-			$("#main_div_" + currentURLhash).html(main_div_string); //OK
+				{
+					$("#container_div_" + sorted_activity_ids[x]).css("background-color", "#fffed6");
+				}	
+			}
 		}
 		for(var x=0; x < user_jo.activity_ids.length; x++) 
 		{  
-			doNotificationItem(user_jo.activity_ids[x], "feeditem_div_" + x);
+			doNotificationItem(user_jo.activity_ids[x], "comment_div_" + user_jo.activity_ids[x]);
 		} 
 
 		// now that the user has viewed this tab, reset activity count to 0
@@ -115,7 +136,7 @@ function doNotificationItem(item_id, dom_id)
 	// if mention, update header, display child
 	var item_random = makeid();
 	var parent_random = makeid();
-	var fids = ""; // feed item div string
+/*	var fids = ""; // feed item div string
 	fids = fids + "<table style=\"width:100%\">";
 	fids = fids + "	<tr>";
 	fids = fids + "		<td style=\"text-align:left;width:95%\" id=\"header_td_" + item_random + "\">";
@@ -142,8 +163,10 @@ function doNotificationItem(item_id, dom_id)
 	fids = fids + "		</td>";
 	fids = fids + "	</tr>";
 	fids = fids + "</table>";
-	$("#" + dom_id).html(fids);//OK
+	$("#" + dom_id).html(fids);//OK*/
 	
+	$("#header_div_" + item_id).html("<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"><a href=\"#\" id=\"notification_hide_link_" + item_random + "\" style=\"text-align:right\">hide</a>");
+		
 	$("#notification_hide_link_" + item_random).click({id: item_id, item_random: item_random}, function(event) { event.preventDefault();
 		var removal_target = event.data.id;
 		$.ajax({
@@ -247,7 +270,8 @@ function doNotificationItem(item_id, dom_id)
         			populate_item = false;
         		}	
         		headerstring = headerstring + "<img id=\"google_favicon_" + item_random + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_random + "\" href=\"#\"></a>";
-    			$("#header_td_" + item_random).html(headerstring);//OK
+        		$("#header_div_" + item_id).html(headerstring);//OK
+        		$("#header_div_" + item_id).show();
     			$("#google_favicon_" + item_random).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
     			$("#pseudo_link_" + item_random).attr("href", item_jo.pseudo_url);
     			$("#pseudo_link_" + item_random).text(url_to_use);
@@ -262,18 +286,21 @@ function doNotificationItem(item_id, dom_id)
         	
         	if(populate_item)
         	{
-        		$("#item_tr_" + item_random).show();
+        	/*	$("#item_tr_" + item_random).show();
         		if(item_jo.author_screenname === user_jo.screenname) // did the person mention himself? (this can't be a like/dislike/reply)
         			$("#they_wrote_td_" + item_random).text("You wrote");
         		else
         			$("#they_wrote_td_" + item_random).text("They wrote");
         		if(!populate_parent)
-        			$("#indent_td_" +  item_random).css("width", "0px"); // if not populating parent (happens with mention only), move item all the way to the left
-        		writeComment(item_jo, "notification_comment_td_" + item_random);
+        			$("#indent_td_" +  item_random).css("width", "0px"); // if not populating parent (happens with mention only), move item all the way to the left*/
+        		writeComment(item_jo, "comment_div_" + item_id);
         	}
+        	
         	if(populate_parent)
         	{
-        		$("#parent_tr_" + parent_random).show();
+        		$("#parent_div_" + item_id).show();
+        		$("#parent_div_" + item_id).html("gonna show something here");
+        		/*$("#parent_tr_" + parent_random).show();*/
         		$.ajax({
         	        type: 'GET',
         	        url: endpoint,
@@ -287,8 +314,8 @@ function doNotificationItem(item_id, dom_id)
         	        	parent_jo = data.item;
         	        	if(data.response_status === "success")
         	        	{
-        	        		$("#you_wrote_td_" + parent_random).text("You wrote"); // if we're showing the parent, this is a reply or a like/dislike. 
-        	        		writeComment(parent_jo, "notification_comment_td_" + parent_random);
+        	        		//$("#you_wrote_td_" + parent_random).text("You wrote"); // if we're showing the parent, this is a reply or a like/dislike. 
+        	        		writeComment(parent_jo, "parent_div_" + item_id);
         	        	}
         	        },
         	        error: function (XMLHttpRequest, textStatus, errorThrown) {
