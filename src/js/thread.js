@@ -661,11 +661,17 @@ function doThreadItem(comment_id, dom_id) // type = "initialpop", "newcomment", 
         	{
         		
         		if(tabmode === "notifications")
+        		{
         			writeComment(data.item, dom_id, false, true, false); // l/d, delete button (if user authored it), reply
+        			$("#" + dom_id).css("margin-left", "60px");
+        		}
         		else
+        		{
         			writeComment(data.item, dom_id, true, true, true); // l/d, delete button (if user authored it), reply
-        		var indent = (data.item.depth-1) * 30;
-        		$("#" + dom_id).css("margin-left", indent + "px");
+        			var indent = (data.item.depth-1) * 30;
+            		$("#" + dom_id).css("margin-left", indent + "px");
+        		}
+        		
         		
         		if(data.item.children && data.item.children.length > 0) // if this is a new reply on the notifications tab, it'll never have children, so no worry here
         		{
