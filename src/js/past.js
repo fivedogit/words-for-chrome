@@ -67,11 +67,12 @@ function getPastComments()
 	        			});
 	            		data.comments_ja = sorted_comments_ja;
 	            	
-	            		var main_div_string = "";
+	            		//var main_div_string = "";
 	            		for(var x=beginindex; x < endindex && x < data.comments_ja.length; x++) 
 	        			{
-	            			main_div_string = main_div_string + "<div class=\"complete-horiz-line-div\"></div>";
-	            			main_div_string = main_div_string + "<div id=\"pastcomment_div_" + x + "\" style=\"padding:5px;text-align:center;" + x + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
+	            			writeUnifiedCommentContainer(data.comments_ja[x], "main_div_" + currentURLhash, "append");
+	            			//main_div_string = main_div_string + "<div class=\"complete-horiz-line-div\"></div>";
+	            			//main_div_string = main_div_string + "<div id=\"pastcomment_div_" + x + "\" style=\"padding:5px;text-align:center;" + x + "\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
 	            		}
 	            		if (x < data.comments_ja.length)
 	        				scrollable = 1;
@@ -79,11 +80,11 @@ function getPastComments()
 	        				scrollable = 0;
 	        			else
 	        				scrollable = 0;
-	            		$("#main_div_" + currentURLhash).append(main_div_string);
+	            		//$("#main_div_" + currentURLhash).append(main_div_string);
 	            		
 	            		for(var x=beginindex; x < endindex && x < data.comments_ja.length; x++) 
 	            		{  
-	            			doPastCommentItem(data.comments_ja[x], "pastcomment_div_" + x);
+	            			doPastCommentItem(data.comments_ja[x], "comment_div_" + data.comments_ja[x]);
 	            		}
 	            		
 	            	}
@@ -143,7 +144,7 @@ function doPastCommentItem(item_id, dom_id)
 			$("#pseudo_link_" + item_random).attr("href", item_jo.pseudo_url);
 			$("#pseudo_link_" + item_random).text(url_to_use);
 			$("#you_wrote_" + item_random).text("You wrote");
-    		writeComment(item_jo, "pastcomment_body_td_" + item_random);
+    		writeComment(item_jo, "pastcomment_body_td_" + item_random, false, true, false); // l/d, delete button, reply 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
         	$("#notification_child_div_" + item_id).text("Unable to retreive item. (network error)");

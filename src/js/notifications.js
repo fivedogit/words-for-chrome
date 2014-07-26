@@ -29,27 +29,6 @@ function doNotificationsTab()
 	getNotifications();
 }
 
-function writeUnifiedCommentContainer(id_to_use, dom_id, action) // main_div_HASH, append/before/after/prepend, etc
-{
-	var unified = "";
-	unified = unified + "<div id=\"container_div_" + id_to_use + "\" style=\"background-color:white\">";
-	unified = unified + "	<div id=\"horizline_div_" + id_to_use + "\" class=\"complete-horiz-line-div\"></div>";
-	unified = unified + "	<div id=\"message_div_" + id_to_use + "\" style=\"display:none\"></div>";
-	unified = unified + "	<div id=\"header_div_" + id_to_use + "\" style=\"display:none\"></div>";
-	unified = unified + "	<div id=\"parent_div_" + id_to_use + "\" style=\"display:none\"></div>";
-	unified = unified + "	<div id=\"comment_div_" + id_to_use + "\"> comment here </div>";
-	unified = unified + "	<div id=\"child_div_" + id_to_use + "\" style=\"display:none\"></div>";
-	unified = unified + "</div>";
-	if(action === "append")
-		$("#" + dom_id).append(unified);
-	else if(action === "prepend")
-		$("#" + dom_id).prepend(unified);
-	else if(action === "after")
-		$("#" + dom_id).after(unified);
-	else if(action === "before")
-		$("#" + dom_id).before(unified);
-}
-
 function getNotifications()
 {
 	if (typeof user_jo==="undefined" || user_jo === null)
@@ -127,6 +106,53 @@ function getNotifications()
 	}
 }
 
+function removeItemFromActivityIds(removal_target)
+{
+	$.ajax({
+        type: 'GET',
+        url: endpoint,
+        data: {
+        	email: email,
+        	this_access_token: this_access_token,
+            method: "removeItemFromActivityIds",
+            id: removal_target
+        },
+        dataType: 'json',
+        async: true,
+        success: function (data, status) {
+        	if(data.response_status === "success")
+        	{
+        		// remove it locally, then repopulate the activity notifications page
+        		var temp_act_ids = user_jo.activity_ids;
+        		for(var x = 0; x < temp_act_ids.length; x++)
+        		{
+        			if(temp_act_ids[x] === removal_target)
+        			{
+        				temp_act_ids.splice(x,1);
+        				break;
+        			}	
+        		}	
+        		user_jo.activity_ids = temp_act_ids;
+        		doNotificationsTab();
+        	}
+        	else if(data.response_status === "error")
+        	{
+        		displayMessage(data.message, "red", "message_div_" + item_id);
+            	if(data.error_code && data.error_code === "0000")
+        		{
+        			displayMessage("Your login has expired. Please relog.", "red", "message_div_" + item_id);
+        			user_jo = null;
+        			updateLogstat();
+        		}
+        	}	
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        	displayMessage("Unable to hide item. (network error)", "red", "message_div_" + item_id);
+        	console.log(textStatus, errorThrown);
+        }
+	});
+}
+
 // item ids are unique. There is only one specific like/dislike/comment in the person's notification array
 // parent ids are not. The same parent item can be replied to, liked, disliked, etc, so the reference has to be randomized
 function doNotificationItem(item_id, dom_id)
@@ -134,84 +160,12 @@ function doNotificationItem(item_id, dom_id)
 	// if like/dislike, update header, display parent
 	// if reply, update header, display parent and child
 	// if mention, update header, display child
-	var item_random = makeid();
-	var parent_random = makeid();
-/*	var fids = ""; // feed item div string
-	fids = fids + "<table style=\"width:100%\">";
-	fids = fids + "	<tr>";
-	fids = fids + "		<td style=\"text-align:left;width:95%\" id=\"header_td_" + item_random + "\">";
-	fids = fids + "			<div style=\"text-align:center\"><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>";
-	fids = fids + "		</td>";
-	fids = fids + "		<td><a href=\"#\" id=\"notification_hide_link_" + item_random + "\" style=\"text-align:right\">hide</a></td>";
-	fids = fids + "	</tr>";
-	fids = fids + "</table>";
-	fids = fids + "<table>";
-	fids = fids + "	<tr id=\"parent_tr_" + parent_random + "\" style=\"display:none\">";
-	fids = fids + "		<td id=\"indent_td_" +  parent_random + "\" style=\"width:0px\"></td>";
-	fids = fids + "		<td class=\"rotated-who-wrote\" id=\"you_wrote_td_" + parent_random + "\"></td>";
-	fids = fids + "		<td style=\"padding:3px;\" id=\"notification_comment_td_" + parent_random + "\">";
-	fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
-	fids = fids + "		</td>";
-	fids = fids + "	</tr>";
-	fids = fids + "</table>";
-	fids = fids + "<table>";
-	fids = fids + "	<tr id=\"item_tr_" + item_random + "\" style=\"display:none\">";
-	fids = fids + "		<td id=\"indent_td_" +  item_random + "\" style=\"width:15px\"></td>";
-	fids = fids + "		<td class=\"rotated-who-wrote\" id=\"they_wrote_td_" + item_random + "\"></td>";
-	fids = fids + "		<td style=\"padding:3px;\" id=\"notification_comment_td_" + item_random + "\">";
-	fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
-	fids = fids + "		</td>";
-	fids = fids + "	</tr>";
-	fids = fids + "</table>";
-	$("#" + dom_id).html(fids);//OK*/
+	$("#header_div_" + item_id).html("<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"><a href=\"#\" id=\"notification_hide_link_" + item_id + "\" style=\"text-align:right\">hide</a>");
+	$("#header_div_" + item_id).show();
 	
-	$("#header_div_" + item_id).html("<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"><a href=\"#\" id=\"notification_hide_link_" + item_random + "\" style=\"text-align:right\">hide</a>");
-		
-	$("#notification_hide_link_" + item_random).click({id: item_id, item_random: item_random}, function(event) { event.preventDefault();
+	$("#notification_hide_link_" + item_id).click({id: item_id}, function(event) { event.preventDefault();
 		var removal_target = event.data.id;
-		$.ajax({
-	        type: 'GET',
-	        url: endpoint,
-	        data: {
-	        	email: email,
-	        	this_access_token: this_access_token,
-	            method: "removeItemFromActivityIds",
-	            id: removal_target
-	        },
-	        dataType: 'json',
-	        async: true,
-	        success: function (data, status) {
-	        	if(data.response_status === "success")
-	        	{
-	        		// remove it locally, then repopulate the activity notifications page
-	        		var temp_act_ids = user_jo.activity_ids;
-	        		for(var x = 0; x < temp_act_ids.length; x++)
-	        		{
-	        			if(temp_act_ids[x] === removal_target)
-	        			{
-	        				temp_act_ids.splice(x,1);
-	        				break;
-	        			}	
-	        		}	
-	        		user_jo.activity_ids = temp_act_ids;
-	        		doNotificationsTab();
-	        	}
-	        	else if(data.response_status === "error")
-	        	{
-	        		displayMessage(data.message, "red");
-	            	if(data.error_code && data.error_code === "0000")
-	        		{
-	        			displayMessage("Your login has expired. Please relog.", "red");
-	        			user_jo = null;
-	        			updateLogstat();
-	        		}
-	        	}	
-	        },
-	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	displayMessage("Unable to hide item. (network error)");
-	        	console.log(textStatus, errorThrown);
-	        }
-		});
+		removeItemFromActivityIds(removal_target);
 	});	
 	
 	var item_jo = null;
@@ -226,81 +180,97 @@ function doNotificationItem(item_id, dom_id)
         dataType: 'json',
         async: true,
         success: function (data, status) {
-        	item_jo = data.item;
         	if(data.response_status === "success")
         	{	
-        		var url_to_use = getSmartCutURL(data.item.pseudo_url,50);
-    			var populate_parent = false;
-    			var populate_item = false;
-    			var headerstring = "";
-        		if(item_id.endsWith("L"))
+        		item_jo = data.item;
+        		// note, probably best to just leave the notification in the feed as a hidden comment. 
+        		// this is because if someone has a "1" for a notification, click the tab and then there's nothing... that's weird.
+        		/*if(item_jo.hidden === true)
         		{
-        			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> liked your comment: ";
-        			populate_parent = true;
-        			populate_item = false;
-        		}
-        		else if(item_id.endsWith("D"))
-        		{
-        			headerstring = headerstring + "Someone disliked your comment: ";
-        			populate_parent = true;
-        			populate_item = false;
-        		}
-        		else if(item_id.endsWith("M"))
-        		{
-        			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> mentioned you: ";
-        			populate_parent = false;
-        			populate_item = true;
+        			//alert("the reply that triggered this activity id is now hidden... just remove from activity_ids"); 
+            		$("#container_div_" + item_id).remove();
+            		removeItemFromActivityIds(item_id);
         		}	
-        		else if(item_id.endsWith("R"))
-        		{
-        			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> replied to you: ";
-        			populate_parent = true;
-        			populate_item = true;
-        		}
-        		else if(item_id.endsWith("F"))
-        		{
-        			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_random + "\"></a> commented on a page you're following: ";
-        			populate_parent = false;
-        			populate_item = true;
-        		}
         		else
-        		{
-        			headerstring = headerstring + "Unknown activity item.";
-        			populate_parent = false;
-        			populate_item = false;
-        		}	
-        		headerstring = headerstring + "<img id=\"google_favicon_" + item_random + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_random + "\" href=\"#\"></a>";
-        		$("#header_div_" + item_id).html(headerstring);//OK
-        		$("#header_div_" + item_id).show();
-    			$("#google_favicon_" + item_random).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
-    			$("#pseudo_link_" + item_random).attr("href", item_jo.pseudo_url);
-    			$("#pseudo_link_" + item_random).text(url_to_use);
-    			if(!item_id.endsWith("D"))
-    			{	
-    				$("#screenname_link_" + item_random).text(item_jo.author_screenname);
-        			$("#screenname_link_" + item_random).click({author_screenname: item_jo.author_screenname}, function(event) { event.preventDefault();
-        		 		viewProfile(event.data.author_screenname);
-        		 	});
-    			}
+        		{*/
+        			var url_to_use = getSmartCutURL(data.item.pseudo_url,50);
+        			var populate_parent = false;
+        			var populate_item = false;
+        			var headerstring = "";
+            		if(item_id.endsWith("L"))
+            		{
+            			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> liked your comment: ";
+            			populate_parent = true;
+            			populate_item = false;
+            		}
+            		else if(item_id.endsWith("D"))
+            		{
+            			headerstring = headerstring + "Someone disliked your comment: ";
+            			populate_parent = true;
+            			populate_item = false;
+            		}
+            		else if(item_id.endsWith("M"))
+            		{
+            			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> mentioned you: ";
+            			populate_parent = false;
+            			populate_item = true;
+            		}	
+            		else if(item_id.endsWith("R"))
+            		{
+            			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> replied to you: ";
+            			populate_parent = true;
+            			populate_item = true;
+            		}
+            		else if(item_id.endsWith("F"))
+            		{
+            			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> commented on a page you're following: ";
+            			populate_parent = false;
+            			populate_item = true;
+            		}
+            		else
+            		{
+            			headerstring = headerstring + "Unknown activity item.";
+            			populate_parent = false;
+            			populate_item = false;
+            		}	
+            		headerstring = headerstring + "<img id=\"google_favicon_" + item_id + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_id + "\" href=\"#\"></a>";
+            		$("#header_div_" + item_id).html(headerstring);//OK
+            		$("#header_div_" + item_id).show();
+        			$("#google_favicon_" + item_id).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
+        			$("#pseudo_link_" + item_id).attr("href", item_jo.pseudo_url);
+        			$("#pseudo_link_" + item_id).text(url_to_use);
+        			if(!item_id.endsWith("D"))
+        			{	
+        				$("#screenname_link_" + item_id).text(item_jo.author_screenname);
+            			$("#screenname_link_" + item_id).click({author_screenname: item_jo.author_screenname}, function(event) { event.preventDefault();
+            		 		viewProfile(event.data.author_screenname);
+            		 	});
+        			}
+        		//}	
+        	}
+        	else if(data.response_status === "error")
+        	{ 
+        		//alert("couldn't find this one remove container div?");
+        		$("#container_div_" + item_id).remove();
+        		removeItemFromActivityIds(item_id);
         	}
         	
-        	if(populate_item)
+        	if(populate_item) // on the notification tab, the "item" (or comment) if drawn, will NEVER have been written by this author.
         	{
-        	/*	$("#item_tr_" + item_random).show();
-        		if(item_jo.author_screenname === user_jo.screenname) // did the person mention himself? (this can't be a like/dislike/reply)
-        			$("#they_wrote_td_" + item_random).text("You wrote");
-        		else
-        			$("#they_wrote_td_" + item_random).text("They wrote");
-        		if(!populate_parent)
-        			$("#indent_td_" +  item_random).css("width", "0px"); // if not populating parent (happens with mention only), move item all the way to the left*/
-        		writeComment(item_jo, "comment_div_" + item_id);
+        		writeComment(item_jo, "comment_div_" + item_id, true, false, true); // l/d, delete button, reply 
+        		if(populate_parent)
+        		{
+        			$("#comment_div_" + item_id).css("margin-left", "30px");
+        		}
         	}
+        	else
+        	{
+        		$("#comment_div_" + item_id).hide();
+        	}	
         	
-        	if(populate_parent)
+        	if(populate_parent) // on this notification tab, the parent, if drawn, will ALWAYS have been written by this author.
         	{
         		$("#parent_div_" + item_id).show();
-        		$("#parent_div_" + item_id).html("gonna show something here");
-        		/*$("#parent_tr_" + parent_random).show();*/
         		$.ajax({
         	        type: 'GET',
         	        url: endpoint,
@@ -315,13 +285,17 @@ function doNotificationItem(item_id, dom_id)
         	        	if(data.response_status === "success")
         	        	{
         	        		//$("#you_wrote_td_" + parent_random).text("You wrote"); // if we're showing the parent, this is a reply or a like/dislike. 
-        	        		writeComment(parent_jo, "parent_div_" + item_id);
+        	        		writeComment(parent_jo, "parent_div_" + item_id, false, true, false); // l/d, delete button, reply
         	        	}
         	        },
         	        error: function (XMLHttpRequest, textStatus, errorThrown) {
         	        	console.log(textStatus, errorThrown);
         	        }
         		});
+        	}	
+        	else
+        	{
+        		$("#parent_div_" + item_id).hide();
         	}	
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {

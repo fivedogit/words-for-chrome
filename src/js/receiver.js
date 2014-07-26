@@ -122,10 +122,8 @@ else
 		capitalized_login_type = login_type.charAt(0).toUpperCase() + login_type.slice(1);
 
 	var client_id = "";
-	if(login_type === "google" && chrome.runtime.id === "oeajbelghhnkmnpjhgefcoagpgfdhckb") //workstation
-		client_id = "591907226969-hlrhounbesss1hmemh20c7q7dk0jd8pl.apps.googleusercontent.com";
-	else if(login_type === "google" && chrome.runtime.id === "mpefojdpeaiaepbgjjmnanepdkhoeeii") //laptop
-		client_id = "591907226969-jp2s464475jft1qgs3phb531f62jug48.apps.googleusercontent.com";
+	if(login_type === "google" && chrome.runtime.id === "mpefojdpeaiaepbgjjmnanepdkhoeeii") //laptop
+		client_id = "591907226969-fgjpelovki35oc3nclvu512msaka2hfh.apps.googleusercontent.com";
 	else if(login_type === "google" && chrome.runtime.id === "lgdfecngaioibcmfbfpeeddgkjfdpgij")
 		client_id = "591907226969-ct58tt67m00b8fjd9b92gfl5aiq0jva6.apps.googleusercontent.com";
 	else //fb

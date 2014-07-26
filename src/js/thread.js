@@ -553,6 +553,30 @@ function noteThreadView(was_empty) //booleans or strings
 	}); 
 }
 
+
+function writeUnifiedCommentContainer(id_to_use, dom_id, action) // main_div_HASH, append/before/after/prepend, etc
+{
+	var unified = "";
+	unified = unified + "<div id=\"container_div_" + id_to_use + "\" style=\"background-color:white;\">";
+	unified = unified + "	<div id=\"horizline_div_" + id_to_use + "\" class=\"complete-horiz-line-div\"></div>"; // always shown
+	unified = unified + "	<div style=\"padding:8px\">";
+	unified = unified + "		<div id=\"message_div_" + id_to_use + "\" style=\"padding:5px 0px 5px 0px;display:none\"></div>"; // hidden unless message displayed
+	unified = unified + "		<div id=\"header_div_" + id_to_use + "\" style=\"padding:5px 0px 5px 0px;text-align:left;display:none\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>"; // hidden except for notification page
+	unified = unified + "		<div id=\"parent_div_" + id_to_use + "\" style=\"padding:5px 0px 5px 0px;display:none\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>"; //hidden except for notification page
+	unified = unified + "		<div id=\"comment_div_" + id_to_use + "\" style=\"border:0px solid black;padding:5px 0px 5px 0px;\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>"; // always shown except for like/dislike on notification page
+	unified = unified + "		<div id=\"child_div_" + id_to_use + "\" style=\"padding:5px 0px 0px 0px;display:none\"></div>"; // always hidden except when someone replies on notification page
+	unified = unified + "	</div>";
+	unified = unified + "</div>";
+	if(action === "append")
+		$("#" + dom_id).append(unified);
+	else if(action === "prepend")
+		$("#" + dom_id).prepend(unified);
+	else if(action === "after")
+		$("#" + dom_id).after(unified);
+	else if(action === "before")
+		$("#" + dom_id).before(unified);
+}
+
 // this function says "Is the thread empty? If so, show empty message. If not, prepare comment divs and then call doThreadItem for each to populate them"
 function prepareGetAndPopulateThreadPortion()
 {
@@ -564,28 +588,15 @@ function prepareGetAndPopulateThreadPortion()
 			var main_div_string = "";
 			main_div_string = main_div_string + "<div style=\"padding:25px;font-size:22px;font-weight:bold\">";
 			main_div_string = main_div_string + "	There are no comments for this page yet.";
-			if(!(currentHostname === "techcrunch.com" || currentHostname === "www.techcrunch.com"))
-			{
-				main_div_string = main_div_string + "	<div style=\"padding-top:25px;font-size:12px;font-style:italic;font-weight:normal\">";
-				main_div_string = main_div_string + "		<span style=\"font-weight:bold;\">NOTE:</span> WORDS is brand new. Feel free to comment anywhere you like,<br>";
-				main_div_string = main_div_string + "		but most of the early activity is on <a href=\"#\" id=\"tc_link\">techcrunch.com</a>.<br>";
-				main_div_string = main_div_string + "	</div>";
-				main_div_string = main_div_string + "	<div style=\"padding-top:25px;font-size:12px;font-style:italic;font-weight:normal\">";
-				main_div_string = main_div_string + "	    Try the <a href=\"#\" id=\"supplemental_trending_link\"><img style=\"vertical-align:middle\" src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></a> trending tab.";
-				main_div_string = main_div_string + "	</div>";
-			}
+			main_div_string = main_div_string + "	<div style=\"padding-top:25px;font-size:12px;font-style:italic;font-weight:normal\">";
+			main_div_string = main_div_string + "	    Try the <a href=\"#\" id=\"supplemental_trending_link\"><img style=\"vertical-align:middle\" src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></a> trending tab.";
+			main_div_string = main_div_string + "	</div>";
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div id=\"trending_div\"></div>";
 			$("#main_div_" + currentURLhash).html(main_div_string);//OK
 			$("#supplemental_trending_link").click( function (event) {	event.preventDefault();
 				doTrendingTab();
 			});
-			if(!(currentHostname === "techcrunch.com" || currentHostname === "www.techcrunch.com"))
-			{
-				$("#tc_link").click( function (event) {	event.preventDefault();
-					chrome.tabs.create({url: "http://techcrunch.com"}); 
-				});
-			}
 
 			drawTrendingTable(currentHostname, 4, "trending_div");
 			noteThreadView(true); // was empty
@@ -604,26 +615,15 @@ function prepareGetAndPopulateThreadPortion()
 			thread_jo.children = tempcomments;
 			
 			// loop the comment id list and doThreadItem for each one
-			//alert("showing beginindex=" + beginindex + " through " + endindex);
 			for(var x=beginindex; x < endindex && x < thread_jo.children.length; x++) 
 			{
-				doThreadItem(thread_jo.children[x], currentURLhash, "initialpop");
+				writeUnifiedCommentContainer(thread_jo.children[x], "main_div_" + currentURLhash, "append");
+				doThreadItem(thread_jo.children[x], "comment_div_" + thread_jo.children[x]);
 			}
-			
 			// if we've reached the end, show "end of comments" message
 			if (x < thread_jo.children.length)
 			{
 				scrollable = 1;
-				if(!chrome.tabs)
-				{	
-					var tempstr = "";
-					if(thread_jo.children.length - x === 1)
-		 				tempstr = tempstr + (thread_jo.children.length - x) + " more comment... ";
-		 			else
-		 				tempstr = tempstr + (thread_jo.children.length - x) + " more comments... ";
-		 			tempstr = tempstr + "use <img style=\"width:20px;height:20px;vertical-align:middle\" src=\"" + chrome.extension.getURL("images/blank_button.png") + "\"> <img style=\"width:16px;height:16px;vertical-align:middle\" src=\"" + chrome.extension.getURL("images/arrow_ne.png") + "\">";
-		 			$("#footer_div").html(tempstr);
-				}
 			}
 			else if(x === thread_jo.children.length)
 			{
@@ -645,214 +645,97 @@ function prepareGetAndPopulateThreadPortion()
 	}
 }
 
-function isValidThreadItemId(inc_id)
+function doThreadItem(comment_id, dom_id) // type = "initialpop", "newcomment", "reply"
 {
-	// before innerHTML, make sure this is a harmless 11-char string of letters and numbers ending with the letter C (for "comment").
-	if(inc_id.length === 11 && /^[A-Za-z0-9]+C$/.test(inc_id))
-		return true;
-	return false;
-}
-
-function doThreadItem(comment_id, parent, commenttype) // type = "initialpop", "newcomment", "reply"
-{
-	//alert("doing threaditem2 for comment_id=" + comment_id + " and parent=" + parent);
-	if(isValidThreadItemId(comment_id)) // before innerHTMl below, make sure this is a harmless 11-char string of letters and numbers.
-	{	
-		var comment_div_string = "";
-		//var indent = 0;
-		var parent_outer_container_div = "main_div_" + parent;
-		var parent_comment_div = "";
-		
-		if(typeof commenttype === "undefined" || commenttype === null || !(commenttype === "initialpop" || commenttype === "newcomment" || commenttype === "reply"))
-		{
-			if(parent.length != 11) // toplevel "parent" is a 8-length hash of the currentURL set by overlay.js
-				commenttype = "newcomment";
-			else
-				commenttype = "reply";
-		}
-		
-		if(parent.length !== 11) // toplevel "parent" is a 8-length hash of the currentURL set by overlay.js
-		{
-			//indent = 0;
-		}
-		else 
-		{
-			parent_outer_container_div = "comment_outer_container_div_" + parent;
-			parent_comment_div = "comment_div_" + parent;
-		}	
-		// This is the main thread item (comment) structure. We have a blank container around the actual visible comment.
-		// That's so we can .after, .before, .append and .prepend to both the comment itself (replies) as well 
-		// as to the comment container (subsequent or previous comments of the same level)
-
-		if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
-			comment_div_string = comment_div_string + "<div id=\"comment_outer_container_div_" + comment_id + "\">";
-		comment_div_string = comment_div_string + "		    <div class=\"complete-horiz-line-div\" id=\"complete_horiz_line_div_" + comment_id + "\"></div>";
-		comment_div_string = comment_div_string + "		    <div class=\"message-div\" id=\"message_div_" + comment_id + "\" style=\"display:none\"></div>";
-		comment_div_string = comment_div_string + "				<div style=\"padding: 5px;\" id=\"comment_div_" + comment_id + "\">";
-		comment_div_string = comment_div_string + "					<span style=\"padding:20px\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></span>";
-		comment_div_string = comment_div_string + "				</div>";
-		if(!$("#comment_outer_container_div_" + comment_id).length)
-			comment_div_string = comment_div_string + "</div>"; // end container div
-
-		if(!$("#comment_outer_container_div_" + comment_id).length) // if the container does not already exist, create it
-		{
-			if(commenttype === "initialpop") // .append to main_div
-			{
-				$("#main_div_" + parent).append(comment_div_string);//OK
-			}	
-			else if(commenttype === "newcomment") // .prepend to main_div
-			{
-				$("#main_div_" + parent).prepend(comment_div_string);//OK
-			}	
-			else if(commenttype == "reply") // .after parent comment
-			{
-				$("#" + parent_outer_container_div).after(comment_div_string);//OK
-			}	
-			else
-			{
-				//alert("invalid commenttype");
-			}
-		}
-		else // container already existed. Just insert the new stuff
-		{
-			$("#comment_outer_container_div_" + comment_id).html(comment_div_string); // container_div already exists, rewrite it //OK
-		}	
-
-		$.ajax({
-	        type: 'GET',
-	        url: endpoint,
-	        data: {
-	            method: "getFeedItem",
-	            id: comment_id
-	        },
-	        dataType: 'json',
-	        async: true,
-	        success: function (data, status) {
-	        	if(data.response_status !== "error" && tabmode === "thread")
-	        	{
-	        		$("#comment_div_" + data.item.id).css("margin-left", ((data.item.depth-1) * 25) + "px");
-	        		writeComment(data.item, "comment_div_" + data.item.id);
-	        		if(data.item.children && data.item.children.length > 0)
-	        		{
-	        			var tempcomments = data.item.children;
-						tempcomments.sort(function(a,b){
-							var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
-							var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
-							return tsa - tsb;
-						});
-						data.item.children = tempcomments;
-						for(var y=0; y < data.item.children.length; y++) 
-			    		{  
-							//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
-							doThreadItem(data.item.children[y], comment_id, "reply");
-			    		}
-	        		}
-	        	}
-	        },
-	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	displayMessage("Unable to retrieve feed item. (ajax)", "red", "message_div_" + comment_id);
-	        	console.log(textStatus, errorThrown);
-	        }
-		});
-	}
+	$.ajax({
+        type: 'GET',
+        url: endpoint,
+        data: {
+            method: "getFeedItem",
+            id: comment_id
+        },
+        dataType: 'json',
+        async: true,
+        success: function (data, status) {
+        	if(data.response_status === "success")// && tabmode === "thread")
+        	{
+        		
+        		if(tabmode === "notifications")
+        			writeComment(data.item, dom_id, false, true, false); // l/d, delete button (if user authored it), reply
+        		else
+        			writeComment(data.item, dom_id, true, true, true); // l/d, delete button (if user authored it), reply
+        		var indent = (data.item.depth-1) * 30;
+        		$("#" + dom_id).css("margin-left", indent + "px");
+        		
+        		if(data.item.children && data.item.children.length > 0) // if this is a new reply on the notifications tab, it'll never have children, so no worry here
+        		{
+        			var tempcomments = data.item.children;
+					tempcomments.sort(function(a,b){
+						var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
+						var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
+						return tsa - tsb;
+					});
+					data.item.children = tempcomments;
+					for(var y=0; y < data.item.children.length; y++) 
+		    		{  
+						//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
+						writeUnifiedCommentContainer(data.item.children[y], "container_div_" + comment_id, "after");
+						doThreadItem(data.item.children[y], "comment_div_" + data.item.children[y]);
+		    		}
+        		}
+        	}
+        	else
+        	{ 
+        		// fail silently
+        	}	
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        	displayMessage("Unable to retrieve feed item. (ajax)", "red", "message_div_" + comment_id);
+        	console.log(textStatus, errorThrown);
+        }
+	});
 }		
 
-function getLinkifiedDiv(text) // also replaces line breaks with br
-{
-	var linkified_div = document.createElement('div');
-	linkified_div.style.textAlign = "left";
-	//linkified_div.style.padding = "6px";
-	linkified_div.textContent = "";
-	var m;
-	var re = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-	var last_index = 0;
-	var matches_found = 0;
-	var current_text = "";
-	var current_textnode;
-	var current_a;
-	while (m = re.exec(text)) {
-		matches_found = matches_found + 1;
-		current_text = text.substring(last_index, m.index);
-		if(current_text.indexOf("\n") === -1)
-		{
-			current_textnode = document.createTextNode(current_text);
-			linkified_div.appendChild(current_textnode);
-		}
-		else
-		{
-			var arr = current_text.split("\n");
-			var chunkcounter = 0;
-			while(chunkcounter < arr.length)
-			{
-				current_textnode = document.createTextNode(arr[chunkcounter]);
-				linkified_div.appendChild(current_textnode);
-				if(chunkcounter < (arr.length - 1)) // if not the last one
-					linkified_div.appendChild(document.createElement('br'));
-				chunkcounter++;
-			}	
-		}	
-		current_a = document.createElement('a');
-		current_a.href = m[0];
-		current_a.textContent = getSmartCutURL(m[0],60); 
-		current_a.className = "newtab";
-		linkified_div.appendChild(current_a);
-		last_index = m.index + m[0].length;
-	} 
-	if(matches_found === 0)
-		current_text = text;
-	else
-		current_text = text.substring(last_index);
-	if(current_text.indexOf("\n") == -1)
-	{
-		current_textnode = document.createTextNode(current_text);
-		linkified_div.appendChild(current_textnode);
-	}
-	else
-	{
-		var arr = current_text.split("\n");
-		var chunkcounter = 0;
-		while(chunkcounter < arr.length)
-		{
-			current_textnode = document.createTextNode(arr[chunkcounter]);
-			linkified_div.appendChild(current_textnode);
-			if(chunkcounter < (arr.length - 1)) // if not the last one
-				linkified_div.appendChild(document.createElement('br'));
-			chunkcounter++;
-		}	
-	}	
-	return linkified_div;
-}
-
-function writeComment(feeditem_jo, dom_id)
+function writeComment(feeditem_jo, dom_id, drawLikeDislike, drawDelete, drawReply)
 {
 	var comment_id = feeditem_jo.id; 
 	
-	if(!isValidThreadItemId(comment_id)) // before using this in innerHTML, make sure it's letters, numbers, ending with "C" and 11 chars long. (i.e. harmless)
-		return;
-
 	// NOTE: I tried changing comment_id to a random string, but it broke the saved text mechanism.
 	
 	var writeReplyTD = false;
 	var tempstr = "";
 	var	numvotes = feeditem_jo.likes.length + feeditem_jo.dislikes.length;
-	tempstr = tempstr + "<table style=\"border:0px solid orange\">";
-	tempstr = tempstr + "	<tr>";
+	
 	if (feeditem_jo.hidden === "true" || feeditem_jo.hidden === true)
 	{
-		tempstr = tempstr + "		<td style=\"vertical-align:top;width:48px;border:0px solid green\">";
-		tempstr = tempstr + "			<table style=\"border:0px solid red\">";
-		tempstr = tempstr + "				<tr>";
-		tempstr = tempstr + "					<td><img style=\"width:48px;height:48px;border-radius:4px\" src=\"" + chrome.extension.getURL("images/48avatar_ghosted.png") + "\"></td>";
-		tempstr = tempstr + "				</tr>";
-		tempstr = tempstr + "			</table>";
+		tempstr = tempstr + "<table style=\"border:0px solid orange\">";
+		tempstr = tempstr + "	<tr>";
+		tempstr = tempstr + "		<td style=\"text-align:middle;vertical-align:top;width:48px;border:0px solid green\">";
+		tempstr = tempstr + "			<img style=\"width:32px;height:32px;border-radius:4px\" src=\"" + chrome.extension.getURL("images/48avatar_ghosted.png") + "\">";
 		tempstr = tempstr + "		</td>";
-		tempstr = tempstr + "		<td style=\"padding:5px;vertical-align:middle;text-align:left\" >";
+		tempstr = tempstr + "		<td style=\"font-style:italic;padding:5px;vertical-align:middle;text-align:left\" >";
 		tempstr = tempstr + "			Comment deleted";
 		tempstr = tempstr + "		</td>";
+		if(user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
+		{
+			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
+			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + comment_id + "\">N!</a> ";
+			tempstr = tempstr + "		   </td>";
+			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
+			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
+			tempstr = tempstr + "		   </td>";
+		}	
+		tempstr = tempstr + "	</tr>";
+	  	tempstr = tempstr + "</table>"
+	  	$("#" + dom_id).parent().css("padding-top", "2px");
+	  	$("#" + dom_id).parent().css("padding-bottom", "2px");
+		$("#" + dom_id).html(tempstr);//OK
 	}
 	else
-	{
+	{	
 		// show this user's info
+		tempstr = tempstr + "<table style=\"border:0px solid orange\">";
+		tempstr = tempstr + "	<tr>";
 		tempstr = tempstr + "		<td style=\"vertical-align:top;width:48px;border:0px solid green\"> <!-- avatar, left hand side -->"; 
 		tempstr = tempstr + "			<table style=\"border:0px solid red\">";
 		tempstr = tempstr + "				<tr>";
@@ -883,28 +766,28 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "		  					 		<a href=\"#\" id=\"screenname_link_" + comment_id + "\"></a> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span>";
 		tempstr = tempstr + "		  					 	</td>";
 		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:green;text-align:right;vertical-align:middle;padding-right:3px\" id=\"comment_likes_count_td_" + comment_id + "\"></td>";
-		//if (tabmode === "thread") 
-       // {
+		if (drawLikeDislike === true) 
+	    {
 			tempstr = tempstr + "	       						<td style=\"width:19px;height:19px;vertical-align:middle;\"><img style=\"height:19px;width:19px\" src=\"" + chrome.extension.getURL("images/like_arrow.png") + "\" id=\"like_img_" + comment_id + "\"></td>";
 			tempstr = tempstr + "	       						<td style=\"width:19px;height:19px;vertical-align:middle;\"><img style=\"height:19px;width:19px\" src=\"" + chrome.extension.getURL("images/dislike_arrow.png") + "\" id=\"dislike_img_" + comment_id + "\"></td>";
-       // }
+	    }
 		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:red;text-align:left;vertical-align:middle;padding-left:3px\" id=\"comment_dislikes_count_td_" + comment_id + "\"></td>";
 		
-		//if ((tabmode === "thread" || tabmode === "past") && (user_jo !== null && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
-		//{
+		if (drawDelete === true && (user_jo !== null && user_jo.screenname === feeditem_jo.author_screenname)) // if no user_jo or screennames don't match, hide
+		{
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_delete_link_" + comment_id + "\">X</a> ";
 			tempstr = tempstr + "		   </td>";
-		//}
-		//if(tabmode === "thread" && user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
-		//{
+		}
+		if(user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
+		{
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + comment_id + "\">N!</a> ";
 			tempstr = tempstr + "		   </td>";
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
 			tempstr = tempstr + "		   </td>";
-	//	}	
+		}	
 		
 		tempstr = tempstr + "							</tr>";
 		tempstr = tempstr + "  						</table>";
@@ -914,9 +797,9 @@ function writeComment(feeditem_jo, dom_id)
 		tempstr = tempstr + "					<td style=\"padding:5px;vertical-align:top;text-align:left;line-height:14px\" id=\"comment_text_td_" + comment_id + "\"> "; //  class=\"comment-text-td\"
 	  	tempstr = tempstr + "					</td>";
 	  	tempstr = tempstr + "				</tr>";
-		//if ((tabmode === "thread" || tabmode === "notifications") && (($("#comment_div_" + feeditem_jo.id).css("margin-left").replace("px","")*1) < 125)) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
-	  	//{
-			tempstr = tempstr + "				<tr>";
+		if (drawReply === true && feeditem_jo.depth < 6) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
+	  	{
+			tempstr = tempstr + "				<tr id=\"reply_tr_" + comment_id + "\">";
 	  		tempstr = tempstr + "					<td style=\"padding:6px;text-align:left\"> ";
 	  		tempstr = tempstr + "							<a href=\"#\" id=\"reply_link_" + comment_id + "\"><b>Reply</b></a>";
 	  		tempstr = tempstr + "					</td>";
@@ -926,215 +809,226 @@ function writeComment(feeditem_jo, dom_id)
 	  		writeReplyTD = true;
 	  		tempstr = tempstr + "					</td>";
 	  		tempstr = tempstr + "				</tr>";
-	  //	}
+	  	}
+		else if(drawReply === true && feeditem_jo.depth === 6)
+		{
+			tempstr = tempstr + "				<tr id=\"reply_tr_" + comment_id + "\">";
+	  		tempstr = tempstr + "					<td style=\"font-style:italic;padding:6px;text-align:left\"> ";
+	  		tempstr = tempstr + "						 Thread is at max depth. No more replies allowed.";
+	  		tempstr = tempstr + "					</td>";
+	  		tempstr = tempstr + "				</tr>";
+		}	
 	  	tempstr = tempstr + "			</table>";
 	  	tempstr = tempstr + "		</td>";
-	}
- 	tempstr = tempstr + "	</tr>";
-  	tempstr = tempstr + "</table>"
-  	
-	$("#" + dom_id).html(tempstr);//OK
-  	
-  	if(writeReplyTD === true)
-  		writeCommentForm(comment_id, "reply_td_" + comment_id, "message_div_" + comment_id);
-  	
-	$("[id=author_picture_img_" + comment_id + "]").attr("src", feeditem_jo.author_picture);
-	var left_percentage = 0;
-	var center_percentage = 0;
-	var right_percentage = 0;
-	var ratingcolor = "blue";
-	if(feeditem_jo.author_rating < 0)
-	{
-		ratingcolor = "red";
-		right_percentage = 50;
-		center_percentage = (feeditem_jo.author_rating / -5 * 50);
-		center_percentage = center_percentage|0;
-		left_percentage = 50 - center_percentage;
-	}	
-	else if(feeditem_jo.author_rating == 0)
-	{
-		ratingcolor = "blue";
-		left_percentage = 49;
-		center_percentage = 2;
-		right_percentage = 49;
-	}	
-	else
-	{
-		ratingcolor = "green";
-		left_percentage = 50;
-		center_percentage = feeditem_jo.author_rating / 5 * 50;
-		center_percentage = center_percentage|0;
-		right_percentage = 50 - center_percentage;
-	}	
-	$("[id=author_rating_left_td_" + comment_id + "]").css("width", left_percentage + "%");
-	$("[id=author_rating_center_td_" + comment_id + "]").css("width", center_percentage + "%");
-	$("[id=author_rating_center_td_" + comment_id + "]").css("background-color", ratingcolor);
-	$("[id=author_rating_right_td_" + comment_id + "]").css("width", right_percentage + "%");
-	$("[id=screenname_link_" + comment_id + "]").text(feeditem_jo.author_screenname);
-	$("[id=time_ago_span_" + comment_id + "]").text(feeditem_jo.time_ago);
-	$("[id=comment_likes_count_td_" + comment_id + "]").text(feeditem_jo.likes.length);
-	$("[id=comment_dislikes_count_td_" + comment_id + "]").text(feeditem_jo.dislikes.length);
-	
-	var linkified_div = getLinkifiedDiv(feeditem_jo.text);
-	$("[id=comment_text_td_" + comment_id + "]").html(linkified_div);
-	
-	chrome.runtime.sendMessage({method: "getSavedText"}, function(response) {
-		 var saved_text = response.saved_text;
-		 var saved_text_dom_id = response.saved_text_dom_id;
-		 var charsleft = 500;
-		 if(saved_text_dom_id !== null && saved_text_dom_id === ("comment_textarea_" + comment_id) 
-				 && saved_text !== null && saved_text.trim().length > 0)
-		 {
-			 charsleft = 500 -  saved_text.length;
-			 $("#comment_textarea_" + comment_id).text(saved_text);
-		 }
-		 else	
-		 {
-			 $("#comment_textarea_" + comment_id).css("color", "#aaa");
-			 $("#comment_textarea_" + comment_id).text("Say something...");
-		 }
-		 $("#charsleft_" + comment_id).text(charsleft);
-	 });	 
-	
-	$("a").click(function(event) {
-		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
+		tempstr = tempstr + "	</tr>";
+	  	tempstr = tempstr + "</table>"
+	  	
+		$("#" + dom_id).html(tempstr);//OK
+	  	
+	  	if(writeReplyTD === true)
+	  		writeCommentForm(comment_id, "reply_td_" + comment_id, "message_div_" + comment_id);
+	  	
+		$("[id=author_picture_img_" + comment_id + "]").attr("src", feeditem_jo.author_picture);
+		var left_percentage = 0;
+		var center_percentage = 0;
+		var right_percentage = 0;
+		var ratingcolor = "blue";
+		if(feeditem_jo.author_rating < 0)
 		{
-			event.processed = true;
-			var c = $(this).attr('class');
-			if(c == "newtab")
+			ratingcolor = "red";
+			right_percentage = 50;
+			center_percentage = (feeditem_jo.author_rating / -5 * 50);
+			center_percentage = center_percentage|0;
+			left_percentage = 50 - center_percentage;
+		}	
+		else if(feeditem_jo.author_rating == 0)
+		{
+			ratingcolor = "blue";
+			left_percentage = 49;
+			center_percentage = 2;
+			right_percentage = 49;
+		}	
+		else
+		{
+			ratingcolor = "green";
+			left_percentage = 50;
+			center_percentage = feeditem_jo.author_rating / 5 * 50;
+			center_percentage = center_percentage|0;
+			right_percentage = 50 - center_percentage;
+		}	
+		$("[id=author_rating_left_td_" + comment_id + "]").css("width", left_percentage + "%");
+		$("[id=author_rating_center_td_" + comment_id + "]").css("width", center_percentage + "%");
+		$("[id=author_rating_center_td_" + comment_id + "]").css("background-color", ratingcolor);
+		$("[id=author_rating_right_td_" + comment_id + "]").css("width", right_percentage + "%");
+		$("[id=screenname_link_" + comment_id + "]").text(feeditem_jo.author_screenname);
+		$("[id=time_ago_span_" + comment_id + "]").text(feeditem_jo.time_ago);
+		$("[id=comment_likes_count_td_" + comment_id + "]").text(feeditem_jo.likes.length);
+		$("[id=comment_dislikes_count_td_" + comment_id + "]").text(feeditem_jo.dislikes.length);
+		
+		var linkified_div = getLinkifiedDiv(feeditem_jo.text);
+		$("[id=comment_text_td_" + comment_id + "]").html(linkified_div);
+		
+		chrome.runtime.sendMessage({method: "getSavedText"}, function(response) {
+			 var saved_text = response.saved_text;
+			 var saved_text_dom_id = response.saved_text_dom_id;
+			 var charsleft = 500;
+			 if(saved_text_dom_id !== null && saved_text_dom_id === ("comment_textarea_" + comment_id) 
+					 && saved_text !== null && saved_text.trim().length > 0)
+			 {
+				 charsleft = 500 -  saved_text.length;
+				 $("#comment_textarea_" + comment_id).text(saved_text);
+			 }
+			 else	
+			 {
+				 $("#comment_textarea_" + comment_id).css("color", "#aaa");
+				 $("#comment_textarea_" + comment_id).text("Say something...");
+			 }
+			 $("#charsleft_" + comment_id).text(charsleft);
+		 });	 
+		
+		$("a").click(function(event) {
+			if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
 			{
-				var h = $(this).attr('href');
-				if(chrome.tabs)
-					doNewtabClick(h);
-				else
-					window.location = h;
+				event.processed = true;
+				var c = $(this).attr('class');
+				if(c == "newtab")
+				{
+					var h = $(this).attr('href');
+					if(chrome.tabs)
+						doNewtabClick(h);
+					else
+						window.location = h;
+				}
 			}
-		}
-	});
-	
-	if(user_jo !== null)
-	{
-		$.ajax({
-			type: 'GET',
-	        url: endpoint,
-	        data: {
-	            method: "haveILikedThisComment",
-	            id: feeditem_jo.id,
-	            email: email,
-	            this_access_token: this_access_token
-	        },
-	        dataType: 'json',
-	        async: true,
-	        success: function (data, status) {
-	        	if (data.response_status === "error")
-	        	{
-	        		// fail silently
-	        	}
-	        	else if (data.response_status === "success")
-	        	{
-	        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
-	        			$("#like_img_" + comment_id).attr("src", chrome.extension.getURL("images/like_arrow_liked.png"));
-	        	}
-	        },
-	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
-	            console.log(textStatus, errorThrown);
-	        } 
 		});
 		
-		$.ajax({
-			type: 'GET',
-	        url: endpoint,
-	        data: {
-	            method: "haveIDislikedThisComment",
-	            id: feeditem_jo.id,
-	            email: email,
-	            this_access_token: this_access_token
-	        },
-	        dataType: 'json',
-	        async: true,
-	        success: function (data, status) {
-	        	if (data.response_status === "error")
-	        	{
-	        		// fail silently
-	        	}
-	        	else if (data.response_status === "success")
-	        	{
-	        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
-	        			$("#dislike_img_" + comment_id).attr("src", chrome.extension.getURL("images/dislike_arrow_disliked.png"));
-	        	}
-	        },
-	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
-	            console.log(textStatus, errorThrown);
-	        } 
-		});
-	}
-	
-	$("#reply_link_" + comment_id).click({value: comment_id}, function(event) { 
-		event.preventDefault();
-		if (user_jo !== null)
+		if(user_jo !== null)
 		{
-			if(!$("#reply_td_" + event.data.value).is(":visible"))
+			$.ajax({
+				type: 'GET',
+		        url: endpoint,
+		        data: {
+		            method: "haveILikedThisComment",
+		            id: feeditem_jo.id,
+		            email: email,
+		            this_access_token: this_access_token
+		        },
+		        dataType: 'json',
+		        async: true,
+		        success: function (data, status) {
+		        	if (data.response_status === "error")
+		        	{
+		        		// fail silently
+		        	}
+		        	else if (data.response_status === "success")
+		        	{
+		        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
+		        			$("#like_img_" + comment_id).attr("src", chrome.extension.getURL("images/like_arrow_liked.png"));
+		        	}
+		        },
+		        error: function (XMLHttpRequest, textStatus, errorThrown) {
+		        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+		            console.log(textStatus, errorThrown);
+		        } 
+			});
+			
+			$.ajax({
+				type: 'GET',
+		        url: endpoint,
+		        data: {
+		            method: "haveIDislikedThisComment",
+		            id: feeditem_jo.id,
+		            email: email,
+		            this_access_token: this_access_token
+		        },
+		        dataType: 'json',
+		        async: true,
+		        success: function (data, status) {
+		        	if (data.response_status === "error")
+		        	{
+		        		// fail silently
+		        	}
+		        	else if (data.response_status === "success")
+		        	{
+		        		if(typeof data.response_value !== "undefined" && data.response_value !== null && data.response_value === true)
+		        			$("#dislike_img_" + comment_id).attr("src", chrome.extension.getURL("images/dislike_arrow_disliked.png"));
+		        	}
+		        },
+		        error: function (XMLHttpRequest, textStatus, errorThrown) {
+		        	// if someone clicks this and there's a communication error, just fail silently as if nothing happened.
+		            console.log(textStatus, errorThrown);
+		        } 
+			});
+		}
+		
+		$("#reply_link_" + comment_id).click({value: comment_id}, function(event) { 
+			event.preventDefault();
+			if (user_jo !== null)
 			{
-				$("#reply_td_" + event.data.value).show();
-				var currtext = $("#comment_textarea_" + event.data.value).val();
-				if(currtext !== "Say something...")
-			 	{
-					// textarea has a scrollbar due to previous text, grow it
-					//alert("comment_textarea_" + event.data.value);
-					if(has_scrollbar("comment_textarea_" + event.data.value))
-					{
-						$("#comment_textarea_" + event.data.value).trigger("keyup");
-					}
-			 	}
+				if(!$("#reply_td_" + event.data.value).is(":visible"))
+				{
+					$("#reply_td_" + event.data.value).show();
+					var currtext = $("#comment_textarea_" + event.data.value).val();
+					if(currtext !== "Say something...")
+				 	{
+						// textarea has a scrollbar due to previous text, grow it
+						//alert("comment_textarea_" + event.data.value);
+						if(has_scrollbar("comment_textarea_" + event.data.value))
+						{
+							$("#comment_textarea_" + event.data.value).trigger("keyup");
+						}
+				 	}
+				}
+				else
+				{
+					$("#reply_td_" + event.data.value).hide();
+				}
 			}
 			else
 			{
-				$("#reply_td_" + event.data.value).hide();
+				displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
 			}
-		}
-		else
-		{
-			displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
-		}
-	});
+		});
 
-	$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
-		event.preventDefault();
-		likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
-	});
-		 
-	$("#dislike_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
-		event.preventDefault();
-		likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
-	});
+		$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+			event.preventDefault();
+			likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
+		});
+			 
+		$("#dislike_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+			event.preventDefault();
+			likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
+		});
+		$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+			event.preventDefault();
+			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
+			if (confirmbox === true)
+				hideComment(event.data.value);
+		});
+		
+		$("[id=screenname_link_"+ comment_id + "]").click({value: feeditem_jo}, function(event) { 
+			event.preventDefault();
+			viewProfile(event.data.value.author_screenname);
+		});
+	}
 
-	$("#comment_nuke_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
-		event.preventDefault();
-		var confirmbox = confirm("Nuke comment?\n(This action is permanent and risky.)");
-		if (confirmbox === true)
-			nukeComment(event.data.value);
-	});
+	if(user_jo !== null && typeof user_jo.permission_level !== "undefined" && user_jo.permission_level !== null && user_jo.permission_level === "admin")
+	{
+		$("#comment_nuke_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+			event.preventDefault();
+			var confirmbox = confirm("Nuke comment?\n(This action is permanent and risky.)");
+			if (confirmbox === true)
+				nukeComment(event.data.value);
+		});
 
-	$("#comment_megadownvote_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
-		event.preventDefault();
-		var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
-		if (confirmbox === true)
-			megadownvoteComment(event.data.value);
-	});
-
-	$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
-		event.preventDefault();
-		var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
-		if (confirmbox === true)
-			hideComment(event.data.value);
-	});
+		$("#comment_megadownvote_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+			event.preventDefault();
+			var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
+			if (confirmbox === true)
+				megadownvoteComment(event.data.value);
+		});
+	}
 	
-	$("[id=screenname_link_"+ comment_id + "]").click({value: feeditem_jo}, function(event) { 
-		event.preventDefault();
-		viewProfile(event.data.value.author_screenname);
-	});
 }
 
 // to submit a comment, we only need to know the id of the parent to which this new comment will be attached, right?
@@ -1216,15 +1110,29 @@ function submitComment(parent, message_element) // submits comment and updates t
 					  //alert(response.message);
 				 });
 	        	
-	        	//if(parent.indexOf(".") !== -1) // toplevel
-	        	//	displayMessage("Comment posted.", "black", "utility_message_td");
-	        	//else 
 	        	displayMessage("Comment posted.", "black", message_element);
 				
-	        	if(parent.length !== 11) // toplevel
-					doThreadItem(data.comment.id, parent, "newcomment");
-				else
-					doThreadItem(data.comment.id, data.comment.parent, "reply");
+	        	if(data.comment.depth === 1) // if the returning comment depth === 1, it's a toplevel on tabmode=thread
+	        	{	
+	        		writeUnifiedCommentContainer(data.comment.id, "main_div_" + currentURLhash, "prepend");
+	        		doThreadItem(data.comment.id, "comment_div_" + data.comment.id);
+	        	}
+	        	else if(tabmode === "notifications") // this is a reply within notifications tab
+	        	{
+	        		if(parent.endsWith("C"))
+	        		{
+	        			$("#reply_tr_" + parent).hide();
+	        			var indexofC = parent.lastIndexOf("C"); // should always be = 10 (11 chars, last char)
+	        			parent = parent.substring(0,indexofC) + "R";
+	        			doThreadItem(data.comment.id, "child_div_" + parent);
+		        		$("#child_div_" + parent).show();
+	        		}
+	        	}	
+	        	else
+	        	{
+	        		writeUnifiedCommentContainer(data.comment.id, "container_div_" + parent, "after");
+	        		doThreadItem(data.comment.id, "comment_div_" + data.comment.id);
+	        	}
 	        }
 	    },
 	    error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -1237,7 +1145,7 @@ function submitComment(parent, message_element) // submits comment and updates t
 	});
 }
 
-function hideComment(inc_id) // submits comment and updates thread
+function hideComment(inc_id) 
 {
 	$.ajax({
 	    type: 'GET',
@@ -1266,7 +1174,7 @@ function hideComment(inc_id) // submits comment and updates thread
 	        {
 	        	displayMessage("Comment hidden.", "black", "message_div_" + inc_id);
 	        	if(tabmode === "thread")
-	        		doThreadItem(data.comment.id, data.comment.parent, "reply");
+	        		doThreadItem(data.comment.id, "comment_div_" + data.comment.id);
 	        	if(tabmode === "past")
 	        		doPastTab();
 	        }
@@ -1282,7 +1190,7 @@ function hideComment(inc_id) // submits comment and updates thread
 	});
 }
 
-function nukeComment(inc_id) // submits comment and updates thread
+function nukeComment(inc_id) 
 {
 	$.ajax({
 	    type: 'GET',
@@ -1310,7 +1218,7 @@ function nukeComment(inc_id) // submits comment and updates thread
 	        else if (data.response_status === "success")
 	        {
 	        	displayMessage("Nuke process underway.", "black", "message_div_" + inc_id);
-				doThreadItem(data.comment.id, data.comment.parent, "reply");
+				//doThreadItem(data.comment.id, data.comment.parent, "reply"); < -- why would we try to load what we just nuked?
 	        }
 	        else
 	        {
@@ -1324,7 +1232,7 @@ function nukeComment(inc_id) // submits comment and updates thread
 	});
 }
 
-function megadownvoteComment(inc_id) // submits comment and updates thread
+function megadownvoteComment(inc_id) 
 {
 	$.ajax({
 	    type: 'GET',

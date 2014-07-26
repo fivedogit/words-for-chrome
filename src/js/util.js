@@ -54,6 +54,71 @@ function hashFnv32a(str, asString, seed) {
     return hval >>> 0;
 }
 
+function getLinkifiedDiv(text) // also replaces line breaks with br
+{
+	var linkified_div = document.createElement('div');
+	linkified_div.style.textAlign = "left";
+	//linkified_div.style.padding = "6px";
+	linkified_div.textContent = "";
+	var m;
+	var re = /(\b(https?):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	var last_index = 0;
+	var matches_found = 0;
+	var current_text = "";
+	var current_textnode;
+	var current_a;
+	while (m = re.exec(text)) {
+		matches_found = matches_found + 1;
+		current_text = text.substring(last_index, m.index);
+		if(current_text.indexOf("\n") === -1)
+		{
+			current_textnode = document.createTextNode(current_text);
+			linkified_div.appendChild(current_textnode);
+		}
+		else
+		{
+			var arr = current_text.split("\n");
+			var chunkcounter = 0;
+			while(chunkcounter < arr.length)
+			{
+				current_textnode = document.createTextNode(arr[chunkcounter]);
+				linkified_div.appendChild(current_textnode);
+				if(chunkcounter < (arr.length - 1)) // if not the last one
+					linkified_div.appendChild(document.createElement('br'));
+				chunkcounter++;
+			}	
+		}	
+		current_a = document.createElement('a');
+		current_a.href = m[0];
+		current_a.textContent = getSmartCutURL(m[0],60); 
+		current_a.className = "newtab";
+		linkified_div.appendChild(current_a);
+		last_index = m.index + m[0].length;
+	} 
+	if(matches_found === 0)
+		current_text = text;
+	else
+		current_text = text.substring(last_index);
+	if(current_text.indexOf("\n") == -1)
+	{
+		current_textnode = document.createTextNode(current_text);
+		linkified_div.appendChild(current_textnode);
+	}
+	else
+	{
+		var arr = current_text.split("\n");
+		var chunkcounter = 0;
+		while(chunkcounter < arr.length)
+		{
+			current_textnode = document.createTextNode(arr[chunkcounter]);
+			linkified_div.appendChild(current_textnode);
+			if(chunkcounter < (arr.length - 1)) // if not the last one
+				linkified_div.appendChild(document.createElement('br'));
+			chunkcounter++;
+		}	
+	}	
+	return linkified_div;
+}
 
 function getHost(loc_url)
 {
@@ -330,14 +395,6 @@ chrome.tabs.query({url: h}, function(tabs) {
 		 });
 	 }
 });
-}
-
-function isValidThreadItemId(inc_id)
-{
-	// before innerHTML, make sure this is a harmless 11-char string of letters and numbers ending with the letter C (for "comment").
-	if(inc_id.length === 11 && /^[A-Za-z0-9]+C$/.test(inc_id))
-		return true;
-	return false;
 }
 
 /***

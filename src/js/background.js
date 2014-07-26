@@ -21,9 +21,6 @@ chrome.runtime.onMessage.addListener(
 	  }  
 	  else if(request.method == "redrawButton")
 	  {
-		  //alert("redrawing button");
-		  //alert(JSON.stringify(t_jo));
-		  //alert("with " + t_jo.top + " and " + t_jo.bottom);
 		  if(typeof t_jo === "undefined" || t_jo === null || typeof t_jo.top === "undefined" || typeof t_jo.bottom === "undefined" || t_jo.top === null || t_jo.bottom === null)
 			  drawTTUButton("0","1Y");
 		  else
@@ -31,38 +28,19 @@ chrome.runtime.onMessage.addListener(
 	  }
 	  else if(request.method == "setSavedText")
 	  {
-		  //alert("saving text", request.saved_text);
 		  docCookies.setItem("saved_text", request.saved_text);
 		  docCookies.setItem("saved_text_dom_id", request.saved_text_dom_id);
 	  }  
 	  else if(request.method == "getSavedText")
 	  {
-		 //alert("bg says: getting saved text");
 		 var saved_text = docCookies.getItem("saved_text");
 		 var saved_text_dom_id = docCookies.getItem("saved_text_dom_id");
-		// alert("bg says: " + saved_text_dom_id + " and " + saved_text);
 		 sendResponse({saved_text: saved_text, saved_text_dom_id: saved_text_dom_id});
 	  }  
 	  else if(request.method == "setLastTabID") // don't need a getter for this as the receiver page can get this directly from cookie
 	  {
 		  docCookies.setItem("last_tab_id", request.last_tab_id);
 	  }  
-	  else if(request.method == "getReplaceTechcrunch") // don't need a getter for this as the receiver page can get this directly from cookie
-	  {
-		  if(typeof user_jo !== "undefined" && user_jo !== null && typeof user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace === "no")
-			  sendResponse({techcrunch_replace: "no"});
-		  else
-			  sendResponse({techcrunch_replace: "yes"});
-	  }  
-	/*  else if(request.method == "setFirstRunMessageIndex") // don't need a getter for this as the receiver page can get this directly from cookie
-	  {
-		  docCookies.setItem("firstrun_msg_index", request.firstrun_msg_index);
-	  }  
-	  else if(request.method == "getFirstRunMessageIndex") // don't need a getter for this as the receiver page can get this directly from cookie
-	  {
-		  var firstrun_msg_index = docCookies.getItem("firstrun_msg_index");
-		  sendResponse({firstrun_msg_index: firstrun_msg_index});
-	  }*/  
   });
 
 //need to include this here because it resides in buttongen.js on the extension itself
@@ -179,27 +157,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 	}
 	else if (changeInfo.status === "complete") 
 	{
-		//alert("onupdated complete");
-		chrome.tabs.getSelected(null, function(tab) { // only follow through if the updating tab is the same as the selected tab, don't want background tabs reloading and wrecking stuff
-			if(updatingtab.url === tab.url) // the one that's updating is the one we're looking at. good. proceed
-			{
-				// if the page in the current tab is updating or changing, always do the TC embed check 
-				//if(allowed_hostnames.indexOf(currentHostname) !== -1)
-				if(currentHostname === "www.techcrunch.com")
-				{
-					//alert("updated: " + currentHostname);
-					// if user_jo.tc_replace is not "no", then replace it. (i.e. default is "yes, replace")
-					if(!(typeof user_jo !== "undefined" && user_jo !== null && typeof user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace === "no"))
-					{	
-						chrome.tabs.getSelected(null, function(tab) { 
-							var email = docCookies.getItem("email");
-							var this_access_token = docCookies.getItem("this_access_token");
-							waitAndSend(email,this_access_token);
-						});
-					}
-				}
-			}
-		});
+		//alert("onupdated complete"); (do nothing for now)
 	}
 }); 
 
@@ -214,37 +172,9 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 			currentHostname = getStandardizedHostname(currentURL);
 			drawTTUButton("   ", "   "); // clear out anything that's there now
 			doButtonGen();
-			//if(allowed_hostnames.indexOf(currentHostname) !== -1)
-			if(currentHostname === "www.techcrunch.com")
-			{
-				//alert("activated: " + currentHostname);
-				// if user_jo.tc_replace is not "no", then replace it. (i.e. default is "yes, replace")
-				if(!(typeof user_jo !== "undefined" && user_jo !== null && typeof user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace !== null && user_jo.techcrunch_replace === "no"))
-				{	
-					chrome.tabs.getSelected(null, function(tab) { 
-						var email = docCookies.getItem("email");
-						var this_access_token = docCookies.getItem("this_access_token");
-						waitAndSend(email,this_access_token);
-					});
-				}
-			}
 		}
 	});
 }); 
-
-function waitAndSend(email, this_access_token)
-{
-	setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}else{setTimeout(function(){if(t_jo!==null){andGo(email,this_access_token)}
-	else{
-		//alert("waited, but thread still not ready");
-	}
-	},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150)}},150);
-}
-
-function andGo(email, this_access_token)
-{
-	chrome.tabs.sendMessage(currentId, {action : 'embedWORDS', thread_jo: t_jo, user_jo: user_jo, currentURL: currentURL, email: email, this_access_token: this_access_token, msfe_according_to_backend: msfe_according_to_backend, comcount:comcount}, function(response) { });
-}
 
 function doButtonGen()
 {
@@ -408,7 +338,15 @@ function drawTTUButton(top, bottom) {
  // Specify a 2d drawing context.
  var context = canvas.getContext("2d");
  
- var top_color = "0a9e01"; //<-- TechCrunch green // "4c7dd0";//<-- chrome blue   "29abe2"; <-- original teal-ish color
+ var top_color = "4c7dd0";//<-- chrome blue   "29abe2"; <-- original teal-ish color
+ 
+ // this is not yet implemented on the backend
+if(typeof user_jo !== "undefined" && user_jo !== null && typeof user_jo.actbutton_color !== "undefined" && user_jo.actbutton_color !== null)
+{
+	var isOk  = /(^[0-9A-F]{6}$)|(^[0-9A-F]{3}$)/i.test(user_jo.actbutton_color);
+	if(isOk)
+		top_color = user_jo.actbutton_color;
+}	 
  
  var top_bg_r = "0x" + top_color.substring(0,2);
  var top_bg_g = "0x" + top_color.substring(2,4);
