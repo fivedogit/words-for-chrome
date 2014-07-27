@@ -18,15 +18,17 @@ function doTrendingTab()
 	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	//updateNotificationTabLinkImage();
 
-	$("#utility_header_td").html("Activity across the Web <span id=\"trending_activity_hours_span\"></span>"); //OK
+	$("#utility_header_td").html("Activity across the Web <span id=\"trending_activity_hours_span\"></span><div style=\"padding-top:6px;font-size:11px;font-weight:bold;text-align:center\">Most recent comments</div>"); //OK
 	
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
 	$("#footer_div").html("");
-	//$("#main_div_" + currentURLhash).before("<div id=\"most_recent_comments_div\">Most recent comments</div>");
-	//drawMostRecentComments(10, "most_recent_comments_div");
-	drawTrendingTable(null, 20, "main_div_" + currentURLhash);
+	$("#main_div_" + currentURLhash).html("");
+	$("#main_div_" + currentURLhash).append("<div id=\"trending_activity\">Trending activity</div>");
+	$("#main_div_" + currentURLhash).prepend("<div id=\"most_recent_comments_div\"></div>");
+	drawMostRecentComments(3, "most_recent_comments_div");
+	drawTrendingTable(null, 20, "trending_activity");
 }
 
 function drawMostRecentComments(num_to_draw, dom_id)
@@ -42,17 +44,24 @@ function drawMostRecentComments(num_to_draw, dom_id)
 		success: function (data, status) {
 			if (data.response_status === "success") 
 			{
-				var earplug = "";
 				var mrc_ja = data.mrc;
+				
+				var sorted_mrc_ja = mrc_ja;
+				sorted_mrc_ja.sort(function(a,b){
+					a = fromOtherBaseToDecimal(62, a.substring(0,7));
+					b = fromOtherBaseToDecimal(62, b.substring(0,7));
+					return b - a;
+				});
+				
+				mrc_ja = sorted_mrc_ja;
+				
 				var x = 0;
 				while(x < mrc_ja.length && x < num_to_draw) // num_to_draw just takes the first few. Should never be more than 25.
 				{
-					earplug = earplug + mrc_ja[x] + " - ";
+					writeUnifiedCommentContainer(mrc_ja[x], "most_recent_comments_div", "append");
+					doTrendingItem(mrc_ja[x], "comment_div_" + mrc_ja[x]);
 					x++;
 				}	
-				if(earplug.length > 0)
-					earplug = earplug.substring(0,earplug.length - 3);
-				$("#" + dom_id).text(earplug);
 				return;
 			}
 			else if (data.response_status === "error") 
@@ -74,13 +83,71 @@ function drawMostRecentComments(num_to_draw, dom_id)
 	});
 }
 
+function doTrendingItem(comment_id, dom_id) // type = "initialpop", "newcomment", "reply"
+{
+	var container_id = comment_id;
+	$.ajax({
+        type: 'GET',
+        url: endpoint,
+        data: {
+            method: "getFeedItem",
+            id: comment_id
+        },
+        dataType: 'json',
+        async: true,
+        success: function (data, status) {
+        	if(data.response_status === "success")// && tabmode === "thread")
+        	{
+        		var item_jo = data.item;
+        		var url_to_use = getSmartCutURL(data.item.pseudo_url,50);
+        		var headerstring = "";
+        		headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + comment_id + "\">" + data.item.author_screenname + "</a> commented on: ";
+        		headerstring = headerstring + "<img id=\"google_favicon_" + comment_id + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + comment_id + "\" href=\"#\"></a>";
+        		$("#header_div_" + comment_id).html(headerstring);//OK
+        		$("#header_div_" + comment_id).show();
+    			$("#google_favicon_" + comment_id).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
+    			$("#pseudo_link_" + comment_id).attr("href", item_jo.pseudo_url);
+    			$("#pseudo_link_" + comment_id).text(url_to_use);
+    			
+        		writeComment(container_id, data.item, dom_id, true, true, false); // l/d, delete button (if user authored it), reply
+        		
+        		/*if(data.item.children && data.item.children.length > 0) // if this is a new reply on the notifications tab, it'll never have children, so no worry here
+        		{
+        			var tempcomments = data.item.children;
+					tempcomments.sort(function(a,b){
+						var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
+						var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
+						return tsa - tsb;
+					});
+					data.item.children = tempcomments;
+					for(var y=0; y < data.item.children.length; y++) 
+		    		{  
+						//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
+						writeUnifiedCommentContainer(data.item.children[y], "container_div_" + comment_id, "after");
+						doThreadItem(data.item.children[y], "comment_div_" + data.item.children[y]);
+		    		}
+        		}*/
+        	}
+        	else
+        	{ 
+        		// fail silently
+        	}	
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        	displayMessage("Unable to retrieve feed item. (ajax)", "red", "message_div_" + comment_id);
+        	console.log(textStatus, errorThrown);
+        }
+	});
+}		
+
+
 function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
 {
 	var compstr = "";  // main div string
 	if(hostname_or_null === null)
 	{
-		$("#utility_header_td").html("Activity across the Web <span id=\"trending_activity_hours_span\"></span>"); //OK
 		compstr = compstr + "<table style=\"background-color:#fff;display:none\" id=\"trending_table\">";
+		compstr = compstr + "	<tr style=\"background-color:#ddd\">";
 	}	
 	else
 	{
@@ -90,8 +157,8 @@ function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
 		compstr = compstr + "			Activity for <img src=\"http://www.google.com/s2/favicons?domain=" + hostname_or_null + "\" style=\"vertical-align:middle\"> " + hostname_or_null + " <span id=\"trending_activity_hours_span\"></span>";
 		compstr = compstr + "		</td>";
 		compstr = compstr + "	</tr>";
+		compstr = compstr + "	<tr>";
 	}	
-	compstr = compstr + "	<tr>";
 	compstr = compstr + "		<td style=\"width:50%;padding:5px;vertical-align:top;text-align:center;font-weight:bold\">";
 	compstr = compstr + "Most active pages";
 	compstr = compstr + "		</td>";

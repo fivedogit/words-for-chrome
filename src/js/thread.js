@@ -661,17 +661,17 @@ function doThreadItem(comment_id, dom_id) // type = "initialpop", "newcomment", 
         	if(data.response_status === "success")// && tabmode === "thread")
         	{
         		
-        		if(tabmode === "notifications")
+        		/*if(tabmode === "notifications") // why would this ever fire in notifications mode? Shouldn't it always call doNotificationItem?
         		{
         			writeComment(container_id, data.item, dom_id, false, true, false); // l/d, delete button (if user authored it), reply
         			$("#" + dom_id).css("margin-left", "60px");
         		}
         		else
-        		{
+        		{*/
         			writeComment(container_id, data.item, dom_id, true, true, true); // l/d, delete button (if user authored it), reply
         			var indent = (data.item.depth-1) * 30;
             		$("#" + dom_id).css("margin-left", indent + "px");
-        		}
+        		//}
         		
         		
         		if(data.item.children && data.item.children.length > 0) // if this is a new reply on the notifications tab, it'll never have children, so no worry here
@@ -1186,6 +1186,8 @@ function hideComment(inc_id)
 	        		doThreadItem(data.comment.id, "comment_div_" + data.comment.id);
 	        	if(tabmode === "past")
 	        		doPastTab();
+	        	if(tabmode === "trending")
+	        		doTrendingTab();
 	        }
 	        else
 	        {
