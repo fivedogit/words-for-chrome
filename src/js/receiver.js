@@ -177,68 +177,77 @@ else
 	else if(code === null)
 	{
 		//alert("receiver: no code");
-		displayMessage("Requesting login permission from " + capitalized_login_type + ". A popup window should appear momentarily.", "black");
-		$("#progress_tr").show();
+		
+		
 		
 		if(login_type === "google")
 		{
-			var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
-			var interactive = true;
-			var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
-			
-			var options = {
-			          'interactive': interactive,
-			          url:'https://accounts.google.com/o/oauth2/auth?' +
-				      'scope=profile email' +
-				      '&response_type=code' +
-				      '&client_id=' + client_id +
-				      '&redirect_uri=' + encodeURIComponent(redirectUri0)
-			        }
-			
-			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
-				if (chrome.runtime.lastError) { // if google and the user clicks the X to close the perm window
-					$("#progress_tr").hide();
-					alert(JSON.stringify(chrome.runtime.lastError));
-					var google_close_message = "";
-					google_close_message = google_close_message + "<div style=\"width:360px;padding:15px\">";
-					google_close_message = google_close_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
-					google_close_message = google_close_message + "		You closed the permission window.";
-					google_close_message = google_close_message + "	</div>";
-					google_close_message = google_close_message + "	<div style=\"font-size:11px;padding-bottom:15px;font-style:italic\">";
-					google_close_message = google_close_message + "		To use a different Google account, <b>restart your browser</b> and then log back in.";
-					google_close_message = google_close_message + "	</div>";
-					google_close_message = google_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
-					google_close_message = google_close_message + "</div>";
-					$("#message_td").html(google_close_message);
-					$("#close_this_tab_link").click( function (event) { event.preventDefault();
-						chrome.tabs.getSelected(null, function(tab) { 
-							var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
-							chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
-							docCookies.removeItem("last_tab_id");
-							chrome.tabs.remove(tab.id);
+			displayMessage("Logging in with Google. A popup window like this may appear. (Don't worry. It's safe.)", "black");
+			$("#progress_tr").html("<td><table style=\"margin-right:auto;margin-left:auto;\"><tr><td style=\"width:220px;\"><img style=\"border:1px solid black\" src=\"images/google_popup.jpg\"></td><td style=\"vertical-align:middle;text-align:center;padding-left:10px\"><a href=\"#\" id=\"confirm_google_popup_link\">Ok. I got it. >></a></td></tr></table></td>");
+			$("#progress_tr").show();
+			$("#confirm_google_popup_link").click(function(event){ event.preventDefault();
+				var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
+				var interactive = true;
+				var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
+				
+				var options = {
+				          'interactive': interactive,
+				          url:'https://accounts.google.com/o/oauth2/auth?' +
+					      'scope=profile email' +
+					      '&response_type=code' +
+					      '&client_id=' + client_id +
+					      '&redirect_uri=' + encodeURIComponent(redirectUri0)
+				        }
+				
+				chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
+					if (chrome.runtime.lastError) { // if google and the user clicks the X to close the perm window
+						$("#progress_tr").hide();
+						//alert(JSON.stringify(chrome.runtime.lastError));
+						var google_close_message = "";
+						google_close_message = google_close_message + "<div style=\"width:360px;padding:15px\">";
+						google_close_message = google_close_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
+						google_close_message = google_close_message + "		You closed the permission window.";
+						google_close_message = google_close_message + "	</div>";
+						google_close_message = google_close_message + "	<div style=\"font-size:11px;padding-bottom:15px;font-style:italic\">";
+						google_close_message = google_close_message + "		To use a different Google account, <b>restart your browser</b> and then log back in.";
+						google_close_message = google_close_message + "	</div>";
+						google_close_message = google_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
+						google_close_message = google_close_message + "</div>";
+						$("#message_td").html(google_close_message);
+						$("#close_this_tab_link").click( function (event) { event.preventDefault();
+							chrome.tabs.getSelected(null, function(tab) { 
+								var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+								chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+								docCookies.removeItem("last_tab_id");
+								chrome.tabs.remove(tab.id);
+							});
 						});
-					});
-					return;
-				}
-				var matches = redirectUri1.match(redirectRe);
-				if (matches && matches.length > 1)
-				{
-					//alert("successful redirect URI match");
-					var values = parseRedirectFragment(matches[1]);
-					window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=google&code=" + values.code + "&redirect_uri=" + encodeURIComponent(redirectUri0);
-				}
-				else
-				{
-					alert("unsuccessful redirect URI match");
-				}	 
-			 });
+						return;
+					}
+					var matches = redirectUri1.match(redirectRe);
+					if (matches && matches.length > 1)
+					{
+						//alert("successful redirect URI match");
+						var values = parseRedirectFragment(matches[1]);
+						window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=google&code=" + values.code + "&redirect_uri=" + encodeURIComponent(redirectUri0);
+					}
+					else
+					{
+						alert("unsuccessful redirect URI match");
+					}	 
+				 });
+			});
 		}
 		else if(login_type === "facebook")
 		{
-			var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
-			var interactive = true;
-			var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
-			var options = {
+			displayMessage("Logging in with Facebook. A popup window like this may appear. (Don't worry. It's safe.)", "black");
+			$("#progress_tr").html("<td><table style=\"margin-right:auto;margin-left:auto;\"><tr><td><img style=\"border:1px solid black\" src=\"images/fb_popup.jpg\"></td><td style=\"vertical-align:middle;text-align:center;padding-left:10px\"><a href=\"#\" id=\"confirm_facebook_popup_link\">Ok. I got it. >></a></td></tr></table></td>");
+			$("#progress_tr").show();
+			$("#confirm_facebook_popup_link").click(function(event){ event.preventDefault();
+				var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
+				var interactive = true;
+				var redirectRe = new RegExp(redirectUri0 + '[#\?](.*)');
+				var options = {
 			          'interactive': interactive,
 			          url:'https://www.facebook.com/dialog/oauth?client_id=' + client_id +
 			              '&reponse_type=code' +
@@ -247,42 +256,43 @@ else
 			              '&redirect_uri=' + encodeURIComponent(redirectUri0)
 			        }
 			
-			chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
-				if (chrome.runtime.lastError) {
-					$("#progress_tr").hide();
-					//alert("error=" + JSON.stringify(chrome.runtime.lastError));
-					var facebook_close_message = "";
-					facebook_close_message = facebook_close_message + "<div style=\"width:360px;padding:15px\">";
-					facebook_close_message = facebook_close_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
-					facebook_close_message = facebook_close_message + "		You closed the permission window.";
-					facebook_close_message = facebook_close_message + "	</div>";
-					facebook_close_message = facebook_close_message + "	<div style=\"font-size:11px;padding-bottom:15px;font-style:italic\">";
-					facebook_close_message = facebook_close_message + "		To use a different Facebook account, <b>restart your browser</b> and then log back in.";
-					facebook_close_message = facebook_close_message + "	</div>";
-					facebook_close_message = facebook_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
-					facebook_close_message = facebook_close_message + "</div>";
-					$("#message_td").html(facebook_close_message);
-					$("#close_this_tab_link").click( function (event) { event.preventDefault();
+				chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
+					if (chrome.runtime.lastError) {
+						$("#progress_tr").hide();
+						//alert("error=" + JSON.stringify(chrome.runtime.lastError));
+						var facebook_close_message = "";
+						facebook_close_message = facebook_close_message + "<div style=\"width:360px;padding:15px\">";
+						facebook_close_message = facebook_close_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
+						facebook_close_message = facebook_close_message + "		You closed the permission window.";
+						facebook_close_message = facebook_close_message + "	</div>";
+						facebook_close_message = facebook_close_message + "	<div style=\"font-size:11px;padding-bottom:15px;font-style:italic\">";
+						facebook_close_message = facebook_close_message + "		To use a different Facebook account, <b>restart your browser</b> and then log back in.";
+						facebook_close_message = facebook_close_message + "	</div>";
+						facebook_close_message = facebook_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
+						facebook_close_message = facebook_close_message + "</div>";
+						$("#message_td").html(facebook_close_message);
+						$("#close_this_tab_link").click( function (event) { event.preventDefault();
 						chrome.tabs.getSelected(null, function(tab) { 
 							var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
 							chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
 							docCookies.removeItem("last_tab_id");
 							chrome.tabs.remove(tab.id);
 						});
-					});
+						});
 					return;
-				}
-				var matches = redirectUri1.match(redirectRe);
-				if (matches && matches.length > 1)
-				{
-					//alert("successful redirect URI match");
-					var values = parseRedirectFragment(matches[1]);
-					window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=facebook&redirect_uri=" + encodeURIComponent(redirectUri0) + "&code=" + values.code;
-				}
-				else
-				{
-					alert("unsuccessful redirect URI match");
-				}	 
+					}
+					var matches = redirectUri1.match(redirectRe);
+					if (matches && matches.length > 1)
+					{	
+						//alert("successful redirect URI match");
+						var values = parseRedirectFragment(matches[1]);
+						window.location = "chrome-extension://" + chrome.runtime.id + "/receiver.html?login_type=facebook&redirect_uri=" + encodeURIComponent(redirectUri0) + "&code=" + values.code;
+					}
+					else
+					{
+						alert("unsuccessful redirect URI match");
+					}	 
+				});
 			});
 		}	
 		else
