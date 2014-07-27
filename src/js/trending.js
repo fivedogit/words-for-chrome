@@ -110,23 +110,6 @@ function doTrendingItem(comment_id, dom_id) // type = "initialpop", "newcomment"
     			$("#pseudo_link_" + comment_id).text(url_to_use);
     			
         		writeComment(container_id, data.item, dom_id, true, true, false); // l/d, delete button (if user authored it), reply
-        		
-        		/*if(data.item.children && data.item.children.length > 0) // if this is a new reply on the notifications tab, it'll never have children, so no worry here
-        		{
-        			var tempcomments = data.item.children;
-					tempcomments.sort(function(a,b){
-						var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
-						var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
-						return tsa - tsb;
-					});
-					data.item.children = tempcomments;
-					for(var y=0; y < data.item.children.length; y++) 
-		    		{  
-						//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
-						writeUnifiedCommentContainer(data.item.children[y], "container_div_" + comment_id, "after");
-						doThreadItem(data.item.children[y], "comment_div_" + data.item.children[y]);
-		    		}
-        		}*/
         	}
         	else
         	{ 

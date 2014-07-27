@@ -1271,7 +1271,7 @@ function megadownvoteComment(inc_id)
 	        else if (data.response_status === "success")
 	        {
 	        	displayMessage("megadownvoteComment process underway.", "black", "message_div_" + inc_id);
-				doThreadItem(data.comment.id, data.comment.parent, "reply");
+				//doThreadItem(data.comment.id, data.comment.parent, "reply");
 	        }
 	        else
 	        {
@@ -1331,10 +1331,16 @@ function likeOrDislikeComment(id, like_or_dislike)
 				else if (data.response_status === "success")
 				{
 					if (like_or_dislike === "like")
+					{
 						displayMessage("Like recorded.", "black", "message_div_" + id);
+						$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_arrow_liked.png"));
+					}
 					else
+					{	
 						displayMessage("Dislike recorded.", "black", "message_div_" + id);
-					doThreadItem(data.parent.id, data.parent.parent, "reply"); // reload the comment this like is attached to and attach it to the parent's parent
+						$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow_disliked.png"));
+					}	
+					doThreadItem(data.parent.id, "comment_div_" + data.parent.id); // reload the comment this like is attached to and attach it to the parent's parent
 				}
 				else
 				{
