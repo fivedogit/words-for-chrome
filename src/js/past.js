@@ -105,6 +105,7 @@ function getPastComments()
 
 function doPastCommentItem(item_id, dom_id)
 {
+	var container_id = item_id;
 	var item_random = makeid();
 	var item_jo = null;
 	var fids = "";
@@ -144,7 +145,7 @@ function doPastCommentItem(item_id, dom_id)
 			$("#pseudo_link_" + item_random).attr("href", item_jo.pseudo_url);
 			$("#pseudo_link_" + item_random).text(url_to_use);
 			$("#you_wrote_" + item_random).text("You wrote");
-    		writeComment(item_jo, "pastcomment_body_td_" + item_random, false, true, false); // l/d, delete button, reply 
+    		writeComment(container_id, item_jo, "pastcomment_body_td_" + item_random, false, true, false); // l/d, delete button, reply 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
         	$("#notification_child_div_" + item_id).text("Unable to retreive item. (network error)");

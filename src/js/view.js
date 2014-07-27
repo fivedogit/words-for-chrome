@@ -436,11 +436,9 @@ function displayLogstatAsLoggedIn() {
 
 function writeFooterMessage() {
 	var footerstr = "";
-	if(msfe_according_to_backend > 1405886400000 && msfe_according_to_backend < 1405951200000)
+	if(msfe_according_to_backend > 1406500396000 && msfe_according_to_backend < 1406519956000)
 	{
-		footerstr = footerstr + "Preview Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a>";
-		//footerstr = footerstr + ", <a href=\"#\" style=\"color:#baff00\" id=\"product_hunt_link\">Product Hunt</a>";
-		footerstr = footerstr + " and <a href=\"#\" style=\"color:#baff00\" id=\"reddit_link\">Reddit</a>!";
+		footerstr = footerstr + "Preview Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a>.";
 		$("#footer_div").html(footerstr);
 		var hn_url = "http://news.ycombinator.com";
 		$.ajax({
@@ -468,33 +466,6 @@ function writeFooterMessage() {
 			} 
 		}); 			
 		noteImpressionAndCreateHandler("hn", "footer", "hn_link", hn_url);
-		var reddit_url = "http://reddit.com";
-		$.ajax({
-			type: 'GET',
-			url: endpoint,
-			data: {
-				method: "getRURL",
-			},
-			dataType: 'json',
-			async: false,
-			timeout: 2000,
-			success: function (data, status) {
-				if(data.response_status === "error")
-				{
-					// fail silently and use default url
-				}
-				else if(data.response_status === "success")
-				{
-					reddit_url = data.url;
-				}	
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				console.log(textStatus, errorThrown);
-				displayMessage("AJAX error getting R url", "red");
-			} 
-		}); 			
-		noteImpressionAndCreateHandler("reddit", "footer", "reddit_link", reddit_url);
-		//noteImpressionAndCreateHandler("producthunt", "footer", "product_hunt_link", "http://www.producthunt.com/");
 	}
 	else // not soft launch day
 	{

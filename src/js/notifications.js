@@ -157,6 +157,7 @@ function removeItemFromActivityIds(removal_target)
 // parent ids are not. The same parent item can be replied to, liked, disliked, etc, so the reference has to be randomized
 function doNotificationItem(item_id, dom_id)
 {
+	var container_id = item_id;
 	// if like/dislike, update header, display parent
 	// if reply, update header, display parent and child
 	// if mention, update header, display child
@@ -251,13 +252,13 @@ function doNotificationItem(item_id, dom_id)
         	else if(data.response_status === "error")
         	{ 
         		//alert("couldn't find this one remove container div?");
-        		$("#container_div_" + item_id).remove();
+        		$("#container_div_" + container_id).remove();
         		removeItemFromActivityIds(item_id);
         	}
         	
         	if(populate_item) // on the notification tab, the "item" (or comment) if drawn, will NEVER have been written by this author.
         	{
-        		writeComment(item_jo, "comment_div_" + item_id, true, false, true); // l/d, delete button, reply 
+        		writeComment(container_id, item_jo, "comment_div_" + item_id, true, false, true); // l/d, delete button, reply 
         		if(populate_parent)
         		{
         			$("#comment_div_" + item_id).css("margin-left", "30px");
@@ -285,7 +286,7 @@ function doNotificationItem(item_id, dom_id)
         	        	if(data.response_status === "success")
         	        	{
         	        		//$("#you_wrote_td_" + parent_random).text("You wrote"); // if we're showing the parent, this is a reply or a like/dislike. 
-        	        		writeComment(parent_jo, "parent_div_" + item_id, false, true, false); // l/d, delete button, reply
+        	        		writeComment(container_id, parent_jo, "parent_div_" + item_id, false, true, false); // l/d, delete button, reply
         	        	}
         	        },
         	        error: function (XMLHttpRequest, textStatus, errorThrown) {

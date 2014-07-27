@@ -24,9 +24,54 @@ function doTrendingTab()
 	$("#utility_csf_td").hide();
 	
 	$("#footer_div").html("");
-	
+	$("#main_div_" + currentURLhash).before("<div id=\"most_recent_comments_div\">Most recent comments</div>");
+	drawMostRecentComments(10, "most_recent_comments_div");
 	drawTrendingTable(null, 20, "main_div_" + currentURLhash);
-	getTrendingActivity(); // initial window, choices
+}
+
+function drawMostRecentComments(num_to_draw, dom_id)
+{
+	$.ajax({
+		type: 'GET',
+		url: endpoint,
+		data: {
+			method: "getMostRecentComments" // always gets 25 items since there is a TTL and saved value involved
+		},
+		dataType: 'json',
+		async: true,
+		success: function (data, status) {
+			if (data.response_status === "success") 
+			{
+				var earplug = "";
+				var mrc_ja = data.mrc;
+				var x = 0;
+				while(x < mrc_ja.length && x < num_to_draw) // num_to_draw just takes the first few. Should never be more than 25.
+				{
+					earplug = earplug + mrc_ja[x] + " - ";
+					x++;
+				}	
+				if(earplug.length > 0)
+					earplug = earplug.substring(0,earplug.length - 3);
+				$("#" + dom_id).text(earplug);
+				return;
+			}
+			else if (data.response_status === "error") 
+			{
+				displayMessage(data.message, "red", "utility_message_td");
+				return;
+			}
+			else
+			{
+				//alert("nonajax error");
+				return;
+			}
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			displayMessage("AJAX error getting most active pages info.", "red", "utility_message_td");
+			console.log(textStatus, errorThrown);
+			return;
+		} 
+	});
 }
 
 function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)

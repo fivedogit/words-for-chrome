@@ -647,6 +647,7 @@ function prepareGetAndPopulateThreadPortion()
 
 function doThreadItem(comment_id, dom_id) // type = "initialpop", "newcomment", "reply"
 {
+	var container_id = comment_id;
 	$.ajax({
         type: 'GET',
         url: endpoint,
@@ -662,12 +663,12 @@ function doThreadItem(comment_id, dom_id) // type = "initialpop", "newcomment", 
         		
         		if(tabmode === "notifications")
         		{
-        			writeComment(data.item, dom_id, false, true, false); // l/d, delete button (if user authored it), reply
+        			writeComment(container_id, data.item, dom_id, false, true, false); // l/d, delete button (if user authored it), reply
         			$("#" + dom_id).css("margin-left", "60px");
         		}
         		else
         		{
-        			writeComment(data.item, dom_id, true, true, true); // l/d, delete button (if user authored it), reply
+        			writeComment(container_id, data.item, dom_id, true, true, true); // l/d, delete button (if user authored it), reply
         			var indent = (data.item.depth-1) * 30;
             		$("#" + dom_id).css("margin-left", indent + "px");
         		}
@@ -702,7 +703,7 @@ function doThreadItem(comment_id, dom_id) // type = "initialpop", "newcomment", 
 	});
 }		
 
-function writeComment(feeditem_jo, dom_id, drawLikeDislike, drawDelete, drawReply)
+function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDelete, drawReply)
 {
 	var comment_id = feeditem_jo.id; 
 	
@@ -831,8 +832,10 @@ function writeComment(feeditem_jo, dom_id, drawLikeDislike, drawDelete, drawRepl
 	  	
 		$("#" + dom_id).html(tempstr);//OK
 	  	
-	  	if(writeReplyTD === true)
+	  	if(writeReplyTD === true && tabmode !== "notifications")
 	  		writeCommentForm(comment_id, "reply_td_" + comment_id, "message_div_" + comment_id);
+	  	else if(writeReplyTD === true && tabmode === "notifications")
+	  		writeCommentForm(comment_id, "reply_td_" + comment_id, "message_div_" + container_id); // if any messages, draw them in the parent's message window, as this is comment form appears as a child.
 	  	
 		$("[id=author_picture_img_" + comment_id + "]").attr("src", feeditem_jo.author_picture);
 		var left_percentage = 0;

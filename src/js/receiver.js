@@ -403,6 +403,7 @@ else
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 				console.log(textStatus, errorThrown);
 				displayMessage("Unknown login error. Please try again.", "red");
+				$("#progress_tr").hide();
 			} 
 		}); 
 	}	
