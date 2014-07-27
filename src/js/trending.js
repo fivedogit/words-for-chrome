@@ -24,8 +24,8 @@ function doTrendingTab()
 	$("#utility_csf_td").hide();
 	
 	$("#footer_div").html("");
-	$("#main_div_" + currentURLhash).before("<div id=\"most_recent_comments_div\">Most recent comments</div>");
-	drawMostRecentComments(10, "most_recent_comments_div");
+	//$("#main_div_" + currentURLhash).before("<div id=\"most_recent_comments_div\">Most recent comments</div>");
+	//drawMostRecentComments(10, "most_recent_comments_div");
 	drawTrendingTable(null, 20, "main_div_" + currentURLhash);
 }
 
