@@ -1340,7 +1340,8 @@ function likeOrDislikeComment(id, like_or_dislike)
 						displayMessage("Dislike recorded.", "black", "message_div_" + id);
 						$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow_disliked.png"));
 					}	
-					doThreadItem(data.parent.id, "comment_div_" + data.parent.id); // reload the comment this like is attached to and attach it to the parent's parent
+					if(tabmode === "thread")
+						doThreadItem(data.parent.id, "comment_div_" + data.parent.id); // reload the comment this like is attached to and attach it to the parent's parent
 				}
 				else
 				{
