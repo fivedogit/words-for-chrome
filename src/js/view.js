@@ -436,7 +436,7 @@ function displayLogstatAsLoggedIn() {
 
 function writeFooterMessage() {
 	var footerstr = "";
-	if(msfe_according_to_backend > 1406500396000 && msfe_according_to_backend < 1406519956000)
+	if(false) //msfe_according_to_backend > 1406500396000 && msfe_according_to_backend < 1406519956000)
 	{
 		footerstr = footerstr + "Preview Day! Please upvote WORDS on <a href=\"#\" style=\"color:#baff00\" id=\"hn_link\">Hacker News</a>.";
 		$("#footer_div").html(footerstr);
