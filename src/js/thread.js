@@ -1334,14 +1334,16 @@ function likeOrDislikeComment(id, like_or_dislike)
 					{
 						displayMessage("Like recorded.", "black", "message_div_" + id);
 						$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_arrow_liked.png"));
+						var like_count = ($("#comment_likes_count_td_" + id).text() * 1) + 1;
+						$("#comment_likes_count_td_" + id).text(like_count);
 					}
 					else
 					{	
 						displayMessage("Dislike recorded.", "black", "message_div_" + id);
 						$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow_disliked.png"));
+						var dislike_count = ($("#comment_dislikes_count_td_" + id).text() * 1) + 1;
+						$("#comment_dislikes_count_td_" + id).text(dislike_count);
 					}	
-					if(tabmode === "thread")
-						doThreadItem(data.parent.id, "comment_div_" + data.parent.id); // reload the comment this like is attached to and attach it to the parent's parent
 				}
 				else
 				{
