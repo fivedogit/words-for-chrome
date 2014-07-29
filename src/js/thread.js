@@ -559,7 +559,7 @@ function writeUnifiedCommentContainer(id_to_use, dom_id, action) // main_div_HAS
 	var unified = "";
 	unified = unified + "<div id=\"container_div_" + id_to_use + "\" style=\"background-color:white;\">";
 	unified = unified + "	<div id=\"horizline_div_" + id_to_use + "\" class=\"complete-horiz-line-div\"></div>"; // always shown
-	unified = unified + "	<div style=\"padding:8px\">";
+	unified = unified + "	<div style=\"padding:6px\">";
 	unified = unified + "		<div id=\"message_div_" + id_to_use + "\" style=\"padding:5px 0px 5px 0px;display:none\"></div>"; // hidden unless message displayed
 	unified = unified + "		<div id=\"header_div_" + id_to_use + "\" style=\"padding:5px 0px 5px 0px;text-align:left;display:none\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>"; // hidden except for notification page
 	unified = unified + "		<div id=\"parent_div_" + id_to_use + "\" style=\"padding:5px 0px 5px 0px;display:none\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>"; //hidden except for notification page
@@ -680,7 +680,7 @@ function doThreadItem(comment_id, dom_id) // type = "initialpop", "newcomment", 
 					tempcomments.sort(function(a,b){
 						var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
 						var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
-						return tsa - tsb;
+						return tsb - tsa;
 					});
 					data.item.children = tempcomments;
 					for(var y=0; y < data.item.children.length; y++) 
@@ -807,7 +807,7 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		if (drawReply === true && feeditem_jo.depth < 6) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
 	  	{
 			tempstr = tempstr + "				<tr id=\"reply_tr_" + comment_id + "\">";
-	  		tempstr = tempstr + "					<td style=\"padding:6px;text-align:left\"> ";
+	  		tempstr = tempstr + "					<td style=\"padding:3px;text-align:left\"> ";
 	  		tempstr = tempstr + "							<a href=\"#\" id=\"reply_link_" + comment_id + "\"><b>Reply</b></a>";
 	  		tempstr = tempstr + "					</td>";
 	  		tempstr = tempstr + "				</tr>";
@@ -820,7 +820,7 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		else if(drawReply === true && feeditem_jo.depth === 6)
 		{
 			tempstr = tempstr + "				<tr id=\"reply_tr_" + comment_id + "\">";
-	  		tempstr = tempstr + "					<td style=\"font-style:italic;padding:6px;text-align:left\"> ";
+	  		tempstr = tempstr + "					<td style=\"font-style:italic;padding:3px;text-align:left;color:#444444\"> ";
 	  		tempstr = tempstr + "						 Thread is at max depth. No more replies allowed.";
 	  		tempstr = tempstr + "					</td>";
 	  		tempstr = tempstr + "				</tr>";
@@ -1080,13 +1080,12 @@ function submitComment(parent, message_element) // submits comment and updates t
 	        	$("#comment_submission_form_submit_button_" + parent).removeAttr('disabled');
 	        	$("#comment_submission_progress_span_" + parent).hide();
 	        } 
-	        else 
+	        else if(data.response_status === "success")
 	        {
 	        	$("#comment_submission_progress_span_" + parent).hide();
 	        	$("#charsleft_" + parent).text("500");
 	        	if(parent.length !== 11) // toplevel
 		    	{
-	        		//alert("Success. And this is a toplevel.");
 		    		$("#comment_submission_form_submit_button_" + parent).removeAttr("disabled");
 		    		if(!thread_jo.children) // if the main thread jo was empty before, create it with one item, this new one and empty the main_div to receive it
 					{
@@ -1137,11 +1136,52 @@ function submitComment(parent, message_element) // submits comment and updates t
 		        		$("#child_div_" + parent).show();
 	        		}
 	        	}	
+	        	else if((data.comment.depth *1) > 1 && tabmode === "thread")
+	        	{
+	        		//alert("tabmode thread reply");
+	        		var parentelem = $("#container_div_" + parent); // this is the dom element of container of the comment we're replying to. always exists
+	        		var parentelem_dom_id = parentelem.attr('id');
+	        		var parentelem_ml = $("#comment_div_" + parent).css("margin-left");
+	        		
+	        		var successfully_placed = false;
+	        		var previouselem = parentelem;
+	        		var previouselem_dom_id = parentelem_dom_id;
+	        		var currentelem = null;
+	        		var currentelem_dom_id = null;
+	        		var currentelem_id = null;
+	        		while(successfully_placed === false)
+	        		{
+	        			//alert("looping dom node=" + previouselem_dom_id);
+	        			currentelem = previouselem.next();
+	        			currentelem_dom_id = currentelem.attr('id');
+	        			//alert("checking currentelem_dom_id for null " + currentelem + " and " + currentelem_dom_id);
+	        			if(typeof currentelem_dom_id === "undefined")
+	        			{
+		        			//alert("there was no current element, attach after previous")
+		        			writeUnifiedCommentContainer(data.comment.id, previouselem_dom_id, "after");
+	        				doThreadItem(data.comment.id, "comment_div_" + data.comment.id);
+	        				successfully_placed = true;
+		        		}	
+	        			else
+	        			{
+	        				currentelem_id = currentelem_dom_id.substring(currentelem_dom_id.length - 11, currentelem_dom_id.length);
+		        			//alert("currentelem_id=" + currentelem_id + " ml=" + $("#comment_div_" + currentelem_id).css("margin-left") + " parent_ml=" + parentelem_ml);
+		        			if($("#comment_div_" + currentelem_id).css("margin-left") <= parentelem_ml)
+		        			{
+		        				//alert("found parent's next sibling");
+		        				writeUnifiedCommentContainer(data.comment.id, "container_div_" + currentelem_id, "before");
+		        				doThreadItem(data.comment.id, "comment_div_" + data.comment.id);
+		        				successfully_placed = true;
+		        			}
+		        			previouselem = currentelem;
+		        			previouselem_dom_id = currentelem_dom_id;
+	        			}	
+	        		}	
+	        	}
 	        	else
 	        	{
-	        		writeUnifiedCommentContainer(data.comment.id, "container_div_" + parent, "after");
-	        		doThreadItem(data.comment.id, "comment_div_" + data.comment.id);
-	        	}
+	        		alert("erroneous else");
+	        	}	
 	        }
 	    },
 	    error: function (XMLHttpRequest, textStatus, errorThrown) {
