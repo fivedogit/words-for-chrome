@@ -110,7 +110,7 @@ function doAboutTab(message)
 	noteImpressionAndCreateHandler("coinbase50", "about", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
 	noteImpressionAndCreateHandler("coinbase100", "about", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");
  	
- 	noteImpressionAndCreateHandler("twitter_persacct", "about", "words4chrome_link", "http://www.twitter.com/words4chrome");
+ 	noteImpressionAndCreateHandler("twitter_mainacct", "about", "words4chrome_link", "http://www.twitter.com/words4chrome");
 	noteImpressionAndCreateHandler("twitter_persacct", "about", "fivedogit_link2", "http://www.twitter.com/fivedogit");
 	
 }
