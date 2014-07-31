@@ -176,10 +176,6 @@ else
 	}	
 	else if(code === null)
 	{
-		//alert("receiver: no code");
-		
-		
-		
 		if(login_type === "google")
 		{
 			displayMessage("Logging in with Google. A popup window like this may appear. (Don't worry. It's safe.)", "black");
@@ -295,9 +291,334 @@ else
 				});
 			});
 		}	
-		else
+		else if(login_type === "words")
 		{
-			alert("Unknown login type");
+			//displayMessage("Log in with Words:", "black");
+			var log_and_reg = "";
+			log_and_reg = log_and_reg + "<table style=\"width:100%;border:1px solid black;border-spacing:15px;border-collapse:separate\">";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Log in:</td><td></td><td></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td><td><input type=text size=20 maxlength=20 id=\"screenname_input\"></td><td></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 maxlength=20 id=\"password_input\"></td><td></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td></td><td><button id=\"login_submit_button\">Login</button></td><td></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td></td><td><a href=\"#\" id=\"forgot_password_link\">I forgot my password.</a></td><td></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Create account:</td><td></td><td></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td><td><input type=text size=20 maxlength=20 id=\"nativereg_screenname_input\"></td><td id=\"screenname_validity_td\"></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 maxlength=20 id=\"nativereg_password_input\"></td><td id=\"password_strength_td\"></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">confirm:</td><td><input type=password size=20 maxlength=20 id=\"nativereg_confirm_input\"></td><td id=\"confirm_validity_td\"></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">avatar:<br><span style=\"font-style:italic;font-color:#666666;font-size:10px\">(Custom avatars<br>coming soon!)</span></td>";
+			log_and_reg = log_and_reg + "		<td>";
+			log_and_reg = log_and_reg + "			<table>";
+			log_and_reg = log_and_reg + "				<tr>";
+			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"geometric\" value=\"geometric\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td>";
+			log_and_reg = log_and_reg + "						Geometric";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"monster\" value=\"monster\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td>";
+			log_and_reg = log_and_reg + "						Monster";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "				</tr>";
+			log_and_reg = log_and_reg + "				<tr>";
+			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"cartoon\" value=\"cartoon\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td>";
+			log_and_reg = log_and_reg + "						Cartoon";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"retro\" value=\"retro\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td>";
+			log_and_reg = log_and_reg + "						Retro";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "				</tr>";
+			log_and_reg = log_and_reg + "				<tr>";
+			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"unicorn\" value=\"unicorn\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td>";
+			log_and_reg = log_and_reg + "						Unicorn <img style=\"width:16px;height:16px;display:none\" id=\"unicorn_progress_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"silhouette\" value=\"silhouette\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td>";
+			log_and_reg = log_and_reg + "						Silhouette";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "				</tr>";
+			log_and_reg = log_and_reg + "			</table>";
+			log_and_reg = log_and_reg + "		</td>";
+			log_and_reg = log_and_reg + "		<td><img style=\"width:50px;height:50px;display:none\" id=\"nativereg_avatar_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td></td><td><button id=\"create_account_button\">Create account</button></td><td></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td></td><td colspan=2 id=\"submit_message_td\"></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "	<tr>";
+			log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"></td><td></td>";
+			log_and_reg = log_and_reg + "	</tr>";
+			log_and_reg = log_and_reg + "</table>";
+			$("#login_td").html(log_and_reg);
+			$("#login_tr").show();
+			$("#login_submit_button").click(function(event){
+				alert("login submit button click");
+			});
+			$("#forgot_password_link").click(function(event){ event.preventDefault();
+				alert("forgot_password_link click");
+			});
+			
+			
+			$("#nativereg_screenname_input")
+			.focusout(function () {
+			$("#nativereg_screenname_input")
+			    .trigger("keypress");
+			});
+			$("#nativereg_screenname_input")
+			.keyup(function () {
+			$("#nativereg_screenname_input")
+			    .trigger("keypress");
+			});
+			$("#nativereg_screenname_input")
+			.keydown(function () {
+			$("#nativereg_screenname_input")
+			    .trigger("keypress");
+			});
+
+			
+			$("#nativereg_screenname_input").keypress(
+					function () {
+						$("#submit_message_td").html("");
+						if ($("#nativereg_screenname_input").val().length <= 0) 
+						{
+							$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
+							return;
+						} 
+						else if ($("#nativereg_screenname_input").val().length < 6) 
+						{
+							$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
+							return;
+						} 
+						else if (!$("#nativereg_screenname_input").val().match(/^[a-zA-Z][a-zA-Z0-9]+$/))
+						{
+							$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">Letters and numbers,<br>starting with a letter</span>");
+							return;	
+						}
+						else if ($("#nativereg_screenname_input").val().length >= 6) 
+						{
+							$("#screenname_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+							return;
+						}
+					});
+			
+			$("#nativereg_password_input")
+			.focusout(function () {
+			$("#nativereg_password_input")
+			    .trigger("keypress");
+			});
+			$("#nativereg_password_input")
+			.keyup(function () {
+			$("#nativereg_password_input")
+			    .trigger("keypress");
+			});
+			$("#nativereg_password_input")
+			.keydown(function () {
+			$("#nativereg_password_input")
+			    .trigger("keypress");
+			});
+
+			$("#nativereg_password_input").keypress(
+					function () {
+						$("#submit_message_td").html("");
+						if ($("#nativereg_password_input").val().length <= 0) 
+						{
+							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
+							return;
+						} 
+						else if ($("#nativereg_password_input").val().length < 6) 
+						{
+							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
+							return;
+						} 
+						else if (!$("#nativereg_password_input").val().match(/^(?=.*[a-zA-Z])(?=.*\d)(?!.* ).+$/))
+						{
+							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Must have 1 letter,<br>1 number, 0 spaces</span>");
+							return;	
+						}
+						else if ($("#nativereg_password_input").val().length >= 6) 
+						{
+							$("#password_strength_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+							return;
+						}
+					});
+			
+			$("#nativereg_confirm_input")
+			.focusout(function () {
+			$("#nativereg_confirm_input")
+			    .trigger("keypress");
+			});
+			$("#nativereg_confirm_input")
+			.keyup(function () {
+			$("#nativereg_confirm_input")
+			    .trigger("keypress");
+			});
+			$("#nativereg_confirm_input")
+			.keydown(function () {
+			$("#nativereg_confirm_input")
+			    .trigger("keypress");
+			});
+			
+			$("#nativereg_confirm_input").keypress(
+					function () {
+						$("#submit_message_td").html("");
+						if ($("#nativereg_confirm_input").val().length <= 0) 
+						{
+							$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
+							return;
+						} 
+						else if ($("#nativereg_confirm_input").val().length < 6) 
+						{
+							$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
+							return;
+						} 
+						else if ($("#nativereg_confirm_input").val().length >= 6) 
+						{
+							if ($("#nativereg_confirm_input").val() === $("#nativereg_password_input").val()) 
+							{
+								$("#confirm_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+							} 
+							else 
+							{
+								$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Doesn't match</span>");
+							}
+							return;
+						}
+					});
+			
+			$("#geometric").click(function (event) { 
+				var g = guid();
+				$("#nativereg_avatar_img").show();
+				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
+			});
+			$("#monster").click(function (event) { 
+				var g = guid();
+				$("#nativereg_avatar_img").show();
+				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
+			});
+			$("#cartoon").click(function (event) { 
+				var g = guid();
+				$("#nativereg_avatar_img").show();
+				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
+			});
+			$("#retro").click(function (event) { 
+				var g = guid();
+				$("#nativereg_avatar_img").show();
+				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
+			});
+			$("#unicorn").click(function (event) { 
+				var g = guid();
+				$("#nativereg_avatar_img").show();
+				$("#nativereg_avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
+				$("#unicorn_progress_img").show();
+				setTimeout(function() {$("#unicorn_progress_img").hide();}, 2000);
+			});
+			$("#silhouette").click(function (event) { 
+				var g = guid();
+				$("#nativereg_avatar_img").show();
+				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
+			});
+			
+			$("#create_account_button").click(function(event){
+				if ($("#nativereg_screenname_input").val().length <= 0) 
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Screenname is blank</span>");
+				} 
+				else if ($("#nativereg_screenname_input").val().length < 6) 
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Screenname is too short</span>");
+				} 
+				else if (!$("#nativereg_screenname_input").val().match(/^[a-zA-Z][a-zA-Z0-9]+$/))
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Screenname must be letters and numbers, starting with a letter</span>");
+				}
+				else if ($("#nativereg_password_input").val().length <= 0) 
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Password cannot be blank</span>");
+				} 
+				else if ($("#nativereg_password_input").val().length < 6) 
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Password is too short</span>");
+				} 
+				else if (!$("#nativereg_password_input").val().match(/^(?=.*[a-zA-Z])(?=.*\d)(?!.* ).+$/))
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Password must have 1 letter, 1 number, 0 spaces</span>");
+				}
+				else if ($("#nativereg_confirm_input").val().length <= 0) 
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Confirm password is blank</span>");
+				} 
+				else if ($("#nativereg_confirm_input").val().length < 6) 
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Confirm password is too short</span>");
+				} 
+				else if ($("#nativereg_confirm_input").val() !== $("#nativereg_password_input").val()) 
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Password and confirm don't match</span>");
+				}
+				else if ($("#nativereg_avatar_img").attr("src").indexOf("ajaxSnake.gif") != -1) 
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">You must choose an avatar</span>");
+				}
+				else
+				{
+					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Everything checks out</span>");
+				}	
+				
+			});
+			
+			$("#google_login_img").click(function(event){
+				window.location = chrome.extension.getURL('receiver.html') + "?login_type=google";
+			});
+			$("#google_login_img").mouseover( function() {
+				$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24_mo.png"));
+			});
+			$("#google_login_img").mouseout( function() {
+				$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24.png"));
+			});
+			$("#facebook_login_img").click(function(event){
+				window.location = chrome.extension.getURL('receiver.html') + "?login_type=facebook";
+			});
+			$("#facebook_login_img").mouseover( function() {
+				$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24_mo.png"));
+			});
+			$("#facebook_login_img").mouseout( function() {
+				$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24.png"));
+			});
+				
 		}	
 		
 	}	
