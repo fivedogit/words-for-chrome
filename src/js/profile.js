@@ -108,7 +108,7 @@ function getProfile(screenname)
             		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span> <a href=\"#\" id=\"logout_link\">Log out</a></td></tr>";
             	else
             		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Email:</td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Email:<br><span style=\"font-style:italic;font-weight:normal;font-color:#666666\">(private)</span></td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Since:</td><td style=\"text-align:left\" id=\"profile_page_since_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left\" id=\"profile_page_seen_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments authored:</td><td style=\"text-align:left\" id=\"profile_page_numcommentsauthored_td\"></td></tr>";
@@ -144,17 +144,30 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On like:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onlike_selector\">";
-					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
+					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onlike_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
+					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On meh:</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "							<select id=\"onmeh_selector\">";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
+					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
+					main_div_string = main_div_string + "							</select>";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onmeh_result_td\">";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On dislike:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"ondislike_selector\">";
-					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
+					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -164,7 +177,8 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On reply:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onreply_selector\">";
-					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
+					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -174,7 +188,8 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On mention:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onmention_selector\">";
-					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
+					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -184,7 +199,8 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">A page you're following<br>is commented on:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onfollowcomment_selector\">";
-					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
+					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -194,7 +210,8 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">News/info emails:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"emailpromos_selector\">";
-					main_div_string = main_div_string + "							  <option SELECTED value=\"email\">Email me</option>";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
+					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -345,7 +362,9 @@ function getProfile(screenname)
             	$("#rating_window_span").text("(" + (target_user_jo.rating_window_mins/1440) + "d)");
             	
             	if(target_user_jo.email)
-            		$("#profile_page_email_td").text(target_user_jo.email + " (private)");
+            	{	
+            		$("#profile_page_email_td").text(target_user_jo.email);
+            	}
             	else
             	{
             		$("#profile_page_email_td").css("font-style", "italic");
@@ -621,31 +640,50 @@ function getProfile(screenname)
             
             	if (user_jo.onlike === "email")
             		$("#onlike_selector").val("email");
+            	else if (user_jo.onlike === "button")
+            		$("#onlike_selector").val("button");
             	else if (user_jo.onlike === "do nothing")
             		$("#onlike_selector").val("do nothing");
             	
+            	if (user_jo.onmeh === "email")
+            		$("#onmeh_selector").val("email");
+            	else if (user_jo.onmeh === "button")
+            		$("#onmeh_selector").val("button");
+            	else if (user_jo.onmeh === "do nothing")
+            		$("#onmeh_selector").val("do nothing");
+            	
             	if (user_jo.ondislike === "email")
             		$("#ondislike_selector").val("email");
+            	else if (user_jo.ondislike === "button")
+            		$("#ondislike_selector").val("button");
             	else if (user_jo.ondislike === "do nothing")
             		$("#ondislike_selector").val("do nothing");
             	
             	if (user_jo.onreply === "email")
             		$("#onreply_selector").val("email");
+            	else if (user_jo.onreply === "button")
+            		$("#onreply_selector").val("button");
             	else if (user_jo.onreply === "do nothing")
             		$("#onreply_selector").val("do nothing");
             	
             	if (user_jo.onmention === "email")
             		$("#onmention_selector").val("email");
+            	else if (user_jo.onmention === "button")
+            		$("#onmention_selector").val("button");
             	else if (user_jo.onmention === "do nothing")
             		$("#onmention_selector").val("do nothing");
 
             	if (user_jo.onfollowcomment === "email")
             		$("#onfollowcomment_selector").val("email");
+            	else if (user_jo.onfollowcomment === "button")
+            		$("#onfollowcomment_selector").val("button");
             	else if (user_jo.onfollowcomment === "do nothing")
             		$("#onfollowcomment_selector").val("do nothing");
             	
             	if (user_jo.emailpromos === "email")
             		$("#emailpromos_selector").val("email");
+            	else if (user_jo.emailpromos === "button")
+            		$("#emailpromos_selector").val("button");
             	else if (user_jo.emailpromos === "do nothing")
             		$("#emailpromos_selector").val("do nothing");
             	
@@ -665,10 +703,12 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#onlike_result_td").text("Error: " + data.message);
+				        		$("#onlike_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
 				        		if (user_jo.onlike === "email")
 				            		$("#onlike_selector").val("email");
+				            	else if (user_jo.onlike === "button")
+				            		$("#onlike_selector").val("button");
 				            	else if (user_jo.onlike === "do nothing")
 				            		$("#onlike_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "utility_message_td");
@@ -692,6 +732,51 @@ function getProfile(screenname)
 					});
             	});
             	
+            	$("#onmeh_selector").change(function () {
+					$.ajax({
+						type: 'GET',
+						url: endpoint,
+						data: {
+				            method: "setUserPreference",
+				            email: email,             
+				            this_access_token: this_access_token,  
+				            which: "onmeh",
+				            value: $("#onmeh_selector").val() 
+				        },
+				        dataType: 'json',
+				        async: true,
+				        success: function (data, status) {
+				        	if (data.response_status === "error")
+				        	{
+				        		$("#onmeh_result_td").text(data.message);
+				        		// on error, reset the selector to the user_jo value
+				        		if (user_jo.onmeh === "email")
+				            		$("#onmeh_selector").val("email");
+				            	else if (user_jo.onmeh === "button")
+				            		$("#onmeh_selector").val("button");
+				            	else if (user_jo.onmeh === "do nothing")
+				            		$("#onmeh_selector").val("do nothing");
+				        		displayMessage(data.message, "red", "utility_message_td");
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
+				        	else
+				        		$("#onmeh_result_td").text("updated");
+				        	setTimeout(function(){$("#onmeh_result_td").text("");},3000);
+				        }
+				        ,
+				        error: function (XMLHttpRequest, textStatus, errorThrown) {
+				        	$("#onmeh_result_td").text("ajax error");
+				        	setTimeout(function(){$("#onmeh_result_td").text("");},3000);
+				            console.log(textStatus, errorThrown);
+				        }
+					});
+            	});
+            	
             	$("#ondislike_selector").change(function () {
             		var previousval = 
 					$.ajax({
@@ -709,10 +794,12 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#ondislike_result_td").text("Error: " + data.message);
+				        		$("#ondislike_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
 				        		if (user_jo.ondislike === "email")
 				            		$("#ondislike_selector").val("email");
+				            	else if (user_jo.ondislike === "button")
+				            		$("#ondislike_selector").val("button");
 				            	else if (user_jo.ondislike === "do nothing")
 				            		$("#ondislike_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "utility_message_td");
@@ -752,10 +839,12 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#onreply_result_td").text("Error: " + data.message);
+				        		$("#onreply_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
 				        		if (user_jo.onreply === "email")
 				            		$("#onreply_selector").val("email");
+				            	else if (user_jo.onreply === "button")
+				            		$("#onreply_selector").val("button");
 				            	else if (user_jo.onreply === "do nothing")
 				            		$("#onreply_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "utility_message_td");
@@ -795,10 +884,12 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#onmention_result_td").text("Error: " + data.message);
+				        		$("#onmention_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
 				        		if (user_jo.onmention === "email")
 				            		$("#onmention_selector").val("email");
+				            	else if (user_jo.onmention === "button")
+				            		$("#onmention_selector").val("button");
 				            	else if (user_jo.onmention === "do nothing")
 				            		$("#onmention_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "utility_message_td");
@@ -839,10 +930,12 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#onfollowcomment_result_td").text("Error: " + data.message);
+				        		$("#onfollowcomment_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
 				        		if (user_jo.onfollowcomment === "email")
 				            		$("#onfollowcomment_selector").val("email");
+				            	else if (user_jo.onfollowcomment === "button")
+				            		$("#onfollowcomment_selector").val("button");
 				            	else if (user_jo.onfollowcomment === "do nothing")
 				            		$("#onfollowcomment_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "utility_message_td");
@@ -882,10 +975,12 @@ function getProfile(screenname)
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#emailpromos_result_td").text("Error: " + data.message);
+				        		$("#emailpromos_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
 				        		if (user_jo.emailpromos === "email")
 				            		$("#emailpromos_selector").val("email");
+				            	else if (user_jo.emailpromos === "button")
+				            		$("#emailpromos_selector").val("button");
 				            	else if (user_jo.emailpromos === "do nothing")
 				            		$("#emailpromos_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "utility_message_td");
