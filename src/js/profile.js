@@ -50,7 +50,7 @@ function guid() {
 	         s4() +s4() + s4() + s4();
 	}
 
-function getProfile(screenname)
+function getProfile(target_screenname)
 {
 	var main_div_string = "";
 	var target_user_jo;
@@ -70,9 +70,9 @@ function getProfile(screenname)
 		url: endpoint,
 		data: {
             method: "getUserByScreenname",
-            email: email,             // this can be called with no email
-            this_access_token: this_access_token,   // this can be called with no this_access_token,user_jo will just come back erroneous
-            screenname: screenname // the screenname of the user to get. Backend will determine if self, provide correct response
+            screenname: screenname,            
+            this_access_token: this_access_token,   
+            target_screenname: target_screenname // the screenname of the user to get. Backend will determine if self, provide correct response
         },
         dataType: 'json',
         async: true,
@@ -104,7 +104,7 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
             	main_div_string = main_div_string + "					<table style=\"margin-right:auto;border-spacing:5px;border-collapse:separate;\">";
-            	if (target_user_jo.email)
+            	if (target_user_jo.email) // ok, this is a self user
             		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span> <a href=\"#\" id=\"logout_link\">Log out</a></td></tr>";
             	else
             		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span></td></tr>";
@@ -128,7 +128,7 @@ function getProfile(screenname)
             	main_div_string = main_div_string + "		</table>";
             	main_div_string = main_div_string + "	</td>";
             	main_div_string = main_div_string + "</tr>";
-            	if (target_user_jo.email) // this is a self user
+            	if (target_user_jo.email) // ok, this is a self user
             	{
             		main_div_string = main_div_string + "<tr>";
             		main_div_string = main_div_string + "	<td>";
@@ -145,7 +145,6 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onlike_selector\">";
 					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -156,7 +155,6 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onmeh_selector\">";
 					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -167,7 +165,6 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"ondislike_selector\">";
 					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -178,7 +175,6 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onreply_selector\">";
 					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -189,7 +185,6 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onmention_selector\">";
 					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
@@ -200,28 +195,26 @@ function getProfile(screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "							<select id=\"onfollowcomment_selector\">";
 					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onfollowcomment_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
-					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">News/info emails:</td>";
+					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">News/info:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "							<select id=\"emailpromos_selector\">";
+					main_div_string = main_div_string + "							<select id=\"promos_selector\">";
 					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"email\">Email me</option>";
 					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"emailpromos_result_td\">";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"promos_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
 					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
 					main_div_string = main_div_string + "								Change avatar:<br>";
-					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-size:10px;font-style:italic;font-weight:normal\">To use a Google/FB profile pic, log out and back in.</span>";
+					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-size:10px;font-style:italic;font-weight:normal\">To use a G/FB profile pic, log in with G/FB.</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
@@ -364,11 +357,12 @@ function getProfile(screenname)
             	if(target_user_jo.email)
             	{	
             		$("#profile_page_email_td").text(target_user_jo.email);
+            		// I guess there needs to be a text field here for supplying a real email if this is an @words4chrome.com address
             	}
             	else
             	{
             		$("#profile_page_email_td").css("font-style", "italic");
-            		$("#profile_page_email_td").text("hidden");
+            		$("#profile_page_email_td").text("private");
             	}	
             	if(target_user_jo.seen)
             		$("#profile_page_seen_td").text(target_user_jo.seen);
@@ -459,13 +453,14 @@ function getProfile(screenname)
             		}
             	});				
             	
+            	// this will log the user out as their existing screenname/tat combo won't work anymore
             	$("#screenname_submit_link").click(function (event) { event.preventDefault();
             		$.ajax({
 						type: 'GET',
 						url: endpoint,
 						data: {
 				            method: "setUserPreference",
-				            email: email,             
+				            screenname: screenname,             
 				            this_access_token: this_access_token,  
 				            which: "screenname",
 				            value:  $("#screenname_change_input").val()
@@ -569,7 +564,7 @@ function getProfile(screenname)
             			url: endpoint,
             			data: {
             				method: "savePicture",
-            				email: email,             
+            				screenname: screenname,             
 				            this_access_token: this_access_token,  
             				picture: $("#avatar_img").attr("src")
             			},
@@ -638,54 +633,40 @@ function getProfile(screenname)
             				return;
             			});
             
-            	if (user_jo.onlike === "email")
-            		$("#onlike_selector").val("email");
-            	else if (user_jo.onlike === "button")
+            	if (user_jo.onlike === "button")
             		$("#onlike_selector").val("button");
             	else if (user_jo.onlike === "do nothing")
             		$("#onlike_selector").val("do nothing");
             	
-            	if (user_jo.onmeh === "email")
-            		$("#onmeh_selector").val("email");
-            	else if (user_jo.onmeh === "button")
+            	if (user_jo.onmeh === "button")
             		$("#onmeh_selector").val("button");
             	else if (user_jo.onmeh === "do nothing")
             		$("#onmeh_selector").val("do nothing");
             	
-            	if (user_jo.ondislike === "email")
-            		$("#ondislike_selector").val("email");
-            	else if (user_jo.ondislike === "button")
+            	if (user_jo.ondislike === "button")
             		$("#ondislike_selector").val("button");
             	else if (user_jo.ondislike === "do nothing")
             		$("#ondislike_selector").val("do nothing");
             	
-            	if (user_jo.onreply === "email")
-            		$("#onreply_selector").val("email");
-            	else if (user_jo.onreply === "button")
+            	if (user_jo.onreply === "button")
             		$("#onreply_selector").val("button");
             	else if (user_jo.onreply === "do nothing")
             		$("#onreply_selector").val("do nothing");
             	
-            	if (user_jo.onmention === "email")
-            		$("#onmention_selector").val("email");
-            	else if (user_jo.onmention === "button")
+            	if (user_jo.onmention === "button")
             		$("#onmention_selector").val("button");
             	else if (user_jo.onmention === "do nothing")
             		$("#onmention_selector").val("do nothing");
 
-            	if (user_jo.onfollowcomment === "email")
-            		$("#onfollowcomment_selector").val("email");
-            	else if (user_jo.onfollowcomment === "button")
+            	if (user_jo.onfollowcomment === "button")
             		$("#onfollowcomment_selector").val("button");
             	else if (user_jo.onfollowcomment === "do nothing")
             		$("#onfollowcomment_selector").val("do nothing");
             	
-            	if (user_jo.emailpromos === "email")
-            		$("#emailpromos_selector").val("email");
-            	else if (user_jo.emailpromos === "button")
-            		$("#emailpromos_selector").val("button");
-            	else if (user_jo.emailpromos === "do nothing")
-            		$("#emailpromos_selector").val("do nothing");
+            	if (user_jo.promos === "button")
+            		$("#promos_selector").val("button");
+            	else if (user_jo.promos === "do nothing")
+            		$("#promos_selector").val("do nothing");
             	
             	$("#onlike_selector").change(function () {
 					$.ajax({
@@ -693,7 +674,7 @@ function getProfile(screenname)
 						url: endpoint,
 						data: {
 				            method: "setUserPreference",
-				            email: email,             
+				            screenname: screenname,             
 				            this_access_token: this_access_token,  
 				            which: "onlike",
 				            value: $("#onlike_selector").val() 
@@ -705,9 +686,7 @@ function getProfile(screenname)
 				        	{
 				        		$("#onlike_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onlike === "email")
-				            		$("#onlike_selector").val("email");
-				            	else if (user_jo.onlike === "button")
+				        		if (user_jo.onlike === "button")
 				            		$("#onlike_selector").val("button");
 				            	else if (user_jo.onlike === "do nothing")
 				            		$("#onlike_selector").val("do nothing");
@@ -738,7 +717,7 @@ function getProfile(screenname)
 						url: endpoint,
 						data: {
 				            method: "setUserPreference",
-				            email: email,             
+				            screenname: screenname,               
 				            this_access_token: this_access_token,  
 				            which: "onmeh",
 				            value: $("#onmeh_selector").val() 
@@ -750,9 +729,7 @@ function getProfile(screenname)
 				        	{
 				        		$("#onmeh_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onmeh === "email")
-				            		$("#onmeh_selector").val("email");
-				            	else if (user_jo.onmeh === "button")
+				        		if (user_jo.onmeh === "button")
 				            		$("#onmeh_selector").val("button");
 				            	else if (user_jo.onmeh === "do nothing")
 				            		$("#onmeh_selector").val("do nothing");
@@ -784,7 +761,7 @@ function getProfile(screenname)
 						url: endpoint,
 						data: {
 				            method: "setUserPreference",
-				            email: email,             
+				            screenname: screenname,               
 				            this_access_token: this_access_token,  
 				            which: "ondislike",
 				            value: $("#ondislike_selector").val() 
@@ -796,9 +773,7 @@ function getProfile(screenname)
 				        	{
 				        		$("#ondislike_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.ondislike === "email")
-				            		$("#ondislike_selector").val("email");
-				            	else if (user_jo.ondislike === "button")
+				        		if (user_jo.ondislike === "button")
 				            		$("#ondislike_selector").val("button");
 				            	else if (user_jo.ondislike === "do nothing")
 				            		$("#ondislike_selector").val("do nothing");
@@ -829,7 +804,7 @@ function getProfile(screenname)
 						url: endpoint,
 						data: {
 				            method: "setUserPreference",
-				            email: email,             
+				            screenname: screenname,          
 				            this_access_token: this_access_token,  
 				            which: "onreply",
 				            value: $("#onreply_selector").val() 
@@ -841,9 +816,7 @@ function getProfile(screenname)
 				        	{
 				        		$("#onreply_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onreply === "email")
-				            		$("#onreply_selector").val("email");
-				            	else if (user_jo.onreply === "button")
+				        		if (user_jo.onreply === "button")
 				            		$("#onreply_selector").val("button");
 				            	else if (user_jo.onreply === "do nothing")
 				            		$("#onreply_selector").val("do nothing");
@@ -874,7 +847,7 @@ function getProfile(screenname)
 						url: endpoint,
 						data: {
 				            method: "setUserPreference",
-				            email: email,             
+				            screenname: screenname,              
 				            this_access_token: this_access_token,  
 				            which: "onmention",
 				            value: $("#onmention_selector").val() 
@@ -886,9 +859,7 @@ function getProfile(screenname)
 				        	{
 				        		$("#onmention_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onmention === "email")
-				            		$("#onmention_selector").val("email");
-				            	else if (user_jo.onmention === "button")
+				        		if (user_jo.onmention === "button")
 				            		$("#onmention_selector").val("button");
 				            	else if (user_jo.onmention === "do nothing")
 				            		$("#onmention_selector").val("do nothing");
@@ -920,7 +891,7 @@ function getProfile(screenname)
 						url: endpoint,
 						data: {
 				            method: "setUserPreference",
-				            email: email,             
+				            screenname: screenname,               
 				            this_access_token: this_access_token,  
 				            which: "onfollowcomment",
 				            value: $("#onfollowcomment_selector").val() 
@@ -932,9 +903,7 @@ function getProfile(screenname)
 				        	{
 				        		$("#onfollowcomment_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onfollowcomment === "email")
-				            		$("#onfollowcomment_selector").val("email");
-				            	else if (user_jo.onfollowcomment === "button")
+				        		if (user_jo.onfollowcomment === "button")
 				            		$("#onfollowcomment_selector").val("button");
 				            	else if (user_jo.onfollowcomment === "do nothing")
 				            		$("#onfollowcomment_selector").val("do nothing");
@@ -959,30 +928,28 @@ function getProfile(screenname)
 					});
             	});
             	
-            	$("#emailpromos_selector").change(function () {
+            	$("#promos_selector").change(function () {
 					$.ajax({
 						type: 'GET',
 						url: endpoint,
 						data: {
 				            method: "setUserPreference",
-				            email: email,             
+				            screenname: screenname,                
 				            this_access_token: this_access_token,  
-				            which: "emailpromos",
-				            value: $("#emailpromos_selector").val() 
+				            which: "promos",
+				            value: $("#promos_selector").val() 
 				        },
 				        dataType: 'json',
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#emailpromos_result_td").text(data.message);
+				        		$("#promos_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.emailpromos === "email")
-				            		$("#emailpromos_selector").val("email");
-				            	else if (user_jo.emailpromos === "button")
-				            		$("#emailpromos_selector").val("button");
-				            	else if (user_jo.emailpromos === "do nothing")
-				            		$("#emailpromos_selector").val("do nothing");
+				        		if (user_jo.promos === "button")
+				            		$("#promos_selector").val("button");
+				            	else if (user_jo.promos === "do nothing")
+				            		$("#promos_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -992,13 +959,13 @@ function getProfile(screenname)
 				        		}
 				        	}
 				        	else
-				        		$("#emailpromos_result_td").text("updated");
-				        	setTimeout(function(){$("#emailpromos_result_td").text("");},3000);
+				        		$("#promos_result_td").text("updated");
+				        	setTimeout(function(){$("#promos_result_td").text("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#emailpromos_result_td").text("ajax error");
-				        	setTimeout(function(){$("#emailpromos_result_td").text("");},3000);
+				        	$("#promos_result_td").text("ajax error");
+				        	setTimeout(function(){$("#promos_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});

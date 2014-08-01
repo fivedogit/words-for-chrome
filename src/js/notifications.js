@@ -72,8 +72,8 @@ function getNotifications()
 	        url: endpoint,
 	        data: {
 	            method: "resetActivityCount",
-	            email: email,             // this can be called with no email
-	            this_access_token: this_access_token   // this can be called with no this_access_token, user_jo will just come back erroneous
+	            screenname: screenname,           
+	            this_access_token: this_access_token  
 	        },
 	        dataType: 'json',
 	        async: true,
@@ -112,7 +112,7 @@ function removeItemFromActivityIds(removal_target)
         type: 'GET',
         url: endpoint,
         data: {
-        	email: email,
+        	screenname: screenname,
         	this_access_token: this_access_token,
             method: "removeItemFromActivityIds",
             id: removal_target

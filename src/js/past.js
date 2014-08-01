@@ -36,8 +36,8 @@ function getPastComments()
 	        url: endpoint,
 	        data: {
 	            method: "getMyComments",
-	            email: email,             // this can be called with no email
-	            this_access_token: this_access_token   // this can be called with no this_access_token, user_jo will just come back erroneous
+	            screenname: screenname,            
+	            this_access_token: this_access_token  
 	        },
 	        dataType: 'json',
 	        async: true,

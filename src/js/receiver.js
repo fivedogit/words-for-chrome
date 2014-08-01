@@ -93,7 +93,7 @@ function getParameterByName(name) {
 var logout = getParameterByName("logout");
 if(logout !== null)
 {
-	docCookies.removeItem("email");
+	docCookies.removeItem("screenname");
 	docCookies.removeItem("this_access_token");
 	var logout_msg = "";
 	logout_msg = logout_msg + "<div style=\"width:360px;padding:15px\">";
@@ -353,399 +353,8 @@ else
 		}	
 		else if(login_type === "words")
 		{
-			//displayMessage("Log in with Words:", "black");
-			$("#message_div").hide();
-			$("#content_div").css("padding","0px");
-			var log_and_reg = "";
-			log_and_reg = log_and_reg + "<table style=\"width:100%;border:0px solid black;border-spacing:15px;border-collapse:separate\">";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Log in:</td><td></td><td></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td><td><input type=text size=20 maxlength=20 id=\"screenname_input\"></td><td></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 maxlength=20 id=\"password_input\"></td><td></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td></td><td><button id=\"login_submit_button\">Login</button></td><td></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td></td><td><a href=\"#\" id=\"forgot_password_link\">I forgot my password.</a></td><td></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Create account:</td><td></td><td></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td><td><input type=text size=20 maxlength=20 id=\"nativereg_screenname_input\"></td><td id=\"screenname_validity_td\"></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 maxlength=20 id=\"nativereg_password_input\"></td><td id=\"password_strength_td\"></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">confirm:</td><td><input type=password size=20 maxlength=20 id=\"nativereg_confirm_input\"></td><td id=\"confirm_validity_td\"></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td style=\"text-align:right\">avatar:<br><span style=\"font-style:italic;font-color:#666666;font-size:10px\">(Custom avatars<br>coming soon!)</span></td>";
-			log_and_reg = log_and_reg + "		<td>";
-			log_and_reg = log_and_reg + "			<table>";
-			log_and_reg = log_and_reg + "				<tr>";
-			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
-			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"geometric\" value=\"geometric\">";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td>";
-			log_and_reg = log_and_reg + "						Geometric";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
-			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"monster\" value=\"monster\">";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td>";
-			log_and_reg = log_and_reg + "						Monster";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "				</tr>";
-			log_and_reg = log_and_reg + "				<tr>";
-			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
-			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"cartoon\" value=\"cartoon\">";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td>";
-			log_and_reg = log_and_reg + "						Cartoon";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
-			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"retro\" value=\"retro\">";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td>";
-			log_and_reg = log_and_reg + "						Retro";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "				</tr>";
-			log_and_reg = log_and_reg + "				<tr>";
-			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
-			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"unicorn\" value=\"unicorn\">";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td>";
-			log_and_reg = log_and_reg + "						Unicorn <img style=\"vertical-align:middle;width:16px;height:16px;display:none\" id=\"unicorn_progress_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
-			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"silhouette\" value=\"silhouette\">";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "					<td>";
-			log_and_reg = log_and_reg + "						Silhouette";
-			log_and_reg = log_and_reg + "					</td>";
-			log_and_reg = log_and_reg + "				</tr>";
-			log_and_reg = log_and_reg + "			</table>";
-			log_and_reg = log_and_reg + "		</td>";
-			log_and_reg = log_and_reg + "		<td><img style=\"width:50px;height:50px;display:none\" id=\"nativereg_avatar_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td></td><td><button id=\"create_account_button\">Create account</button></td><td></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td></td><td colspan=2 id=\"submit_message_div\"></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"></td><td></td>";
-			log_and_reg = log_and_reg + "	</tr>";
-			log_and_reg = log_and_reg + "</table>";
-			$("#content_div").html(log_and_reg);
-			$("#login_submit_button").click(function(event){
-				$.ajax({
-					type: 'GET',
-					url: bg.endpoint,
-					data: {
-						method: "nativeLogin",
-						screenname: $("#screenname_input").val(),
-						password: $("#password_input").val()
-					},
-					dataType: 'json',
-					async: true,
-					success: function (data, status) {
-						//alert("ajax success");
-						if(data.response_status === "error")
-						{
-							displayMessage(data.message, "red");
-						}
-						else
-						{
-							$("#message_div").show();
-							docCookies.setItem("email", data.email, 31536e3);
-							docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-							doReallyFinished();
-						}
-					},
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						console.log(textStatus, errorThrown);
-						displayMessage("Unable to login. Check username and password.", "red");
-					} 
-				});
-			});
-			$("#forgot_password_link").click(function(event){ event.preventDefault();
-				alert("forgot_password_link click");
-			});
-			
-			
-			$("#nativereg_screenname_input")
-			.focusout(function () {
-			$("#nativereg_screenname_input")
-			    .trigger("keypress");
-			});
-			$("#nativereg_screenname_input")
-			.keyup(function () {
-			$("#nativereg_screenname_input")
-			    .trigger("keypress");
-			});
-			$("#nativereg_screenname_input")
-			.keydown(function () {
-			$("#nativereg_screenname_input")
-			    .trigger("keypress");
-			});
-
-			
-			$("#nativereg_screenname_input").keypress(
-					function () {
-						$("#submit_message_div").html("");
-						if ($("#nativereg_screenname_input").val().length <= 0) 
-						{
-							$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
-							return;
-						} 
-						else if ($("#nativereg_screenname_input").val().length < 6) 
-						{
-							$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
-							return;
-						} 
-						else if (!$("#nativereg_screenname_input").val().match(/^[a-zA-Z][a-zA-Z0-9]+$/))
-						{
-							$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">Letters and numbers,<br>starting with a letter</span>");
-							return;	
-						}
-						else if ($("#nativereg_screenname_input").val().length >= 6) 
-						{
-							$("#screenname_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
-							return;
-						}
-					});
-			
-			$("#nativereg_password_input")
-			.focusout(function () {
-			$("#nativereg_password_input")
-			    .trigger("keypress");
-			});
-			$("#nativereg_password_input")
-			.keyup(function () {
-			$("#nativereg_password_input")
-			    .trigger("keypress");
-			});
-			$("#nativereg_password_input")
-			.keydown(function () {
-			$("#nativereg_password_input")
-			    .trigger("keypress");
-			});
-
-			$("#nativereg_password_input").keypress(
-					function () {
-						$("#submit_message_div").html("");
-						if ($("#nativereg_password_input").val().length <= 0) 
-						{
-							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
-							return;
-						} 
-						else if ($("#nativereg_password_input").val().length < 6) 
-						{
-							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
-							return;
-						} 
-						else if (!$("#nativereg_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}/))
-						{
-							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">8-20 letters, numbers or !@-#$%*_</span>");
-							return;	
-						}
-						else if ($("#nativereg_password_input").val().length >= 6) 
-						{
-							$("#password_strength_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
-							return;
-						}
-					});
-			
-			$("#nativereg_confirm_input")
-			.focusout(function () {
-			$("#nativereg_confirm_input")
-			    .trigger("keypress");
-			});
-			$("#nativereg_confirm_input")
-			.keyup(function () {
-			$("#nativereg_confirm_input")
-			    .trigger("keypress");
-			});
-			$("#nativereg_confirm_input")
-			.keydown(function () {
-			$("#nativereg_confirm_input")
-			    .trigger("keypress");
-			});
-			
-			$("#nativereg_confirm_input").keypress(
-					function () {
-						$("#submit_message_div").html("");
-						if ($("#nativereg_confirm_input").val().length <= 0) 
-						{
-							$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
-							return;
-						} 
-						else if ($("#nativereg_confirm_input").val().length < 6) 
-						{
-							$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
-							return;
-						} 
-						else if ($("#nativereg_confirm_input").val().length >= 6) 
-						{
-							if ($("#nativereg_confirm_input").val() === $("#nativereg_password_input").val()) 
-							{
-								$("#confirm_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
-							} 
-							else 
-							{
-								$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Doesn't match</span>");
-							}
-							return;
-						}
-					});
-			
-			$("#geometric").click(function (event) { 
-				var g = guid();
-				$("#nativereg_avatar_img").show();
-				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
-			});
-			$("#monster").click(function (event) { 
-				var g = guid();
-				$("#nativereg_avatar_img").show();
-				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
-			});
-			$("#cartoon").click(function (event) { 
-				var g = guid();
-				$("#nativereg_avatar_img").show();
-				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
-			});
-			$("#retro").click(function (event) { 
-				var g = guid();
-				$("#nativereg_avatar_img").show();
-				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
-			});
-			$("#unicorn").click(function (event) { 
-				var g = guid();
-				$("#nativereg_avatar_img").show();
-				$("#nativereg_avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
-				$("#unicorn_progress_img").show();
-				setTimeout(function() {$("#unicorn_progress_img").hide();}, 2000);
-			});
-			$("#silhouette").click(function (event) { 
-				var g = guid();
-				$("#nativereg_avatar_img").show();
-				$("#nativereg_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
-			});
-			
-			$("#create_account_button").click(function(event){
-				if ($("#nativereg_screenname_input").val().length <= 0) 
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Screenname is blank</span>");
-				} 
-				else if ($("#nativereg_screenname_input").val().length < 6) 
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Screenname is too short</span>");
-				} 
-				else if (!$("#nativereg_screenname_input").val().match(/^[a-zA-Z][a-zA-Z0-9]+$/))
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Screenname must be letters and numbers, starting with a letter</span>");
-				}
-				else if ($("#nativereg_password_input").val().length <= 0) 
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password cannot be blank</span>");
-				} 
-				else if ($("#nativereg_password_input").val().length < 6) 
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password is too short</span>");
-				} 
-				else if (!$("#nativereg_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}/))
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password must be 8-20 letters, numbers or !@-#$%*_</span>");
-				}
-				else if ($("#nativereg_confirm_input").val().length <= 0) 
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Confirm password is blank</span>");
-				} 
-				else if ($("#nativereg_confirm_input").val().length < 6) 
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Confirm password is too short</span>");
-				} 
-				else if ($("#nativereg_confirm_input").val() !== $("#nativereg_password_input").val()) 
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password and confirm don't match</span>");
-				}
-				else if ($("#nativereg_avatar_img").attr("src").indexOf("ajaxSnake.gif") != -1) 
-				{
-					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">You must choose an avatar</span>");
-				}
-				else
-				{
-					$("#submit_message_div").html("<img src=\"\" + chrome.extension.getURL(\"images/ajaxSnake.gif\") + \"\" style=\"width:16px;height16px;border:0px\">");
-					$.ajax({
-						type: 'GET',
-						url: bg.endpoint,
-						data: {
-							method: "createUser",
-							login_type: "words",
-							social_access_token: null,
-							screenname: $("#nativereg_screenname_input").val(),
-							picture: $("#nativereg_avatar_img").attr("src"),
-							email: $("#nativereg_screenname_input").val() + "@words4chrome.com",
-							password: $("#nativereg_password_input").val(),
-							useragent: navigator.userAgent
-						},
-						dataType: 'json',
-						async: true,
-						success: function (data, status) {
-							//alert("ajax success");
-							if(data.response_status === "error")
-							{
-								$("#submit_message_div").html("");
-								displayMessage(data.message, "red");
-								$("#registration_form_td").show();
-							}
-							else
-							{
-								$("#message_div").show();
-								$("#submit_message_div").html("");
-								docCookies.setItem("email", data.email, 31536e3);
-								docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-								doReallyFinished();
-							}
-						},
-						error: function (XMLHttpRequest, textStatus, errorThrown) {
-							console.log(textStatus, errorThrown);
-							displayMessage("Unable to create WORDS account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please contact us.", "red");
-						} 
-					});
-				}	
-				
-			});
-			
-			$("#google_login_img").click(function(event){
-				window.location = chrome.extension.getURL('receiver.html') + "?login_type=google";
-			});
-			$("#google_login_img").mouseover( function() {
-				$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24_mo.png"));
-			});
-			$("#google_login_img").mouseout( function() {
-				$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24.png"));
-			});
-			$("#facebook_login_img").click(function(event){
-				window.location = chrome.extension.getURL('receiver.html') + "?login_type=facebook";
-			});
-			$("#facebook_login_img").mouseover( function() {
-				$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24_mo.png"));
-			});
-			$("#facebook_login_img").mouseout( function() {
-				$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24.png"));
-			});
-				
-		}	
+			displayNewRegistration(true, null, "words", null, null); // show login, picture, login_type, email, facebook_access_token;
+		}
 		
 	}	
 	else if(code !== null && code !== "")
@@ -807,14 +416,16 @@ else
 					if(data.error_code === "0000" && data.login_type === "facebook")
 					{
 						docCookies.removeItem("last_tab_id");
-						docCookies.removeItem("email");
+						//docCookies.removeItem("email");
+						docCookies.removeItem("screenname");
 						docCookies.removeItem("this_access_token");
 					}	
 					else if(data.error_code === "0000" && data.login_type === "google")
 					{
 						//alert("delete token here.");
 						docCookies.removeItem("last_tab_id");
-						docCookies.removeItem("email");
+						//docCookies.removeItem("email");
+						docCookies.removeItem("screenname");
 						docCookies.removeItem("this_access_token");
 					}	
 				}
@@ -823,26 +434,26 @@ else
 					$("#progress_tr").hide();
 					if(data.show_registration === "true" && data.login_type === "facebook")
 					{
-						docCookies.setItem("email", data.email, 31536e3);
-						showRegistration(data.picture, data.login_type, data.email, data.facebook_access_token);
+						//docCookies.setItem("email", data.email, 31536e3); if we're passing the email in the next line, why do we need to store it as a cookie?
+						displayNewRegistration(false, data.picture, data.login_type, data.email, data.facebook_access_token);
 					}
 					else if(data.show_registration === "false" && data.login_type === "facebook")
 					{
 						//alert("receiver: fb login success, showing no registration, going to doFinished()");
-						docCookies.setItem("email", data.email, 31536e3);
-			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+						docCookies.setItem("screenname", data.screenname, 31536e3);
+						docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 			    		doFinished(false, data.facebook_access_token);
 					}	
 					if(data.show_registration === "true" && data.login_type === "google")
 					{
-						docCookies.setItem("email", data.email, 31536e3);
-						showRegistration(data.picture, data.login_type, data.email, data.google_access_token);
+						//docCookies.setItem("email", data.email, 31536e3); if we're passing the email in the next line, why do we need to store it as a cookie?
+						displayNewRegistration(false, data.picture, data.login_type, data.email, data.google_access_token);
 					}
 					else if(data.show_registration === "false" && data.login_type === "google")
 					{
 						//alert("receiver: g+ login success, showing no registration, going to doFinished()");
-						docCookies.setItem("email", data.email, 31536e3);
-			    		docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+						docCookies.setItem("screenname", data.screenname, 31536e3);
+						docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 			    		doFinished(false, data.google_access_token);
 					}	
 				}	
@@ -878,6 +489,499 @@ function guid() {
 	         s4() +s4() + s4() + s4();
 	}
 
+function displayNewRegistration(show_login, picture, login_type, email, social_access_token)
+{
+	$("#message_div").hide();
+	$("#content_div").css("padding","0px");
+	var log_and_reg = "";
+	log_and_reg = log_and_reg + "<table style=\"width:100%;border:0px solid black;border-spacing:15px;border-collapse:separate\">";
+	if(show_login)
+	{	
+		log_and_reg = log_and_reg + "	<tr>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Log in:</td><td></td><td></td>";
+		log_and_reg = log_and_reg + "	</tr>";
+		log_and_reg = log_and_reg + "	<tr>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td><td><input type=text size=20 id=\"screenname_input\"></td><td></td>";
+		log_and_reg = log_and_reg + "	</tr>";
+		log_and_reg = log_and_reg + "	<tr>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 id=\"password_input\"></td><td></td>";
+		log_and_reg = log_and_reg + "	</tr>";
+		log_and_reg = log_and_reg + "	<tr>";
+		log_and_reg = log_and_reg + "		<td></td><td><button id=\"login_submit_button\">Login</button></td><td></td>";
+		log_and_reg = log_and_reg + "	</tr>";
+		log_and_reg = log_and_reg + "	<tr>";
+		log_and_reg = log_and_reg + "		<td></td><td><a href=\"#\" id=\"forgot_password_link\">I forgot my password.</a></td><td></td>";
+		log_and_reg = log_and_reg + "	</tr>";
+	}
+	log_and_reg = log_and_reg + "	<tr>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Create account:</td><td></td><td></td>";
+	log_and_reg = log_and_reg + "	</tr>";
+	if(email !== null)
+	{
+		log_and_reg = log_and_reg + "	<tr>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:right\">email:</td><td>" + email + "</td>";
+		log_and_reg = log_and_reg + "			<td style=\"text-align:right;font-style:italic;font-size:11px\">";
+		log_and_reg = log_and_reg + "				Not you? Restart browser <br>to try again.";
+		log_and_reg = log_and_reg + "			</td>";
+		log_and_reg = log_and_reg + "	</tr>";
+	}	
+	log_and_reg = log_and_reg + "	<tr>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td><td><input type=text size=20 id=\"registration_screenname_input\"><br><a href=\"#\" id=\"screenname_availability_link\">available?</a> <span id=\"screenname_availability_span\"></span></td><td id=\"screenname_validity_td\"></td>";
+	log_and_reg = log_and_reg + "	</tr>";
+	log_and_reg = log_and_reg + "	<tr>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 id=\"registration_password_input\"></td><td id=\"password_strength_td\"></td>";
+	log_and_reg = log_and_reg + "	</tr>";
+	log_and_reg = log_and_reg + "	<tr>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">confirm:</td><td><input type=password size=20 id=\"registration_confirm_input\"></td><td id=\"confirm_validity_td\"></td>";
+	log_and_reg = log_and_reg + "	</tr>";
+	log_and_reg = log_and_reg + "	<tr>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">avatar:<br><span style=\"font-style:italic;font-color:#666666;font-size:10px\">(Custom avatars<br>coming soon!)</span></td>";
+	log_and_reg = log_and_reg + "		<td>";
+	log_and_reg = log_and_reg + "			<table>";
+	if(login_type === "google" || login_type === "facebook")
+	{	
+		log_and_reg = log_and_reg + "				<tr>";
+		if(login_type === "google")
+		{
+			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"registration_avatar\" id=\"use_google_radio\" value=\"google\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td>";
+			log_and_reg = log_and_reg + "						Google";
+			log_and_reg = log_and_reg + "					</td>";
+		}
+		else if(login_type === "facebook")
+		{	
+			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"registration_avatar\" id=\"use_facebook_radio\" value=\"facebook\">";
+			log_and_reg = log_and_reg + "					</td>";
+			log_and_reg = log_and_reg + "					<td>";
+			log_and_reg = log_and_reg + "						Facebook";
+			log_and_reg = log_and_reg + "					</td>";
+		}
+		log_and_reg = log_and_reg + "				<td></td><td></td>";
+		log_and_reg = log_and_reg + "				</tr>";
+	}
+	log_and_reg = log_and_reg + "				<tr>";
+	log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+	log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"registration_avatar\" id=\"geometric\" value=\"geometric\">";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td>";
+	log_and_reg = log_and_reg + "						Geometric";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+	log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"registration_avatar\" id=\"monster\" value=\"monster\">";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td>";
+	log_and_reg = log_and_reg + "						Monster";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "				</tr>";
+	log_and_reg = log_and_reg + "				<tr>";
+	log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+	log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"registration_avatar\" id=\"cartoon\" value=\"cartoon\">";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td>";
+	log_and_reg = log_and_reg + "						Cartoon";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+	log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"registration_avatar\" id=\"retro\" value=\"retro\">";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td>";
+	log_and_reg = log_and_reg + "						Retro";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "				</tr>";
+	log_and_reg = log_and_reg + "				<tr>";
+	log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+	log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"registration_avatar\" id=\"unicorn\" value=\"unicorn\">";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td>";
+	log_and_reg = log_and_reg + "						Unicorn <img style=\"vertical-align:middle;width:16px;height:16px;display:none\" id=\"unicorn_progress_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
+	log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"registration_avatar\" id=\"silhouette\" value=\"silhouette\">";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "					<td>";
+	log_and_reg = log_and_reg + "						Silhouette";
+	log_and_reg = log_and_reg + "					</td>";
+	log_and_reg = log_and_reg + "				</tr>";
+	log_and_reg = log_and_reg + "			</table>";
+	log_and_reg = log_and_reg + "		</td>";
+	log_and_reg = log_and_reg + "		<td><img style=\"width:80px;height:80px;display:none\" id=\"registration_avatar_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></td>";
+	log_and_reg = log_and_reg + "	</tr>";
+	log_and_reg = log_and_reg + "	<tr>";
+	log_and_reg = log_and_reg + "		<td></td><td><button id=\"create_account_button\">Create account</button></td><td></td>";
+	log_and_reg = log_and_reg + "	</tr>";
+	log_and_reg = log_and_reg + "	<tr>";
+	log_and_reg = log_and_reg + "		<td></td><td colspan=2 id=\"submit_message_div\"></td>";
+	log_and_reg = log_and_reg + "	</tr>";
+	log_and_reg = log_and_reg + "	<tr>";
+	if(login_type === "words")
+		log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"></td><td></td>";
+	else if(login_type === "facebook")
+		log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_24x24.png") + "\"></td><td></td>";
+	else if(login_type === "google")
+		log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_24x24.png") + "\"></td><td></td>";
+	
+	log_and_reg = log_and_reg + "	</tr>";
+	log_and_reg = log_and_reg + "</table>";
+	$("#content_div").html(log_and_reg);
+	$("#login_submit_button").click(function(event){
+		$.ajax({
+			type: 'GET',
+			url: bg.endpoint,
+			data: {
+				method: "nativeLogin",
+				screenname: $("#screenname_input").val(),
+				password: $("#password_input").val()
+			},
+			dataType: 'json',
+			async: true,
+			success: function (data, status) {
+				//alert("ajax success");
+				if(data.response_status === "error")
+				{
+					displayMessage(data.message, "red");
+				}
+				else
+				{
+					$("#message_div").show();
+					docCookies.setItem("screenname", data.screenname, 31536e3);
+					docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+					doReallyFinished();
+				}
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				console.log(textStatus, errorThrown);
+				displayMessage("Unable to login. Check username and password.", "red");
+			} 
+		});
+	});
+	$("#forgot_password_link").click(function(event){ event.preventDefault();
+		alert("forgot_password_link click");
+	});
+	
+	
+	$("#registration_screenname_input")
+	.focusout(function () {
+	$("#registration_screenname_input")
+	    .trigger("keypress");
+	});
+	$("#registration_screenname_input")
+	.keyup(function () {
+	$("#registration_screenname_input")
+	    .trigger("keypress");
+	});
+	$("#registration_screenname_input")
+	.keydown(function () {
+	$("#registration_screenname_input")
+	    .trigger("keypress");
+	});
+
+	
+	$("#registration_screenname_input").keypress(
+			function () {
+				$("#submit_message_div").html("");
+				if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,19}$/))
+				{
+					$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">8-20 letters and numbers,<br>starting with a letter</span>");
+					return;	
+				}
+				else
+				{
+					$("#screenname_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+					return;
+				}
+			});
+	
+	$("#screenname_availability_link").click( function (event) { event.preventDefault();
+	$("#screenname_availability_span").text("Checking...");
+	var response_object;
+	$.ajax({
+		type: 'GET',
+		url: bg.endpoint,
+		data: {
+			method: "isScreennameAvailable",
+			screenname: $("#registration_screenname_input").val()
+		},
+		dataType: 'json',
+		async: true,
+		success: function (data, status) 
+		{
+			response_object = data;
+			if (response_object.response_status === "error") 
+			{
+				$("#screenname_availability_span").css("color", "red");
+				$("#screenname_availability_span").text(data.message);
+				setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
+			} 
+			else if (response_object.response_status === "success") 
+			{
+				if (response_object.screenname_available === "true") 
+				{
+					$("#screenname_availability_span").css("color", "green");
+					$("#screenname_availability_span").text("Available");
+				}
+				else if (response_object.screenname_available === "false") 
+				{
+					$("#screenname_availability_span").css("color", "red");
+					$("#screenname_availability_span").text("Unavailable");
+				}
+				else
+				{
+					$("#screenname_availability_span").css("color", "red");
+					$("#screenname_availability_span").text("Error. Value !t/f.");
+				}
+				setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
+			}
+			else
+			{
+				//alert("weird. response_status not error or success.");
+			}
+			return;
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) 
+		{
+			console.log(textStatus, errorThrown);
+		}
+	});	
+});					
+	
+	$("#registration_password_input")
+	.focusout(function () {
+	$("#registration_password_input")
+	    .trigger("keypress");
+	});
+	$("#registration_password_input")
+	.keyup(function () {
+	$("#registration_password_input")
+	    .trigger("keypress");
+	});
+	$("#registration_password_input")
+	.keydown(function () {
+	$("#registration_password_input")
+	    .trigger("keypress");
+	});
+
+	$("#registration_password_input").keypress(
+			function () {
+				$("#submit_message_div").html("");
+				if ($("#registration_password_input").val().length <= 0) 
+				{
+					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
+					return;
+				} 
+				else if ($("#registration_password_input").val().length < 6) 
+				{
+					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
+					return;
+				} 
+				else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
+				{
+					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">8-20 letters, numbers or !@-#$%*_</span>");
+					return;	
+				}
+				else if ($("#registration_password_input").val().length >= 6) 
+				{
+					$("#password_strength_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+					return;
+				}
+			});
+	
+	$("#registration_confirm_input")
+	.focusout(function () {
+	$("#registration_confirm_input")
+	    .trigger("keypress");
+	});
+	$("#registration_confirm_input")
+	.keyup(function () {
+	$("#registration_confirm_input")
+	    .trigger("keypress");
+	});
+	$("#registration_confirm_input")
+	.keydown(function () {
+	$("#registration_confirm_input")
+	    .trigger("keypress");
+	});
+	
+	$("#registration_confirm_input").keypress(
+			function () {
+				$("#submit_message_div").html("");
+				if ($("#registration_confirm_input").val().length <= 0) 
+				{
+					$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
+					return;
+				} 
+				else if ($("#registration_confirm_input").val().length < 6) 
+				{
+					$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
+					return;
+				} 
+				else if ($("#registration_confirm_input").val().length >= 6) 
+				{
+					if ($("#registration_confirm_input").val() === $("#registration_password_input").val()) 
+					{
+						$("#confirm_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+					} 
+					else 
+					{
+						$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Doesn't match</span>");
+					}
+					return;
+				}
+			});
+	
+	if(login_type === "google")
+	{	
+		$("#use_google_radio").click(function (event) { 
+			$("#registration_avatar_img").show();
+			$("#registration_avatar_img").attr("src", picture);
+		});
+		$("#use_google_radio").trigger("click");
+		
+	}
+	if(login_type === "facebook")
+	{
+		$("#use_facebook_radio").click(function (event) {
+			$("#registration_avatar_img").show();
+			$("#registration_avatar_img").attr("src", picture );
+		});
+		$("#use_facebook_radio").trigger("click");
+	}	
+	
+	$("#geometric").click(function (event) { 
+		var g = guid();
+		$("#registration_avatar_img").show();
+		$("#registration_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
+	});
+	$("#monster").click(function (event) { 
+		var g = guid();
+		$("#registration_avatar_img").show();
+		$("#registration_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
+	});
+	$("#cartoon").click(function (event) { 
+		var g = guid();
+		$("#registration_avatar_img").show();
+		$("#registration_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
+	});
+	$("#retro").click(function (event) { 
+		var g = guid();
+		$("#registration_avatar_img").show();
+		$("#registration_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
+	});
+	$("#unicorn").click(function (event) { 
+		var g = guid();
+		$("#registration_avatar_img").show();
+		$("#registration_avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
+		$("#unicorn_progress_img").show();
+		setTimeout(function() {$("#unicorn_progress_img").hide();}, 2000);
+	});
+	$("#silhouette").click(function (event) { 
+		var g = guid();
+		$("#registration_avatar_img").show();
+		$("#registration_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
+	});
+	
+	$("#create_account_button").click(function(event){
+		if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,19}$/))
+		{
+			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Screenname must be 8-20 letters and numbers,<br>starting with a letter</span>");
+		}
+		else if ($("#registration_password_input").val().length <= 0) 
+		{
+			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password cannot be blank</span>");
+		} 
+		else if ($("#registration_password_input").val().length < 6) 
+		{
+			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password is too short</span>");
+		} 
+		else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
+		{
+			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password must be 8-20 letters, numbers or !@-#$%*_</span>");
+		}
+		else if ($("#registration_confirm_input").val().length <= 0) 
+		{
+			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Confirm password is blank</span>");
+		} 
+		else if ($("#registration_confirm_input").val().length < 6) 
+		{
+			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Confirm password is too short</span>");
+		} 
+		else if ($("#registration_confirm_input").val() !== $("#registration_password_input").val()) 
+		{
+			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password and confirm don't match</span>");
+		}
+		else if ($("#registration_avatar_img").attr("src").indexOf("ajaxSnake.gif") != -1) 
+		{
+			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">You must choose an avatar</span>");
+		}
+		else
+		{
+			$("#submit_message_div").html("<img src=\"\" + chrome.extension.getURL(\"images/ajaxSnake.gif\") + \"\" style=\"width:16px;height16px;border:0px\">");
+			if(login_type === "words")
+				email = $("#registration_screenname_input").val() + "@words4chrome.com";
+			$.ajax({
+				type: 'GET',
+				url: bg.endpoint,
+				data: {
+					method: "createUser",
+					login_type: login_type,
+					social_access_token: social_access_token,
+					screenname: $("#registration_screenname_input").val(),
+					picture: $("#registration_avatar_img").attr("src"),
+					email: email,
+					password: $("#registration_password_input").val(),
+					useragent: navigator.userAgent
+				},
+				dataType: 'json',
+				async: true,
+				success: function (data, status) {
+					//alert("ajax success");
+					if(data.response_status === "error")
+					{
+						$("#submit_message_div").html("");
+						displayMessage(data.message, "red");
+						$("#registration_form_td").show();
+					}
+					else
+					{
+						$("#message_div").show();
+						$("#submit_message_div").html("");
+						docCookies.setItem("screenname", data.screenname, 31536e3);
+						docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+						doReallyFinished();
+					}
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					console.log(textStatus, errorThrown);
+					displayMessage("Unable to create WORDS account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please contact us.", "red");
+				} 
+			});
+		}	
+		
+	});
+	
+	$("#google_login_img").click(function(event){
+		window.location = chrome.extension.getURL('receiver.html') + "?login_type=google";
+	});
+	$("#google_login_img").mouseover( function() {
+		$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24_mo.png"));
+	});
+	$("#google_login_img").mouseout( function() {
+		$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24.png"));
+	});
+	$("#facebook_login_img").click(function(event){
+		window.location = chrome.extension.getURL('receiver.html') + "?login_type=facebook";
+	});
+	$("#facebook_login_img").mouseover( function() {
+		$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24_mo.png"));
+	});
+	$("#facebook_login_img").mouseout( function() {
+		$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24.png"));
+	});
+		
+}
+
+/*
 function showRegistration(picture, login_type, email, social_access_token)
 {
 	$("#message_div").css("font-weight", "bold");
@@ -916,28 +1020,16 @@ function showRegistration(picture, login_type, email, social_access_token)
 	tstr=tstr+"			</td>";
 	tstr=tstr+"			<td style=\"text-align:right;font-style:italic;font-size:11px\">";
 	tstr=tstr+"				Not you? Restart browser <br>to try again.";
-	tstr=tstr+"				<!-- <a href=\"#\" id=\"not_you_link\" style=\"font-size:11px\">Not you?</a> -->";
 	tstr=tstr+"			</td>";
 	tstr=tstr+"		</tr>";
 	tstr=tstr+"		<tr>";
 	tstr=tstr+"			<td style=\"text-align:right\">";
-	tstr=tstr+"				 screenname<br><span style=\"font-size:10px\">(letters and numbers)</span>";
+	tstr=tstr+"				 screenname<br><span style=\"font-size:10px\">(8-20 letters/numbers, starting with a letter)</span>";
 	tstr=tstr+"			</td>";
 	tstr=tstr+"			<td style=\"text-align:center\">";
-	tstr=tstr+"				<input type=text id=\"registration_screenname_input\" style=\"width:130px\" maxlength=\"20\">";
+	tstr=tstr+"				<input type=text id=\"registration_screenname_input\" style=\"width:130px\" maxlength=\"20\"><br><a href=\"#\" id=\"screenname_availability_link\">available?</a> <span id=\"screenname_availability_span\"></span>";
 	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td>";
-	tstr=tstr+"				<table>";
-	tstr=tstr+"				<tr>";
-	tstr=tstr+"					<td>";
-	tstr=tstr+"						<input type=button id=\"registration_screenname_button\" value=\"available?\" style=\"width:100px\">";
-	tstr=tstr+"					</td>";
-	tstr=tstr+"					<td>";
-	tstr=tstr+"						<span style=\"margin-left:2px;font-size:11px\" id=\"screenname_availability_span\"></span>";
-	tstr=tstr+"					</td>";
-	tstr=tstr+"				</tr>";
-	tstr=tstr+"				</table>";
-	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td id=\"screenname_validity_td\"></td>";
 	tstr=tstr+"		</tr>";
 	tstr = tstr + "	<tr>";
 	tstr = tstr + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 maxlength=20 id=\"registration_password_input\"></td><td id=\"password_strength_td\"></td>";
@@ -952,22 +1044,28 @@ function showRegistration(picture, login_type, email, social_access_token)
 	tstr=tstr+"			<td>";
 	tstr=tstr+"				<div id=\"picture_type_div\">";
 	tstr=tstr+"					<table style=\"margin-right:auto;margin-left:auto\" id=\"avatar_radios_table\">";
-	tstr=tstr+"					<tr id=\"use_google_tr\">";
-	tstr=tstr+"						<td>";
-	tstr=tstr+"							<input id=\"use_google_radio\" type=\"radio\" name=\"picture_type\" value=\"google\">";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"						<td id=\"use_google_wording_td\">";
-	tstr=tstr+"							Google picture";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"					</tr>";
-	tstr=tstr+"					<tr id=\"use_facebook_tr\">";
-	tstr=tstr+"						<td>";
-	tstr=tstr+"							<input id=\"use_facebook_radio\" type=\"radio\" name=\"picture_type\" value=\"facebook\">";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"						<td id=\"use_facebook_wording_td\">";
-	tstr=tstr+"							Facebook picture";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"					</tr>";
+	if(login_type === "google")
+	{	
+		tstr=tstr+"					<tr id=\"use_google_tr\">";
+		tstr=tstr+"						<td>";
+		tstr=tstr+"							<input id=\"use_google_radio\" type=\"radio\" name=\"picture_type\" value=\"use_google_radio\">";
+		tstr=tstr+"						</td>";
+		tstr=tstr+"						<td id=\"use_google_wording_td\">";
+		tstr=tstr+"							Google picture";
+		tstr=tstr+"						</td>";
+		tstr=tstr+"					</tr>";
+	}
+	else if(login_type === "facebook")
+	{	
+		tstr=tstr+"					<tr id=\"use_facebook_tr\">";
+		tstr=tstr+"						<td>";
+		tstr=tstr+"							<input id=\"use_facebook_radio\" type=\"radio\" name=\"picture_type\" value=\"use_facebook_radio\">";
+		tstr=tstr+"						</td>";
+		tstr=tstr+"						<td id=\"use_facebook_wording_td\">";
+		tstr=tstr+"							Facebook picture";
+		tstr=tstr+"						</td>";
+		tstr=tstr+"					</tr>";
+	}
 	tstr=tstr+"					<tr>";
 	tstr=tstr+"						<td>";
 	tstr=tstr+"							<input id=\"use_geometric_radio\" type=\"radio\" name=\"picture_type\" value=\"geometric\">";
@@ -1033,7 +1131,7 @@ function showRegistration(picture, login_type, email, social_access_token)
 	tstr=tstr+"						";
 	tstr=tstr+"					</td>";
 	tstr=tstr+"					<td>";
-	tstr=tstr+"						<input id=\"registration_submit_button\" class=button type=button value=\"submit\" style=\"width:50px\"></input>";
+	tstr=tstr+"						<input id=\"registration_submit_button\" class=button type=button value=\"Create account\"></input>";
 	tstr=tstr+"					</td>";
 	tstr=tstr+"					<td>";
 	tstr=tstr+"						<span id=\"registration_progress_span\" style=\"display:none\"><img src=\"\" + chrome.extension.getURL(\"images/ajaxSnake.gif\") + \"\" style=\"width:16px;height16px;border:0px\"></span>";
@@ -1049,10 +1147,43 @@ function showRegistration(picture, login_type, email, social_access_token)
 	tstr=tstr+"	</td>";
 	tstr=tstr+"</tr>";
 	tstr=tstr+"</table>";
-	$("#main_td").html(tstr);
+	$("#content_div").html(tstr);
 	
 	$("#registration_email_td").text(email);
 	$("#registration_form_td").show();
+	
+	
+	$("#registration_screenname_input")
+	.focusout(function () {
+	$("#registration_screenname_input")
+	    .trigger("keypress");
+	});
+	$("#registration_screenname_input")
+	.keyup(function () {
+	$("#registration_screenname_input")
+	    .trigger("keypress");
+	});
+	$("#registration_screenname_input")
+	.keydown(function () {
+	$("#registration_screenname_input")
+	    .trigger("keypress");
+	});
+
+	
+	$("#registration_screenname_input").keypress(
+			function () {
+				$("#submit_message_div").html("");
+				if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,19}$/))
+				{
+					$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">8-20 letters and numbers,<br>starting with a letter</span>");
+					return;	
+				}
+				else
+				{
+					$("#screenname_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+					return;
+				}
+			});	
 	
 	$("#use_google_radio").click(function (event) { 
 		$("#avatar_img").attr("src", picture);
@@ -1103,73 +1234,57 @@ function showRegistration(picture, login_type, email, social_access_token)
 		});
 	});
 	
-	$("#registration_screenname_button").click( function (event) { event.preventDefault();
+	$("#screenname_availability_link").click( function (event) { event.preventDefault();
 		$("#screenname_availability_span").text("Checking...");
-		if ($("#registration_screenname_input").val().length <= 0) 
-		{
-			$("#screenname_availability_span").css("color", "red");
-			$("#screenname_availability_span").text("Blank");
-			setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
-		} 
-		else if ($("#registration_screenname_input").val().length < 6) 
-		{
-			$("#screenname_availability_span").css("color", "red");
-			$("#screenname_availability_span").text("Too short");
-			setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
-		} 
-		else 
-		{
-			var response_object;
-			$.ajax({
-				type: 'GET',
-				url: bg.endpoint,
-				data: {
-					method: "isScreennameAvailable",
-					screenname: $("#registration_screenname_input").val()
-				},
-				dataType: 'json',
-				async: true,
-				success: function (data, status) 
+		var response_object;
+		$.ajax({
+			type: 'GET',
+			url: bg.endpoint,
+			data: {
+				method: "isScreennameAvailable",
+				screenname: $("#registration_screenname_input").val()
+			},
+			dataType: 'json',
+			async: true,
+			success: function (data, status) 
+			{
+				response_object = data;
+				if (response_object.response_status === "error") 
 				{
-					response_object = data;
-					if (response_object.response_status === "error") 
+					$("#screenname_availability_span").css("color", "red");
+					$("#screenname_availability_span").text(data.message);
+					setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
+				} 
+				else if (response_object.response_status === "success") 
+				{
+					if (response_object.screenname_available === "true") 
+					{
+						$("#screenname_availability_span").css("color", "green");
+						$("#screenname_availability_span").text("Available");
+					}
+					else if (response_object.screenname_available === "false") 
 					{
 						$("#screenname_availability_span").css("color", "red");
-						$("#screenname_availability_span").text(data.message);
-						setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
-					} 
-					else if (response_object.response_status === "success") 
-					{
-						if (response_object.screenname_available === "true") 
-						{
-							$("#screenname_availability_span").css("color", "green");
-							$("#screenname_availability_span").text("Available");
-						}
-						else if (response_object.screenname_available === "false") 
-						{
-							$("#screenname_availability_span").css("color", "red");
-							$("#screenname_availability_span").text("Unavailable");
-						}
-						else
-						{
-							$("#screenname_availability_span").css("color", "red");
-							$("#screenname_availability_span").text("Error. Value !t/f.");
-						}
-						setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
+						$("#screenname_availability_span").text("Unavailable");
 					}
 					else
 					{
-						//alert("weird. response_status not error or success.");
+						$("#screenname_availability_span").css("color", "red");
+						$("#screenname_availability_span").text("Error. Value !t/f.");
 					}
-					return;
-				},
-				error: function (XMLHttpRequest, textStatus, errorThrown) 
-				{
-					console.log(textStatus, errorThrown);
+					setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
 				}
-			});
-			return;
-		}
+				else
+				{
+					//alert("weird. response_status not error or success.");
+				}
+				return;
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) 
+			{
+				console.log(textStatus, errorThrown);
+			}
+		});	
 	});					
 		
 	$("#registration_password_input")
@@ -1201,7 +1316,7 @@ function showRegistration(picture, login_type, email, social_access_token)
 					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
 					return;
 				} 
-				else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}/))
+				else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
 				{
 					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">8-20 letters, numbers or !@-#$%*_</span>");
 					return;	
@@ -1308,7 +1423,7 @@ function showRegistration(picture, login_type, email, social_access_token)
 				else
 				{
 					$("#progress_tr").hide();
-					docCookies.setItem("email", data.email, 31536e3);
+					docCookies.setItem("screenname", data.screenname, 31536e3);
 					docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 					doFinished(true, social_access_token);
 				}
@@ -1319,7 +1434,7 @@ function showRegistration(picture, login_type, email, social_access_token)
 			} 
 		});
 	});
-}
+}*/
 
 function doFinished(from_registration, social_access_token)
 {
@@ -1334,7 +1449,7 @@ function doFinished(from_registration, social_access_token)
 		url: bg.endpoint, 
 		data: {
             method: "getUserSelf",
-            email: docCookies.getItem("email"),							
+            screenname: docCookies.getItem("screenname"),							
             this_access_token: docCookies.getItem("this_access_token")	
         },
         dataType: 'json', 
@@ -1476,7 +1591,7 @@ function doFinished(from_registration, social_access_token)
                 			url: bg.endpoint,
                 			data: {
                 				method: "savePicture",
-                				email: docCookies.getItem("email"),							
+                				screenname: docCookies.getItem("screenname"),							
                 				this_access_token: docCookies.getItem("this_access_token"),	
                 				picture: social_pic
                 			},

@@ -8,7 +8,7 @@ var currentHostname;
 var scrollable = 0;
 var beginindex;
 var endindex;
-var email;
+var screenname;
 var this_access_token;
 var tabmode = "thread";
 var msfe_according_to_backend = bg.msfe_according_to_backend;
@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			 currentHostname = "www." + currentHostname;
 		 
 		 initializeView();
-		 // need a valid email/this_access_token to do the rest
-		 email = bg.docCookies.getItem("email");
+
+		 screenname = bg.docCookies.getItem("screenname");
 		 this_access_token = bg.docCookies.getItem("this_access_token");
 		 
 		 doThreadTab();

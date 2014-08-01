@@ -2,7 +2,7 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 	  if(request.method === "logout")
 	  {
-		  docCookies.removeItem("email");
+		  docCookies.removeItem("screenname");
 		  docCookies.removeItem("this_access_token");
 		  sendResponse({message: "You are now logged out of WORDS."});
 	  }  
@@ -14,10 +14,10 @@ chrome.runtime.onMessage.addListener(
 	  }  
 	  else if(request.method === "switchUser")
 	  {
-		  docCookies.setItem("email", request.email, 31536e3);
+		  docCookies.setItem("screenname", request.screenname, 31536e3);
 		  docCookies.setItem("this_access_token", request.this_access_token, 31536e3);
 		  getUser(false);
-		  sendResponse({email:request.email, this_access_token:request.this_access_token, thread_jo: t_jo, user_jo: user_jo});
+		  sendResponse({screenname:request.screenname, this_access_token:request.this_access_token, thread_jo: t_jo, user_jo: user_jo});
 	  }  
 	  else if(request.method == "redrawButton")
 	  {
@@ -434,10 +434,9 @@ function getUser(retrieve_asynchronously)
 		async = false;
 		//alert("async=" + async);
 	}
-	var email = docCookies.getItem("email");
+	var screenname = docCookies.getItem("screenname");
 	var this_access_token = docCookies.getItem("this_access_token");
-	//alert("getUser with email=" + email + " and tat=" + this_access_token);
-	if(email !== null && email.length >=6 && this_access_token !== null && this_access_token.length == 32)// the shortest possible email length is x@b.co = 6.
+	if(screenname !== null && screenname.length >=6 && this_access_token !== null && this_access_token.length == 32)// the shortest possible screenname length is x@b.co = 6.
 	{
 		//alert("bg.getUserSelf()");
 		$.ajax({ 
@@ -445,7 +444,7 @@ function getUser(retrieve_asynchronously)
 			url: endpoint, 
 			data: {
 	            method: "getUserSelf",
-	            email: email,							
+	            screenname: screenname,							
 	            this_access_token: this_access_token	
 	        },
 	        dataType: 'json', 
@@ -457,7 +456,7 @@ function getUser(retrieve_asynchronously)
             		if(data.error_code && data.error_code === "0000")
             		{
             			//alert("getUser error 0000");
-            			docCookies.removeItem("email"); 
+            			docCookies.removeItem("screenname"); 
             			docCookies.removeItem("this_access_token");
             			user_jo = null;
             		}
@@ -474,9 +473,9 @@ function getUser(retrieve_asynchronously)
 	        } 
 		});
 	}
-	else if(email !== null || this_access_token !== null) // if either of these is not null and we've gotten here, 
+	else if(screenname !== null || this_access_token !== null) // if either of these is not null and we've gotten here, 
 	{													  // something is rotten in denmark re: cookie credentials, delete them 	
-		docCookies.removeItem("email"); 
+		docCookies.removeItem("screenname"); 
 		docCookies.removeItem("this_access_token");
 		user_jo = null;
 	}

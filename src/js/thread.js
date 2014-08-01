@@ -134,7 +134,7 @@ function gotThread()
 				type: 'GET',
 				url: endpoint,
 				data: {
-					email: email,
+					screenname: screenname, 
 					this_access_token: this_access_token,
 					method: likepage_method,
 					url: currentURL
@@ -179,7 +179,7 @@ function gotThread()
 		        data: {
 		            method: haveilikedpage_method,
 		            url: currentURL,
-		            email: email,
+		            screenname: screenname, 
 		            this_access_token: this_access_token
 		        },
 		        dataType: 'json',
@@ -207,7 +207,7 @@ function gotThread()
 		        data: {
 		            method: "amIFollowingThisPage",
 		            url: currentURL,
-		            email: email,
+		            screenname: screenname, 
 		            this_access_token: this_access_token
 		        },
 		        dataType: 'json',
@@ -283,7 +283,7 @@ function gotThread()
 	 				type: 'GET',
 	 				url: endpoint,
 	 				data: {
-	 					email: email,
+	 					screenname: screenname, 
 	 					this_access_token: this_access_token,
 	 					method: "followPage",
 	 					url: currentURL
@@ -315,7 +315,7 @@ function gotThread()
 	 				type: 'GET',
 	 				url: endpoint,
 	 				data: {
-	 					email: email,
+	 					screenname: screenname, 
 	 					this_access_token: this_access_token,
 	 					method: "unfollowPage",
 	 					url: currentURL
@@ -356,7 +356,7 @@ function gotThread()
 	 					data: {
 	 						method: "separateHostname",
 	 						url: currentURL,
-	 						email: email,
+	 						screenname: screenname, 
 	 						this_access_token: this_access_token
 	 					},
 	 					dataType: 'json',
@@ -386,7 +386,7 @@ function gotThread()
 	 					data: {
 	 						method: "combineHostname",
 	 						url: currentURL,
-	 						email: email,
+	 						screenname: screenname, 
 	 						this_access_token: this_access_token
 	 					},
 	 					dataType: 'json',
@@ -419,7 +419,7 @@ function gotThread()
 	 					method: "setSignificantQSP",
 	 					url: currentURL,
 	 					sqsp: $("#sqsp").val(),
-	 					email: email,
+	 					screenname: screenname, 
 	 					this_access_token: this_access_token
 	 				},
 	 				dataType: 'json',
@@ -528,7 +528,7 @@ function noteThreadView(was_empty) //booleans or strings
 		url: endpoint,
 		data: {
 			method: "noteThreadView",
-			email: email,
+			screenname: screenname, 
 			this_access_token: this_access_token,
 			url: currentURL,
 			was_empty: was_empty
@@ -728,9 +728,6 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + comment_id + "\">N!</a> ";
 			tempstr = tempstr + "		   </td>";
-			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
-			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
-			tempstr = tempstr + "		   </td>";
 		}	
 		tempstr = tempstr + "	</tr>";
 	  	tempstr = tempstr + "</table>"
@@ -790,9 +787,6 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		{
 			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
 			tempstr = tempstr + "				<a href=\"#\" id=\"comment_nuke_link_" + comment_id + "\">N!</a> ";
-			tempstr = tempstr + "		   </td>";
-			tempstr = tempstr + "		   <td style=\"width:10px;padding-left:3px;\"> ";
-			tempstr = tempstr + "				<a href=\"#\" id=\"comment_megadownvote_link_" + comment_id + "\">D!</a> ";
 			tempstr = tempstr + "		   </td>";
 		}	
 		
@@ -919,7 +913,7 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		        data: {
 		            method: "haveILikedThisComment",
 		            id: feeditem_jo.id,
-		            email: email,
+		            screenname: screenname, 
 		            this_access_token: this_access_token
 		        },
 		        dataType: 'json',
@@ -947,7 +941,7 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		        data: {
 		            method: "haveIDislikedThisComment",
 		            id: feeditem_jo.id,
-		            email: email,
+		            screenname: screenname, 
 		            this_access_token: this_access_token
 		        },
 		        dataType: 'json',
@@ -1029,13 +1023,6 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 			if (confirmbox === true)
 				nukeComment(event.data.value);
 		});
-
-		$("#comment_megadownvote_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
-			event.preventDefault();
-			var confirmbox = confirm("Megadownvote comment?\n(This action is permanent.)");
-			if (confirmbox === true)
-				megadownvoteComment(event.data.value);
-		});
 	}
 	
 }
@@ -1055,7 +1042,7 @@ function submitComment(parent, message_element) // submits comment and updates t
 	    data: {
 	        method: "addComment",
 	        url: currentURL,
-	        email: email, // do it this way... no need to go get these from cookies again
+	        screenname: screenname,  // do it this way... no need to go get these from cookies again
             this_access_token: this_access_token, // if the user loaded the page and got this link to click in the first place, these values should be valid
             text: text,
 	        parent: parent_to_submit
@@ -1202,7 +1189,7 @@ function hideComment(inc_id)
 	    data: {
 	        method: "hideComment",
 	        id: inc_id,
-	        email: email, 
+	        screenname: screenname, 
             this_access_token: this_access_token
 	    },
 	    dataType: 'json',
@@ -1249,7 +1236,7 @@ function nukeComment(inc_id)
 	    data: {
 	        method: "nukeComment",
 	        id: inc_id,
-	        email: email, 
+	        screenname: screenname,  
             this_access_token: this_access_token
 	    },
 	    dataType: 'json',
@@ -1283,48 +1270,6 @@ function nukeComment(inc_id)
 	});
 }
 
-function megadownvoteComment(inc_id) 
-{
-	$.ajax({
-	    type: 'GET',
-	    url: endpoint,
-	    data: {
-	        method: "megadownvoteComment",
-	        id: inc_id,
-	        email: email, 
-            this_access_token: this_access_token
-	    },
-	    dataType: 'json',
-	    async: true,
-	    success: function (data, status) {
-
-	        if (data.response_status == "error") 
-	        {
-	        	displayMessage(data.message, "red", "message_div_" + inc_id);
-            	if(data.error_code && data.error_code === "0000")
-        		{
-        			displayMessage("Your login has expired. Please relog.", "red");
-        			user_jo = null;
-        			updateLogstat();
-        		}
-	        }
-	        else if (data.response_status === "success")
-	        {
-	        	displayMessage("megadownvoteComment process underway.", "black", "message_div_" + inc_id);
-				//doThreadItem(data.comment.id, data.comment.parent, "reply");
-	        }
-	        else
-	        {
-	        	//alert("weird");
-	        }
-	    },
-	    error: function (XMLHttpRequest, textStatus, errorThrown) {
-	    	displayMessage("Ajax error megadownvoteComment: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + inc_id);
-	        console.log(textStatus, errorThrown);
-	    }
-	});
-}
-
 function likeOrDislikeComment(id, like_or_dislike)
 {
 	var prev = ""; $("#like_img_" + id).attr("src");
@@ -1345,7 +1290,7 @@ function likeOrDislikeComment(id, like_or_dislike)
 			url: endpoint,
 			data: {
 				method: "addCommentLikeOrDislike",
-				email: email, 
+				screenname: screenname, 
 				this_access_token: this_access_token, 
 				id: id,
 				like_or_dislike: like_or_dislike
