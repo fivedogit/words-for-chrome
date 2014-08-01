@@ -48,7 +48,7 @@ var docCookies = {
 function displayMessage(inc_message, inc_color, dom_id, s)
 {
 	if(typeof dom_id === "undefined" || dom_id === null)
-		dom_id = "message_td";
+		dom_id = "message_div";
 	var ms;
 	if(s === null || !$.isNumeric(s) ||  Math.floor(s) != s) // not a number or not an integer 
 		ms = 3000;
@@ -102,7 +102,7 @@ if(logout !== null)
 	logout_msg = logout_msg + "	</div>";
 	logout_msg = logout_msg + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 	logout_msg = logout_msg + "</div>";
-	$("#message_td").html(logout_msg);
+	$("#message_div").html(logout_msg);
 	$("#close_this_tab_link").click( function (event) { event.preventDefault();
 		chrome.tabs.getSelected(null, function(tab) { 
 			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
@@ -141,7 +141,7 @@ else
 		google_cancel_message = google_cancel_message + "	</div>";
 		google_cancel_message = google_cancel_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 		google_cancel_message = google_cancel_message + "</div>";
-		$("#message_td").html(google_cancel_message);
+		$("#message_div").html(google_cancel_message);
 		$("#close_this_tab_link").click( function (event) { event.preventDefault();
 			chrome.tabs.getSelected(null, function(tab) { 
 				var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
@@ -164,7 +164,7 @@ else
 		facebook_cancel_message = facebook_cancel_message + "	</div>";
 		facebook_cancel_message = facebook_cancel_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 		facebook_cancel_message = facebook_cancel_message + "</div>";
-		$("#message_td").html(facebook_cancel_message);
+		$("#message_div").html(facebook_cancel_message);
 		$("#close_this_tab_link").click( function (event) { event.preventDefault();
 			chrome.tabs.getSelected(null, function(tab) { 
 				var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
@@ -179,8 +179,18 @@ else
 		if(login_type === "google")
 		{
 			displayMessage("Logging in with Google. A popup window like this may appear. (Don't worry. It's safe.)", "black");
-			$("#progress_tr").html("<td><table style=\"margin-right:auto;margin-left:auto;\"><tr><td style=\"width:220px;\"><img style=\"border:1px solid black\" src=\"images/google_popup.jpg\"></td><td style=\"vertical-align:middle;text-align:center;padding-left:10px\"><a href=\"#\" id=\"confirm_google_popup_link\">Ok. I got it. >></a></td></tr></table></td>");
-			$("#progress_tr").show();
+			var tstr = "";
+			tstr=tstr+"<table style=\"margin-right:auto;margin-left:auto;\">";
+			tstr=tstr+"	<tr>";
+			tstr=tstr+"		<td style=\"width:220px;\"><img style=\"border:1px solid black\" src=\"images/google_popup.jpg\"></td>";
+			tstr=tstr+"		<td style=\"vertical-align:middle;text-align:center;padding-left:25px\">";
+			tstr=tstr+"			<a href=\"#\" id=\"confirm_google_popup_link\">Ok. I got it. >></a>";
+			tstr=tstr+"			<br><br>";
+			tstr=tstr+"			Or, login with: <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_black_24x24.png") + "\"> ";
+			tstr=tstr+"		</td>";
+			tstr=tstr+"	</tr>";
+			tstr=tstr+"</table>";
+			$("#content_div").html(tstr);
 			$("#confirm_google_popup_link").click(function(event){ event.preventDefault();
 				var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
 				var interactive = true;
@@ -209,7 +219,7 @@ else
 						google_close_message = google_close_message + "	</div>";
 						google_close_message = google_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 						google_close_message = google_close_message + "</div>";
-						$("#message_td").html(google_close_message);
+						$("#message_div").html(google_close_message);
 						$("#close_this_tab_link").click( function (event) { event.preventDefault();
 							chrome.tabs.getSelected(null, function(tab) { 
 								var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
@@ -233,12 +243,44 @@ else
 					}	 
 				 });
 			});
+			
+			
+			$("#facebook_login_img").click(function(event){
+				window.location = chrome.extension.getURL('receiver.html') + "?login_type=facebook";
+			});
+			$("#facebook_login_img").mouseover( function() {
+				$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24_mo.png"));
+			});
+			$("#facebook_login_img").mouseout( function() {
+				$("#facebook_login_img").attr("src", chrome.extension.getURL("images/facebook_button_24x24.png"));
+			});
+			$("#words_login_img").click(function(event){
+				window.location = chrome.extension.getURL('receiver.html') + "?login_type=words";
+			});
+			$("#words_login_img").mouseover( function() {
+				$("#words_login_img").attr("src", chrome.extension.getURL("images/words_button_black_24x24_mo.png"));
+			});
+			$("#words_login_img").mouseout( function() {
+				$("#words_login_img").attr("src", chrome.extension.getURL("images/words_button_black_24x24.png"));
+			});
+			
 		}
 		else if(login_type === "facebook")
 		{
 			displayMessage("Logging in with Facebook. A popup window like this may appear. (Don't worry. It's safe.)", "black");
-			$("#progress_tr").html("<td><table style=\"margin-right:auto;margin-left:auto;\"><tr><td><img style=\"border:1px solid black\" src=\"images/fb_popup.jpg\"></td><td style=\"vertical-align:middle;text-align:center;padding-left:10px\"><a href=\"#\" id=\"confirm_facebook_popup_link\">Ok. I got it. >></a></td></tr></table></td>");
-			$("#progress_tr").show();
+			$("#content_div").html("<table style=\"margin-right:auto;margin-left:auto;\"><tr><td><img style=\"border:1px solid black\" src=\"images/fb_popup.jpg\"></td><td style=\"vertical-align:middle;text-align:center;padding-left:10px\"><a href=\"#\" id=\"confirm_facebook_popup_link\">Ok. I got it. >></a></td></tr></table>");
+			var tstr = "";
+			tstr=tstr+"<table style=\"margin-right:auto;margin-left:auto;\">";
+			tstr=tstr+"	<tr>";
+			tstr=tstr+"		<td style=\"width:220px;\"><img style=\"border:1px solid black\" src=\"images/fb_popup.jpg\"></td>";
+			tstr=tstr+"		<td style=\"vertical-align:middle;text-align:center;padding-left:25px;padding-right:15px\">";
+			tstr=tstr+"			<a href=\"#\" id=\"confirm_facebook_popup_link\">Ok. I got it. >></a>";
+			tstr=tstr+"			<br><br>";
+			tstr=tstr+"			Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_black_24x24.png") + "\"> ";
+			tstr=tstr+"		</td>";
+			tstr=tstr+"	</tr>";
+			tstr=tstr+"</table>";
+			$("#content_div").html(tstr);
 			$("#confirm_facebook_popup_link").click(function(event){ event.preventDefault();
 				var redirectUri0 = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
 				var interactive = true;
@@ -266,7 +308,7 @@ else
 						facebook_close_message = facebook_close_message + "	</div>";
 						facebook_close_message = facebook_close_message + "	<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>";
 						facebook_close_message = facebook_close_message + "</div>";
-						$("#message_td").html(facebook_close_message);
+						$("#message_div").html(facebook_close_message);
 						$("#close_this_tab_link").click( function (event) { event.preventDefault();
 						chrome.tabs.getSelected(null, function(tab) { 
 							var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
@@ -290,12 +332,32 @@ else
 					}	 
 				});
 			});
+			$("#google_login_img").click(function(event){
+				window.location = chrome.extension.getURL('receiver.html') + "?login_type=google";
+			});
+			$("#google_login_img").mouseover( function() {
+				$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24_mo.png"));
+			});
+			$("#google_login_img").mouseout( function() {
+				$("#google_login_img").attr("src", chrome.extension.getURL("images/google_button_24x24.png"));
+			});
+			$("#words_login_img").click(function(event){
+				window.location = chrome.extension.getURL('receiver.html') + "?login_type=words";
+			});
+			$("#words_login_img").mouseover( function() {
+				$("#words_login_img").attr("src", chrome.extension.getURL("images/words_button_black_24x24_mo.png"));
+			});
+			$("#words_login_img").mouseout( function() {
+				$("#words_login_img").attr("src", chrome.extension.getURL("images/words_button_black_24x24.png"));
+			});
 		}	
 		else if(login_type === "words")
 		{
 			//displayMessage("Log in with Words:", "black");
+			$("#message_div").hide();
+			$("#content_div").css("padding","0px");
 			var log_and_reg = "";
-			log_and_reg = log_and_reg + "<table style=\"width:100%;border:1px solid black;border-spacing:15px;border-collapse:separate\">";
+			log_and_reg = log_and_reg + "<table style=\"width:100%;border:0px solid black;border-spacing:15px;border-collapse:separate\">";
 			log_and_reg = log_and_reg + "	<tr>";
 			log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Log in:</td><td></td><td></td>";
 			log_and_reg = log_and_reg + "	</tr>";
@@ -360,7 +422,7 @@ else
 			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"unicorn\" value=\"unicorn\">";
 			log_and_reg = log_and_reg + "					</td>";
 			log_and_reg = log_and_reg + "					<td>";
-			log_and_reg = log_and_reg + "						Unicorn <img style=\"width:16px;height:16px;display:none\" id=\"unicorn_progress_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+			log_and_reg = log_and_reg + "						Unicorn <img style=\"vertical-align:middle;width:16px;height:16px;display:none\" id=\"unicorn_progress_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
 			log_and_reg = log_and_reg + "					</td>";
 			log_and_reg = log_and_reg + "					<td style=\"width:15px\">";
 			log_and_reg = log_and_reg + "						<input type=\"radio\" name=\"nativereg_avatar\" id=\"silhouette\" value=\"silhouette\">";
@@ -377,16 +439,43 @@ else
 			log_and_reg = log_and_reg + "		<td></td><td><button id=\"create_account_button\">Create account</button></td><td></td>";
 			log_and_reg = log_and_reg + "	</tr>";
 			log_and_reg = log_and_reg + "	<tr>";
-			log_and_reg = log_and_reg + "		<td></td><td colspan=2 id=\"submit_message_td\"></td>";
+			log_and_reg = log_and_reg + "		<td></td><td colspan=2 id=\"submit_message_div\"></td>";
 			log_and_reg = log_and_reg + "	</tr>";
 			log_and_reg = log_and_reg + "	<tr>";
 			log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"></td><td></td>";
 			log_and_reg = log_and_reg + "	</tr>";
 			log_and_reg = log_and_reg + "</table>";
-			$("#login_td").html(log_and_reg);
-			$("#login_tr").show();
+			$("#content_div").html(log_and_reg);
 			$("#login_submit_button").click(function(event){
-				alert("login submit button click");
+				$.ajax({
+					type: 'GET',
+					url: bg.endpoint,
+					data: {
+						method: "nativeLogin",
+						screenname: $("#screenname_input").val(),
+						password: $("#password_input").val()
+					},
+					dataType: 'json',
+					async: true,
+					success: function (data, status) {
+						//alert("ajax success");
+						if(data.response_status === "error")
+						{
+							displayMessage(data.message, "red");
+						}
+						else
+						{
+							$("#message_div").show();
+							docCookies.setItem("email", data.email, 31536e3);
+							docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+							doReallyFinished();
+						}
+					},
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						console.log(textStatus, errorThrown);
+						displayMessage("Unable to login. Check username and password.", "red");
+					} 
+				});
 			});
 			$("#forgot_password_link").click(function(event){ event.preventDefault();
 				alert("forgot_password_link click");
@@ -412,7 +501,7 @@ else
 			
 			$("#nativereg_screenname_input").keypress(
 					function () {
-						$("#submit_message_td").html("");
+						$("#submit_message_div").html("");
 						if ($("#nativereg_screenname_input").val().length <= 0) 
 						{
 							$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
@@ -453,7 +542,7 @@ else
 
 			$("#nativereg_password_input").keypress(
 					function () {
-						$("#submit_message_td").html("");
+						$("#submit_message_div").html("");
 						if ($("#nativereg_password_input").val().length <= 0) 
 						{
 							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
@@ -464,9 +553,9 @@ else
 							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
 							return;
 						} 
-						else if (!$("#nativereg_password_input").val().match(/^(?=.*[a-zA-Z])(?=.*\d)(?!.* ).+$/))
+						else if (!$("#nativereg_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}/))
 						{
-							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Must have 1 letter,<br>1 number, 0 spaces</span>");
+							$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">8-20 letters, numbers or !@-#$%*_</span>");
 							return;	
 						}
 						else if ($("#nativereg_password_input").val().length >= 6) 
@@ -494,7 +583,7 @@ else
 			
 			$("#nativereg_confirm_input").keypress(
 					function () {
-						$("#submit_message_td").html("");
+						$("#submit_message_div").html("");
 						if ($("#nativereg_confirm_input").val().length <= 0) 
 						{
 							$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
@@ -555,47 +644,84 @@ else
 			$("#create_account_button").click(function(event){
 				if ($("#nativereg_screenname_input").val().length <= 0) 
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Screenname is blank</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Screenname is blank</span>");
 				} 
 				else if ($("#nativereg_screenname_input").val().length < 6) 
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Screenname is too short</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Screenname is too short</span>");
 				} 
 				else if (!$("#nativereg_screenname_input").val().match(/^[a-zA-Z][a-zA-Z0-9]+$/))
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Screenname must be letters and numbers, starting with a letter</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Screenname must be letters and numbers, starting with a letter</span>");
 				}
 				else if ($("#nativereg_password_input").val().length <= 0) 
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Password cannot be blank</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password cannot be blank</span>");
 				} 
 				else if ($("#nativereg_password_input").val().length < 6) 
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Password is too short</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password is too short</span>");
 				} 
-				else if (!$("#nativereg_password_input").val().match(/^(?=.*[a-zA-Z])(?=.*\d)(?!.* ).+$/))
+				else if (!$("#nativereg_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}/))
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Password must have 1 letter, 1 number, 0 spaces</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password must be 8-20 letters, numbers or !@-#$%*_</span>");
 				}
 				else if ($("#nativereg_confirm_input").val().length <= 0) 
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Confirm password is blank</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Confirm password is blank</span>");
 				} 
 				else if ($("#nativereg_confirm_input").val().length < 6) 
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Confirm password is too short</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Confirm password is too short</span>");
 				} 
 				else if ($("#nativereg_confirm_input").val() !== $("#nativereg_password_input").val()) 
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Password and confirm don't match</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password and confirm don't match</span>");
 				}
 				else if ($("#nativereg_avatar_img").attr("src").indexOf("ajaxSnake.gif") != -1) 
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">You must choose an avatar</span>");
+					$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">You must choose an avatar</span>");
 				}
 				else
 				{
-					$("#submit_message_td").html("<span style=\"color:red;font-size:11px\">Everything checks out</span>");
+					$("#submit_message_div").html("<img src=\"\" + chrome.extension.getURL(\"images/ajaxSnake.gif\") + \"\" style=\"width:16px;height16px;border:0px\">");
+					$.ajax({
+						type: 'GET',
+						url: bg.endpoint,
+						data: {
+							method: "createUser",
+							login_type: "words",
+							social_access_token: null,
+							screenname: $("#nativereg_screenname_input").val(),
+							picture: $("#nativereg_avatar_img").attr("src"),
+							email: $("#nativereg_screenname_input").val() + "@words4chrome.com",
+							password: $("#nativereg_password_input").val(),
+							useragent: navigator.userAgent
+						},
+						dataType: 'json',
+						async: true,
+						success: function (data, status) {
+							//alert("ajax success");
+							if(data.response_status === "error")
+							{
+								$("#submit_message_div").html("");
+								displayMessage(data.message, "red");
+								$("#registration_form_td").show();
+							}
+							else
+							{
+								$("#message_div").show();
+								$("#submit_message_div").html("");
+								docCookies.setItem("email", data.email, 31536e3);
+								docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+								doReallyFinished();
+							}
+						},
+						error: function (XMLHttpRequest, textStatus, errorThrown) {
+							console.log(textStatus, errorThrown);
+							displayMessage("Unable to create WORDS account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please contact us.", "red");
+						} 
+					});
 				}	
 				
 			});
@@ -754,8 +880,8 @@ function guid() {
 
 function showRegistration(picture, login_type, email, social_access_token)
 {
-	$("#message_td").css("font-weight", "bold");
-	$("#message_td").text("Welcome! Let's create a WORDS account for you.");
+	$("#message_div").css("font-weight", "bold");
+	$("#message_div").text("Welcome! Let's create a WORDS account for you.");
 	if(!picture)
 	{
 		$("#use_google_tr").hide();
@@ -776,6 +902,155 @@ function showRegistration(picture, login_type, email, social_access_token)
 		
 		$("#avatar_img").attr("src", picture);
 	}
+	var tstr = "";
+	tstr=tstr+"<table style=\"margin-left:auto;margin-right:auto;border-spacing:5px;\">";
+	tstr=tstr+"<tr>";
+	tstr=tstr+"	<td id=\"registration_form_td\" style=\"display:none;text-align:center\">";
+	tstr=tstr+"	<form method=\"post\" id=\"registration_form\" action=\"#\">";
+	tstr=tstr+"		<table id=\"registration_table\">";
+	tstr=tstr+"		<tr>";
+	tstr=tstr+"			<td style=\"text-align:right\">";
+	tstr=tstr+"				 email address<br><span style=\"font-size:10px\">(always private, never spammed)</span>";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td id=\"registration_email_td\" style=\"font-weight:bold;text-align:center\">";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td style=\"text-align:right;font-style:italic;font-size:11px\">";
+	tstr=tstr+"				Not you? Restart browser <br>to try again.";
+	tstr=tstr+"				<!-- <a href=\"#\" id=\"not_you_link\" style=\"font-size:11px\">Not you?</a> -->";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"		</tr>";
+	tstr=tstr+"		<tr>";
+	tstr=tstr+"			<td style=\"text-align:right\">";
+	tstr=tstr+"				 screenname<br><span style=\"font-size:10px\">(letters and numbers)</span>";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td style=\"text-align:center\">";
+	tstr=tstr+"				<input type=text id=\"registration_screenname_input\" style=\"width:130px\" maxlength=\"20\">";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td>";
+	tstr=tstr+"				<table>";
+	tstr=tstr+"				<tr>";
+	tstr=tstr+"					<td>";
+	tstr=tstr+"						<input type=button id=\"registration_screenname_button\" value=\"available?\" style=\"width:100px\">";
+	tstr=tstr+"					</td>";
+	tstr=tstr+"					<td>";
+	tstr=tstr+"						<span style=\"margin-left:2px;font-size:11px\" id=\"screenname_availability_span\"></span>";
+	tstr=tstr+"					</td>";
+	tstr=tstr+"				</tr>";
+	tstr=tstr+"				</table>";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"		</tr>";
+	tstr = tstr + "	<tr>";
+	tstr = tstr + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 maxlength=20 id=\"registration_password_input\"></td><td id=\"password_strength_td\"></td>";
+	tstr = tstr + "	</tr>";
+	tstr = tstr + "	<tr>";
+	tstr = tstr + "		<td style=\"text-align:right\">confirm:</td><td><input type=password size=20 maxlength=20 id=\"registration_confirm_input\"></td><td id=\"confirm_validity_td\"></td>";
+	tstr = tstr + "	</tr>";
+	tstr=tstr+"		<tr>";
+	tstr=tstr+"			<td style=\"text-align:right;vertical-align:top\">";
+	tstr=tstr+"				 avatar";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td>";
+	tstr=tstr+"				<div id=\"picture_type_div\">";
+	tstr=tstr+"					<table style=\"margin-right:auto;margin-left:auto\" id=\"avatar_radios_table\">";
+	tstr=tstr+"					<tr id=\"use_google_tr\">";
+	tstr=tstr+"						<td>";
+	tstr=tstr+"							<input id=\"use_google_radio\" type=\"radio\" name=\"picture_type\" value=\"google\">";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"						<td id=\"use_google_wording_td\">";
+	tstr=tstr+"							Google picture";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"					</tr>";
+	tstr=tstr+"					<tr id=\"use_facebook_tr\">";
+	tstr=tstr+"						<td>";
+	tstr=tstr+"							<input id=\"use_facebook_radio\" type=\"radio\" name=\"picture_type\" value=\"facebook\">";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"						<td id=\"use_facebook_wording_td\">";
+	tstr=tstr+"							Facebook picture";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"					</tr>";
+	tstr=tstr+"					<tr>";
+	tstr=tstr+"						<td>";
+	tstr=tstr+"							<input id=\"use_geometric_radio\" type=\"radio\" name=\"picture_type\" value=\"geometric\">";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"						<td id=\"use_geometric_wording_td\">";
+	tstr=tstr+"							Geometric";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"					</tr>";
+	tstr=tstr+"					<tr>";
+	tstr=tstr+"						<td>";
+	tstr=tstr+"							<input id=\"use_monster_radio\" type=\"radio\" name=\"picture_type\" value=\"monster\">";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"						<td id=\"use_monster_wording_td\">";
+	tstr=tstr+"							Monster";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"					</tr>";
+	tstr=tstr+"					<tr>";
+	tstr=tstr+"						<td>";
+	tstr=tstr+"							<input id=\"use_cartoonface_radio\" type=\"radio\" name=\"picture_type\" value=\"cartoonface\">";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"						<td id=\"use_cartoonface_wording_td\">";
+	tstr=tstr+"							Cartoon face";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"					</tr>";
+	tstr=tstr+"					<tr>";
+	tstr=tstr+"						<td>";
+	tstr=tstr+"							<input id=\"use_retro_radio\" type=\"radio\" name=\"picture_type\" value=\"retro\">";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"						<td id=\"use_retro_wording_td\">";
+	tstr=tstr+"							Retro";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"					</tr>";
+	tstr=tstr+"					<tr>";
+	tstr=tstr+"						<td>";
+	tstr=tstr+"							<input id=\"use_unicorn_radio\" type=\"radio\" name=\"picture_type\" value=\"unicorn\">";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"						<td id=\"use_unicorn_wording_td\">";
+	tstr=tstr+"							Unicorn <span id=\"unicorn_wait_span\" style=\"font-style:italic\"></span>";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"					</tr>";
+	tstr=tstr+"					<tr>";
+	tstr=tstr+"						<td>";
+	tstr=tstr+"							<input id=\"use_silhouette_radio\" type=\"radio\" name=\"picture_type\" value=\"silhouette\">";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"						<td id=\"use_silhouette_wording_td\">";
+	tstr=tstr+"							Silhouette";
+	tstr=tstr+"						</td>";
+	tstr=tstr+"					</tr>";
+	tstr=tstr+"					</table>";
+	tstr=tstr+"				</div>";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td id=\"picture_td\" style=\"text-align:center;vertical-align:top\">";
+	tstr=tstr+"				<img id=\"avatar_img\" src=\"\" style=\"width:96px;\">";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"		</tr>";
+	tstr=tstr+"		<tr>";
+	tstr=tstr+"			<td>";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td>";
+	tstr=tstr+"				<table style=\"border-spacing:3px;margin-left:auto;margin-right:auto\">";
+	tstr=tstr+"				<tr>";
+	tstr=tstr+"					<td>";
+	tstr=tstr+"						";
+	tstr=tstr+"					</td>";
+	tstr=tstr+"					<td>";
+	tstr=tstr+"						<input id=\"registration_submit_button\" class=button type=button value=\"submit\" style=\"width:50px\"></input>";
+	tstr=tstr+"					</td>";
+	tstr=tstr+"					<td>";
+	tstr=tstr+"						<span id=\"registration_progress_span\" style=\"display:none\"><img src=\"\" + chrome.extension.getURL(\"images/ajaxSnake.gif\") + \"\" style=\"width:16px;height16px;border:0px\"></span>";
+	tstr=tstr+"					</td>";
+	tstr=tstr+"				</tr>";
+	tstr=tstr+"				</table>";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"			<td>";
+	tstr=tstr+"			</td>";
+	tstr=tstr+"		</tr>";
+	tstr=tstr+"		</table>";
+	tstr=tstr+"	</form>";
+	tstr=tstr+"	</td>";
+	tstr=tstr+"</tr>";
+	tstr=tstr+"</table>";
+	$("#main_td").html(tstr);
+	
 	$("#registration_email_td").text(email);
 	$("#registration_form_td").show();
 	
@@ -819,7 +1094,7 @@ function showRegistration(picture, login_type, email, social_access_token)
 		docCookies.removeItem("this_access_token");
 		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
 		$("#registration_form_td").show();
-		$("#message_td").text("The existing user information has been removed. Please start the login process again.");
+		$("#message_div").text("The existing user information has been removed. Please start the login process again.");
 		
 		$("#close_this_tab_link").click( function (event) { event.preventDefault();
 			chrome.tabs.getSelected(null, function(tab) { 
@@ -897,6 +1172,90 @@ function showRegistration(picture, login_type, email, social_access_token)
 		}
 	});					
 		
+	$("#registration_password_input")
+	.focusout(function () {
+	$("#registration_password_input")
+	    .trigger("keypress");
+	});
+	$("#registration_password_input")
+	.keyup(function () {
+	$("#registration_password_input")
+	    .trigger("keypress");
+	});
+	$("#registration_password_input")
+	.keydown(function () {
+	$("#registration_password_input")
+	    .trigger("keypress");
+	});
+
+	$("#registration_password_input").keypress(
+			function () {
+				$("#submit_message_div").html("");
+				if ($("#registration_password_input").val().length <= 0) 
+				{
+					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
+					return;
+				} 
+				else if ($("#registration_password_input").val().length < 6) 
+				{
+					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
+					return;
+				} 
+				else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}/))
+				{
+					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">8-20 letters, numbers or !@-#$%*_</span>");
+					return;	
+				}
+				else if ($("#registration_password_input").val().length >= 6) 
+				{
+					$("#password_strength_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+					return;
+				}
+			});
+	
+	$("#registration_confirm_input")
+	.focusout(function () {
+	$("#registration_confirm_input")
+	    .trigger("keypress");
+	});
+	$("#registration_confirm_input")
+	.keyup(function () {
+	$("#registration_confirm_input")
+	    .trigger("keypress");
+	});
+	$("#registration_confirm_input")
+	.keydown(function () {
+	$("#registration_confirm_input")
+	    .trigger("keypress");
+	});
+	
+	$("#registration_confirm_input").keypress(
+			function () {
+				$("#submit_message_div").html("");
+				if ($("#registration_confirm_input").val().length <= 0) 
+				{
+					$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
+					return;
+				} 
+				else if ($("#registration_confirm_input").val().length < 6) 
+				{
+					$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
+					return;
+				} 
+				else if ($("#registration_confirm_input").val().length >= 6) 
+				{
+					if ($("#registration_confirm_input").val() === $("#registration_password_input").val()) 
+					{
+						$("#confirm_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+					} 
+					else 
+					{
+						$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Doesn't match</span>");
+					}
+					return;
+				}
+			});
+	
 	$("#registration_submit_button").click( function (event) {	event.preventDefault();
 		if($("#registration_screenname_input").val() === "")
 		{
@@ -933,6 +1292,7 @@ function showRegistration(picture, login_type, email, social_access_token)
 				screenname: $("#registration_screenname_input").val(),
 				picture: picture,
 				email: email,
+				password: $("#nativereg_password_input").val(),
 				useragent: navigator.userAgent
 			},
 			dataType: 'json',
@@ -1059,7 +1419,7 @@ function doFinished(from_registration, social_access_token)
             		message = message + "		</table>";
             		message = message + "	</div>";
             		message = message + "</div>";
-            		$("#message_td").html(message);
+            		$("#message_div").html(message);
             		
             		$("#close_this_tab_link").click( function (event) { event.preventDefault();
             		chrome.tabs.getSelected(null, function(tab) { 
@@ -1161,7 +1521,7 @@ function doFinished(from_registration, social_access_token)
 
 function doReallyFinished()
 {
-	$("#message_td").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You are now logged in.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
+	$("#message_div").html("<div style=\"width:360px;padding:15px\"><div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">You are now logged in.</div><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>");
 	
 	// tips html formation
 	var str = "";
@@ -1172,8 +1532,7 @@ function doReallyFinished()
 	
 	// end tips html formation
 	
-	$("#registration_form_td").html(str);//OK
-	$("#registration_form_td").show();
+	$("#content_div").html(str);//OK
 	
 	$("#close_this_tab_link").click( function (event) { event.preventDefault();
 		chrome.tabs.getSelected(null, function(tab) { 

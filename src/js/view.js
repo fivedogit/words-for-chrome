@@ -257,9 +257,9 @@ function displayLogstatAsLoggedOut() {
 	welcomearea = welcomearea + "		<td>";
 	welcomearea = welcomearea + " 			<a href=\"#\" id=\"facebook_login_link\"><img id=\"facebook_login_img\" style=\"width:24px;height:24px\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"></a>";
 	welcomearea = welcomearea + " 		</td>";
-	//welcomearea = welcomearea + "		<td>";
-	//welcomearea = welcomearea + " 			<a href=\"#\" id=\"words_login_link\"><img id=\"words_login_img\" style=\"width:24px;height:24px\" src=\"" + chrome.extension.getURL("images/words_button_24x24.png") + "\"></a>";
-	//welcomearea = welcomearea + " 		</td>";
+	welcomearea = welcomearea + "		<td>";
+	welcomearea = welcomearea + " 			<a href=\"#\" id=\"words_login_link\"><img id=\"words_login_img\" style=\"width:24px;height:24px\" src=\"" + chrome.extension.getURL("images/words_button_24x24.png") + "\"></a>";
+	welcomearea = welcomearea + " 		</td>";
 	welcomearea = welcomearea + "	</tr>";
 	welcomearea = welcomearea + "</table>";
 	$("#logstat_td").html(welcomearea); //OK
