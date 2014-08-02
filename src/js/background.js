@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(
 		  docCookies.setItem("screenname", request.screenname, 31536e3);
 		  docCookies.setItem("this_access_token", request.this_access_token, 31536e3);
 		  getUser(false);
-		  sendResponse({screenname:request.screenname, this_access_token:request.this_access_token, thread_jo: t_jo, user_jo: user_jo});
+		  sendResponse({screenname:request.screenname, this_access_token:request.this_access_token, user_jo: user_jo});
 	  }  
 	  else if(request.method == "redrawButton")
 	  {

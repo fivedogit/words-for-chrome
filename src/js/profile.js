@@ -94,7 +94,7 @@ function getProfile(target_screenname)
             	target_user_jo = data.target_user_jo; // backend will provide something that looks like this:
             	
             	main_div_string = main_div_string + "<div style=\"padding:5px;text-align:center\">";
-            	main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto;width:430px\">";
+            	main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto;width:580px\">";
             	main_div_string = main_div_string + "<tr>";
             	main_div_string = main_div_string + "	<td>";
             	main_div_string = main_div_string + "		<table style=\"width:100%;\">";
@@ -108,7 +108,7 @@ function getProfile(target_screenname)
             		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span> <a href=\"#\" id=\"logout_link\">Log out</a></td></tr>";
             	else
             		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Screenname:</td><td style=\"text-align:left\"><span id=\"profile_page_screenname_span\"></span></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Email:<br><span style=\"font-style:italic;font-weight:normal;font-color:#666666\">(private)</span></td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold;vertical-align:top\">Email <span style=\"font-style:italic;font-weight:normal;font-color:#666666\">(private)</span>:</td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Since:</td><td style=\"text-align:left\" id=\"profile_page_since_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left\" id=\"profile_page_seen_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments authored:</td><td style=\"text-align:left\" id=\"profile_page_numcommentsauthored_td\"></td></tr>";
@@ -149,16 +149,6 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onlike_result_td\">";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "						</tr>";
-					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On meh:</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "							<select id=\"onmeh_selector\">";
-					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
-					main_div_string = main_div_string + "							</select>";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onmeh_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">On dislike:</td>";
@@ -356,8 +346,166 @@ function getProfile(target_screenname)
             	
             	if(target_user_jo.email)
             	{	
-            		$("#profile_page_email_td").text(target_user_jo.email);
-            		// I guess there needs to be a text field here for supplying a real email if this is an @words4chrome.com address
+            		var tstr = "";
+            		if(typeof target_user_jo.provisional_email !== "undefined" && target_user_jo.provisional_email !== null)
+        			{
+        				tstr = tstr + "<table>";
+            			tstr = tstr + "<tr><td style=\"text-align:left\">" +  target_user_jo.provisional_email + " (pending confirmation)</td></tr>";
+            			tstr = tstr + "<tr><td id=\"email_flex_td\" style=\"text-align:left;font-size:10px\">code: <input type=\"text\" style=\"width:120px;font-size:10px\" id=\"email_confirmation_code_input\" value=\"Enter confirmation code\"><button id=\"confirmation_code_go_button\">go</button>";
+            			tstr = tstr + "<br><span id=\"conf_code_result_span\"></span></td></tr>";
+            			tstr = tstr + "</table>";
+            			$("#profile_page_email_td").html(tstr);
+            			$("#email_confirmation_code_input").focus(function(event) {
+            				$("#email_confirmation_code_input").val("");
+            			});
+            			$("#confirmation_code_go_button").click(function(event) {
+            				$.ajax({
+                				type: 'GET',
+                				url: endpoint,
+                				data: {
+                					method: "confirmEmailAddressWithCode",
+                					email_to_confirm: target_user_jo.provisional_email,
+                					confirmation_code: $("#email_confirmation_code_input").val(),
+                					screenname: screenname,
+                					this_access_token: this_access_token
+                				},
+                				dataType: 'json',
+                				async: true,
+                				success: function (data, status) 
+                				{
+                					if(data.response_status === "error")
+                					{
+                						$("#conf_code_result_span").text(data.message);
+                						$("#conf_code_result_span").css("color", "red");
+                						setTimeout(function() { 
+                							viewProfile(screenname);
+                						}, 2000);
+                					}	
+                					else if(data.response_status === "success")
+                					{
+                						$("#email_flex_td").css("color", "green");
+                						$("#email_flex_td").text(data.message);
+                						setTimeout(function() { 
+                							viewProfile(screenname);
+                						}, 2000);
+                					}	
+                					else
+                					{
+                						alert("response_status neither error nor success");
+                					}	
+                				},
+                				error: function (XMLHttpRequest, textStatus, errorThrown) 
+                				{
+                					console.log(textStatus, errorThrown);
+                					alert("ajax error");
+                				}	
+                			});
+            			});
+        			}	
+        			else // no provisional_email, just the default
+        			{
+        				if(target_user_jo.email_is_confirmed)
+        				{
+        					tstr = tstr + target_user_jo.email + " (confirmed) <a href=\"#\" id=\"remove_email_link\">remove</a>";
+        					tstr = tstr + "<br><span id=\"remove_email_result_span\"></span></td></tr>";
+                			$("#profile_page_email_td").html(tstr);
+                			$("#remove_email_link").click(function(event) { event.preventDefault();
+                				$.ajax({
+                					type: 'GET',
+                					url: endpoint,
+                					data: {
+                						method: "removeEmail",
+                						email_to_remove: target_user_jo.email,
+                						screenname: screenname,
+                						this_access_token: this_access_token
+                					},
+                					dataType: 'json',
+                    				async: true,
+                    				success: function (data, status) 
+                    				{
+                    					if(data.response_status === "error")
+                    					{
+                    						$("#remove_email_result_span").text(data.message);
+                    						$("#remove_email_result_span").css("color", "red");
+                    						setTimeout(function() { 
+                    							$("#remove_email_result_span").text("");
+                        						$("#remove_email_result_span").css("color", "black");
+                    						}, 2000);
+                    					}	
+                    					else if(data.response_status === "success")
+                    					{
+                    						$("#profile_page_email_td").text(data.message);
+                    						$("#profile_page_email_td").css("color", "green");
+                    						setTimeout(function() { 
+                    							viewProfile(screenname);
+                    						}, 2000);
+                    					}	
+                    					else
+                    					{
+                    						alert("response_status neither error nor success");
+                    					}	
+                    				},
+                    				error: function (XMLHttpRequest, textStatus, errorThrown) 
+                    				{
+                    					console.log(textStatus, errorThrown);
+                    					alert("ajax error");
+                    				}
+                    			});
+                			});
+        				}	
+        				else // no provisional email waiting, nothing confirmed... this is the default @words4chrome.com address
+        				{
+        					tstr = tstr + "<table>";
+                			tstr = tstr + "<tr><td style=\"text-align:left\">" +  target_user_jo.email + " (placeholder)</td></tr>";
+                			tstr = tstr + "<tr><td id=\"email_flex_td\" style=\"text-align:left;font-size:10px\"><a href=\"#\" id=\"enter_real_address_link\">Enter a valid email in case you forget your password.</a></td></tr>";
+                			tstr = tstr + "</table>";
+                			$("#profile_page_email_td").html(tstr);
+                			
+                			$("#enter_real_address_link").click(function(event) { event.preventDefault();
+                				$("#email_flex_td").html("<input type=text style=\"width:175px\" style=\"font-size:10px\" id=\"real_email_input\"><button id=\"real_email_go_button\">go</button><br><span id=\"real_email_result_span\"></span></td></tr>");
+                				$("#real_email_go_button").click(function(event) {
+                					$.ajax({
+                        				type: 'GET',
+                        				url: endpoint,
+                        				data: {
+                        					method: "setProvisionalEmail",
+                        					provisional_email: $("#real_email_input").val(),
+                        					screenname: screenname,
+                        					this_access_token: this_access_token
+                        				},
+                        				dataType: 'json',
+                        				async: true,
+                        				success: function (data, status) 
+                        				{
+                        					if(data.response_status === "error")
+                        					{
+                        						$("#real_email_result_span").text(data.message);
+                        						$("#real_email_result_span").css("color", "red");
+                        						setTimeout(function() { 
+                        							$("#real_email_result_span").text("");
+                            						$("#real_email_result_span").css("color", "black");
+                        						}, 2000);
+                        					}	
+                        					else if(data.response_status === "success")
+                        					{
+                        						$("#email_flex_td").text(data.message);
+                        						$("#email_flex_td").css("color", "green");
+                        					}	
+                        					else
+                        					{
+                        						alert("response_status neither error nor success");
+                        					}	
+                        				},
+                        				error: function (XMLHttpRequest, textStatus, errorThrown) 
+                        				{
+                        					console.log(textStatus, errorThrown);
+                        					alert("ajax error");
+                        				}
+                        			});
+                    			});
+                			});
+        				}
+        			}		
             	}
             	else
             	{
@@ -638,11 +786,6 @@ function getProfile(target_screenname)
             	else if (user_jo.onlike === "do nothing")
             		$("#onlike_selector").val("do nothing");
             	
-            	if (user_jo.onmeh === "button")
-            		$("#onmeh_selector").val("button");
-            	else if (user_jo.onmeh === "do nothing")
-            		$("#onmeh_selector").val("do nothing");
-            	
             	if (user_jo.ondislike === "button")
             		$("#ondislike_selector").val("button");
             	else if (user_jo.ondislike === "do nothing")
@@ -706,49 +849,6 @@ function getProfile(target_screenname)
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
 				        	$("#onlike_result_td").text("ajax error");
 				        	setTimeout(function(){$("#onlike_result_td").text("");},3000);
-				            console.log(textStatus, errorThrown);
-				        }
-					});
-            	});
-            	
-            	$("#onmeh_selector").change(function () {
-					$.ajax({
-						type: 'GET',
-						url: endpoint,
-						data: {
-				            method: "setUserPreference",
-				            screenname: screenname,               
-				            this_access_token: this_access_token,  
-				            which: "onmeh",
-				            value: $("#onmeh_selector").val() 
-				        },
-				        dataType: 'json',
-				        async: true,
-				        success: function (data, status) {
-				        	if (data.response_status === "error")
-				        	{
-				        		$("#onmeh_result_td").text(data.message);
-				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.onmeh === "button")
-				            		$("#onmeh_selector").val("button");
-				            	else if (user_jo.onmeh === "do nothing")
-				            		$("#onmeh_selector").val("do nothing");
-				        		displayMessage(data.message, "red", "utility_message_td");
-				            	if(data.error_code && data.error_code === "0000")
-				        		{
-				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			user_jo = null;
-				        			updateLogstat();
-				        		}
-				        	}
-				        	else
-				        		$("#onmeh_result_td").text("updated");
-				        	setTimeout(function(){$("#onmeh_result_td").text("");},3000);
-				        }
-				        ,
-				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#onmeh_result_td").text("ajax error");
-				        	setTimeout(function(){$("#onmeh_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});

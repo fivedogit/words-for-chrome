@@ -419,11 +419,10 @@ function displayLogstatAsLoggedIn() {
 			$("#user_" + alts_counter + "_link").click({altuser: user_jo.alts[alts_counter], prev: prev}, function (event) { event.preventDefault();
 			$("#utility_header_td").html(event.data.prev);//OK
 			//alert("email=" + event.data.altuser.email + " and tat=" + event.data.altuser.this_access_token);
-			chrome.runtime.sendMessage({method: "switchUser", email: event.data.altuser.email, this_access_token: event.data.altuser.this_access_token}, function(response) {
-				email = response.email;
+			chrome.runtime.sendMessage({method: "switchUser", screenname: event.data.altuser.screenname, this_access_token: event.data.altuser.this_access_token}, function(response) {
+				screenname = response.screenname;
 				this_access_token = response.this_access_token;
 				user_jo = response.user_jo;
-				//thread_jo = response.thread_jo;
 				initializeView();
 				doThreadTab();
 			});
