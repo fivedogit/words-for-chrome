@@ -510,6 +510,9 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 		log_and_reg = log_and_reg + "		<td></td><td><button id=\"login_submit_button\">Login</button></td><td></td>";
 		log_and_reg = log_and_reg + "	</tr>";
 		log_and_reg = log_and_reg + "	<tr>";
+		log_and_reg = log_and_reg + "		<td></td><td colspan=2 style=\"color:red;font-size:11px\" id=\"login_submit_message_div\"></td>";
+		log_and_reg = log_and_reg + "	</tr>";
+		log_and_reg = log_and_reg + "	<tr>";
 		log_and_reg = log_and_reg + "		<td></td><td><a href=\"#\" id=\"forgot_password_link\">I forgot my password.</a></td><td></td>";
 		log_and_reg = log_and_reg + "	</tr>";
 	}
@@ -526,13 +529,19 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 		log_and_reg = log_and_reg + "	</tr>";
 	}	
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td><td><input type=text size=20 id=\"registration_screenname_input\"><br><a href=\"#\" id=\"screenname_availability_link\">available?</a> <span id=\"screenname_availability_span\"></span></td><td id=\"screenname_validity_td\"></td>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td>";
+	log_and_reg = log_and_reg + "		<td><input type=text size=20 id=\"registration_screenname_input\"><br><a href=\"#\" id=\"screenname_availability_link\">available?</a> <span id=\"screenname_availability_span\"></span></td>";
+	log_and_reg = log_and_reg + "		<td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 id=\"registration_password_input\"></td><td id=\"password_strength_td\"></td>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td>";
+	log_and_reg = log_and_reg + "		<td><input type=password size=20 id=\"registration_password_input\"> <span style=\"font-size:11px\" id=\"password_validity_span\"></span></td>";
+	log_and_reg = log_and_reg + "		<td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">confirm:</td><td><input type=password size=20 id=\"registration_confirm_input\"></td><td id=\"confirm_validity_td\"></td>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">confirm:</td>";
+	log_and_reg = log_and_reg + "		<td><input type=password size=20 id=\"registration_confirm_input\"> <span style=\"font-size:11px\" id=\"confirm_validity_span\"></span></td>";
+	log_and_reg = log_and_reg + "		<td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
 	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">avatar:<br><span style=\"font-style:italic;font-color:#666666;font-size:10px\">(Custom avatars<br>coming soon!)</span></td>";
@@ -612,7 +621,7 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 	log_and_reg = log_and_reg + "		<td></td><td><button id=\"create_account_button\">Create account</button></td><td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td></td><td colspan=2 id=\"submit_message_div\"></td>";
+	log_and_reg = log_and_reg + "		<td></td><td colspan=2 style=\"color:red;font-size:11px\" id=\"submit_message_div\"></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
 	if(login_type === "words")
@@ -626,6 +635,7 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 	log_and_reg = log_and_reg + "</table>";
 	$("#content_div").html(log_and_reg);
 	$("#login_submit_button").click(function(event){
+		$("#login_submit_message_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
 		$.ajax({
 			type: 'GET',
 			url: bg.endpoint,
@@ -640,11 +650,13 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 				//alert("ajax success");
 				if(data.response_status === "error")
 				{
-					displayMessage(data.message, "red");
+					$("#login_submit_message_div").text(data.message);
+					setTimeout(function() { $("#login_submit_message_div").text("");}, 3000);
 				}
 				else
 				{
 					$("#message_div").show();
+					$("#login_submit_message_div").text();
 					docCookies.setItem("screenname", data.screenname, 31536e3);
 					docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 					doReallyFinished();
@@ -652,46 +664,14 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 				console.log(textStatus, errorThrown);
-				displayMessage("Unable to login. Check username and password.", "red");
+				$("#login_submit_message_div").text("Unable to login. Check username and password.");
+				setTimeout(function() { $("#login_submit_message_div").text("");}, 3000);
 			} 
 		});
 	});
 	$("#forgot_password_link").click(function(event){ event.preventDefault();
 		alert("This feature is not yet enabled. Sorry! Try hypnotism or something.");
 	});
-	
-	
-	$("#registration_screenname_input")
-	.focusout(function () {
-	$("#registration_screenname_input")
-	    .trigger("keypress");
-	});
-	$("#registration_screenname_input")
-	.keyup(function () {
-	$("#registration_screenname_input")
-	    .trigger("keypress");
-	});
-	$("#registration_screenname_input")
-	.keydown(function () {
-	$("#registration_screenname_input")
-	    .trigger("keypress");
-	});
-
-	
-	$("#registration_screenname_input").keypress(
-			function () {
-				$("#submit_message_div").html("");
-				if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,19}$/))
-				{
-					$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">8-20 letters and numbers,<br>starting with a letter</span>");
-					return;	
-				}
-				else
-				{
-					$("#screenname_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
-					return;
-				}
-			});
 	
 	$("#screenname_availability_link").click( function (event) { event.preventDefault();
 	$("#screenname_availability_span").text("Checking...");
@@ -767,13 +747,14 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 				$("#submit_message_div").html("");
 				if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
 				{
-					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">8-20 letters, numbers or !@-#$%*_</span>");
-					return;	
+					$("#password_validity_span").text("X");
+					$("#password_validity_span").css("color", "red");
+
 				}
 				else if ($("#registration_password_input").val().length >= 6) 
 				{
-					$("#password_strength_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
-					return;
+					$("#password_validity_span").text("OK");
+					$("#password_validity_span").css("color", "green");
 				}
 			});
 	
@@ -798,25 +779,26 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 				$("#submit_message_div").html("");
 				if ($("#registration_confirm_input").val().length <= 0) 
 				{
-					$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
-					return;
+					$("#confirm_validity_span").text("X");
+					$("#confirm_validity_span").css("color", "red");
 				} 
 				else if ($("#registration_confirm_input").val().length < 6) 
 				{
-					$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
-					return;
+					$("#confirm_validity_span").text("X");
+					$("#confirm_validity_span").css("color", "red");
 				} 
 				else if ($("#registration_confirm_input").val().length >= 6) 
 				{
 					if ($("#registration_confirm_input").val() === $("#registration_password_input").val()) 
 					{
-						$("#confirm_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
+						$("#confirm_validity_span").text("OK");
+						$("#confirm_validity_span").css("color", "green");
 					} 
 					else 
 					{
-						$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Doesn't match</span>");
+						$("#confirm_validity_span").text("X");
+						$("#confirm_validity_span").css("color", "red");
 					}
-					return;
 				}
 			});
 	
@@ -874,35 +856,35 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 	$("#create_account_button").click(function(event){
 		if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,19}$/))
 		{
-			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Screenname must be 8-20 letters and numbers,<br>starting with a letter</span>");
+			$("#submit_message_div").text("Screenname must be 8-20 chars, no spaces");
 		}
 		else if ($("#registration_password_input").val().length <= 0) 
 		{
-			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password cannot be blank</span>");
+			$("#submit_message_div").text("Password cannot be blank");
 		} 
 		else if ($("#registration_password_input").val().length < 6) 
 		{
-			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password is too short</span>");
+			$("#submit_message_div").text("Password is too short");
 		} 
 		else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
 		{
-			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password must be 8-20 letters, numbers or !@-#$%*_</span>");
+			$("#submit_message_div").text("Password must be 8-20 letters, numbers or !@-#$%*_");
 		}
 		else if ($("#registration_confirm_input").val().length <= 0) 
 		{
-			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Confirm password is blank</span>");
+			$("#submit_message_div").text("Confirm password is blank");
 		} 
 		else if ($("#registration_confirm_input").val().length < 6) 
 		{
-			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Confirm password is too short</span>");
+			$("#submit_message_div").text("Confirm password is too short");
 		} 
 		else if ($("#registration_confirm_input").val() !== $("#registration_password_input").val()) 
 		{
-			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">Password and confirm don't match</span>");
+			$("#submit_message_div").text("Password and confirm don't match");
 		}
 		else if ($("#registration_avatar_img").attr("src").indexOf("ajaxSnake.gif") != -1) 
 		{
-			$("#submit_message_div").html("<span style=\"color:red;font-size:11px\">You must choose an avatar</span>");
+			$("#submit_message_div").text("You must choose an avatar");
 		}
 		else
 		{
@@ -928,14 +910,12 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 					//alert("ajax success");
 					if(data.response_status === "error")
 					{
-						$("#submit_message_div").html("");
-						displayMessage(data.message, "red");
-						$("#registration_form_td").show();
+						$("#submit_message_div").text(data.message);
+						setTimeout(function() {$("#submit_message_div").text("");}, 2000);
 					}
-					else
+					else if(data.response_status === "success")
 					{
 						$("#message_div").show();
-						$("#submit_message_div").html("");
 						docCookies.setItem("screenname", data.screenname, 31536e3);
 						docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
 						doReallyFinished();

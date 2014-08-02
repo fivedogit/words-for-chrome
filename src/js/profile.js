@@ -204,7 +204,7 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "						<tr>";
 					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
 					main_div_string = main_div_string + "								Change avatar:<br>";
-					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-size:10px;font-style:italic;font-weight:normal\">To use a G/FB profile pic, log in with G/FB.</span>";
+					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-weight:normal;font-size:10px;font-style:italic;color:#666666\">To use a G/FB profile pic, log in with G/FB.</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
@@ -285,7 +285,7 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
 					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
-					main_div_string = main_div_string + "							 Change screenname:<br><span style=\"font-weight:normal\">Letters and numbers only,<br>starting with a letter</span>";
+					main_div_string = main_div_string + "							 Change screenname:<br><span style=\"font-weight:normal;font-size:10px;font-style:italic;color:#666666\">Letters and numbers only,<br>starting with a letter</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<table style=\"width:auto;margin-right:auto\">";
@@ -315,7 +315,7 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
 					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
-					main_div_string = main_div_string + "							 Change password:<br><span style=\"font-weight:normal\">8-20 letters, numbers, !@-#$%*_</span>";
+					main_div_string = main_div_string + "							 Change password:<br><span style=\"font-weight:normal;font-size:10px;font-style:italic;color:#666666\">8-20 letters, numbers, !@-#$%*_</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<table style=\"width:auto;margin-right:auto\">";
@@ -445,7 +445,7 @@ function getProfile(target_screenname)
             				flexstr = flexstr + "		<td style=\"text-align:left;padding-left:3px\" id=\"remove_or_go_td\"><a href=\"#\" id=\"remove_email_link\">remove</a></td>";
             				flexstr = flexstr + "	</tr>";
             				flexstr = flexstr + "	<tr id=\"currpassrow_tr\" style=\"display:none\">";
-            				flexstr = flexstr + "		<td style=\"text-align:left\"><input type=text style=\"width:175px;font-size:11px;color:#666666\" id=\"remove_email_password_input\" value=\"current password\"></td>";
+            				flexstr = flexstr + "		<td style=\"text-align:left;font-size:10px;\">current pass: <input type=password style=\"width:90px;font-size:11px;color:#666666\" id=\"remove_email_password_input\"></td>";
             				flexstr = flexstr + "		<td style=\"text-align:left;font-size:10px;padding-left:3px\" id=\"remove_email_result_td\" ></td>";
             				flexstr = flexstr + "	</tr>";
             				flexstr = flexstr + "</table>";
@@ -453,13 +453,6 @@ function getProfile(target_screenname)
                 			$("#remove_email_link").click(function(event) { event.preventDefault();
                 				$("#currpassrow_tr").show();
                 				$("#remove_or_go_td").html("<button id=\"remove_email_go_button\">go</button>");
-                				$("#remove_email_password_input").focus(function() {
-                					if($("#remove_email_password_input").val() === "current password")
-                					{
-                						$("#remove_email_password_input").val("");
-                						$("#remove_email_password_input").css("color", "black");
-                					}
-                				});
                 				$("#remove_email_go_button").click(function(event) { 
                 					$.ajax({
                 						type: 'GET',

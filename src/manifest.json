@@ -1,7 +1,7 @@
 {
     "name": "WORDS",
     "short_name": "WORDS",
-    "version": "0.193",
+    "version": "0.194",
     "manifest_version": 2,
     "description": "Smarter, safer web comments",
     "icons": {

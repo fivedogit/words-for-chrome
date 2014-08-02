@@ -993,14 +993,14 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 			}
 		});
 
-		$("#like_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+		$("#like_img_" + comment_id).click({comment_id: comment_id, container_id: container_id}, function(event) { 
 			event.preventDefault();
-			likeOrDislikeComment(event.data.value, "like"); // id, like or dislike, dom_id
+			likeOrDislikeComment(event.data.comment_id, event.data.container_id, "like"); // id, like or dislike, dom_id
 		});
 			 
-		$("#dislike_img_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+		$("#dislike_img_" + comment_id).click({comment_id: comment_id, container_id: container_id}, function(event) { 
 			event.preventDefault();
-			likeOrDislikeComment(event.data.value, "dislike"); // id, like or dislike, dom_id
+			likeOrDislikeComment(event.data.comment_id, event.data.container_id, "dislike"); // id, like or dislike, dom_id
 		});
 		$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
 			event.preventDefault();
@@ -1270,7 +1270,7 @@ function nukeComment(inc_id)
 	});
 }
 
-function likeOrDislikeComment(id, like_or_dislike)
+function likeOrDislikeComment(id, container_id, like_or_dislike)
 {
 	var prev = ""; $("#like_img_" + id).attr("src");
 	if(like_or_dislike === "like")
@@ -1304,10 +1304,10 @@ function likeOrDislikeComment(id, like_or_dislike)
 					$("#dislike_img_" + id).attr("src", prev);
 				if (data.response_status === "error") 
 				{
-					displayMessage(data.message, "red", "message_div_" + id);
+					displayMessage(data.message, "red", "message_div_" + container_id);
 	            	if(data.error_code && data.error_code === "0000")
 	        		{
-	        			displayMessage("Your login has expired. Please relog.", "red");
+	        			displayMessage("Your login has expired. Please relog.", "red", "message_div_" + container_id);
 	        			user_jo = null;
 	        			updateLogstat();
 	        		}
@@ -1317,14 +1317,14 @@ function likeOrDislikeComment(id, like_or_dislike)
 				{
 					if (like_or_dislike === "like")
 					{
-						displayMessage("Like recorded.", "black", "message_div_" + id);
+						displayMessage("Like recorded.", "black", "message_div_" + container_id);
 						$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_arrow_liked.png"));
 						var like_count = ($("#comment_likes_count_td_" + id).text() * 1) + 1;
 						$("#comment_likes_count_td_" + id).text(like_count);
 					}
 					else
 					{	
-						displayMessage("Dislike recorded.", "black", "message_div_" + id);
+						displayMessage("Dislike recorded.", "black", "message_div_" + container_id);
 						$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow_disliked.png"));
 						var dislike_count = ($("#comment_dislikes_count_td_" + id).text() * 1) + 1;
 						$("#comment_dislikes_count_td_" + id).text(dislike_count);
@@ -1340,7 +1340,7 @@ function likeOrDislikeComment(id, like_or_dislike)
 					$("#like_img_" + id).attr("src", chrome.extension.getURL("images/like_arrow.png"));
 				else
 					$("#dislike_img_" + id).attr("src", chrome.extension.getURL("images/dislike_arrow.png"));
-				displayMessage("Ajax error addCommentLikeOrDislike: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + id);
+				displayMessage("Ajax error addCommentLikeOrDislike: text=" + textStatus + " and error=" + errorThrown, "red", "message_div_" + container_id);
 				console.log(textStatus, errorThrown);
 			} 
 		});
