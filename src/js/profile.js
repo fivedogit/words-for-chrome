@@ -288,32 +288,64 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "							 Change screenname:<br><span style=\"font-weight:normal\">Letters and numbers only,<br>starting with a letter</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "								<table>";
+					main_div_string = main_div_string + "								<table style=\"width:auto;margin-right:auto\">";
 					main_div_string = main_div_string + "									<tr>";
-					main_div_string = main_div_string + "										<td><span style=\"font-style:italic\">Warning: Changing this will sign you out.</span><br>";
-					main_div_string = main_div_string + "											<input type=text id=\"screenname_change_input\">";
+					main_div_string = main_div_string + "										<td colspan=2 style=\"text-align:left;padding-left:5px;\">";
+					main_div_string = main_div_string + "											<span style=\"font-style:italic\">Warning: Changing this will sign you out.</span><br>";
 					main_div_string = main_div_string + "										</td>";
 					main_div_string = main_div_string + "									</tr>";
 					main_div_string = main_div_string + "									<tr>";
-					main_div_string = main_div_string + "										<td style=\"text-align:center\">";
-					main_div_string = main_div_string + "											<a href=\"#\" id=\"screenname_available_link\">available?</a> - ";
-					main_div_string = main_div_string + "											<a href=\"#\" id=\"screenname_submit_link\">submit</a>";
+					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:5px;\">";
+					main_div_string = main_div_string + "											<input type=text id=\"screenname_change_input\" type=password style=\"width:150px;color:#666666;font-size:11px\" value=\"new screenname\">";
 					main_div_string = main_div_string + "										</td>";
-					main_div_string = main_div_string + "									</tr>";
-					main_div_string = main_div_string + "								</table>";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td>";
-					main_div_string = main_div_string + "								<table>";
-					main_div_string = main_div_string + "									<tr>";
-					main_div_string = main_div_string + "										<td>";
+					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:5px;\">";
 					main_div_string = main_div_string + "											<span style=\"margin-left:2px;border:0px black solid;display:none\" id=\"screenname_availability_span\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></span>";
 					main_div_string = main_div_string + "										</td>";
 					main_div_string = main_div_string + "									</tr>";
 					main_div_string = main_div_string + "									<tr>";
-					main_div_string = main_div_string + "										<td style=\"text-align:left\" id=\"screenname_result_td\">";
+					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:5px;\">";
+					main_div_string = main_div_string + "											<a href=\"#\" id=\"screenname_available_link\">available?</a> - ";
+					main_div_string = main_div_string + "											<a href=\"#\" id=\"screenname_submit_link\">submit</a>";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:5px;\" id=\"screenname_result_td\">";
 					main_div_string = main_div_string + "										</td>";
 					main_div_string = main_div_string + "									</tr>";
 					main_div_string = main_div_string + "								</table>";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "						</tr>";
+					main_div_string = main_div_string + "						<tr>";
+					main_div_string = main_div_string + "							<td style=\"text-align:right;font-weight:bold;vertical-align:top\">";
+					main_div_string = main_div_string + "							 Change password:<br><span style=\"font-weight:normal\">8-20 letters, numbers, !@-#$%*_</span>";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
+					main_div_string = main_div_string + "								<table style=\"width:auto;margin-right:auto\">";
+					main_div_string = main_div_string + "									<tr>";
+					main_div_string = main_div_string + "										<td style=\"text-align:right;font-size:10px;\">current:</td>";
+					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:3px\">";
+					main_div_string = main_div_string + "											<input type=password style=\"width:150px;color:#666666;font-size:11px\" id=\"password_current_input\">";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "									</tr>";
+					main_div_string = main_div_string + "									<tr>";
+					main_div_string = main_div_string + "										<td style=\"text-align:right;font-size:10px;\">new:</td>";
+					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:3px\">";
+					main_div_string = main_div_string + "											<input type=password style=\"width:150px;color:#666666;font-size:11px\" id=\"password_new_input\">";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "									</tr>";
+					main_div_string = main_div_string + "									<tr>";
+					main_div_string = main_div_string + "										<td style=\"text-align:right;font-size:10px;\">confirm:</td>";
+					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:3px\">";
+					main_div_string = main_div_string + "											<input type=password style=\"width:150px;color:#666666;font-size:11px\" id=\"password_confirm_input\">";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "									</tr>";
+					main_div_string = main_div_string + "									<tr>";
+					main_div_string = main_div_string + "										<td style=\"text-align:right;font-size:10px;\"></td>";
+					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:3px\">";
+					main_div_string = main_div_string + "											<a href=\"#\" id=\"password_submit_link\">submit</a> <span id=\"password_change_result_span\"></span>";
+					main_div_string = main_div_string + "										</td>";
+					main_div_string = main_div_string + "									</tr>";
+					main_div_string = main_div_string + "								</table>";
+					main_div_string = main_div_string + "							</td>";
+					main_div_string = main_div_string + "							<td id=\"password_change_result_td\" style=\"text-align:left\">";
 					main_div_string = main_div_string +	"							</td>";
 					main_div_string = main_div_string + "						</tr>";
                 	main_div_string = main_div_string + "					</table>";
@@ -406,51 +438,72 @@ function getProfile(target_screenname)
         			{
         				if(target_user_jo.email_is_confirmed)
         				{
-        					tstr = tstr + target_user_jo.email + " (confirmed) <a href=\"#\" id=\"remove_email_link\">remove</a>";
-        					tstr = tstr + "<br><span id=\"remove_email_result_span\"></span></td></tr>";
-                			$("#profile_page_email_td").html(tstr);
+        					var flexstr = "";
+        					flexstr = flexstr + "<table style=\"width:auto;margin-right:auto;\">";
+            				flexstr = flexstr + "	<tr>";
+            				flexstr = flexstr + "		<td style=\"text-align:left\">" + target_user_jo.email + " (confirmed)</td>";
+            				flexstr = flexstr + "		<td style=\"text-align:left;padding-left:3px\" id=\"remove_or_go_td\"><a href=\"#\" id=\"remove_email_link\">remove</a></td>";
+            				flexstr = flexstr + "	</tr>";
+            				flexstr = flexstr + "	<tr id=\"currpassrow_tr\" style=\"display:none\">";
+            				flexstr = flexstr + "		<td style=\"text-align:left\"><input type=text style=\"width:175px;font-size:11px;color:#666666\" id=\"remove_email_password_input\" value=\"current password\"></td>";
+            				flexstr = flexstr + "		<td style=\"text-align:left;font-size:10px;padding-left:3px\" id=\"remove_email_result_td\" ></td>";
+            				flexstr = flexstr + "	</tr>";
+            				flexstr = flexstr + "</table>";
+                			$("#profile_page_email_td").html(flexstr);
                 			$("#remove_email_link").click(function(event) { event.preventDefault();
-                				$.ajax({
-                					type: 'GET',
-                					url: endpoint,
-                					data: {
-                						method: "removeEmail",
-                						email_to_remove: target_user_jo.email,
-                						screenname: screenname,
-                						this_access_token: this_access_token
-                					},
-                					dataType: 'json',
-                    				async: true,
-                    				success: function (data, status) 
-                    				{
-                    					if(data.response_status === "error")
-                    					{
-                    						$("#remove_email_result_span").text(data.message);
-                    						$("#remove_email_result_span").css("color", "red");
-                    						setTimeout(function() { 
-                    							$("#remove_email_result_span").text("");
-                        						$("#remove_email_result_span").css("color", "black");
-                    						}, 2000);
-                    					}	
-                    					else if(data.response_status === "success")
-                    					{
-                    						$("#profile_page_email_td").text(data.message);
-                    						$("#profile_page_email_td").css("color", "green");
-                    						setTimeout(function() { 
-                    							viewProfile(screenname);
-                    						}, 2000);
-                    					}	
-                    					else
-                    					{
-                    						alert("response_status neither error nor success");
-                    					}	
-                    				},
-                    				error: function (XMLHttpRequest, textStatus, errorThrown) 
-                    				{
-                    					console.log(textStatus, errorThrown);
-                    					alert("ajax error");
-                    				}
-                    			});
+                				$("#currpassrow_tr").show();
+                				$("#remove_or_go_td").html("<button id=\"remove_email_go_button\">go</button>");
+                				$("#remove_email_password_input").focus(function() {
+                					if($("#remove_email_password_input").val() === "current password")
+                					{
+                						$("#remove_email_password_input").val("");
+                						$("#remove_email_password_input").css("color", "black");
+                					}
+                				});
+                				$("#remove_email_go_button").click(function(event) { 
+                					$.ajax({
+                						type: 'GET',
+                    					url: endpoint,
+                    					data: {
+                    						method: "removeEmail",
+                    						email_to_remove: target_user_jo.email,
+                    						current_password: $("#remove_email_password_input").val(),
+                    						screenname: screenname,
+                    						this_access_token: this_access_token
+                    					},
+                    					dataType: 'json',
+                        				async: true,
+                        				success: function (data, status) 
+                        				{
+                        					if(data.response_status === "error")
+                        					{
+                        						$("#remove_email_result_td").text(data.message);
+                        						$("#remove_email_result_td").css("color", "red");
+                        						setTimeout(function() { 
+                        							$("#remove_email_result_td").text("");
+                            						$("#remove_email_result_td").css("color", "black");
+                        						}, 2000);
+                        					}	
+                        					else if(data.response_status === "success")
+                        					{
+                        						$("#profile_page_email_td").text(data.message);
+                        						$("#profile_page_email_td").css("color", "green");
+                        						setTimeout(function() { 
+                        							viewProfile(screenname);
+                        						}, 2000);
+                        					}	
+                        					else
+                        					{
+                        						alert("response_status neither error nor success");
+                        					}	
+                        				},
+                        				error: function (XMLHttpRequest, textStatus, errorThrown) 
+                        				{
+                        					console.log(textStatus, errorThrown);
+                        					alert("ajax error");
+                        				}
+                        			});
+                				});
                 			});
         				}	
         				else // no provisional email waiting, nothing confirmed... this is the default @words4chrome.com address
@@ -462,13 +515,32 @@ function getProfile(target_screenname)
                 			$("#profile_page_email_td").html(tstr);
                 			
                 			$("#enter_real_address_link").click(function(event) { event.preventDefault();
-                				$("#email_flex_td").html("<input type=text style=\"width:175px\" style=\"font-size:10px\" id=\"real_email_input\"><button id=\"real_email_go_button\">go</button><br><span id=\"real_email_result_span\"></span></td></tr>");
+                				var flexstr = "";
+                				flexstr = flexstr + "<table style=\"width:auto;margin-right:auto;\">";
+                				flexstr = flexstr + "	<tr>";
+                				flexstr = flexstr + "		<td style=\"text-align:left\"><input type=text style=\"width:175px;font-size:11px;color:#666666\" id=\"real_email_input\" value=\"enter email\"></td>";
+                				flexstr = flexstr + "		<td style=\"text-align:left\"><button id=\"real_email_go_button\">go</button></td>";
+                				flexstr = flexstr + "	</tr>";
+                				flexstr = flexstr + "	<tr>";
+                				flexstr = flexstr + "		<td style=\"text-align:left\">current pass: <input type=password style=\"width:100px;font-size:11px;color:#666666\" id=\"real_email_password_input\"></td>";
+                				flexstr = flexstr + "		<td style=\"text-align:left;font-size:10px\" id=\"real_email_result_td\" ></td>";
+                				flexstr = flexstr + "	</tr>";
+                				flexstr = flexstr + "</table>";
+                				$("#email_flex_td").html(flexstr);
+                				$("#real_email_input").focus(function() {
+                					if($("#real_email_input").val() === "enter email")
+                					{
+                						$("#real_email_input").val("");
+                						$("#real_email_input").css("color", "black");
+                					}
+                				});
                 				$("#real_email_go_button").click(function(event) {
                 					$.ajax({
                         				type: 'GET',
                         				url: endpoint,
                         				data: {
                         					method: "setProvisionalEmail",
+                        					current_password: $("#real_email_password_input").val(),
                         					provisional_email: $("#real_email_input").val(),
                         					screenname: screenname,
                         					this_access_token: this_access_token
@@ -479,11 +551,11 @@ function getProfile(target_screenname)
                         				{
                         					if(data.response_status === "error")
                         					{
-                        						$("#real_email_result_span").text(data.message);
-                        						$("#real_email_result_span").css("color", "red");
+                        						$("#real_email_result_td").text(data.message);
+                        						$("#real_email_result_td").css("color", "red");
                         						setTimeout(function() { 
-                        							$("#real_email_result_span").text("");
-                            						$("#real_email_result_span").css("color", "black");
+                        							$("#real_email_result_td").text("");
+                            						$("#real_email_result_td").css("color", "black");
                         						}, 2000);
                         					}	
                         					else if(data.response_status === "success")
@@ -601,68 +673,8 @@ function getProfile(target_screenname)
             		}
             	});				
             	
-            	// this will log the user out as their existing screenname/tat combo won't work anymore
-            	$("#screenname_submit_link").click(function (event) { event.preventDefault();
-            		$.ajax({
-						type: 'GET',
-						url: endpoint,
-						data: {
-				            method: "setUserPreference",
-				            screenname: screenname,             
-				            this_access_token: this_access_token,  
-				            which: "screenname",
-				            value:  $("#screenname_change_input").val()
-				        },
-				        dataType: 'json',
-				        async: true,
-				        success: function (data, status) {
-				        	if (data.response_status === "error")
-				        	{
-				        		$("#screenname_result_td").css("color","red");
-								$("#screenname_result_td").text("error");
-								setTimeout( function () { 
-									$("#screenname_result_td").text("");
-								}, 3000);
-				        		displayMessage(data.message, "red", "utility_message_td");
-				            	if(data.error_code && data.error_code === "0000")
-				        		{
-				            		//alert("setUserPreference:screenname returned code 0000");
-				        			displayMessage("Your login has expired. Please relog.", "red");
-				        			user_jo = null;
-				        			updateLogstat();
-				        		}
-				        	}
-				        	else
-				        	{
-				        		$("#screenname_result_td").text("updated");
-				        		setTimeout( function () { 
-									$("#screenname_result_td").text("");
-								}, 3000);
-				        		user_jo.screenname = $("#screenname_change_input").val();
-				        		displayLogstatAsLoggedIn(); //updateLogstat();
-				        		viewProfile($("#screenname_change_input").val());
-				        		$("#screenname_change_input").val("");
-				        	}
-				        }
-				        ,
-				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#screenname_result_td").text("error");
-				            console.log(textStatus, errorThrown);
-				        }
-					});
-            	});
+            	
 
-            	/*if(user_jo.picture.indexOf("graph.facebook.com") != -1)
-            	{
-            		$("#use_social_radio").prop('checked', true);
-            		$("#use_social_wording_td").text("Facebook");
-            	}
-            	else if(user_jo.picture.indexOf("googleusercontent.com") != -1)
-            	{
-            		$("#use_social_radio").prop('checked', true);
-            		$("#use_social_wording_td").text("Google");
-            	}
-            	*/ 
             	if(user_jo.picture.indexOf("unicornify.appspot.com") != -1)
         			$("#use_unicorn_radio").prop('checked', true);
         		else if(user_jo.picture.indexOf("d=identicon") != -1)
@@ -676,9 +688,6 @@ function getProfile(target_screenname)
         		else if(user_jo.picture.indexOf("d=monsterid") != -1)
         			$("#use_monster_radio").prop('checked', true);
         		
-            	/*$("#use_social_radio").click(function (event) { 
-        			alert("user wants to use social. Get URL from backend and go from there.");
-            	});*/
             	$("#use_geometric_radio").click(function (event) {
             		var g = guid();
             		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
@@ -1070,6 +1079,128 @@ function getProfile(target_screenname)
 				        }
 					});
             	});
+            	
+            	$("#screenname_change_input").focus(function () { 
+            		if($("#screenname_change_input").val() === "new screenname")
+            		{
+            			$("#screenname_change_input").val("");
+            			$("#screenname_change_input").css("color", "black");
+            		}
+            	});
+            	
+            	// this will log the user out as their existing screenname/tat combo won't work anymore
+            	$("#screenname_submit_link").click(function (event) { event.preventDefault();
+            		$.ajax({
+						type: 'GET',
+						url: endpoint,
+						data: {
+				            method: "setUserPreference",
+				            screenname: screenname,             
+				            this_access_token: this_access_token,  
+				            which: "screenname",
+				            value:  $("#screenname_change_input").val()
+				        },
+				        dataType: 'json',
+				        async: true,
+				        success: function (data, status) {
+				        	if (data.response_status === "error")
+				        	{
+				        		$("#screenname_result_td").css("color","red");
+								$("#screenname_result_td").text("error");
+								setTimeout( function () { 
+									$("#screenname_result_td").text("");
+								}, 3000);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				        			displayMessage("Your login has expired. Please relog.", "red");
+				        			user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
+				        	else
+				        	{
+				        		$("#screenname_result_td").text("updated");
+				        		setTimeout( function () { 
+									$("#screenname_result_td").text("");
+								}, 3000);
+				        		user_jo = null; // changing screenname logs the user out completely
+				        		updateLogstat(); 
+				        		viewProfile($("#screenname_change_input").val());
+				        		$("#screenname_change_input").val("");
+				        	}
+				        }
+				        ,
+				        error: function (XMLHttpRequest, textStatus, errorThrown) {
+				        	$("#screenname_result_td").text("ajax error");
+				            console.log(textStatus, errorThrown);
+				        }
+					});
+            	});
+            	
+            	$("#password_submit_link").click(function (event) { event.preventDefault();
+            	
+            		if ($("#password_new_input").val() !== $("#password_confirm_input").val())
+            		{
+            			$("#password_result_td").css("color","red");	
+            			$("#screenname_result_td").text("Password and confirm don't match.");
+            		}
+            		else if (!$("#password_new_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
+            		{
+            			$("#password_result_td").css("color","red");	
+            			$("#screenname_result_td").text("New password is invalid.");
+            		}
+            		else
+            		{
+            			
+            		}	
+            		$.ajax({
+						type: 'GET',
+						url: endpoint,
+						data: {
+				            method: "changePassword",
+				            screenname: screenname,             
+				            this_access_token: this_access_token,  
+				            current_password: $("#password_current_input").val(),
+				            new_password:  $("#password_new_input").val()
+				        },
+				        dataType: 'json',
+				        async: true,
+				        success: function (data, status) {
+				        	if (data.response_status === "error")
+				        	{
+				        		$("#password_change_result_span").css("color","red");
+								$("#password_change_result_span").text("error");
+								setTimeout( function () { 
+									$("#password_change_result_span").text("");
+								}, 2000);
+				            	if(data.error_code && data.error_code === "0000")
+				        		{
+				            		$("#password_change_result_span").text("Your login has expired. Please relog.");
+				        			user_jo = null;
+				        			updateLogstat();
+				        		}
+				        	}
+				        	else
+				        	{
+				        		$("#password_change_result_span").css("color","green");
+								$("#password_change_result_span").text("updated");
+								$("#password_current_input").val("");
+								$("#password_new_input").val("");
+								$("#password_confirm_input").val("");
+				        		setTimeout( function () { 
+									$("#password_change_result_span").text("");
+								}, 2000);
+				        	}
+				        }
+				        ,
+				        error: function (XMLHttpRequest, textStatus, errorThrown) {
+				        	$("#password_change_result_span").css("color","red");
+							$("#password_change_result_span").text("ajax error");
+				            console.log(textStatus, errorThrown);
+				        }
+					});
+            	});
+            	
             }
         
         },

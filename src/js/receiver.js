@@ -765,17 +765,7 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 	$("#registration_password_input").keypress(
 			function () {
 				$("#submit_message_div").html("");
-				if ($("#registration_password_input").val().length <= 0) 
-				{
-					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
-					return;
-				} 
-				else if ($("#registration_password_input").val().length < 6) 
-				{
-					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
-					return;
-				} 
-				else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
+				if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
 				{
 					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">8-20 letters, numbers or !@-#$%*_</span>");
 					return;	
