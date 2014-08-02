@@ -278,7 +278,7 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "								</div>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left;vertical-align:top\">";
-					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;48px;height:48px;\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
+					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;70px;height:70px;\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
 					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\" class=\"standardized-button\" >Save</button>";
 					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "							</td>";
@@ -290,7 +290,7 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "								<table>";
 					main_div_string = main_div_string + "									<tr>";
-					main_div_string = main_div_string + "										<td>";
+					main_div_string = main_div_string + "										<td><span style=\"font-style:italic\">Warning: Changing this will sign you out.</span><br>";
 					main_div_string = main_div_string + "											<input type=text id=\"screenname_change_input\">";
 					main_div_string = main_div_string + "										</td>";
 					main_div_string = main_div_string + "									</tr>";

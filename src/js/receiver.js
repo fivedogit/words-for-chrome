@@ -657,7 +657,7 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 		});
 	});
 	$("#forgot_password_link").click(function(event){ event.preventDefault();
-		alert("forgot_password_link click");
+		alert("This feature is not yet enabled. Sorry! Try hypnotism or something.");
 	});
 	
 	
