@@ -130,7 +130,6 @@ else
 	    client_id = "271212039709142";
 	if(login_type === "google" && code === "undefined") // if google user clicks "cancel" 
 	{
-		$("#progress_tr").hide();
 		var google_cancel_message = "";
 		google_cancel_message = google_cancel_message + "<div style=\"width:360px;padding:15px\">";
 		google_cancel_message = google_cancel_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
@@ -153,7 +152,6 @@ else
 	}	
 	else if(login_type === "facebook" && code === "undefined") // if facebook user clicks "cancel" 
 	{
-		$("#progress_tr").hide();
 		var facebook_cancel_message = "";
 		facebook_cancel_message = facebook_cancel_message + "<div style=\"width:360px;padding:15px\">";
 		facebook_cancel_message = facebook_cancel_message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:15px\">";
@@ -207,7 +205,7 @@ else
 				
 				chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
 					if (chrome.runtime.lastError) { // if google and the user clicks the X to close the perm window
-						$("#progress_tr").hide();
+						$("#content_div").hide();
 						//alert(JSON.stringify(chrome.runtime.lastError));
 						var google_close_message = "";
 						google_close_message = google_close_message + "<div style=\"width:360px;padding:15px\">";
@@ -296,7 +294,7 @@ else
 			
 				chrome.identity.launchWebAuthFlow(options, function(redirectUri1) {
 					if (chrome.runtime.lastError) {
-						$("#progress_tr").hide();
+						$("#content_div").hide();
 						//alert("error=" + JSON.stringify(chrome.runtime.lastError));
 						var facebook_close_message = "";
 						facebook_close_message = facebook_close_message + "<div style=\"width:360px;padding:15px\">";
@@ -363,7 +361,6 @@ else
 		// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
 		//alert("parsing code, going to getAccessTokenFromAuthorizationCode with redirect_uri=" + getParameterByName("redirect_uri"));
 		displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
-		$("#progress_tr").show();
 		
 		$.ajax({
 			type: 'get',
@@ -381,7 +378,6 @@ else
 				if(data.response_status === "error")
 				{
 					displayMessage(data.message, "red");
-					$("#progress_tr").hide();
 					if(data.login_type === "facebook")
 					{
 						var msg = "";
@@ -431,7 +427,6 @@ else
 				}
 				else if(data.response_status === "success")
 				{
-					$("#progress_tr").hide();
 					if(data.show_registration === "true" && data.login_type === "facebook")
 					{
 						//docCookies.setItem("email", data.email, 31536e3); if we're passing the email in the next line, why do we need to store it as a cookie?
@@ -461,7 +456,6 @@ else
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 				console.log(textStatus, errorThrown);
 				displayMessage("Unknown login error. Please try again.", "red");
-				$("#progress_tr").hide();
 			} 
 		}); 
 	}	
@@ -951,468 +945,12 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 		
 }
 
-/*
-function showRegistration(picture, login_type, email, social_access_token)
-{
-	$("#message_div").css("font-weight", "bold");
-	$("#message_div").text("Welcome! Let's create a WORDS account for you.");
-	if(!picture)
-	{
-		$("#use_google_tr").hide();
-		$("#use_facebook_tr").hide();
-	}
-	else
-	{
-		if(login_type === "google")
-		{
-			$("#use_facebook_tr").hide();
-			$("#use_google_radio").prop('checked', true);
-		}
-		else if(login_type === "facebook")
-		{
-			$("#use_google_tr").hide();
-			$("#use_facebook_radio").prop('checked', true);
-		}
-		
-		$("#avatar_img").attr("src", picture);
-	}
-	var tstr = "";
-	tstr=tstr+"<table style=\"margin-left:auto;margin-right:auto;border-spacing:5px;\">";
-	tstr=tstr+"<tr>";
-	tstr=tstr+"	<td id=\"registration_form_td\" style=\"display:none;text-align:center\">";
-	tstr=tstr+"	<form method=\"post\" id=\"registration_form\" action=\"#\">";
-	tstr=tstr+"		<table id=\"registration_table\">";
-	tstr=tstr+"		<tr>";
-	tstr=tstr+"			<td style=\"text-align:right\">";
-	tstr=tstr+"				 email address<br><span style=\"font-size:10px\">(always private, never spammed)</span>";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td id=\"registration_email_td\" style=\"font-weight:bold;text-align:center\">";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td style=\"text-align:right;font-style:italic;font-size:11px\">";
-	tstr=tstr+"				Not you? Restart browser <br>to try again.";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"		</tr>";
-	tstr=tstr+"		<tr>";
-	tstr=tstr+"			<td style=\"text-align:right\">";
-	tstr=tstr+"				 screenname<br><span style=\"font-size:10px\">(8-20 letters/numbers, starting with a letter)</span>";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td style=\"text-align:center\">";
-	tstr=tstr+"				<input type=text id=\"registration_screenname_input\" style=\"width:130px\" maxlength=\"20\"><br><a href=\"#\" id=\"screenname_availability_link\">available?</a> <span id=\"screenname_availability_span\"></span>";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td id=\"screenname_validity_td\"></td>";
-	tstr=tstr+"		</tr>";
-	tstr = tstr + "	<tr>";
-	tstr = tstr + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 maxlength=20 id=\"registration_password_input\"></td><td id=\"password_strength_td\"></td>";
-	tstr = tstr + "	</tr>";
-	tstr = tstr + "	<tr>";
-	tstr = tstr + "		<td style=\"text-align:right\">confirm:</td><td><input type=password size=20 maxlength=20 id=\"registration_confirm_input\"></td><td id=\"confirm_validity_td\"></td>";
-	tstr = tstr + "	</tr>";
-	tstr=tstr+"		<tr>";
-	tstr=tstr+"			<td style=\"text-align:right;vertical-align:top\">";
-	tstr=tstr+"				 avatar";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td>";
-	tstr=tstr+"				<div id=\"picture_type_div\">";
-	tstr=tstr+"					<table style=\"margin-right:auto;margin-left:auto\" id=\"avatar_radios_table\">";
-	if(login_type === "google")
-	{	
-		tstr=tstr+"					<tr id=\"use_google_tr\">";
-		tstr=tstr+"						<td>";
-		tstr=tstr+"							<input id=\"use_google_radio\" type=\"radio\" name=\"picture_type\" value=\"use_google_radio\">";
-		tstr=tstr+"						</td>";
-		tstr=tstr+"						<td id=\"use_google_wording_td\">";
-		tstr=tstr+"							Google picture";
-		tstr=tstr+"						</td>";
-		tstr=tstr+"					</tr>";
-	}
-	else if(login_type === "facebook")
-	{	
-		tstr=tstr+"					<tr id=\"use_facebook_tr\">";
-		tstr=tstr+"						<td>";
-		tstr=tstr+"							<input id=\"use_facebook_radio\" type=\"radio\" name=\"picture_type\" value=\"use_facebook_radio\">";
-		tstr=tstr+"						</td>";
-		tstr=tstr+"						<td id=\"use_facebook_wording_td\">";
-		tstr=tstr+"							Facebook picture";
-		tstr=tstr+"						</td>";
-		tstr=tstr+"					</tr>";
-	}
-	tstr=tstr+"					<tr>";
-	tstr=tstr+"						<td>";
-	tstr=tstr+"							<input id=\"use_geometric_radio\" type=\"radio\" name=\"picture_type\" value=\"geometric\">";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"						<td id=\"use_geometric_wording_td\">";
-	tstr=tstr+"							Geometric";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"					</tr>";
-	tstr=tstr+"					<tr>";
-	tstr=tstr+"						<td>";
-	tstr=tstr+"							<input id=\"use_monster_radio\" type=\"radio\" name=\"picture_type\" value=\"monster\">";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"						<td id=\"use_monster_wording_td\">";
-	tstr=tstr+"							Monster";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"					</tr>";
-	tstr=tstr+"					<tr>";
-	tstr=tstr+"						<td>";
-	tstr=tstr+"							<input id=\"use_cartoonface_radio\" type=\"radio\" name=\"picture_type\" value=\"cartoonface\">";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"						<td id=\"use_cartoonface_wording_td\">";
-	tstr=tstr+"							Cartoon face";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"					</tr>";
-	tstr=tstr+"					<tr>";
-	tstr=tstr+"						<td>";
-	tstr=tstr+"							<input id=\"use_retro_radio\" type=\"radio\" name=\"picture_type\" value=\"retro\">";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"						<td id=\"use_retro_wording_td\">";
-	tstr=tstr+"							Retro";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"					</tr>";
-	tstr=tstr+"					<tr>";
-	tstr=tstr+"						<td>";
-	tstr=tstr+"							<input id=\"use_unicorn_radio\" type=\"radio\" name=\"picture_type\" value=\"unicorn\">";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"						<td id=\"use_unicorn_wording_td\">";
-	tstr=tstr+"							Unicorn <span id=\"unicorn_wait_span\" style=\"font-style:italic\"></span>";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"					</tr>";
-	tstr=tstr+"					<tr>";
-	tstr=tstr+"						<td>";
-	tstr=tstr+"							<input id=\"use_silhouette_radio\" type=\"radio\" name=\"picture_type\" value=\"silhouette\">";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"						<td id=\"use_silhouette_wording_td\">";
-	tstr=tstr+"							Silhouette";
-	tstr=tstr+"						</td>";
-	tstr=tstr+"					</tr>";
-	tstr=tstr+"					</table>";
-	tstr=tstr+"				</div>";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td id=\"picture_td\" style=\"text-align:center;vertical-align:top\">";
-	tstr=tstr+"				<img id=\"avatar_img\" src=\"\" style=\"width:96px;\">";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"		</tr>";
-	tstr=tstr+"		<tr>";
-	tstr=tstr+"			<td>";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td>";
-	tstr=tstr+"				<table style=\"border-spacing:3px;margin-left:auto;margin-right:auto\">";
-	tstr=tstr+"				<tr>";
-	tstr=tstr+"					<td>";
-	tstr=tstr+"						";
-	tstr=tstr+"					</td>";
-	tstr=tstr+"					<td>";
-	tstr=tstr+"						<input id=\"registration_submit_button\" class=button type=button value=\"Create account\"></input>";
-	tstr=tstr+"					</td>";
-	tstr=tstr+"					<td>";
-	tstr=tstr+"						<span id=\"registration_progress_span\" style=\"display:none\"><img src=\"\" + chrome.extension.getURL(\"images/ajaxSnake.gif\") + \"\" style=\"width:16px;height16px;border:0px\"></span>";
-	tstr=tstr+"					</td>";
-	tstr=tstr+"				</tr>";
-	tstr=tstr+"				</table>";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"			<td>";
-	tstr=tstr+"			</td>";
-	tstr=tstr+"		</tr>";
-	tstr=tstr+"		</table>";
-	tstr=tstr+"	</form>";
-	tstr=tstr+"	</td>";
-	tstr=tstr+"</tr>";
-	tstr=tstr+"</table>";
-	$("#content_div").html(tstr);
-	
-	$("#registration_email_td").text(email);
-	$("#registration_form_td").show();
-	
-	
-	$("#registration_screenname_input")
-	.focusout(function () {
-	$("#registration_screenname_input")
-	    .trigger("keypress");
-	});
-	$("#registration_screenname_input")
-	.keyup(function () {
-	$("#registration_screenname_input")
-	    .trigger("keypress");
-	});
-	$("#registration_screenname_input")
-	.keydown(function () {
-	$("#registration_screenname_input")
-	    .trigger("keypress");
-	});
-
-	
-	$("#registration_screenname_input").keypress(
-			function () {
-				$("#submit_message_div").html("");
-				if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,19}$/))
-				{
-					$("#screenname_validity_td").html("<span style=\"color:red;font-size:11px\">8-20 letters and numbers,<br>starting with a letter</span>");
-					return;	
-				}
-				else
-				{
-					$("#screenname_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
-					return;
-				}
-			});	
-	
-	$("#use_google_radio").click(function (event) { 
-		$("#avatar_img").attr("src", picture);
-	});
-	$("#use_facebook_radio").click(function (event) { 
-		$("#avatar_img").attr("src", picture );
-	});
-	$("#use_geometric_radio").click(function (event) { 
-		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=identicon&s=128");
-	});
-	$("#use_monster_radio").click(function (event) { 
-		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=monsterid&s=128");
-	});
-	$("#use_cartoonface_radio").click(function (event) { 
-		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=wavatar&s=128");
-	});
-	$("#use_retro_radio").click(function (event) { 
-		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=retro&s=128");
-	});
-	$("#use_unicorn_radio").click(function (event) { 
-		var g = guid();
-		$("#avatar_img").attr("src", "http://unicornify.appspot.com/avatar/" + g + "?s=128");
-		$("#unicorn_wait_span").text("Wait...");
-		setTimeout(function() {$("#unicorn_wait_span").text("");}, 2000);
-	});
-	$("#use_silhouette_radio").click(function (event) { 
-		var g = guid();
-		$("#avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
-	});
-	//EVENT HANDLERS
-
-	$("#not_you_link").click(function (event) { event.preventDefault();
-		docCookies.removeItem("email");
-		docCookies.removeItem("last_tab_id");
-		docCookies.removeItem("this_access_token");
-		$("#registration_form_td").html("<a href=\"#\" id=\"close_this_tab_link\">Close this tab</a>");//OK
-		$("#registration_form_td").show();
-		$("#message_div").text("The existing user information has been removed. Please start the login process again.");
-		
-		$("#close_this_tab_link").click( function (event) { event.preventDefault();
-			chrome.tabs.getSelected(null, function(tab) { 
-				chrome.tabs.remove(tab.id);
-			});
-		});
-	});
-	
-	$("#screenname_availability_link").click( function (event) { event.preventDefault();
-		$("#screenname_availability_span").text("Checking...");
-		var response_object;
-		$.ajax({
-			type: 'GET',
-			url: bg.endpoint,
-			data: {
-				method: "isScreennameAvailable",
-				screenname: $("#registration_screenname_input").val()
-			},
-			dataType: 'json',
-			async: true,
-			success: function (data, status) 
-			{
-				response_object = data;
-				if (response_object.response_status === "error") 
-				{
-					$("#screenname_availability_span").css("color", "red");
-					$("#screenname_availability_span").text(data.message);
-					setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
-				} 
-				else if (response_object.response_status === "success") 
-				{
-					if (response_object.screenname_available === "true") 
-					{
-						$("#screenname_availability_span").css("color", "green");
-						$("#screenname_availability_span").text("Available");
-					}
-					else if (response_object.screenname_available === "false") 
-					{
-						$("#screenname_availability_span").css("color", "red");
-						$("#screenname_availability_span").text("Unavailable");
-					}
-					else
-					{
-						$("#screenname_availability_span").css("color", "red");
-						$("#screenname_availability_span").text("Error. Value !t/f.");
-					}
-					setTimeout(function() { $("#screenname_availability_span").text("");}, 3000);
-				}
-				else
-				{
-					//alert("weird. response_status not error or success.");
-				}
-				return;
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) 
-			{
-				console.log(textStatus, errorThrown);
-			}
-		});	
-	});					
-		
-	$("#registration_password_input")
-	.focusout(function () {
-	$("#registration_password_input")
-	    .trigger("keypress");
-	});
-	$("#registration_password_input")
-	.keyup(function () {
-	$("#registration_password_input")
-	    .trigger("keypress");
-	});
-	$("#registration_password_input")
-	.keydown(function () {
-	$("#registration_password_input")
-	    .trigger("keypress");
-	});
-
-	$("#registration_password_input").keypress(
-			function () {
-				$("#submit_message_div").html("");
-				if ($("#registration_password_input").val().length <= 0) 
-				{
-					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
-					return;
-				} 
-				else if ($("#registration_password_input").val().length < 6) 
-				{
-					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
-					return;
-				} 
-				else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
-				{
-					$("#password_strength_td").html("<span style=\"color:red;font-size:11px\">8-20 letters, numbers or !@-#$%*_</span>");
-					return;	
-				}
-				else if ($("#registration_password_input").val().length >= 6) 
-				{
-					$("#password_strength_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
-					return;
-				}
-			});
-	
-	$("#registration_confirm_input")
-	.focusout(function () {
-	$("#registration_confirm_input")
-	    .trigger("keypress");
-	});
-	$("#registration_confirm_input")
-	.keyup(function () {
-	$("#registration_confirm_input")
-	    .trigger("keypress");
-	});
-	$("#registration_confirm_input")
-	.keydown(function () {
-	$("#registration_confirm_input")
-	    .trigger("keypress");
-	});
-	
-	$("#registration_confirm_input").keypress(
-			function () {
-				$("#submit_message_div").html("");
-				if ($("#registration_confirm_input").val().length <= 0) 
-				{
-					$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Blank</span>");
-					return;
-				} 
-				else if ($("#registration_confirm_input").val().length < 6) 
-				{
-					$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Too short</span>");
-					return;
-				} 
-				else if ($("#registration_confirm_input").val().length >= 6) 
-				{
-					if ($("#registration_confirm_input").val() === $("#registration_password_input").val()) 
-					{
-						$("#confirm_validity_td").html("<span style=\"color:green;font-size:11px\">OK</span>");
-					} 
-					else 
-					{
-						$("#confirm_validity_td").html("<span style=\"color:red;font-size:11px\">Doesn't match</span>");
-					}
-					return;
-				}
-			});
-	
-	$("#registration_submit_button").click( function (event) {	event.preventDefault();
-		if($("#registration_screenname_input").val() === "")
-		{
-			displayMessage("Choose a screenname.", "red");
-			return false;
-		}	
-		
-		if($("#registration_screenname_input").val().length > 20)
-		{
-			displayMessage("Screennames must be less than 21 characters.", "red");
-			return false;
-		}	
-		
-		if($("#registration_screenname_input").val().length < 6)
-		{
-			displayMessage("Screennames must be at least 6 characters.", "red");
-			return false;
-		}	
-		
-		var avatar_str = null;
-		var picture = $("#avatar_img").attr("src");		
-		
-		displayMessage("Creating WORDS account... ", "black");
-		$("#progress_tr").show();
-		$("#registration_form_td").hide();	
-		
-		$.ajax({
-			type: 'GET',
-			url: bg.endpoint,
-			data: {
-				method: "createUser",
-				login_type: login_type,
-				social_access_token: social_access_token,
-				screenname: $("#registration_screenname_input").val(),
-				picture: picture,
-				email: email,
-				password: $("#nativereg_password_input").val(),
-				useragent: navigator.userAgent
-			},
-			dataType: 'json',
-			async: true,
-			success: function (data, status) {
-				//alert("ajax success");
-				if(data.response_status === "error")
-				{
-					$("#progress_tr").hide();
-					displayMessage(data.message, "red");
-					$("#registration_form_td").show();
-				}
-				else
-				{
-					$("#progress_tr").hide();
-					docCookies.setItem("screenname", data.screenname, 31536e3);
-					docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-					doFinished(true, social_access_token);
-				}
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				console.log(textStatus, errorThrown);
-				displayMessage("Unable to create WORDS account. Can't reach network.<br>Please check your internet connection and try again.<br>If you continue to have trouble, please contact us.", "red");
-			} 
-		});
-	});
-}*/
-
 function doFinished(from_registration, social_access_token)
 {
 	//alert("receiver: doFinished from_reg=" + from_registration);
 	// we've gotten the login return, now we need to get the user before we can safely say, 
 	displayMessage("Identify verified. Loading WORDS user info... ", "black");
 	
-	$("#progress_tr").show();
 	//alert("receiver getUserSelf()");
 	$.ajax({ 
 		type: 'GET', 
@@ -1429,7 +967,6 @@ function doFinished(from_registration, social_access_token)
         	var existing_pic = data.user_jo.picture;
         	if (data.response_status === "error") 
         	{
-        		$("#progress_tr").hide();
         		displayMessage(data.message, "red");
         		if(data.error_code && data.error_code === "0000")
         		{
@@ -1440,7 +977,6 @@ function doFinished(from_registration, social_access_token)
         	} 
         	else if (data.response_status === "success") 
         	{	
-        		$("#progress_tr").hide();
         		//alert("receiver: getUserSelf success");
         		if(data.user_jo) { 	bg.user_jo = data.user_jo; }
         		
