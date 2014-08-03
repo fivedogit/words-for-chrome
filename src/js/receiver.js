@@ -488,30 +488,37 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 	$("#message_div").hide();
 	$("#content_div").css("padding","0px");
 	var log_and_reg = "";
-	log_and_reg = log_and_reg + "<table style=\"width:100%;border:0px solid black;border-spacing:15px;border-collapse:separate\">";
+	
 	if(show_login)
 	{	
+		log_and_reg = log_and_reg + "<form name=\"login_form\" id=\"existing_user_login_form\" method=\"get\" action=\"#\">";
+		log_and_reg = log_and_reg + "<table style=\"width:100%;border:0px solid black;border-spacing:15px;border-collapse:separate\">";
 		log_and_reg = log_and_reg + "	<tr>";
-		log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Log in:</td><td></td><td></td>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold;width:110px\">Log in:</td><td></td>";
 		log_and_reg = log_and_reg + "	</tr>";
 		log_and_reg = log_and_reg + "	<tr>";
-		log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td><td><input type=text size=20 id=\"screenname_input\"></td><td></td>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:right;width:110px\">screenname:</td><td><input type=\"text\" size=20 id=\"screenname_input\"></td>";
 		log_and_reg = log_and_reg + "	</tr>";
 		log_and_reg = log_and_reg + "	<tr>";
-		log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td><td><input type=password size=20 id=\"password_input\"></td><td></td>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:right;width:110px\">password:</td><td><input type=\"password\" size=20 id=\"password_input\"></td>";
 		log_and_reg = log_and_reg + "	</tr>";
 		log_and_reg = log_and_reg + "	<tr>";
-		log_and_reg = log_and_reg + "		<td></td><td><button id=\"login_submit_button\">Login</button></td><td></td>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:right;width:110px\"></td><td><input type=\"submit\" value=\"Login\"></td>";
 		log_and_reg = log_and_reg + "	</tr>";
 		log_and_reg = log_and_reg + "	<tr>";
-		log_and_reg = log_and_reg + "		<td></td><td colspan=2 style=\"color:red;font-size:11px\" id=\"login_submit_message_div\"></td>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:right;width:110px\"></td><td style=\"color:red;font-size:11px\" id=\"login_submit_message_div\"></td>";
 		log_and_reg = log_and_reg + "	</tr>";
 		log_and_reg = log_and_reg + "	<tr>";
-		log_and_reg = log_and_reg + "		<td></td><td><a href=\"#\" id=\"forgot_password_link\">I forgot my password.</a></td><td></td>";
+		log_and_reg = log_and_reg + "		<td style=\"text-align:right;width:110px\"></td><td><a href=\"#\" id=\"forgot_password_link\">I forgot my password.</a></td>";
 		log_and_reg = log_and_reg + "	</tr>";
+		log_and_reg = log_and_reg + "</table>";
+		log_and_reg = log_and_reg + "</form>";
 	}
+	
+	log_and_reg = log_and_reg + "<form name=\"registration_form\" id=\"new_user_registration_form\" method=\"get\" action=\"#\">";
+	log_and_reg = log_and_reg + "<table style=\"width:100%;border-top:1px solid #cccccc;border-spacing:15px;border-collapse:separate\">";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold\">Create account:</td><td></td><td></td>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold;width:110px\">Create account:</td><td></td><td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	if(email !== null)
 	{
@@ -523,22 +530,22 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 		log_and_reg = log_and_reg + "	</tr>";
 	}	
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">screenname:</td>";
-	log_and_reg = log_and_reg + "		<td><input type=text size=20 id=\"registration_screenname_input\"><br><a href=\"#\" id=\"screenname_availability_link\">available?</a> <span id=\"screenname_availability_span\"></span></td>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right;vertical-align:top;width:110px\">screenname:</td>";
+	log_and_reg = log_and_reg + "		<td style=\"vertical-align:top\"><input type=\"text\" size=20 id=\"registration_screenname_input\"></td>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:center;vertical-align:top\"><a href=\"#\" id=\"screenname_availability_link\">available?</a><br><span id=\"screenname_availability_span\"></span></td>";
+	log_and_reg = log_and_reg + "	</tr>";
+	log_and_reg = log_and_reg + "	<tr>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right;width:110px\">password:</td>";
+	log_and_reg = log_and_reg + "		<td><input type=\"password\" size=20 id=\"registration_password_input\"> <span style=\"font-size:11px\" id=\"password_validity_span\"></span></td>";
 	log_and_reg = log_and_reg + "		<td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">password:</td>";
-	log_and_reg = log_and_reg + "		<td><input type=password size=20 id=\"registration_password_input\"> <span style=\"font-size:11px\" id=\"password_validity_span\"></span></td>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right;width:110px\">confirm:</td>";
+	log_and_reg = log_and_reg + "		<td><input type=\"password\" size=20 id=\"registration_confirm_input\"> <span style=\"font-size:11px\" id=\"confirm_validity_span\"></span></td>";
 	log_and_reg = log_and_reg + "		<td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">confirm:</td>";
-	log_and_reg = log_and_reg + "		<td><input type=password size=20 id=\"registration_confirm_input\"> <span style=\"font-size:11px\" id=\"confirm_validity_span\"></span></td>";
-	log_and_reg = log_and_reg + "		<td></td>";
-	log_and_reg = log_and_reg + "	</tr>";
-	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:right\">avatar:<br><span style=\"font-style:italic;font-color:#666666;font-size:10px\">(Custom avatars<br>coming soon!)</span></td>";
+	log_and_reg = log_and_reg + "		<td style=\"text-align:right;vertical-align:top;width:110px\">avatar:<br><span style=\"font-style:italic;color:#666666;font-size:10px\">(To use your own picture, log in with Google or FB.)</span></td>";
 	log_and_reg = log_and_reg + "		<td>";
 	log_and_reg = log_and_reg + "			<table>";
 	if(login_type === "google" || login_type === "facebook")
@@ -612,23 +619,24 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 	log_and_reg = log_and_reg + "		<td><img style=\"width:80px;height:80px;display:none\" id=\"registration_avatar_img\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td></td><td><button id=\"create_account_button\">Create account</button></td><td></td>";
+	log_and_reg = log_and_reg + "		<td style=\"width:110px\"></td><td><input type=\"submit\" value=\"Create account\"></td><td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td></td><td colspan=2 style=\"color:red;font-size:11px\" id=\"submit_message_div\"></td>";
+	log_and_reg = log_and_reg + "		<td style=\"width:110px\"></td><td colspan=2 style=\"color:red;font-size:11px\" id=\"submit_message_div\"></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "	<tr>";
 	if(login_type === "words")
-		log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"></td><td></td>";
+		log_and_reg = log_and_reg + "		<td style=\"width:110px\"></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"></td><td></td>";
 	else if(login_type === "facebook")
-		log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_24x24.png") + "\"></td><td></td>";
+		log_and_reg = log_and_reg + "		<td style=\"width:110px\"></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_24x24.png") + "\"></td><td></td>";
 	else if(login_type === "google")
-		log_and_reg = log_and_reg + "		<td></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_24x24.png") + "\"></td><td></td>";
-	
+		log_and_reg = log_and_reg + "		<td style=\"width:110px\"></td><td>Or, login with: <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_24x24.png") + "\"></td><td></td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	log_and_reg = log_and_reg + "</table>";
+	log_and_reg = log_and_reg + "</form>";
 	$("#content_div").html(log_and_reg);
-	$("#login_submit_button").click(function(event){
+	
+	$("#existing_user_login_form").submit(function(event){
 		$("#login_submit_message_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
 		$.ajax({
 			type: 'GET',
@@ -658,10 +666,11 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 				console.log(textStatus, errorThrown);
-				$("#login_submit_message_div").text("Unable to login. Check username and password.");
+				$("#login_submit_message_div").text("Unable to login. Check username and password. (AJAX)");
 				setTimeout(function() { $("#login_submit_message_div").text("");}, 3000);
 			} 
 		});
+		return false;
 	});
 	$("#forgot_password_link").click(function(event){ event.preventDefault();
 		alert("This feature is not yet enabled. Sorry! Try hypnotism or something.");
@@ -847,38 +856,26 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 		$("#registration_avatar_img").attr("src", "http://www.gravatar.com/avatar/" + g + "?d=mm&s=128");
 	});
 	
-	$("#create_account_button").click(function(event){
-		if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,19}$/))
+	$("#new_user_registration_form").submit(function(event){
+		if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,14}$/))
 		{
-			$("#submit_message_div").text("Screenname must be 8-20 chars, no spaces");
+			$("#submit_message_div").text("Screenname must be 6-15 chars, no spaces");
+			setTimeout(function() { $("#submit_message_div").text("");}, 3000);
 		}
-		else if ($("#registration_password_input").val().length <= 0) 
-		{
-			$("#submit_message_div").text("Password cannot be blank");
-		} 
-		else if ($("#registration_password_input").val().length < 6) 
-		{
-			$("#submit_message_div").text("Password is too short");
-		} 
 		else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))
 		{
 			$("#submit_message_div").text("Password must be 8-20 letters, numbers or !@-#$%*_");
+			setTimeout(function() { $("#submit_message_div").text("");}, 3000);
 		}
-		else if ($("#registration_confirm_input").val().length <= 0) 
-		{
-			$("#submit_message_div").text("Confirm password is blank");
-		} 
-		else if ($("#registration_confirm_input").val().length < 6) 
-		{
-			$("#submit_message_div").text("Confirm password is too short");
-		} 
 		else if ($("#registration_confirm_input").val() !== $("#registration_password_input").val()) 
 		{
 			$("#submit_message_div").text("Password and confirm don't match");
+			setTimeout(function() { $("#submit_message_div").text("");}, 3000);
 		}
 		else if ($("#registration_avatar_img").attr("src").indexOf("ajaxSnake.gif") != -1) 
 		{
 			$("#submit_message_div").text("You must choose an avatar");
+			setTimeout(function() { $("#submit_message_div").text("");}, 3000);
 		}
 		else
 		{
@@ -921,7 +918,7 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 				} 
 			});
 		}	
-		
+		return false;
 	});
 	
 	$("#google_login_img").click(function(event){
