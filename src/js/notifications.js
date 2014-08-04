@@ -161,13 +161,8 @@ function doNotificationItem(item_id, dom_id)
 	// if like/dislike, update header, display parent
 	// if reply, update header, display parent and child
 	// if mention, update header, display child
-	$("#header_div_" + item_id).html("<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"><a href=\"#\" id=\"notification_hide_link_" + item_id + "\" style=\"text-align:right\">hide</a>");
+	$("#header_div_" + item_id).html("<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
 	$("#header_div_" + item_id).show();
-	
-	$("#notification_hide_link_" + item_id).click({id: item_id}, function(event) { event.preventDefault();
-		var removal_target = event.data.id;
-		removeItemFromActivityIds(removal_target);
-	});	
 	
 	var item_jo = null;
 	var parent_jo = null;
@@ -234,12 +229,18 @@ function doNotificationItem(item_id, dom_id)
             			populate_parent = false;
             			populate_item = false;
             		}	
-            		headerstring = headerstring + "<img id=\"google_favicon_" + item_id + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_id + "\" href=\"#\"></a>";
+            		headerstring = "<table style=\"width:100%;\"><tr><td style=\"text-align:left;width:94%;\">" + headerstring + "<img id=\"google_favicon_" + item_id + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_id + "\" href=\"#\"></a></td><td style=\"text-align:right;width:6%;\"><a href=\"#\" id=\"notification_hide_link_" + item_id + "\" style=\"text-align:right\">hide</a></td></tr></table>";
             		$("#header_div_" + item_id).html(headerstring);//OK
             		$("#header_div_" + item_id).show();
         			$("#google_favicon_" + item_id).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
         			$("#pseudo_link_" + item_id).attr("href", item_jo.pseudo_url);
         			$("#pseudo_link_" + item_id).text(url_to_use);
+
+        			$("#notification_hide_link_" + item_id).click({id: item_id}, function(event) { event.preventDefault();
+        				var removal_target = event.data.id;
+        				removeItemFromActivityIds(removal_target);
+        			});	
+        			
         			if(!item_id.endsWith("D"))
         			{	
         				$("#screenname_link_" + item_id).text(item_jo.author_screenname);

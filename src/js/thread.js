@@ -798,7 +798,7 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		tempstr = tempstr + "					<td style=\"padding:5px;vertical-align:top;text-align:left;line-height:14px\" id=\"comment_text_td_" + comment_id + "\"> "; //  class=\"comment-text-td\"
 	  	tempstr = tempstr + "					</td>";
 	  	tempstr = tempstr + "				</tr>";
-		if (drawReply === true && feeditem_jo.depth < 6) // we know this is a 6th level comment if indent value is 125 or greater, don't show reply option
+		if (drawReply === true && feeditem_jo.depth < 6)
 	  	{
 			tempstr = tempstr + "				<tr id=\"reply_tr_" + comment_id + "\">";
 	  		tempstr = tempstr + "					<td style=\"padding:3px;text-align:left\"> ";
@@ -965,7 +965,6 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		}
 		
 		$("#reply_link_" + comment_id).click({value: comment_id}, function(event) { 
-			event.preventDefault();
 			if (user_jo !== null)
 			{
 				if(!$("#reply_td_" + event.data.value).is(":visible"))
@@ -991,6 +990,8 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 			{
 				displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
 			}
+			event.preventDefault();
+			evt.stopPropagation();
 		});
 
 		$("#like_img_" + comment_id).click({comment_id: comment_id, container_id: container_id}, function(event) { 
@@ -1114,14 +1115,55 @@ function submitComment(parent, message_element) // submits comment and updates t
 	        	}
 	        	else if(tabmode === "notifications") // this is a reply within notifications tab
 	        	{
-	        		if(parent.endsWith("C"))
+	        		$("#reply_tr_" + parent).hide();
+	        		var indexofC = parent.lastIndexOf("C"); // should always be = 10 (11 chars, last char)
+	        		var indent = "30px";
+	        		if(message_element.endsWith("R"))
 	        		{
-	        			$("#reply_tr_" + parent).hide();
-	        			var indexofC = parent.lastIndexOf("C"); // should always be = 10 (11 chars, last char)
+	        			//alert("R");
 	        			parent = parent.substring(0,indexofC) + "R";
-	        			doThreadItem(data.comment.id, "child_div_" + parent);
-		        		$("#child_div_" + parent).show();
+	        			indent = "60px";
 	        		}
+	        		else if(message_element.endsWith("F"))
+	        		{
+	        			//alert("F");
+	        			parent = parent.substring(0,indexofC) + "F";
+	        		}
+	        		else if(message_element.endsWith("M"))
+	        		{
+	        			//alert("M");
+	        			parent = parent.substring(0,indexofC) + "M";
+	        		}	
+	        		
+        			var container_id = data.comment.id;
+        			$.ajax({
+        		        type: 'GET',
+        		        url: endpoint,
+        		        data: {
+        		            method: "getFeedItem",
+        		            id: data.comment.id
+        		        },
+        		        dataType: 'json',
+        		        async: true,
+        		        success: function (data, status) {
+        		        	if(data.response_status === "success")// && tabmode === "thread")
+        		        	{
+        		        		writeComment(container_id, data.item, "child_div_" + parent, false, true, false); // l/d, delete button (if user authored it), reply
+        	        			$("#child_div_" + parent).css("margin-left", indent);
+        		        		 // this is a new reply on the notifications tab, it'll never have children, so no worry here
+        		        	}
+        		        	else
+        		        	{ 
+        		        		// fail silently
+        		        	}	
+        		        },
+        		        error: function (XMLHttpRequest, textStatus, errorThrown) {
+        		        	displayMessage("Unable to retrieve feed item. (AJAX)", "red", "message_div_" + comment_id);
+        		        	console.log(textStatus, errorThrown);
+        		        }
+        			});
+        			
+	        		$("#child_div_" + parent).show();
 	        	}	
 	        	else if((data.comment.depth *1) > 1 && tabmode === "thread")
 	        	{
