@@ -1040,7 +1040,7 @@ function submitComment(parent, message_element) // submits comment and updates t
 	if(parent.length !== 11) // this is a toplevel comment. if toplevel, "parent" should be 8 chars as hashed by hashFnv32a()
 		parent_to_submit = currentURL;
 	$.ajax({
-	    type: 'GET',
+	    type: 'POST',
 	    url: endpoint,
 	    data: {
 	        method: "addComment",
