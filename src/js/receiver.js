@@ -361,7 +361,7 @@ else
 		// login_type gets passed through the oauth scheme. so it's always there. No need to try to get it again here.
 		//alert("parsing code, going to getAccessTokenFromAuthorizationCode with redirect_uri=" + getParameterByName("redirect_uri"));
 		displayMessage("Verifying your identity with " + capitalized_login_type + "... ", "black");
-		
+		$("#content_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
 		$.ajax({
 			type: 'get',
 			url: bg.endpoint,
@@ -947,7 +947,7 @@ function doFinished(from_registration, social_access_token)
 	//alert("receiver: doFinished from_reg=" + from_registration);
 	// we've gotten the login return, now we need to get the user before we can safely say, 
 	displayMessage("Identify verified. Loading WORDS user info... ", "black");
-	
+	$("#content_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
 	//alert("receiver getUserSelf()");
 	$.ajax({ 
 		type: 'GET', 

@@ -767,7 +767,7 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		tempstr = tempstr + "						<table style=\"width:100%;float:left;border:0px solid brown;vertical-align:middle; border-collapse: separate\">";
 		tempstr = tempstr + "							<tr> ";
 		tempstr = tempstr + "		  					 	<td style=\"vertical-align:middle;text-align:left;padding-left:5px\">";
-		tempstr = tempstr + "		  					 		<a href=\"#\" id=\"screenname_link_" + comment_id + "\"></a> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span>";
+		tempstr = tempstr + "		  					 		<a href=\"#\" id=\"screenname_link_" + comment_id + "\"></a> - <span id=\"time_ago_span_" + comment_id + "\" style=\"padding:5px;\"></span>";// + comment_id;
 		tempstr = tempstr + "		  					 	</td>";
 		tempstr = tempstr + "		   						<td style=\"width:13px;height:19px;color:green;text-align:right;vertical-align:middle;padding-right:3px\" id=\"comment_likes_count_td_" + comment_id + "\"></td>";
 		if (drawLikeDislike === true) 
@@ -964,7 +964,8 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 			});
 		}
 		
-		$("#reply_link_" + comment_id).click({value: comment_id}, function(event) { 
+		
+		$("[id=reply_link_" + comment_id + "]").click({value: comment_id}, function(event) { 
 			if (user_jo !== null)
 			{
 				if(!$("#reply_td_" + event.data.value).is(":visible"))
@@ -991,19 +992,20 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 				displayMessage("Please login to write a reply.", "red", "message_div_" + event.data.value); // this one is ok since user may be scrolled too far to see message_div
 			}
 			event.preventDefault();
-			evt.stopPropagation();
+			event.stopPropagation();
 		});
 
-		$("#like_img_" + comment_id).click({comment_id: comment_id, container_id: container_id}, function(event) { 
+		$("[id=like_img_" + comment_id + "]").click({comment_id: comment_id, container_id: container_id}, function(event) { 
 			event.preventDefault();
 			likeOrDislikeComment(event.data.comment_id, event.data.container_id, "like"); // id, like or dislike, dom_id
 		});
 			 
-		$("#dislike_img_" + comment_id).click({comment_id: comment_id, container_id: container_id}, function(event) { 
+		$("[id=dislike_img_" + comment_id + "]").click({comment_id: comment_id, container_id: container_id}, function(event) { 
 			event.preventDefault();
 			likeOrDislikeComment(event.data.comment_id, event.data.container_id, "dislike"); // id, like or dislike, dom_id
 		});
-		$("#comment_delete_link_" + comment_id).click({value: feeditem_jo.id}, function(event) { 
+		
+		$("[id=comment_delete_link_" + comment_id + "]").click({value: feeditem_jo.id}, function(event) { 
 			event.preventDefault();
 			var confirmbox = confirm("Delete comment?\n(This action is permanent.)");
 			if (confirmbox === true)
@@ -1167,10 +1169,11 @@ function submitComment(parent, message_element) // submits comment and updates t
 	        	}	
 	        	else if((data.comment.depth *1) > 1 && tabmode === "thread")
 	        	{
-	        		//alert("tabmode thread reply");
+	        		// this is all very hackish. Meh. It works.
 	        		var parentelem = $("#container_div_" + parent); // this is the dom element of container of the comment we're replying to. always exists
 	        		var parentelem_dom_id = parentelem.attr('id');
 	        		var parentelem_ml = $("#comment_div_" + parent).css("margin-left");
+	        		parentelem_ml = parentelem_ml.substring(0,parentelem_ml.length-2)*1; // remove the "px" and type it to a number
 	        		
 	        		var successfully_placed = false;
 	        		var previouselem = parentelem;
@@ -1178,12 +1181,12 @@ function submitComment(parent, message_element) // submits comment and updates t
 	        		var currentelem = null;
 	        		var currentelem_dom_id = null;
 	        		var currentelem_id = null;
+	        		var currentelem_ml = null;
+	        		//alert("parent_ml (the comment we're replying to (" + parent + ")) was " + parentelem_ml + ", so we're looking for (a) the end (a null dom node) or (b) the first element <=" + parentelem_ml);
 	        		while(successfully_placed === false)
 	        		{
-	        			//alert("looping dom node=" + previouselem_dom_id);
 	        			currentelem = previouselem.next();
 	        			currentelem_dom_id = currentelem.attr('id');
-	        			//alert("checking currentelem_dom_id for null " + currentelem + " and " + currentelem_dom_id);
 	        			if(typeof currentelem_dom_id === "undefined")
 	        			{
 		        			//alert("there was no current element, attach after previous")
@@ -1194,10 +1197,12 @@ function submitComment(parent, message_element) // submits comment and updates t
 	        			else
 	        			{
 	        				currentelem_id = currentelem_dom_id.substring(currentelem_dom_id.length - 11, currentelem_dom_id.length);
-		        			//alert("currentelem_id=" + currentelem_id + " ml=" + $("#comment_div_" + currentelem_id).css("margin-left") + " parent_ml=" + parentelem_ml);
-		        			if($("#comment_div_" + currentelem_id).css("margin-left") <= parentelem_ml)
+	        				currentelem_ml = $("#comment_div_" + currentelem_id).css("margin-left");
+	        				currentelem_ml = currentelem_ml.substring(0,currentelem_ml.length-2)*1; // remove the "px" and type it to a number
+		        			//alert("currentelem_id=" + currentelem_id + " ml=" + currentelem_ml + " parent_ml=" + parentelem_ml);
+		        			if(currentelem_ml <= parentelem_ml)
 		        			{
-		        				//alert("found parent's next sibling");
+		        				//alert("found parent's next sibling, attaching before");
 		        				writeUnifiedCommentContainer(data.comment.id, "container_div_" + currentelem_id, "before");
 		        				doThreadItem(data.comment.id, "comment_div_" + data.comment.id);
 		        				successfully_placed = true;
