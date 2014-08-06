@@ -24,9 +24,8 @@ function doTrendingTab()
 	$("#utility_csf_td").hide();
 	
 	$("#footer_div").html("");
-	$("#main_div_" + currentURLhash).html("");
-	$("#main_div_" + currentURLhash).append("<div id=\"trending_activity\">Trending activity</div>");
-	drawTrendingTable(null, 20, "trending_activity");
+	$("#main_div_" + currentURLhash).html("<div id=\"trending_activity_div\"></div>");//OK
+	drawTrendingTable(null, 20, "trending_activity_div");
 }
 
 function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
@@ -34,7 +33,7 @@ function drawTrendingTable(hostname_or_null, number_of_results, target_dom_id)
 	var compstr = "";  // main div string
 	if(hostname_or_null === null)
 	{
-		compstr = compstr + "<table style=\"background-color:#fff;display:none\" id=\"trending_table\">";
+		compstr = compstr + "<table style=\"background-color:#fff;\" id=\"trending_table\">";
 		compstr = compstr + "	<tr>";
 	}	
 	else
