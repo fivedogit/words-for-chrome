@@ -14,6 +14,7 @@ function doThreadTab()
 {
 	tabmode = "thread";
 	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_blue.png"));
+	$("#feed_tab_img").attr("src", chrome.extension.getURL("images/earth_gray.png"));
 	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_gray.png"));
 	updateNotificationTabLinkImage();
 	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
@@ -658,37 +659,30 @@ function doThreadItem(comment_id, dom_id) // type = "initialpop", "newcomment", 
         dataType: 'json',
         async: true,
         success: function (data, status) {
-        	if(data.response_status === "success")// && tabmode === "thread")
+        	if(data.response_status === "success")
         	{
-        		
-        		/*if(tabmode === "notifications") // why would this ever fire in notifications mode? Shouldn't it always call doNotificationItem?
-        		{
-        			writeComment(container_id, data.item, dom_id, false, true, false); // l/d, delete button (if user authored it), reply
-        			$("#" + dom_id).css("margin-left", "60px");
-        		}
-        		else
-        		{*/
+        		if(tabmode === "thread") // as these come in, only process them if we're still on the thread tab
+        		{	
         			writeComment(container_id, data.item, dom_id, true, true, true); // l/d, delete button (if user authored it), reply
         			var indent = (data.item.depth-1) * 30;
             		$("#" + dom_id).css("margin-left", indent + "px");
-        		//}
         		
-        		
-        		if(data.item.children && data.item.children.length > 0) // if this is a new reply on the notifications tab, it'll never have children, so no worry here
-        		{
-        			var tempcomments = data.item.children;
-					tempcomments.sort(function(a,b){
-						var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
-						var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
-						return tsb - tsa;
-					});
-					data.item.children = tempcomments;
-					for(var y=0; y < data.item.children.length; y++) 
-		    		{  
-						//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
-						writeUnifiedCommentContainer(data.item.children[y], "container_div_" + comment_id, "after");
-						doThreadItem(data.item.children[y], "comment_div_" + data.item.children[y]);
-		    		}
+            		if(data.item.children && data.item.children.length > 0) // if this is a new reply on the notifications tab, it'll never have children, so no worry here
+            		{
+            			var tempcomments = data.item.children;
+    					tempcomments.sort(function(a,b){
+    						var tsa = fromOtherBaseToDecimal(62, a.substring(0,7));
+    						var tsb = fromOtherBaseToDecimal(62, b.substring(0,7));
+    						return tsb - tsa;
+    					});
+    					data.item.children = tempcomments;
+    					for(var y=0; y < data.item.children.length; y++) 
+    		    		{  
+    						//alert("going to write a reply comment_id=" + data.children[y] + " and parent_id=" + comment_id);
+    						writeUnifiedCommentContainer(data.item.children[y], "container_div_" + comment_id, "after");
+    						doThreadItem(data.item.children[y], "comment_div_" + data.item.children[y]);
+    		    		}
+            		}
         		}
         	}
         	else

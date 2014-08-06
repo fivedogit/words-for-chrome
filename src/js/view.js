@@ -1,3 +1,19 @@
+function resetTabTooltip()
+{
+	if(tabmode === "thread")
+		$("#tab_tooltip_td").text("Comments for this page");
+	else if(tabmode === "feed")
+		$("#tab_tooltip_td").text("Comments from all over");
+	else if(tabmode === "trending")
+		$("#tab_tooltip_td").text("Trending");
+	else if(tabmode === "notifications")
+		$("#tab_tooltip_td").text("Notifications");
+	else if(tabmode === "past")
+		$("#tab_tooltip_td").text("Your past comments");
+	else if(tabmode === "profile")
+		$("#tab_tooltip_td").text("Profile/Settings");
+}
+
 //INITIALIZE THE BASE HTML FOR THE WORDS VIEW along with all of its event triggers (mouseover + mouseout + click for each tab button + comment form events focus, blur, submit and keyup (charcount))
  function initializeView()
  {
@@ -12,13 +28,14 @@
  				bs = bs + "<table style=\"width:120px;line-height:14px;margin:2px 2px 2px auto;\">"; // tabs table
  					bs = bs + "<tr>";
  						bs = bs + "<td><a href=\"#\" id=\"thread_tab_link\"><img id=\"thread_tab_img\" src=\"" + chrome.extension.getURL("images/chat_blue.png") + "\"></img></a></td>";
+ 						bs = bs + "<td><a href=\"#\" id=\"feed_tab_link\"><img id=\"feed_tab_img\" src=\"" + chrome.extension.getURL("images/earth_gray.png") + "\"></img></a></td>";
  					    bs = bs + "<td><a href=\"#\" id=\"trending_tab_link\"><img id=\"trending_tab_img\" src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></img></a></td>"; 
  						bs = bs + "<td><a href=\"#\" id=\"notifications_tab_link\"><img id=\"notifications_tab_img\" src=\"" + chrome.extension.getURL("images/flag_gray.png") + "\"></img></a></td>";
  						bs = bs + "<td><a href=\"#\" id=\"past_tab_link\"><img id=\"past_tab_img\" src=\"" + chrome.extension.getURL("images/clock_gray.png") + "\"></img></a></td>";
  						bs = bs + "<td><a href=\"#\" id=\"profile_tab_link\"><img id=\"profile_tab_img\" src=\"" + chrome.extension.getURL("images/user_gray.png") + "\"></img></a></td>";
  					bs = bs + "</tr>";
  					bs = bs + "<tr>";
- 						bs = bs + "<td colspan=5 id=\"tab_tooltip_td\">Comments</td>";
+ 						bs = bs + "<td colspan=6 id=\"tab_tooltip_td\">Comments</td>";
  					bs = bs + "</tr>";
  				bs = bs + "</table>";
  			bs = bs + "</td>";
@@ -42,27 +59,34 @@
 
  	$("#thread_tab_link").mouseover(
  			function () {
- 				$("#tab_tooltip_td").text("Comments");
+ 				$("#tab_tooltip_td").text("Comments for this page");
  				return false;
  			});
 
  	$("#thread_tab_link").mouseout(
  			function () {
- 				if(tabmode === "thread")
- 					$("#tab_tooltip_td").text("Comments");
- 				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").text("Trending");
- 				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").text("Notifications");
- 				else if(tabmode === "past")
- 					$("#tab_tooltip_td").text("Your past comments");
- 				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").text("Profile/Settings");
+ 				resetTabTooltip();
  				return false;
  			});
 
  	$("#thread_tab_link").click( function (event) {	event.preventDefault();
  				doThreadTab();
+ 			});
+ 	
+	$("#feed_tab_link").mouseover(
+ 			function () {
+ 				$("#tab_tooltip_td").text("Comments from all over");
+ 				return false;
+ 			});
+
+ 	$("#feed_tab_link").mouseout(
+ 			function () {
+ 				resetTabTooltip();
+ 				return false;
+ 			});
+
+ 	$("#feed_tab_link").click( function (event) {	event.preventDefault();
+ 				doFeedTab();
  			});
 
  	$("#trending_tab_link").mouseover(
@@ -73,16 +97,8 @@
 
  	$("#trending_tab_link").mouseout(
  			function () {
- 				if(tabmode === "thread")
- 					$("#tab_tooltip_td").text("Comments");
- 				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").text("Trending");
- 				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").text("Notifications");
- 				else if(tabmode === "past")
- 					$("#tab_tooltip_td").text("Your past comments");
- 				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").text("Profile/Settings");
+ 				resetTabTooltip();
+ 				return false;
  			});
 
  	$("#trending_tab_link").click( function (event) {	event.preventDefault();
@@ -97,16 +113,7 @@
 
  	$("#notifications_tab_link").mouseout(
  			function () {
- 				if(tabmode === "thread")
- 					$("#tab_tooltip_td").text("Comments");
- 				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").text("Trending");
- 				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").text("Notifications");
- 				else if(tabmode === "past")
- 					$("#tab_tooltip_td").text("Your past comments");
- 				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").text("Profile/Settings");
+ 				resetTabTooltip();
  				return false;
  			});
 
@@ -125,16 +132,7 @@
 
  	$("#past_tab_link").mouseout(
  			function () {
- 				if(tabmode === "thread")
- 					$("#tab_tooltip_td").text("Comments");
- 				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").text("Trending");
- 				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").text("Notifications");
- 				else if(tabmode === "past")
- 					$("#tab_tooltip_td").text("Your past comments");
- 				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").text("Profile/Settings");
+ 				resetTabTooltip();
  				return false;
  			});
 
@@ -150,16 +148,7 @@
 
  	$("#profile_tab_link").mouseout(
  			function () {
- 				if(tabmode === "thread")
- 					$("#tab_tooltip_td").text("Comments");
- 				else if(tabmode === "trending")
- 					$("#tab_tooltip_td").text("Trending");
- 				else if(tabmode === "notifications")
- 					$("#tab_tooltip_td").text("Notifications");
- 				else if(tabmode === "past")
- 					$("#tab_tooltip_td").text("Your past comments");
- 				else if(tabmode === "profile")
- 					$("#tab_tooltip_td").text("Profile/Settings");
+ 				resetTabTooltip();
  				return false;
  			});
 

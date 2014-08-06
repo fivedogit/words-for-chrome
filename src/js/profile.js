@@ -15,6 +15,7 @@ function viewProfile(screenname)
 	tabmode = "profile";
 	//updateNotificationTabLinkImage();
 	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_gray.png"));
+	$("#feed_tab_img").attr("src", chrome.extension.getURL("images/earth_gray.png"));
 	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_gray.png"));
 	updateNotificationTabLinkImage();
 	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));

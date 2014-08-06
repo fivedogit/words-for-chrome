@@ -13,12 +13,13 @@ function doNotificationsTab()
 {
 	tabmode = "notifications";
 	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_gray.png"));
+	$("#feed_tab_img").attr("src", chrome.extension.getURL("images/earth_gray.png"));
 	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_gray.png"));
 	$("#notifications_tab_img").attr("src", chrome.extension.getURL("images/flag_blue.png"));
 	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_gray.png"));
 	$("#profile_tab_img").attr("src", chrome.extension.getURL("images/user_gray.png"));
 	
-	$("#utility_header_td").text("Notification Feed");
+	$("#utility_header_td").text("Notifications");
 	
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
@@ -178,17 +179,11 @@ function doNotificationItem(item_id, dom_id)
         success: function (data, status) {
         	if(data.response_status === "success")
         	{	
-        		item_jo = data.item;
-        		// note, probably best to just leave the notification in the feed as a hidden comment. 
-        		// this is because if someone has a "1" for a notification, click the tab and then there's nothing... that's weird.
-        		/*if(item_jo.hidden === true)
-        		{
-        			//alert("the reply that triggered this activity id is now hidden... just remove from activity_ids"); 
-            		$("#container_div_" + item_id).remove();
-            		removeItemFromActivityIds(item_id);
-        		}	
-        		else
-        		{*/
+        		if(tabmode === "notifications") // as these come in, only process them if we're still on the notifications tab
+        		{	
+        			item_jo = data.item;
+        			// note, probably best to just leave the notification in the feed as a hidden comment rather than delete it. 
+        			// this is because if someone has a "1" for a notification, click the tab and then there's nothing... that's weird.
         			var url_to_use = getSmartCutURL(data.item.pseudo_url,50);
         			var populate_parent = false;
         			var populate_item = false;
@@ -248,7 +243,7 @@ function doNotificationItem(item_id, dom_id)
             		 		viewProfile(event.data.author_screenname);
             		 	});
         			}
-        		//}	
+        		}	
         	}
         	else if(data.response_status === "error")
         	{ 

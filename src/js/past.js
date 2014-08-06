@@ -5,6 +5,7 @@ function doPastTab()
 {
 	tabmode = "past";
 	$("#thread_tab_img").attr("src", chrome.extension.getURL("images/chat_gray.png"));
+	$("#feed_tab_img").attr("src", chrome.extension.getURL("images/earth_gray.png"));
 	$("#trending_tab_img").attr("src", chrome.extension.getURL("images/trending_gray.png"));
 	updateNotificationTabLinkImage();
 	$("#past_tab_img").attr("src", chrome.extension.getURL("images/clock_blue.png"));
@@ -27,7 +28,7 @@ function getPastComments()
 {
 	if (typeof user_jo==="undefined" || user_jo === null)
 	{
-		$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\">Log in to view your past comments.</div>");//OK
+		$("#loading_past_comments_div").html("Log in to view your past comments.");
 	}
 	else
 	{
@@ -119,33 +120,36 @@ function doPastCommentItem(item_id, dom_id)
         dataType: 'json',
         async: true,
         success: function (data, status) {
-        	item_jo = data.item;
-        	fids = fids + "<table style=\"width:100%\">";
-    		fids = fids + "	<tr>";
-    		fids = fids + "		<td style=\"text-align:left;padding-bottom:5px\" id=\"pastcomment_header_td_" + item_random + "\">";
-    		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
-        	fids = fids + "		</td>";
-        	fids = fids + "	</tr>";
-        	fids = fids + "</table>";
-    		fids = fids + "<table>";
-    		fids = fids + "	<tr>";
-    		fids = fids + "		<td class=\"rotated-who-wrote\" id=\"you_wrote_" + item_random + "\">";
-    		fids = fids + "		</td>";
-    		fids = fids + "		<td id=\"pastcomment_body_td_" + item_random + "\">";
-    		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
-    		fids = fids + "		</td>";
-    		fids = fids + "	</tr>";
-    		fids = fids + "</table>";
-    		$("#" + dom_id).html(fids);//OK
-    		var url_to_use = getSmartCutURL(data.item.pseudo_url,50);
-    		var headerstring = "";
-    		headerstring = headerstring + "<img id=\"google_favicon_" + item_random + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_random + "\" href=\"#\"></a>";
-			$("#pastcomment_header_td_" + item_random).html(headerstring);//OK
-			$("#google_favicon_" + item_random).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
-			$("#pseudo_link_" + item_random).attr("href", item_jo.pseudo_url);
-			$("#pseudo_link_" + item_random).text(url_to_use);
-			$("#you_wrote_" + item_random).text("You wrote");
-    		writeComment(container_id, item_jo, "pastcomment_body_td_" + item_random, false, true, false); // l/d, delete button, reply 
+        	if(tabmode === "past") // as these come in, only process them if we're still on the notifications tab
+    		{	
+        		item_jo = data.item;
+            	fids = fids + "<table style=\"width:100%\">";
+        		fids = fids + "	<tr>";
+        		fids = fids + "		<td style=\"text-align:left;padding-bottom:5px\" id=\"pastcomment_header_td_" + item_random + "\">";
+        		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+            	fids = fids + "		</td>";
+            	fids = fids + "	</tr>";
+            	fids = fids + "</table>";
+        		fids = fids + "<table>";
+        		fids = fids + "	<tr>";
+        		fids = fids + "		<td class=\"rotated-who-wrote\" id=\"you_wrote_" + item_random + "\">";
+        		fids = fids + "		</td>";
+        		fids = fids + "		<td id=\"pastcomment_body_td_" + item_random + "\">";
+        		fids = fids + "			<img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">";
+        		fids = fids + "		</td>";
+        		fids = fids + "	</tr>";
+        		fids = fids + "</table>";
+        		$("#" + dom_id).html(fids);//OK
+        		var url_to_use = getSmartCutURL(data.item.pseudo_url,50);
+        		var headerstring = "";
+        		headerstring = headerstring + "<img id=\"google_favicon_" + item_random + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_random + "\" href=\"#\"></a>";
+    			$("#pastcomment_header_td_" + item_random).html(headerstring);//OK
+    			$("#google_favicon_" + item_random).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
+    			$("#pseudo_link_" + item_random).attr("href", item_jo.pseudo_url);
+    			$("#pseudo_link_" + item_random).text(url_to_use);
+    			$("#you_wrote_" + item_random).text("You wrote");
+        		writeComment(container_id, item_jo, "pastcomment_body_td_" + item_random, false, true, false); // l/d, delete button, reply 
+    		}
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
         	$("#notification_child_div_" + item_id).text("Unable to retreive item. (network error)");
