@@ -242,14 +242,7 @@ function gotThread()
 
 	 	$("#pagelike_img").mouseout(
 	 			function () {
-	 				if(tabmode === "thread")
-	 					$("#tab_tooltip_td").text("Comments");
-	 				else if(tabmode === "trending")
-	 					$("#tab_tooltip_td").text("Trending");
-	 				else if(tabmode === "notifications")
-	 					$("#tab_tooltip_td").text("Notifications");
-	 				else if(tabmode === "profile")
-	 					$("#tab_tooltip_td").text("Profile/Settings");
+	 				resetTabTooltip();
 	 				return false;
 	 			});
 	 	
@@ -264,14 +257,7 @@ function gotThread()
 
 	 	$("#follow_img").mouseout(
 	 			function () {
-	 				if(tabmode === "thread")
-	 					$("#tab_tooltip_td").text("Comments");
-	 				else if(tabmode === "trending")
-	 					$("#tab_tooltip_td").text("Trending");
-	 				else if(tabmode === "notifications")
-	 					$("#tab_tooltip_td").text("Notifications");
-	 				else if(tabmode === "profile")
-	 					$("#tab_tooltip_td").text("Profile/Settings");
+	 				resetTabTooltip();
 	 				return false;
 	 			});
 	 	
@@ -454,14 +440,8 @@ function gotThread()
 
 	 	$("#separated_or_combined_img").mouseout(
 	 			function () {
-	 				if(tabmode === "thread")
-	 					$("#tab_tooltip_td").text("Comments");
-	 				else if(tabmode === "trending")
-	 					$("#tab_tooltip_td").text("Trending");
-	 				else if(tabmode === "notifications")
-	 					$("#tab_tooltip_td").text("Notifications");
-	 				else if(tabmode === "profile")
-	 					$("#tab_tooltip_td").text("Profile/Settings");
+	 				resetTabTooltip();
+	 				return false;
 	 			});
 		beginindex = 0;
 		endindex = 15;
