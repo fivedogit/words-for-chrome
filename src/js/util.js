@@ -467,7 +467,7 @@ function createBlurEventForTextarea(id)
 	 $("#comment_textarea_" + id).blur({id: id}, function (event) {
 				if($("#comment_textarea_" + event.data.id).val() === "") // if the user has written anything, leave the composition + submission area the way it is
 				{
-					$("#comment_textarea_" + event.data.id).css("height", "30px");			// set it back to normal height
+					$("#comment_textarea_" + event.data.id).css("height", "34px");			// set it back to normal height
 					$("#comment_textarea_" + event.data.id).val("Say something..."); // set the default wording
 					$("#char_count_and_submit_button_div_" + event.data.id).hide();			// hide the charcount and submit area
 					$("#comment_textarea_" + event.data.id).css("color", "#aaa");			// reset the text to gray

@@ -518,7 +518,7 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 	log_and_reg = log_and_reg + "<form name=\"registration_form\" id=\"new_user_registration_form\" method=\"get\" action=\"#\">";
 	log_and_reg = log_and_reg + "<table style=\"width:100%;border-top:1px solid #cccccc;border-spacing:15px;border-collapse:separate\">";
 	log_and_reg = log_and_reg + "	<tr>";
-	log_and_reg = log_and_reg + "		<td style=\"text-align:left;font-size:15px;font-weight:bold;width:110px\">Create account:</td><td></td><td></td>";
+	log_and_reg = log_and_reg + "		<td colspan=3 style=\"text-align:left;font-size:15px;font-weight:bold;width:110px\">Create account:</td>";
 	log_and_reg = log_and_reg + "	</tr>";
 	if(email !== null)
 	{

@@ -568,17 +568,46 @@ function prepareGetAndPopulateThreadPortion()
 			//alert("Thread had no children");
 			var main_div_string = "";
 			main_div_string = main_div_string + "<div style=\"padding:25px;font-size:22px;font-weight:bold\">";
-			main_div_string = main_div_string + "	There are no comments for this page yet.";
+			main_div_string = main_div_string + "	There are no comments for this page yet. Write one!";
 			main_div_string = main_div_string + "	<div style=\"padding-top:25px;font-size:12px;font-style:italic;font-weight:normal\">";
-			main_div_string = main_div_string + "	    Try the <a href=\"#\" id=\"supplemental_trending_link\"><img style=\"vertical-align:middle\" src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></a> trending tab.";
+			main_div_string = main_div_string + "	    Or try the <a href=\"#\" id=\"supplemental_feed_link\"><img style=\"vertical-align:middle\" src=\"" + chrome.extension.getURL("images/earth_gray.png") + "\"></a> or <a href=\"#\" id=\"supplemental_trending_link\"><img style=\"vertical-align:middle\" src=\"" + chrome.extension.getURL("images/trending_gray.png") + "\"></a> tabs.";
 			main_div_string = main_div_string + "	</div>";
 			main_div_string = main_div_string + "</div>";
 			main_div_string = main_div_string + "<div id=\"trending_div\"></div>";
 			$("#main_div_" + currentURLhash).html(main_div_string);//OK
+			
+			$("#supplemental_feed_link").mouseover(
+		 			function () {
+		 				$("#tab_tooltip_td").text("Comments from all over");
+		 				return false;
+		 			});
+
+		 	$("#supplemental_feed_link").mouseout(
+		 			function () {
+		 				resetTabTooltip();
+		 				return false;
+		 			});
+		 	
+			$("#supplemental_feed_link").click( function (event) {	event.preventDefault();
+				doFeedTab();
+			});
+
+			$("#supplemental_trending_link").mouseover(
+		 			function () {
+		 				$("#tab_tooltip_td").text("Trending");
+		 				return false;
+		 			});
+
+		 	$("#supplemental_trending_link").mouseout(
+		 			function () {
+		 				resetTabTooltip();
+		 				return false;
+		 			});
+		 	
 			$("#supplemental_trending_link").click( function (event) {	event.preventDefault();
 				doTrendingTab();
 			});
-
+			
 			drawTrendingTable(currentHostname, 4, "trending_div");
 			noteThreadView(true); // was empty
 		}
@@ -1069,7 +1098,7 @@ function submitComment(parent, message_element) // submits comment and updates t
 		    	}
 	        	
 	        	// on success, reset the form stuff
-	        	$("#comment_textarea_" + parent).css("height", "30px");			// set it back to normal height
+	        	$("#comment_textarea_" + parent).css("height", "34px");			// set it back to normal height
 	        	$("#comment_textarea_" + parent).val("Say something..."); // set the default wording
 	        	$("#char_count_and_submit_button_div_" + parent).hide();			// hide the charcount and submit area
 	        	if(parent.length === 11) // not toplevel
