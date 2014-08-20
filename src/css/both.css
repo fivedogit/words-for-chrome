@@ -74,10 +74,10 @@ div#words_div input {
     margin: 0;
 }
 
-div#words_div .white-links a:link {color:white;}      /* unvisited link */
-div#words_div .white-links a:visited {color:white;}  /* visited link */
-div#words_div .white-links a:hover {color:white;}  /* mouse over link */
-div#words_div .white-links a:active {color:white;}  /* selected link */
+div#words_div .white-links a:link {color:white; text-decoration:underline;}      /* unvisited link */
+div#words_div .white-links a:visited {color:white; text-decoration:underline;}  /* visited link */
+div#words_div .white-links a:hover {color:white; text-decoration:underline;}  /* mouse over link */
+div#words_div .white-links a:active {color:white; text-decoration:underline;}  /* selected link */
 
 div#words_div .composition-textarea {
 	-webkit-appearance: none;

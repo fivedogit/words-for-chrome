@@ -26,7 +26,7 @@ function viewProfile(screenname)
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
-	$("#footer_div").html("");
+	//$("#footer_div").html("");
 	
 	if (user_jo !== null)
 	{	
@@ -100,7 +100,7 @@ function getProfile(target_screenname)
             	main_div_string = main_div_string + "	<td>";
             	main_div_string = main_div_string + "		<table style=\"width:100%;\">";
             	main_div_string = main_div_string + "			<tr>";
-            	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right\" id=\"large_avatar_td\">";
+            	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right;vertical-align:top\" id=\"large_avatar_td\">";
             	main_div_string = main_div_string + "					<img style=\"border-radius: 4px;height:128px;\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\">";
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
@@ -112,9 +112,9 @@ function getProfile(target_screenname)
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold;vertical-align:top\">Email <span style=\"font-style:italic;font-weight:normal;font-color:#666666\">(private)</span>:</td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Since:</td><td style=\"text-align:left\" id=\"profile_page_since_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left\" id=\"profile_page_seen_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments authored:</td><td style=\"text-align:left\" id=\"profile_page_numcommentsauthored_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Likes authored:</td><td style=\"text-align:left\" id=\"profile_page_numlikesauthored_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Dislikes authored:</td><td style=\"text-align:left\" id=\"profile_page_numdislikesauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments authored 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numcommentsauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Likes authored 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numlikesauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Dislikes authored 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numdislikesauthored_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Rating <span id=\"rating_window_span\"></span>:</td>";
             	main_div_string = main_div_string + "						<td style=\"text-align:left\" id=\"profile_page_rating_td\">";
             	main_div_string = main_div_string + "						<span id=\"up_span\" style=\"color:green\"></span> up, ";
@@ -123,6 +123,13 @@ function getProfile(target_screenname)
             	main_div_string = main_div_string + "						<span id=\"rating_span\" style=\"color:blue\"></span> rating";
             	main_div_string = main_div_string + "						</td>";
             	main_div_string = main_div_string + "						</tr>";
+            	if (target_user_jo.email) // ok, this is a self user
+            	{
+            		main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\"># of prize entries:</td><td style=\"text-align:left\" id=\"profile_page_prize_entries_td\"></td></tr>";
+                	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal;vertical-align:top\">Entry 1:</td><td style=\"text-align:left\" id=\"entry_1_td\"></td></tr>";
+                	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal\">Entry 2:</td><td style=\"text-align:left\" id=\"entry_2_td\"></td></tr>";
+                	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal\">Entry 3:</td><td style=\"text-align:left\" id=\"entry_3_td\"></td></tr>";
+                }
             	main_div_string = main_div_string + "					</table>";
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "			</tr>";
@@ -192,14 +199,14 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"onfollowcomment_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
-					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">News/info:</td>";
+					main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Footer messages:</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "							<select id=\"promos_selector\">";
-					main_div_string = main_div_string + "							  <option SELECTED value=\"button\">Update button</option>";
-					main_div_string = main_div_string + "							  <option value=\"do nothing\">Do nothing</option>";
+					main_div_string = main_div_string + "							<select id=\"footermessages_selector\">";
+					main_div_string = main_div_string + "							  <option SELECTED value=\"show\">Show</option>";
+					main_div_string = main_div_string + "							  <option value=\"hide\">Hide</option>";
 					main_div_string = main_div_string + "							</select>";
 					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"promos_result_td\">";
+					main_div_string = main_div_string + "							<td style=\"text-align:left\" id=\"footermessages_result_td\">";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
@@ -208,22 +215,19 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "								<span id=\"social_wording_span\" style=\"font-weight:normal;font-size:10px;font-style:italic;color:#666666\">To use a G/FB profile pic, log in with G/FB.</span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "							<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "								<div id=\"picture_type_div\">";
-					main_div_string = main_div_string + "<table style=\"margin-right:auto;margin-left:auto\">";
-				/*	main_div_string = main_div_string + "<tr>";
-					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
-					main_div_string = main_div_string + "		<input id=\"use_social_radio\" type=\"radio\" name=\"picture_type\" value=\"social\">";
-					main_div_string = main_div_string + "	</td>";
-					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_social_wording_td\">";
-					main_div_string = main_div_string + "		Social";
-					main_div_string = main_div_string + "	</td>";
-					main_div_string = main_div_string + "</tr>";*/
+					main_div_string = main_div_string + "<table style=\"width:auto\">";
 					main_div_string = main_div_string + "<tr>";
 					main_div_string = main_div_string + "	<td style=\"text-align:left\">";
 					main_div_string = main_div_string + "		<input id=\"use_geometric_radio\" type=\"radio\" name=\"picture_type\" value=\"geometric\">";
 					main_div_string = main_div_string + "	</td>";
 					main_div_string = main_div_string + "	<td style=\"text-align:left\" id=\"use_geometric_wording_td\">";
 					main_div_string = main_div_string + "		Geometric";
+					main_div_string = main_div_string + "	</td>";
+					main_div_string = main_div_string + "	<td rowspan=6 style=\"padding-left:10px\">";
+					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;70px;height:70px;\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
+					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\" class=\"standardized-button\" >Save</button>";
+					main_div_string = main_div_string + "								<br><button id=\"avatar_reset_button\" class=\"standardized-button\" >Reset</button>";
+					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "	</td>";
 					main_div_string = main_div_string + "</tr>";
 					main_div_string = main_div_string + "<tr>";
@@ -267,21 +271,6 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "	</td>";
 					main_div_string = main_div_string + "</tr>";
 					main_div_string = main_div_string + "</table>";
-					main_div_string = main_div_string + "								</div>";
-					main_div_string = main_div_string + "									<table id=\"words_avatar_selector_table\" style=\"display:none;margin-right:auto;margin-left:auto\">";
-					main_div_string = main_div_string + "										<tr>";
-					main_div_string = main_div_string + "											<td>";
-					main_div_string = main_div_string + "												<div id=\"avatar_change_selector\"></div>";
-					main_div_string = main_div_string + "						    					<input type=hidden id=\"hidden_avatar_change_input\" value=\"0\"></input>";
-					main_div_string = main_div_string + "											</td>";
-					main_div_string = main_div_string + "										</tr>";
-					main_div_string = main_div_string + "									</table>";
-					main_div_string = main_div_string + "								</div>";
-					main_div_string = main_div_string + "							</td>";
-					main_div_string = main_div_string + "							<td style=\"text-align:left;vertical-align:top\">";
-					main_div_string = main_div_string + "								<img style=\"border-radius: 4px;width;70px;height:70px;\" id=\"avatar_img\" src=\"images/48avatar_ghosted.png\">";
-					main_div_string = main_div_string + "								<br><button id=\"avatar_save_button\" class=\"standardized-button\" >Save</button>";
-					main_div_string = main_div_string + "								<br><span style=\"margin-left:7px\" id=\"avatar_save_span\"></span>";
 					main_div_string = main_div_string + "							</td>";
 					main_div_string = main_div_string + "						</tr>";
 					main_div_string = main_div_string + "						<tr>";
@@ -363,9 +352,10 @@ function getProfile(target_screenname)
             	$("#large_avatar_img").attr("src", target_user_jo.picture);
             	$("#profile_page_screenname_span").text(target_user_jo.screenname);
             	$("#profile_page_since_td").text(target_user_jo.since);
-            	$("#profile_page_numcommentsauthored_td").text(target_user_jo.num_comments_authored);
-            	$("#profile_page_numlikesauthored_td").text(target_user_jo.num_likes_authored);
-            	$("#profile_page_numdislikesauthored_td").text(target_user_jo.num_dislikes_authored);
+            	$("#profile_page_numcommentsauthored_td").text(target_user_jo.num_comments_authored_in_window + " / " + target_user_jo.num_comments_authored);
+            	$("#profile_page_numlikesauthored_td").text(target_user_jo.num_likes_authored_in_window + " / " + target_user_jo.num_likes_authored);
+            	$("#profile_page_numdislikesauthored_td").text(target_user_jo.num_dislikes_authored_in_window + " / " + target_user_jo.num_dislikes_authored);
+            	
             	$("#up_span").text(target_user_jo.up);
             	$("#down_span").text(target_user_jo.down);
             	if(target_user_jo.up === 0 && target_user_jo.down === 0)
@@ -379,6 +369,32 @@ function getProfile(target_screenname)
             	
             	if(target_user_jo.email)
             	{	
+            		$("#profile_page_prize_entries_td").text(target_user_jo.giveaway_entries + " of 3 possible.");
+            		
+            		var e1str = "Registered? <span style=\"color:green\">Yes</span><br>";
+            		
+            		if(target_user_jo.email_is_confirmed === true)
+            			e1str = e1str + "Confirmed email? <span style=\"color:green\">Yes</span><br>";
+            		else
+            			e1str = e1str + "Confirmed email? <span style=\"color:red\">No</span><br>";
+
+            		if(target_user_jo.num_comments_authored > 0)
+            			e1str = e1str + "Commented? <span style=\"color:green\">Yes</span>";
+            		else
+            			e1str = e1str + "Commented? <span style=\"color:red\">No</span>";
+            	
+                	$("#entry_1_td").html(e1str);
+                	
+                	if(user_jo.shared_via_facebook === true)
+                		$("#entry_2_td").html("Shared via Facebook? <span style=\"color:green\">Yes</span>");
+                	else
+                		$("#entry_2_td").html("Shared via Facebook? <span style=\"color:red\">No</span>");
+                	
+                	if(user_jo.shared_via_twitter === true)
+                		$("#entry_3_td").html("Shared via Twitter? <span style=\"color:green\">Yes</span>");
+                	else
+                		$("#entry_3_td").html("Shared via Twitter? <span style=\"color:red\">No</span>");                	
+                	
             		var tstr = "";
             		if(typeof target_user_jo.provisional_email !== "undefined" && target_user_jo.provisional_email !== null)
         			{
@@ -420,6 +436,7 @@ function getProfile(target_screenname)
                 						$("#email_flex_td").text(data.message);
                 						setTimeout(function() { 
                 							viewProfile(screenname);
+                							writeFooterMessage();
                 						}, 2000);
                 					}	
                 					else
@@ -503,8 +520,8 @@ function getProfile(target_screenname)
         				else // no provisional email waiting, nothing confirmed... this is the default @words4chrome.com address
         				{
         					tstr = tstr + "<table>";
-                			tstr = tstr + "<tr><td style=\"text-align:left\">" +  target_user_jo.email + " (placeholder)</td></tr>";
-                			tstr = tstr + "<tr><td id=\"email_flex_td\" style=\"text-align:left;font-size:10px\"><a href=\"#\" id=\"enter_real_address_link\">Enter a valid email in case you forget your password.</a></td></tr>";
+                			tstr = tstr + "<tr><td style=\"text-align:left\">" +  target_user_jo.email + " (unconfirmed placeholder)</td></tr>";
+                			tstr = tstr + "<tr><td id=\"email_flex_td\" style=\"text-align:left;font-size:10px\"><a href=\"#\" id=\"enter_real_address_link\">Confirm your email for prize eligibility & password retrieval.</a></td></tr>";
                 			tstr = tstr + "</table>";
                 			$("#profile_page_email_td").html(tstr);
                 			
@@ -743,6 +760,17 @@ function getProfile(target_screenname)
             		});  
             	});
             	
+            	$("#avatar_reset_button").click(function (event) { 
+            		$("#avatar_img").attr("src",user_jo.picture);
+            		$("#use_unicorn_radio").prop('checked', false);
+            		$("#use_geometric_radio").prop('checked', false);
+            		$("#use_silhouette_radio").prop('checked', false);
+            		$("#use_retro_radio").prop('checked', false);
+            		$("#use_cartoonface_radio").prop('checked', false);
+            		$("#use_monster_radio").prop('checked', false);
+            		return false;
+            	});
+            	
             	$("#logout_link").click( function (event) { event.preventDefault();
             				var logoutmessage = "<div>";
             				logoutmessage = logoutmessage + "<table style=\"margin-right:auto;margin-left:auto;border-spacing:20px;border-collapse:separate\">";
@@ -809,10 +837,10 @@ function getProfile(target_screenname)
             	else if (user_jo.onfollowcomment === "do nothing")
             		$("#onfollowcomment_selector").val("do nothing");
             	
-            	if (user_jo.promos === "button")
-            		$("#promos_selector").val("button");
-            	else if (user_jo.promos === "do nothing")
-            		$("#promos_selector").val("do nothing");
+            	if (user_jo.show_footer_messages === true)
+            		$("#footermessages_selector").val("show");
+            	else
+            		$("#footermessages_selector").val("hide");
             	
             	$("#onlike_selector").change(function () {
 					$.ajax({
@@ -1031,7 +1059,7 @@ function getProfile(target_screenname)
 					});
             	});
             	
-            	$("#promos_selector").change(function () {
+            	$("#footermessages_selector").change(function () {
 					$.ajax({
 						type: 'GET',
 						url: endpoint,
@@ -1039,20 +1067,20 @@ function getProfile(target_screenname)
 				            method: "setUserPreference",
 				            screenname: screenname,                
 				            this_access_token: this_access_token,  
-				            which: "promos",
-				            value: $("#promos_selector").val() 
+				            which: "footermessages",
+				            value: $("#footermessages_selector").val() 
 				        },
 				        dataType: 'json',
 				        async: true,
 				        success: function (data, status) {
 				        	if (data.response_status === "error")
 				        	{
-				        		$("#promos_result_td").text(data.message);
+				        		$("#footermessages_result_td").text(data.message);
 				        		// on error, reset the selector to the user_jo value
-				        		if (user_jo.promos === "button")
-				            		$("#promos_selector").val("button");
-				            	else if (user_jo.promos === "do nothing")
-				            		$("#promos_selector").val("do nothing");
+				        		if (user_jo.footermessages === "button")
+				            		$("#footermessages_selector").val("button");
+				            	else if (user_jo.footermessages === "do nothing")
+				            		$("#footermessages_selector").val("do nothing");
 				        		displayMessage(data.message, "red", "utility_message_td");
 				            	if(data.error_code && data.error_code === "0000")
 				        		{
@@ -1061,14 +1089,21 @@ function getProfile(target_screenname)
 				        			updateLogstat();
 				        		}
 				        	}
-				        	else
-				        		$("#promos_result_td").text("updated");
-				        	setTimeout(function(){$("#promos_result_td").text("");},3000);
+				        	else if (data.response_status === "success")
+				        	{
+				        		$("#footermessages_result_td").text("updated");
+				        		if($("#footermessages_selector").val() === "show")
+				        			user_jo.show_footer_messages = true;
+				        		else
+				        			user_jo.show_footer_messages = false;
+				        		writeFooterMessage();
+				        	}
+				        	setTimeout(function(){$("#footermessages_result_td").text("");},3000);
 				        }
 				        ,
 				        error: function (XMLHttpRequest, textStatus, errorThrown) {
-				        	$("#promos_result_td").text("ajax error");
-				        	setTimeout(function(){$("#promos_result_td").text("");},3000);
+				        	$("#footermessages_result_td").text("ajax error");
+				        	setTimeout(function(){$("#footermessages_result_td").text("");},3000);
 				            console.log(textStatus, errorThrown);
 				        }
 					});

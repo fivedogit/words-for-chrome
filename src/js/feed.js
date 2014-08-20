@@ -13,7 +13,7 @@ function doFeedTab()
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
-	$("#footer_div").html("");
+	//$("#footer_div").html("");
 	$("#main_div_" + currentURLhash).html("<div style=\"padding:20px\" id=\"loading_comments_fatw_div\">Loading comments from around the Web... please wait.<br><img style=\"margin-top:16px;margin-bottom:16px\" src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\"></div>");//OK
 	//$("#main_div_" + currentURLhash).append("<div id=\"most_recent_comments_div\"></div>");
 	drawMostRecentComments(25, "main_div_" + currentURLhash);

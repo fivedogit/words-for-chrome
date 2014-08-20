@@ -24,7 +24,7 @@ function doNotificationsTab()
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 
-	$("#footer_div").html("");
+	//$("#footer_div").html("");
 	
 	$("#main_div_" + currentURLhash).html("");//OK
 	getNotifications();

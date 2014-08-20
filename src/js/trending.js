@@ -23,7 +23,7 @@ function doTrendingTab()
 	$("#utility_message_td").hide();
 	$("#utility_csf_td").hide();
 	
-	$("#footer_div").html("");
+	//$("#footer_div").html("");
 	$("#main_div_" + currentURLhash).html("<div id=\"trending_activity_div\"></div>");//OK
 	drawTrendingTable(null, 20, "trending_activity_div");
 }
