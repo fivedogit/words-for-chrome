@@ -2,6 +2,7 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 	  if(request.method === "logout")
 	  {
+		  //alert("bg listener logout method");
 		  docCookies.removeItem("screenname");
 		  docCookies.removeItem("this_access_token");
 		  sendResponse({message: "You are now logged out of WORDS."});
@@ -436,7 +437,7 @@ function getUser(retrieve_asynchronously)
 	}
 	var screenname = docCookies.getItem("screenname");
 	var this_access_token = docCookies.getItem("this_access_token");
-	if(screenname !== null && screenname.length >=6 && this_access_token !== null && this_access_token.length == 32)// the shortest possible screenname length is x@b.co = 6.
+	if(screenname !== null && this_access_token !== null && this_access_token.length == 32)// the shortest possible screenname length is x@b.co = 6.
 	{
 		//alert("bg.getUserSelf()");
 		$.ajax({ 

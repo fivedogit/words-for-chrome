@@ -53,13 +53,13 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "<br>";
 	aboutmessage = aboutmessage + "3. Rate 5 stars <a href=\"#\" id=\"rate_5_stars_link\">here</a><br>";
 	aboutmessage = aboutmessage + "4. Report bugs to <a href=\"#\" id=\"fivedogit_link\">@fivedogit</a><br>";
-	aboutmessage = aboutmessage + "5. Donate Bitcoins to keep the servers running ";
+	/*aboutmessage = aboutmessage + "5. Donate Bitcoins to keep the servers running ";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_10_link\" >$10</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_20_link\" >$20</a>";
 	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_50_link\" >$50</a>";
-	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";
+	aboutmessage = aboutmessage + "<a style=\"margin-left:6px;\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";*/
 	aboutmessage = aboutmessage + "		</td>";
 	aboutmessage = aboutmessage + "	</tr>";
 	aboutmessage = aboutmessage + "	<tr>";
@@ -73,39 +73,19 @@ function doAboutTab(message)
 	aboutmessage = aboutmessage + "</table>";
 	$("#main_div_" + currentURLhash).html(aboutmessage); //OK
 	
-	// don't think I need this. All the <a>s here have click handlers
-/*	$("a").click(function(event) {  event.preventDefault();
-		if(typeof event.processed === "undefined" || event.processed === null) // prevent this from firing multiple times by setting event.processed = true on first pass
-		{
-			event.processed = true;
-			if(chrome.tabs)
-			{	
-				var c = $(this).attr('class');
-				if(c == "newtab")
-				{
-					var h = $(this).attr('href');
-					doNewtabClick(h);
-				}
-			}
-		}
-	});*/
-	
-	if(navigator.userAgent.indexOf("OPR/") !== -1)
-		noteImpressionAndCreateHandler("operastore", "about", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
-	else
-		noteImpressionAndCreateHandler("cws", "about", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+	noteImpressionAndCreateHandler("cws", "about", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
 	noteImpressionAndCreateHandler("twitter_persacct", "about", "fivedogit_link", "http://www.twitter.com/fivedogit");
 	noteImpressionAndCreateHandler("facebookshare", "about", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
 	noteImpressionAndCreateHandler("twittershare", "about", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
  	noteImpressionAndCreateHandler("googleplusshare", "about", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
  	noteImpressionAndCreateHandler("tumblrshare", "about", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
  	
-	noteImpressionAndCreateHandler("coinbase2", "about", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");
+	/*noteImpressionAndCreateHandler("coinbase2", "about", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");
 	noteImpressionAndCreateHandler("coinbase5", "about", "coinbase_5_link", "https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41");
 	noteImpressionAndCreateHandler("coinbase10", "about", "coinbase_10_link", "https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca");
 	noteImpressionAndCreateHandler("coinbase20", "about", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
 	noteImpressionAndCreateHandler("coinbase50", "about", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
-	noteImpressionAndCreateHandler("coinbase100", "about", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");
+	noteImpressionAndCreateHandler("coinbase100", "about", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");*/
  	
  	noteImpressionAndCreateHandler("twitter_mainacct", "about", "words4chrome_link", "http://www.twitter.com/words4chrome");
 	noteImpressionAndCreateHandler("twitter_persacct", "about", "fivedogit_link2", "http://www.twitter.com/fivedogit");

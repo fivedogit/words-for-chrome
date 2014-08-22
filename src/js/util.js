@@ -485,7 +485,7 @@ function createFocusEventForTextarea(id, message_element)
 		 }
 		 else // user logged in and rating ok
 		 {	 
-			 if(user_jo.rating <= -5)
+			 if(user_jo.rating_in_window <= -5)
 			 {
 				 displayMessage("Unable to compose comment. Your comment rating is too low.", "red", event.data.message_element);
 				 $("#comment_textarea_" + event.data.id).trigger("blur");
@@ -541,7 +541,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 		} 
 	}); 
 }	
-	
+
  function noteConversion(id) //booleans or strings
  {
  	$.ajax({
@@ -572,7 +572,7 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
  
  function createHandler(id, dom_id, inc_url)
  {
-	// alert("creating handler with id=" + id + " and dom_id=" + dom_id + " and inc_url=" + inc_url);
+	 //alert("creating handler with id=" + id + " and dom_id=" + dom_id + " and inc_url=" + inc_url);
 	 $("#" + dom_id).click( function (event) { event.preventDefault();
 	 			 if(chrome.tabs)
 	 				 chrome.tabs.create({url:inc_url});
@@ -580,5 +580,35 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
 	 				 window.location = inc_url;
 				 noteConversion(id);
 			 });
+ }
+ 
+ function noteSocialShare(which) //booleans or strings
+ {
+ 	$.ajax({
+ 		type: 'GET',
+ 		url: endpoint,
+ 		data: {
+ 			method: "noteSocialShare",
+ 			screenname: screenname,
+			this_access_token: this_access_token,
+ 			which: which
+ 		},
+ 		dataType: 'json',
+ 		async: false, // this has to complete before the next tab is loaded, otherwise the user may not get credit
+ 		success: function (data, status) {
+ 			if(data.response_status === "error")
+ 			{
+ 				// fail silently
+ 			}
+ 			else if(data.response_status === "success")
+ 			{
+ 				// succeed silently 
+ 			}	
+ 		},
+ 		error: function (XMLHttpRequest, textStatus, errorThrown) {
+ 			console.log(textStatus, errorThrown);
+ 			// fail silently
+ 		} 
+ 	}); 
  }
  

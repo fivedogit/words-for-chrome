@@ -434,9 +434,9 @@ function writeFooterMessage() {
 	var footerstr = "";
 	if(typeof user_jo === "undefined" || user_jo === null)
 	{
-		footerstr = footerstr + "<a id=\"reg_reminder_link\" style=\"color:#baff00\">Register</span> to be eligible for the next <span style=\"color:#ffde00\">giveaway</span>! Don't miss out!";
+		footerstr = footerstr + "<a id=\"reg_reminder_link\" href=\"#\" style=\"color:#baff00\">Register</a> to be eligible for the next <span style=\"color:#ffde00\">giveaway</span>! Don't miss out!";
 		$("#footer_div").html(footerstr);
-		$("#reg_reminder_link").click(function (event) { 
+		$("#reg_reminder_link").click(function (event) { event.preventDefault();
 			var currenttabid;
 			chrome.tabs.getSelected(null, function(tab) { 
 				currenttabid = tab.id; 
@@ -445,7 +445,6 @@ function writeFooterMessage() {
 				});
 				chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=words"});
 			});
-			return false;
 		});
 	}	
 	else
@@ -456,35 +455,46 @@ function writeFooterMessage() {
 			{
 				footerstr = footerstr + "<a id=\"confirm_your_email_link\" style=\"color:#baff00\" href=\"#\">Confirm your email address</a> to be eligible for a free iPad!";
 				$("#footer_div").html(footerstr);
-				$("#confirm_your_email_link").click(function (event) {
+				$("#confirm_your_email_link").click(function (event) { event.preventDefault();
 					viewProfile(user_jo.screenname);
-					return false;
 				});
 			}
 			else if(user_jo.num_comments_authored === 0)
 			{
-				footerstr = footerstr + "To be eligible for the upcoming iPad drawing, write at least <span style=\"color:#ffde00\">one non-trivial comment</span>.";
+				footerstr = footerstr + "To be eligible for the <span style=\"color:#ffde00\">iPad drawings</span>, write at least one (nontrivial) comment somewhere.";
 				$("#footer_div").html(footerstr);
 			}	
-			else if(user_jo.shared_via_facebook === false && user_jo.shared_via_twitter === false)
+			else if(user_jo.shared_to_facebook === false && user_jo.shared_to_twitter === false)
 			{
 				footerstr = footerstr + "You have 1 prize entry. Earn 2 more by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a> and ";
 				footerstr = footerstr + "<a style=\"color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>.";
 				$("#footer_div").html(footerstr);
-				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
-				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
+				$("#share_to_facebook_link").click(function(event) { 
+        			noteSocialShare("facebook");
+        		});
+				$("#share_to_twitter_link").click(function(event) { event.preventDefault();
+        			noteSocialShare("twitter");
+        		});
+				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%2C%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2Faction_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D");
+				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F");
 			}	
-			else if(user_jo.shared_via_facebook === true && user_jo.shared_via_twitter === false)
+			else if(user_jo.shared_to_facebook === true && user_jo.shared_to_twitter === false)
 			{
 				footerstr = footerstr + "You have 2 prize entries. Earn another by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>.";
 				$("#footer_div").html(footerstr);
-				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
+				$("#share_to_twitter_link").click(function(event) { event.preventDefault();
+        			noteSocialShare("twitter");
+        		});
+				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F");
 			}	
-			else if(user_jo.shared_via_facebook === false && user_jo.shared_via_twitter === true)
+			else if(user_jo.shared_to_facebook === false && user_jo.shared_to_twitter === true)
 			{
 				footerstr = footerstr + "You have 2 prize entries. Earn another by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>.";
 				$("#footer_div").html(footerstr);
-				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+				$("#share_to_facebook_link").click(function(event) { event.preventDefault();
+        			noteSocialShare("facebook");
+        		});
+				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%2C%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2Faction_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D");
 			}	
 		}
 		else

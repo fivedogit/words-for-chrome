@@ -754,6 +754,17 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		tempstr = tempstr + "					<td> ";
 		tempstr = tempstr + "						<table style=\"width:48px; height:5px; border:1px solid #7c7c7c; border-radius:2px; border-collapse: separate\">"; 
 		tempstr = tempstr + "							<tr>";
+		tempstr = tempstr + "								<td id=\"author_rating_in_window_left_td_" + comment_id + "\" style=\"width:33%;height:3px;border:0px\"></td>";
+		tempstr = tempstr + "								<td id=\"author_rating_in_window_center_td_" + comment_id + "\" style=\"width:34%;height:3px;border:0px;background-color:blue\"></td>";
+		tempstr = tempstr + "								<td id=\"author_rating_in_window_right_td_" + comment_id + "\" style=\"width:33%;height:3px;border:0px\"></td>";
+	  	tempstr = tempstr + "							</tr>";
+	  	tempstr = tempstr + "						</table>"
+		tempstr = tempstr + "					</td>";
+		tempstr = tempstr + "				</tr>";		
+		tempstr = tempstr + "				<tr>";
+		tempstr = tempstr + "					<td> ";
+		tempstr = tempstr + "						<table style=\"width:48px; height:5px; border:1px solid #7c7c7c; border-radius:2px; border-collapse: separate\">"; 
+		tempstr = tempstr + "							<tr>";
 		tempstr = tempstr + "								<td id=\"author_rating_left_td_" + comment_id + "\" style=\"width:33%;height:3px;border:0px\"></td>";
 		tempstr = tempstr + "								<td id=\"author_rating_center_td_" + comment_id + "\" style=\"width:34%;height:3px;border:0px;background-color:blue\"></td>";
 		tempstr = tempstr + "								<td id=\"author_rating_right_td_" + comment_id + "\" style=\"width:33%;height:3px;border:0px\"></td>";
@@ -839,6 +850,39 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		var center_percentage = 0;
 		var right_percentage = 0;
 		var ratingcolor = "blue";
+		if(feeditem_jo.author_rating_in_window < 0)
+		{
+			ratingcolor = "red";
+			right_percentage = 50;
+			center_percentage = (feeditem_jo.author_rating_in_window / -5 * 50);
+			center_percentage = center_percentage|0;
+			left_percentage = 50 - center_percentage;
+		}	
+		else if(feeditem_jo.author_rating_in_window == 0)
+		{
+			ratingcolor = "blue";
+			left_percentage = 49;
+			center_percentage = 2;
+			right_percentage = 49;
+		}	
+		else
+		{
+			ratingcolor = "green";
+			left_percentage = 50;
+			center_percentage = feeditem_jo.author_rating_in_window / 5 * 50;
+			center_percentage = center_percentage|0;
+			right_percentage = 50 - center_percentage;
+		}	
+		$("[id=author_rating_in_window_left_td_" + comment_id + "]").css("width", left_percentage + "%");
+		$("[id=author_rating_in_window_center_td_" + comment_id + "]").css("width", center_percentage + "%");
+		$("[id=author_rating_in_window_center_td_" + comment_id + "]").css("background-color", ratingcolor);
+		$("[id=author_rating_in_window_right_td_" + comment_id + "]").css("width", right_percentage + "%");
+		
+		
+		left_percentage = 0;
+		center_percentage = 0;
+		right_percentage = 0;
+		ratingcolor = "blue";
 		if(feeditem_jo.author_rating < 0)
 		{
 			ratingcolor = "red";
@@ -866,6 +910,7 @@ function writeComment(container_id, feeditem_jo, dom_id, drawLikeDislike, drawDe
 		$("[id=author_rating_center_td_" + comment_id + "]").css("width", center_percentage + "%");
 		$("[id=author_rating_center_td_" + comment_id + "]").css("background-color", ratingcolor);
 		$("[id=author_rating_right_td_" + comment_id + "]").css("width", right_percentage + "%");
+		
 		$("[id=screenname_link_" + comment_id + "]").text(feeditem_jo.author_screenname);
 		$("[id=time_ago_span_" + comment_id + "]").text(feeditem_jo.time_ago);
 		$("[id=comment_likes_count_td_" + comment_id + "]").text(feeditem_jo.likes.length);

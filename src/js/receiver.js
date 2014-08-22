@@ -93,6 +93,7 @@ function getParameterByName(name) {
 var logout = getParameterByName("logout");
 if(logout !== null)
 {
+	//alert("reciever removing credentials because logout !== null");
 	docCookies.removeItem("screenname");
 	docCookies.removeItem("this_access_token");
 	var logout_msg = "";
@@ -411,16 +412,15 @@ else
 					
 					if(data.error_code === "0000" && data.login_type === "facebook")
 					{
+						//alert("reciever removing credentials because getAccessToken (FB) error");
 						docCookies.removeItem("last_tab_id");
-						//docCookies.removeItem("email");
 						docCookies.removeItem("screenname");
 						docCookies.removeItem("this_access_token");
 					}	
 					else if(data.error_code === "0000" && data.login_type === "google")
 					{
-						//alert("delete token here.");
+						//alert("reciever removing credentials because getAccessToken (G) error");
 						docCookies.removeItem("last_tab_id");
-						//docCookies.removeItem("email");
 						docCookies.removeItem("screenname");
 						docCookies.removeItem("this_access_token");
 					}	
@@ -672,8 +672,123 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 		});
 		return false;
 	});
+	
 	$("#forgot_password_link").click(function(event){ event.preventDefault();
-		alert("This feature is not yet enabled. Sorry! Try hypnotism or something.");
+		var fp_form = "";
+		fp_form = fp_form + "<form name=\"forgotpasword_form\" id=\"fp_form\" method=\"get\" action=\"#\">";
+		fp_form = fp_form + "<table style=\"width:100%;border:0px solid black;border-spacing:15px;border-collapse:separate\">";
+		fp_form = fp_form + "	<tr>";
+		fp_form = fp_form + "		<td colspan=2 style=\"text-align:left;font-size:15px;font-weight:bold;width:110px\">Password reset:</td>";
+		fp_form = fp_form + "	</tr>";
+		fp_form = fp_form + "	<tr>";
+		fp_form = fp_form + "		<td style=\"text-align:right;width:110px\">email address:</td><td><input type=\"text\" size=20 id=\"email_input\"></td>";
+		fp_form = fp_form + "	</tr>";
+		fp_form = fp_form + "	<tr>";
+		fp_form = fp_form + "		<td style=\"text-align:right;width:110px\"></td><td><input type=\"submit\" value=\"Submit\"></td>";
+		fp_form = fp_form + "	</tr>";
+		fp_form = fp_form + "	<tr>";
+		fp_form = fp_form + "		<td style=\"text-align:right;width:110px\"></td><td style=\"color:red;font-size:11px\" id=\"fp_submit_message_div\"></td>";
+		fp_form = fp_form + "	</tr>";
+		fp_form = fp_form + "	<tr>";
+		fp_form = fp_form + "		<td style=\"text-align:right;width:110px\"></td><td style=\"font-style:italic;color:#444444\">If you never confirmed an email address,<br>your password is unrecoverable. Sorry.<br>Create a new account.</td>";
+		fp_form = fp_form + "	</tr>";
+		fp_form = fp_form + "</table>";
+		fp_form = fp_form + "</form>";
+		$("#content_div").html(fp_form);
+		$("#fp_form").submit(function(event){
+			var email_address = $("#email_input").val();
+			$("#fp_submit_message_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
+			$.ajax({
+				type: 'GET',
+				url: bg.endpoint,
+				data: {
+					method: "sendPasswordResetEmail",
+					email: email_address
+				},
+				dataType: 'json',
+				async: true,
+				success: function (data, status) {
+					if(data.response_status === "error")
+					{
+						$("#fp_submit_message_div").text(data.message);
+						setTimeout(function() { $("#fp_submit_message_div").text("");}, 3000);
+					}
+					else if(data.response_status === "success")
+					{
+						var confcode_form = "";
+						confcode_form = confcode_form + "<form name=\"forgotpasword_form\" id=\"confcode_form\" method=\"get\" action=\"#\">";
+						confcode_form = confcode_form + "<table style=\"width:100%;border:0px solid black;border-spacing:15px;border-collapse:separate\">";
+						confcode_form = confcode_form + "	<tr>";
+						confcode_form = confcode_form + "		<td colspan=2 style=\"text-align:left;font-size:15px;font-weight:bold;width:110px\">Password reset:</td>";
+						confcode_form = confcode_form + "	</tr>";
+						confcode_form = confcode_form + "	<tr>";
+						confcode_form = confcode_form + "		<td style=\"text-align:right;width:110px\">confirmation code:</td><td><input type=\"text\" size=20 id=\"confcode_input\"></td>";
+						confcode_form = confcode_form + "	</tr>";
+						confcode_form = confcode_form + "	<tr>";
+						confcode_form = confcode_form + "		<td style=\"text-align:right;width:110px\"></td><td><input type=\"submit\" value=\"Submit\"></td>";
+						confcode_form = confcode_form + "	</tr>";
+						confcode_form = confcode_form + "	<tr>";
+						confcode_form = confcode_form + "		<td style=\"text-align:right;width:110px\"></td><td style=\"color:red;font-size:11px\" id=\"confcode_submit_message_div\"></td>";
+						confcode_form = confcode_form + "	</tr>";
+						confcode_form = confcode_form + "	<tr>";
+						confcode_form = confcode_form + "		<td style=\"text-align:right;width:110px\"></td><td style=\"font-style:italic;color:red\">Keep this window open!</td>";
+						confcode_form = confcode_form + "	</tr>";
+						confcode_form = confcode_form + "</table>";
+						confcode_form = confcode_form + "</form>";
+						$("#content_div").html(confcode_form);
+						$("#confcode_form").submit(function(event){
+							$("#confcode_submit_message_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
+							$.ajax({
+								type: 'GET',
+								url: bg.endpoint,
+								data: {
+									method: "confirmPasswordReset",
+									email: email_address,
+									confcode: $("#confcode_input").val()
+								},
+								dataType: 'json',
+								async: true,
+								success: function (data, status) {
+									if(data.response_status === "error")
+									{
+										$("#confcode_submit_message_div").text(data.message);
+										setTimeout(function() { $("#confcode_submit_message_div").text("");}, 3000);
+									}
+									else if(data.response_status === "success")
+									{
+										var confcode_form = "";
+										confcode_form = confcode_form + "<table style=\"width:100%;border:0px solid black;border-spacing:15px;border-collapse:separate\">";
+										confcode_form = confcode_form + "	<tr>";
+										confcode_form = confcode_form + "		<td style=\"text-align:left;font-size:15px;font-weight:bold;width:110px\">Password reset</td>";
+										confcode_form = confcode_form + "	</tr>";
+										confcode_form = confcode_form + "	<tr>";
+										confcode_form = confcode_form + "		<td style=\"text-align:left;width:110px\">If your email address was found in the system, your new temporary password has been emailed to you.</td>";
+										confcode_form = confcode_form + "	</tr>";
+										confcode_form = confcode_form + "	<tr>";
+										confcode_form = confcode_form + "		<td style=\"text-align:left;width:110px\">If you do not receive an email, it's probably because that email address was not found. Sorry.</td>";
+										confcode_form = confcode_form + "	</tr>";
+										confcode_form = confcode_form + "</table>";
+										$("#content_div").html(confcode_form);
+									}
+								},
+								error: function (XMLHttpRequest, textStatus, errorThrown) {
+									console.log(textStatus, errorThrown);
+									$("#login_submit_message_div").text("Unable to login. Check username and password. (AJAX)");
+									setTimeout(function() { $("#login_submit_message_div").text("");}, 3000);
+								} 
+							});
+							return false;
+						});
+					}
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					console.log(textStatus, errorThrown);
+					$("#login_submit_message_div").text("Unable to login. Check username and password. (AJAX)");
+					setTimeout(function() { $("#login_submit_message_div").text("");}, 3000);
+				} 
+			});
+			return false;
+		});
 	});
 	
 	$("#screenname_availability_link").click( function (event) { event.preventDefault();
@@ -857,9 +972,9 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 	});
 	
 	$("#new_user_registration_form").submit(function(event){
-		if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){5,14}$/))
+		if (!$("#registration_screenname_input").val().match(/^[a-zA-Z]([a-zA-Z0-9]){2,14}$/))
 		{
-			$("#submit_message_div").text("Screenname must be 6-15 chars, no spaces");
+			$("#submit_message_div").text("Screenname must be 3-15 chars, no spaces");
 			setTimeout(function() { $("#submit_message_div").text("");}, 3000);
 		}
 		else if (!$("#registration_password_input").val().match(/^(\w|[!@\-#$%\*]){8,20}$/))

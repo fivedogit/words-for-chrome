@@ -112,10 +112,18 @@ function getProfile(target_screenname)
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold;vertical-align:top\">Email <span style=\"font-style:italic;font-weight:normal;font-color:#666666\">(private)</span>:</td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Since:</td><td style=\"text-align:left\" id=\"profile_page_since_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left\" id=\"profile_page_seen_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments authored 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numcommentsauthored_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Likes authored 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numlikesauthored_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Dislikes authored 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numdislikesauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numcommentsauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Likes 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numlikesauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Dislikes 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numdislikesauthored_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Rating <span id=\"rating_window_span\"></span>:</td>";
+            	main_div_string = main_div_string + "						<td style=\"text-align:left\" id=\"profile_page_rating_in_window_td\">";
+            	main_div_string = main_div_string + "						<span id=\"up_in_window_span\" style=\"color:green\"></span> up, ";
+            	main_div_string = main_div_string + "						<span id=\"down_in_window_span\" style=\"color:red\"></span> down, ";
+            	main_div_string = main_div_string + "						<span id=\"percent_up_in_window_span\" style=\"color:blue\"></span> % up, ";
+            	main_div_string = main_div_string + "						<span id=\"rating_in_window_span\" style=\"color:blue\"></span> rating";
+            	main_div_string = main_div_string + "						</td>";
+            	main_div_string = main_div_string + "						</tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Rating (all):</td>";
             	main_div_string = main_div_string + "						<td style=\"text-align:left\" id=\"profile_page_rating_td\">";
             	main_div_string = main_div_string + "						<span id=\"up_span\" style=\"color:green\"></span> up, ";
             	main_div_string = main_div_string + "						<span id=\"down_span\" style=\"color:red\"></span> down, ";
@@ -356,6 +364,17 @@ function getProfile(target_screenname)
             	$("#profile_page_numlikesauthored_td").text(target_user_jo.num_likes_authored_in_window + " / " + target_user_jo.num_likes_authored);
             	$("#profile_page_numdislikesauthored_td").text(target_user_jo.num_dislikes_authored_in_window + " / " + target_user_jo.num_dislikes_authored);
             	
+            	$("#up_in_window_span").text(target_user_jo.up_in_window);
+            	$("#down_in_window_span").text(target_user_jo.down_in_window);
+            	if(target_user_jo.up_in_window === 0 && target_user_jo.down_in_window === 0)
+            		$("#percent_up_in_window_span").text("0");
+            	else if(target_user_jo.up_in_window > 0 && target_user_jo.down_in_window === 0)
+            		$("#percent_up_in_window_span").text("100");
+            	else
+            		$("#percent_up_in_window_span").text(Math.floor(target_user_jo.up_in_window / (target_user_jo.up_in_window + target_user_jo.down_in_window) * 100));
+            	$("#rating_in_window_span").text(target_user_jo.rating_in_window);
+            	$("#rating_window_span").text("(" + (target_user_jo.rating_window_mins/1440) + "d)");
+            	
             	$("#up_span").text(target_user_jo.up);
             	$("#down_span").text(target_user_jo.down);
             	if(target_user_jo.up === 0 && target_user_jo.down === 0)
@@ -365,7 +384,6 @@ function getProfile(target_screenname)
             	else
             		$("#percent_up_span").text(Math.floor(target_user_jo.up / (target_user_jo.up + target_user_jo.down) * 100));
             	$("#rating_span").text(target_user_jo.rating);
-            	$("#rating_window_span").text("(" + (target_user_jo.rating_window_mins/1440) + "d)");
             	
             	if(target_user_jo.email)
             	{	
@@ -376,7 +394,7 @@ function getProfile(target_screenname)
             		if(target_user_jo.email_is_confirmed === true)
             			e1str = e1str + "Confirmed email? <span style=\"color:green\">Yes</span><br>";
             		else
-            			e1str = e1str + "Confirmed email? <span style=\"color:red\">No</span><br>";
+            			e1str = e1str + "Confirmed email? <span style=\"color:red\">No</span> (see above)<br>";
 
             		if(target_user_jo.num_comments_authored > 0)
             			e1str = e1str + "Commented? <span style=\"color:green\">Yes</span>";
@@ -385,15 +403,37 @@ function getProfile(target_screenname)
             	
                 	$("#entry_1_td").html(e1str);
                 	
-                	if(user_jo.shared_via_facebook === true)
-                		$("#entry_2_td").html("Shared via Facebook? <span style=\"color:green\">Yes</span>");
+                	if(user_jo.shared_to_facebook === true)
+                		$("#entry_2_td").html("Shared to Facebook? <span style=\"color:green\">Yes</span>");
                 	else
-                		$("#entry_2_td").html("Shared via Facebook? <span style=\"color:red\">No</span>");
+                	{
+                		if(!target_user_jo.email_is_confirmed || target_user_jo.num_comments_authored <= 0)
+                			$("#entry_2_td").html("Shared to Facebook? <span style=\"color:red\">No</span> (Complete entry 1 first.)");
+                		else
+                		{	
+                			$("#entry_2_td").html("<a href=\"#\" id=\"s2f_link\">Shared to Facebook?</a> <span style=\"color:red\">No</span>");
+                    		$("#s2f_link").click(function(event) { event.preventDefault();
+                    			noteSocialShare("facebook");
+                    		});
+                    		noteImpressionAndCreateHandler("facebookshare", "profile", "s2f_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%2C%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2Faction_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D");
+                    	}
+                	}
                 	
-                	if(user_jo.shared_via_twitter === true)
-                		$("#entry_3_td").html("Shared via Twitter? <span style=\"color:green\">Yes</span>");
+                	if(user_jo.shared_to_twitter === true)
+                		$("#entry_3_td").html("Shared to Twitter? <span style=\"color:green\">Yes</span>");
                 	else
-                		$("#entry_3_td").html("Shared via Twitter? <span style=\"color:red\">No</span>");                	
+                	{
+                		if(!target_user_jo.email_is_confirmed || target_user_jo.num_comments_authored <= 0)
+                			$("#entry_3_td").html("Shared to Twitter? <span style=\"color:red\">No</span> (Complete entry 1 first.)");
+                		else
+                		{
+                			$("#entry_3_td").html("<a href=\"#\" id=\"s2t_link\">Shared to Twitter?</a> <span style=\"color:red\">No</span>");
+                    		$("#s2t_link").click(function(event) { event.preventDefault();
+                    			noteSocialShare("twitter");
+                    		});
+                    		noteImpressionAndCreateHandler("twittershare", "profile", "s2t_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F");
+                		}
+                	}
                 	
             		var tstr = "";
             		if(typeof target_user_jo.provisional_email !== "undefined" && target_user_jo.provisional_email !== null)
@@ -434,9 +474,10 @@ function getProfile(target_screenname)
                 					{
                 						$("#email_flex_td").css("color", "green");
                 						$("#email_flex_td").text(data.message);
+                						user_jo.email_is_confirmed = true;
+                						writeFooterMessage();
                 						setTimeout(function() { 
                 							viewProfile(screenname);
-                							writeFooterMessage();
                 						}, 2000);
                 					}	
                 					else
@@ -613,10 +654,16 @@ function getProfile(target_screenname)
             			$("#screenname_availability_span").text("Blank");
             			return;
             		} 
-            		else if ($("#screenname_change_input").val().length < 6) 
+            		else if ($("#screenname_change_input").val().length < 3) 
             		{
             			$("#screenname_availability_span").css("color","red");
             			$("#screenname_availability_span").text("Too short");
+            			return;
+            		} 
+            		else if ($("#screenname_change_input").val().length > 15) 
+            		{
+            			$("#screenname_availability_span").css("color","red");
+            			$("#screenname_availability_span").text("Too long");
             			return;
             		} 
             		else 
