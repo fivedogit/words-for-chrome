@@ -101,7 +101,37 @@ function getProfile(target_screenname)
             	main_div_string = main_div_string + "		<table style=\"width:100%;\">";
             	main_div_string = main_div_string + "			<tr>";
             	main_div_string = main_div_string + "				<td style=\"width:128px;text-align:right;vertical-align:top\" id=\"large_avatar_td\">";
-            	main_div_string = main_div_string + "					<img style=\"border-radius: 4px;height:128px;\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\">";
+            	main_div_string = main_div_string + "					<table style=\"width:auto\">";
+            	main_div_string = main_div_string + "						<tr>";
+            	main_div_string = main_div_string + "							<td colspan=2>";
+            	main_div_string = main_div_string + "								<img style=\"border-radius: 4px;height:128px;\" id=\"large_avatar_img\" src=\"images/48avatar_ghosted.png\">";
+            	main_div_string = main_div_string + "							</td>";
+            	main_div_string = main_div_string + "						</tr>";
+            	main_div_string = main_div_string + "						<tr>";
+            	main_div_string = main_div_string + "							<td style=\"width:20px;text-align-right;padding-right:3px;\">7d:</td>";
+        		main_div_string = main_div_string + "							<td> ";
+        		main_div_string = main_div_string + "								<table style=\"width:100%; height:10px; border:1px solid #7c7c7c; border-radius:2px; border-collapse: separate\">"; 
+        		main_div_string = main_div_string + "									<tr>";
+        		main_div_string = main_div_string + "										<td id=\"rating_in_window_left_td\" style=\"width:33%;height:3px;border:0px\"></td>";
+        		main_div_string = main_div_string + "										<td id=\"rating_in_window_center_td\" style=\"width:34%;height:3px;border:0px;background-color:blue\"></td>";
+        		main_div_string = main_div_string + "										<td id=\"rating_in_window_right_td\" style=\"width:33%;height:3px;border:0px\"></td>";
+        	  	main_div_string = main_div_string + "									</tr>";
+        	  	main_div_string = main_div_string + "								</table>"
+        		main_div_string = main_div_string + "							</td>";
+        		main_div_string = main_div_string + "						</tr>";		
+        		main_div_string = main_div_string + "						<tr>";
+        		main_div_string = main_div_string + "							<td style=\"width:20px;text-align-right;padding-right:3px;\">all:</td>";
+        		main_div_string = main_div_string + "							<td>";
+        		main_div_string = main_div_string + "								<table style=\"width:100%; height:10px; border:1px solid #7c7c7c; border-radius:2px; border-collapse: separate\">"; 
+        		main_div_string = main_div_string + "									<tr>";
+        		main_div_string = main_div_string + "										<td id=\"rating_left_td\" style=\"width:33%;height:3px;border:0px\"></td>";
+        		main_div_string = main_div_string + "										<td id=\"rating_center_td\" style=\"width:34%;height:3px;border:0px;background-color:blue\"></td>";
+        		main_div_string = main_div_string + "										<td id=\"rating_right_td\" style=\"width:33%;height:3px;border:0px\"></td>";
+        	  	main_div_string = main_div_string + "									</tr>";
+        	  	main_div_string = main_div_string + "								</table>"
+        		main_div_string = main_div_string + "							</td>";
+        		main_div_string = main_div_string + "						</tr>";			
+        		main_div_string = main_div_string + "					</table>"; 
             	main_div_string = main_div_string + "				</td>";
             	main_div_string = main_div_string + "				<td>";
             	main_div_string = main_div_string + "					<table style=\"margin-right:auto;border-spacing:5px;border-collapse:separate;\">";
@@ -112,9 +142,13 @@ function getProfile(target_screenname)
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold;vertical-align:top\">Email <span style=\"font-style:italic;font-weight:normal;font-color:#666666\">(private)</span>:</td><td style=\"text-align:left\" id=\"profile_page_email_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Since:</td><td style=\"text-align:left\" id=\"profile_page_since_td\"></td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Seen:</td><td style=\"text-align:left\" id=\"profile_page_seen_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Comments 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numcommentsauthored_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Likes 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numlikesauthored_td\"></td></tr>";
-            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Dislikes 7d/all:</td><td style=\"text-align:left\" id=\"profile_page_numdislikesauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold;vertical-align:top\">Activity:</td><td style=\"text-align:left\">";
+            	main_div_string = main_div_string + "						<table style=\"width:auto;border-collapse:separate;border-spacing:3px\">";
+            	main_div_string = main_div_string + "							<tr><td></td><td style=\"font-weight:bold\">Comments</td><td style=\"font-weight:bold\">Likes</td><td style=\"font-weight:bold\">Dislikes</td></tr>";
+            	main_div_string = main_div_string + "							<tr><td style=\"font-weight:bold\">7d</td><td id=\"profile_page_numcommentsauthored_in_window_td\"></td><td id=\"profile_page_numlikesauthored_in_window_td\"></td><td id=\"profile_page_numdislikesauthored_in_window_td\"></td></tr>";
+            	main_div_string = main_div_string + "							<tr><td style=\"font-weight:bold\">all</td><td id=\"profile_page_numcommentsauthored_td\"></td><td id=\"profile_page_numlikesauthored_td\"></td><td id=\"profile_page_numdislikesauthored_td\"></td></tr>";
+            	main_div_string = main_div_string + "						</table>";
+            	main_div_string = main_div_string + "						</td></tr>";
             	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:bold\">Rating <span id=\"rating_window_span\"></span>:</td>";
             	main_div_string = main_div_string + "						<td style=\"text-align:left\" id=\"profile_page_rating_in_window_td\">";
             	main_div_string = main_div_string + "						<span id=\"up_in_window_span\" style=\"color:green\"></span> up, ";
@@ -295,6 +329,7 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "									<tr>";
 					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:5px;\">";
 					main_div_string = main_div_string + "											<input type=text id=\"screenname_change_input\" type=password style=\"width:150px;color:#666666;font-size:11px\" value=\"new screenname\">";
+					main_div_string = main_div_string + "											<br>password: <input type=password style=\"width:100px;color:#666666;font-size:11px\" id=\"screenname_change_password_input\">";
 					main_div_string = main_div_string + "										</td>";
 					main_div_string = main_div_string + "										<td style=\"text-align:left;padding-left:5px;\">";
 					main_div_string = main_div_string + "											<span style=\"margin-left:2px;border:0px black solid;display:none\" id=\"screenname_availability_span\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></span>";
@@ -358,11 +393,80 @@ function getProfile(target_screenname)
             	$("#main_div_" + currentURLhash).html(main_div_string); //OK
             	
             	$("#large_avatar_img").attr("src", target_user_jo.picture);
+            	
+            	var left_percentage = 0;
+        		var center_percentage = 0;
+        		var right_percentage = 0;
+        		var ratingcolor = "blue";
+        		if(target_user_jo.rating_in_window < 0)
+        		{
+        			ratingcolor = "red";
+        			right_percentage = 50;
+        			center_percentage = (target_user_jo.rating_in_window / -5 * 50);
+        			center_percentage = center_percentage|0;
+        			left_percentage = 50 - center_percentage;
+        		}	
+        		else if(target_user_jo.rating_in_window == 0)
+        		{
+        			ratingcolor = "blue";
+        			left_percentage = 49;
+        			center_percentage = 2;
+        			right_percentage = 49;
+        		}	
+        		else
+        		{
+        			ratingcolor = "green";
+        			left_percentage = 50;
+        			center_percentage = target_user_jo.rating_in_window / 5 * 50;
+        			center_percentage = center_percentage|0;
+        			right_percentage = 50 - center_percentage;
+        		}	
+        		$("[id=rating_in_window_left_td").css("width", left_percentage + "%");
+        		$("[id=rating_in_window_center_td").css("width", center_percentage + "%");
+        		$("[id=rating_in_window_center_td").css("background-color", ratingcolor);
+        		$("[id=rating_in_window_right_td").css("width", right_percentage + "%");
+        		
+        		
+        		left_percentage = 0;
+        		center_percentage = 0;
+        		right_percentage = 0;
+        		ratingcolor = "blue";
+        		if(target_user_jo.rating < 0)
+        		{
+        			ratingcolor = "red";
+        			right_percentage = 50;
+        			center_percentage = (target_user_jo.rating / -5 * 50);
+        			center_percentage = center_percentage|0;
+        			left_percentage = 50 - center_percentage;
+        		}	
+        		else if(target_user_jo.rating == 0)
+        		{
+        			ratingcolor = "blue";
+        			left_percentage = 49;
+        			center_percentage = 2;
+        			right_percentage = 49;
+        		}	
+        		else
+        		{
+        			ratingcolor = "green";
+        			left_percentage = 50;
+        			center_percentage = target_user_jo.rating / 5 * 50;
+        			center_percentage = center_percentage|0;
+        			right_percentage = 50 - center_percentage;
+        		}	
+        		$("[id=rating_left_td").css("width", left_percentage + "%");
+        		$("[id=rating_center_td").css("width", center_percentage + "%");
+        		$("[id=rating_center_td").css("background-color", ratingcolor);
+        		$("[id=rating_right_td").css("width", right_percentage + "%");
+            	
             	$("#profile_page_screenname_span").text(target_user_jo.screenname);
             	$("#profile_page_since_td").text(target_user_jo.since);
-            	$("#profile_page_numcommentsauthored_td").text(target_user_jo.num_comments_authored_in_window + " / " + target_user_jo.num_comments_authored);
-            	$("#profile_page_numlikesauthored_td").text(target_user_jo.num_likes_authored_in_window + " / " + target_user_jo.num_likes_authored);
-            	$("#profile_page_numdislikesauthored_td").text(target_user_jo.num_dislikes_authored_in_window + " / " + target_user_jo.num_dislikes_authored);
+            	$("#profile_page_numcommentsauthored_in_window_td").text(target_user_jo.num_comments_authored_in_window);
+            	$("#profile_page_numlikesauthored_in_window_td").text(target_user_jo.num_likes_authored_in_window);
+            	$("#profile_page_numdislikesauthored_in_window_td").text(target_user_jo.num_dislikes_authored_in_window);
+            	$("#profile_page_numcommentsauthored_td").text(target_user_jo.num_comments_authored);
+            	$("#profile_page_numlikesauthored_td").text(target_user_jo.num_likes_authored);
+            	$("#profile_page_numdislikesauthored_td").text(target_user_jo.num_dislikes_authored);
             	
             	$("#up_in_window_span").text(target_user_jo.up_in_window);
             	$("#down_in_window_span").text(target_user_jo.down_in_window);
@@ -652,18 +756,6 @@ function getProfile(target_screenname)
             		{
             			$("#screenname_availability_span").css("color","red");
             			$("#screenname_availability_span").text("Blank");
-            			return;
-            		} 
-            		else if ($("#screenname_change_input").val().length < 3) 
-            		{
-            			$("#screenname_availability_span").css("color","red");
-            			$("#screenname_availability_span").text("Too short");
-            			return;
-            		} 
-            		else if ($("#screenname_change_input").val().length > 15) 
-            		{
-            			$("#screenname_availability_span").css("color","red");
-            			$("#screenname_availability_span").text("Too long");
             			return;
             		} 
             		else 
@@ -1174,7 +1266,8 @@ function getProfile(target_screenname)
 				            screenname: screenname,             
 				            this_access_token: this_access_token,  
 				            which: "screenname",
-				            value:  $("#screenname_change_input").val()
+				            value:  $("#screenname_change_input").val(),
+				            password: $("#screenname_change_password_input").val()
 				        },
 				        dataType: 'json',
 				        async: true,

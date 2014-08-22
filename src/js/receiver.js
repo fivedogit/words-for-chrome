@@ -728,7 +728,9 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 						confcode_form = confcode_form + "		<td style=\"text-align:right;width:110px\"></td><td><input type=\"submit\" value=\"Submit\"></td>";
 						confcode_form = confcode_form + "	</tr>";
 						confcode_form = confcode_form + "	<tr>";
-						confcode_form = confcode_form + "		<td style=\"text-align:right;width:110px\"></td><td style=\"color:red;font-size:11px\" id=\"confcode_submit_message_div\"></td>";
+						confcode_form = confcode_form + "		<td style=\"text-align:right;width:110px\"></td><td style=\"color:red;font-size:11px\" id=\"confcode_submit_message_div\">";
+						confcode_form = confcode_form + "			<span style=\"color:#444;font-style:italic\">If that email address was found, a reset code has been sent to it.<br>Check your email and enter the code above.</span>";
+						confcode_form = confcode_form + " 		</td>";
 						confcode_form = confcode_form + "	</tr>";
 						confcode_form = confcode_form + "	<tr>";
 						confcode_form = confcode_form + "		<td style=\"text-align:right;width:110px\"></td><td style=\"font-style:italic;color:red\">Keep this window open!</td>";
@@ -762,10 +764,7 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 										confcode_form = confcode_form + "		<td style=\"text-align:left;font-size:15px;font-weight:bold;width:110px\">Password reset</td>";
 										confcode_form = confcode_form + "	</tr>";
 										confcode_form = confcode_form + "	<tr>";
-										confcode_form = confcode_form + "		<td style=\"text-align:left;width:110px\">If your email address was found in the system, your new temporary password has been emailed to you.</td>";
-										confcode_form = confcode_form + "	</tr>";
-										confcode_form = confcode_form + "	<tr>";
-										confcode_form = confcode_form + "		<td style=\"text-align:left;width:110px\">If you do not receive an email, it's probably because that email address was not found. Sorry.</td>";
+										confcode_form = confcode_form + "		<td style=\"text-align:left;width:110px\">Your new password has been emailed to you.</td>";
 										confcode_form = confcode_form + "	</tr>";
 										confcode_form = confcode_form + "</table>";
 										$("#content_div").html(confcode_form);
