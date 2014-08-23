@@ -666,7 +666,7 @@ function getProfile(target_screenname)
         				else // no provisional email waiting, nothing confirmed... this is the default @words4chrome.com address
         				{
         					tstr = tstr + "<table>";
-                			tstr = tstr + "<tr><td style=\"text-align:left\">" +  target_user_jo.email + " (unconfirmed placeholder)</td></tr>";
+                			tstr = tstr + "<tr><td style=\"text-align:left;font-style:italic\">none</td></tr>";
                 			tstr = tstr + "<tr><td id=\"email_flex_td\" style=\"text-align:left;font-size:10px\"><a href=\"#\" id=\"enter_real_address_link\">Confirm your email for prize eligibility & password retrieval.</a></td></tr>";
                 			tstr = tstr + "</table>";
                 			$("#profile_page_email_td").html(tstr);
