@@ -171,6 +171,7 @@ function getProfile(target_screenname)
                 	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal;vertical-align:top\">Entry 1:</td><td style=\"text-align:left\" id=\"entry_1_td\"></td></tr>";
                 	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal\">Entry 2:</td><td style=\"text-align:left\" id=\"entry_2_td\"></td></tr>";
                 	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal\">Entry 3:</td><td style=\"text-align:left\" id=\"entry_3_td\"></td></tr>";
+                	main_div_string = main_div_string + "						<tr><td style=\"text-align:center;font-style:italic;color:red\" colspan=2>Winners will be notified VIA WORDS, not email, so don't uninstall.</td></tr>";
                 }
             	main_div_string = main_div_string + "					</table>";
             	main_div_string = main_div_string + "				</td>";
@@ -323,7 +324,7 @@ function getProfile(target_screenname)
 					main_div_string = main_div_string + "								<table style=\"width:auto;margin-right:auto\">";
 					main_div_string = main_div_string + "									<tr>";
 					main_div_string = main_div_string + "										<td colspan=2 style=\"text-align:left;padding-left:5px;\">";
-					main_div_string = main_div_string + "											<span style=\"font-style:italic\">Warning: Changing this will sign you out.</span><br>";
+					main_div_string = main_div_string + "											<span style=\"font-style:italic;color:red\">Warning: Changing this will sign you out.</span><br>";
 					main_div_string = main_div_string + "										</td>";
 					main_div_string = main_div_string + "									</tr>";
 					main_div_string = main_div_string + "									<tr>";

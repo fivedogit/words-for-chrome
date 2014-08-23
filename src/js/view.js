@@ -22,7 +22,7 @@ function resetTabTooltip()
  		bs = bs + "<tr>";
  			bs = bs + "<td style=\"text-align:left;padding:8px 8px 5px 8px\">"; // small words logo td
  			bs = bs + "		<table style=\"width:auto\"><tr><td style=\"text-align:center\"><a href=\"#\" id=\"words_logo_link\"><img src=\"" + chrome.extension.getURL("images/words_logo_125x24.png") + "\"></img></a></td></tr>";
- 			bs = bs + "		<tr><td style=\"text-align:center;line-height:10px\">Smarter, safer web comments</td></tr></table>";
+ 			bs = bs + "		<tr><td style=\"text-align:center;line-height:10px\" id=\"tagline_td\">Smarter, safer web comments</td></tr></table>";
  			//bs = bs + "		<a href=\"#\" id=\"words_logo_link\"><img src=\"" + chrome.extension.getURL("images/words_logo_125x24.png") + "\"></img></a>";
  			bs = bs + "</td>";
  			bs = bs + "<td id=\"logstat_td\" style=\"padding:8px 8px 5px 8px\"></td>";
@@ -496,104 +496,114 @@ function writeFooterMessage() {
         		});
 				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%2C%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2Faction_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D");
 			}	
+			else // do the usual stuff
+			{
+				var randomint = Math.floor(Math.random() * 60);
+				if(randomint === 0)
+				{
+					footerstr = footerstr + "If you get a moment, a <a href=\"#\" id=\"rate_5_stars_link\" style=\"color:#baff00\">five star rating</a> would be greatly appreciated.";
+					$("#footer_div").html(footerstr);
+					noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
+				}	
+				else if(randomint === 1)
+				{
+					footerstr = footerstr + "I want to hear your feedback on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
+					$("#footer_div").html(footerstr);
+					noteImpressionAndCreateHandler("facebook_apppage", "footer", "follow_on_facebook_link", "https://www.facebook.com/words4chrome");
+					noteImpressionAndCreateHandler("twitter_mainacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/words4chrome");
+				}
+				else if(randomint === 2)
+				{
+					footerstr = footerstr + "Spread the WORDS! ";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_googleplus_link\" >G+</a>";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_tumblr_link\" >Tumblr</a>";
+					$("#footer_div").html(footerstr);
+					
+					noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
+					noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
+					noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
+					noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
+				}
+				else if(randomint === 3)
+				{
+					footerstr = footerstr + "Support WORDS with Bitcoin: ";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_10_link\" >$10</a>";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_20_link\" >$20</a>";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_50_link\" >$50</a>";
+					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";
+					$("#footer_div").html(footerstr);
+					noteImpressionAndCreateHandler("coinbase2", "footer", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");
+					noteImpressionAndCreateHandler("coinbase5", "footer", "coinbase_5_link", "https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41");
+					noteImpressionAndCreateHandler("coinbase10", "footer", "coinbase_10_link", "https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca");
+					noteImpressionAndCreateHandler("coinbase20", "footer", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
+					noteImpressionAndCreateHandler("coinbase50", "footer", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
+					noteImpressionAndCreateHandler("coinbase100", "footer", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");
+				}
+				else if(randomint === 4)
+				{
+					footerstr = footerstr + "Remember: <span style=\"color:#ffde00\">Appropriate downvoting</span> is necessary for maintaining quality discussions. Do your part!";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 5)
+				{
+					footerstr = footerstr + "<span style=\"color:#ffde00\">\"I agree.\"</span> or <span style=\"color:#ffde00\">\"Me too!\"</span> should be upvotes, not comments. Downvote them.";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 6)
+				{
+					footerstr = footerstr + "Comments with <span style=\"color:#ffde00\">poor punctuation</span> should be downvoted. We're better than that.";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 7)
+				{
+					footerstr = footerstr + "Name-calling, racism, sexism, etc should be <span style=\"color:#ffde00\">downvoted</span> and otherwise <span style=\"color:#ffde00\">ignored</span>. Don't fuel the fire.";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 8)
+				{
+					footerstr = footerstr + "Downvotes mean \"This is inappropriate\" and <span style=\"color:#ffde00\">should not</span> be used for mere disagreement.";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 9)
+				{
+					footerstr = footerstr + "Downvote inappropriate <span style=\"color:#ffde00\">religious</span> or <span style=\"color:#ffde00\">political</span> rants.";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 10)
+				{
+					footerstr = footerstr + "Users with too many downvotes will be <span style=\"color:#ffde00\">silenced</span> for 7 days and have their existing comments <span style=\"color:#ffde00\">deleted</span>.";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 11)
+				{
+					footerstr = footerstr + "Trolling is downvote-worthy. <span style=\"color:#ffde00\">So is engaging them.</span>";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 12)
+				{
+					footerstr = footerstr + "Downvoting is anonymous. Your username will not be divulged.";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 13)
+				{
+					footerstr = footerstr + "Keep WORDS installed to receive winning prize notifications.";
+					$("#footer_div").html(footerstr);
+				}
+				else if(randomint === 14)
+				{
+					footerstr = footerstr + "Comments should be written in the language of the page currently being viewed.";
+					$("#footer_div").html(footerstr);
+				}
+			}	
 		}
 		else
 		{
 			// do nothing
 		}	
 	}	
-	/*var randomint = Math.floor(Math.random() * 50);
-	if(randomint === 0)
-	{
-		footerstr = footerstr + "If you get a moment, a <a href=\"#\" id=\"rate_5_stars_link\" style=\"color:#baff00\">five star rating</a> would be greatly appreciated.";
-		$("#footer_div").html(footerstr);
-		if(navigator.userAgent.indexOf("OPR/") !== -1)
-			noteImpressionAndCreateHandler("operastore", "footer", "rate_5_stars_link", "https://addons.opera.com/en/extensions/details/words/");
-		else
-			noteImpressionAndCreateHandler("cws", "footer", "rate_5_stars_link", "https://chrome.google.com/webstore/detail/words/lgdfecngaioibcmfbfpeeddgkjfdpgij/reviews");
-	}	
-	else if(randomint === 1)
-	{
-		footerstr = footerstr + "I want to hear your feedback on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
-		$("#footer_div").html(footerstr);
-		noteImpressionAndCreateHandler("facebook_apppage", "footer", "follow_on_facebook_link", "https://www.facebook.com/words4chrome");
-		noteImpressionAndCreateHandler("twitter_mainacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/words4chrome");
-	}
-	else if(randomint === 2)
-	{
-		footerstr = footerstr + "Spread the WORDS! ";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_googleplus_link\" >G+</a>";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_tumblr_link\" >Tumblr</a>";
-		$("#footer_div").html(footerstr);
-		
-		noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.words4chrome.com");
-		noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people&url=http%3A%2F%2Fwww.words4chrome.com");
-		noteImpressionAndCreateHandler("googleplusshare", "footer", "share_to_googleplus_link", "https://plus.google.com/share?url=http%3A%2F%2Fwww.words4chrome.com");
-		noteImpressionAndCreateHandler("tumblrshare", "footer", "share_to_tumblr_link", "http://www.tumblr.com/share?v=3&u=http%3A%2F%2Fwww.words4chrome.com&t=WORDS%20for%20Chrome%3A%20Web%20comments%20for%20smart%20people");
-	}
-	else if(randomint === 3)
-	{
-		footerstr = footerstr + "Support WORDS with Bitcoin: ";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_2_link\" >$2</a>";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_5_link\" >$5</a>";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_10_link\" >$10</a>";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_20_link\" >$20</a>";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_50_link\" >$50</a>";
-		footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"coinbase_100_link\" >$100</a>";
-		$("#footer_div").html(footerstr);
-		noteImpressionAndCreateHandler("coinbase2", "footer", "coinbase_2_link", "https://coinbase.com/checkouts/0dd1fe6c62615d397145ab61ed563851");
-		noteImpressionAndCreateHandler("coinbase5", "footer", "coinbase_5_link", "https://coinbase.com/checkouts/61112abb012d09699e65c6ec1a632e41");
-		noteImpressionAndCreateHandler("coinbase10", "footer", "coinbase_10_link", "https://coinbase.com/checkouts/9413426d693428113687ecbddf94faca");
-		noteImpressionAndCreateHandler("coinbase20", "footer", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
-		noteImpressionAndCreateHandler("coinbase50", "footer", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
-		noteImpressionAndCreateHandler("coinbase100", "footer", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");
-	}
-	else if(randomint === 4)
-	{
-		footerstr = footerstr + "Remember: <span style=\"color:#ffde00\">Appropriate downvoting</span> is necessary for maintaining quality discussions. Do your part!";
-		$("#footer_div").html(footerstr);
-	}
-	else if(randomint === 5)
-	{
-		footerstr = footerstr + "<span style=\"color:#ffde00\">\"I agree.\"</span> or <span style=\"color:#ffde00\">\"Me too!\"</span> should be upvotes, not comments. Downvote them.";
-		$("#footer_div").html(footerstr);
-	}
-	else if(randomint === 6)
-	{
-		footerstr = footerstr + "Comments with <span style=\"color:#ffde00\">poor punctuation</span> should be downvoted. We're better than that.";
-		$("#footer_div").html(footerstr);
-	}
-	else if(randomint === 7)
-	{
-		footerstr = footerstr + "Name-calling, racism, sexism, etc should be <span style=\"color:#ffde00\">downvoted</span> and otherwise <span style=\"color:#ffde00\">ignored</span>. Don't fuel the fire.";
-		$("#footer_div").html(footerstr);
-	}
-	else if(randomint === 8)
-	{
-		footerstr = footerstr + "Downvotes mean \"This is inappropriate\" and <span style=\"color:#ffde00\">should not</span> be used for mere disagreement.";
-		$("#footer_div").html(footerstr);
-	}
-	else if(randomint === 9)
-	{
-		footerstr = footerstr + "Downvote inappropriate <span style=\"color:#ffde00\">religious</span> or <span style=\"color:#ffde00\">political</span> rants.";
-		$("#footer_div").html(footerstr);
-	}
-	else if(randomint === 10)
-	{
-		footerstr = footerstr + "Users with too many downvotes will be <span style=\"color:#ffde00\">silenced</span> for 7 days and have their existing comments <span style=\"color:#ffde00\">deleted</span>.";
-		$("#footer_div").html(footerstr);
-	}
-	else if(randomint === 11)
-	{
-		footerstr = footerstr + "Trolling is downvote-worthy. <span style=\"color:#ffde00\">So is engaging them.</span>";
-		$("#footer_div").html(footerstr);
-	}
-	else if(randomint === 12)
-	{
-		footerstr = footerstr + "Downvoting is anonymous. Your username will not be divulged.";
-		$("#footer_div").html(footerstr);
-	}*/
 }
 
