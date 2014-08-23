@@ -187,44 +187,56 @@ function doNotificationItem(item_id, dom_id)
         			var url_to_use = getSmartCutURL(data.item.pseudo_url,50);
         			var populate_parent = false;
         			var populate_item = false;
-        			var headerstring = "";
+        			var headerstring_begin = "";
             		if(item_id.endsWith("L"))
             		{
-            			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> liked your comment: ";
+            			headerstring_begin = headerstring_begin + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> liked your comment: ";
             			populate_parent = true;
             			populate_item = false;
             		}
             		else if(item_id.endsWith("D"))
             		{
-            			headerstring = headerstring + "Someone disliked your comment: ";
+            			headerstring_begin = headerstring_begin + "Someone disliked your comment: ";
             			populate_parent = true;
             			populate_item = false;
             		}
             		else if(item_id.endsWith("M"))
             		{
-            			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> mentioned you: ";
+            			headerstring_begin = headerstring_begin + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> mentioned you: ";
             			populate_parent = false;
             			populate_item = true;
             		}	
             		else if(item_id.endsWith("R"))
             		{
-            			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> replied to you: ";
+            			headerstring_begin = headerstring_begin + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> replied to you: ";
             			populate_parent = true;
             			populate_item = true;
             		}
             		else if(item_id.endsWith("F"))
             		{
-            			headerstring = headerstring + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> commented on a page you're following: ";
+            			headerstring_begin = headerstring_begin + "<a href=\"#\" id=\"screenname_link_" + item_id + "\">Someone</a> commented on a page you're following: ";
             			populate_parent = false;
             			populate_item = true;
             		}
             		else
             		{
-            			headerstring = headerstring + "Unknown activity item.";
+            			headerstring_begin = headerstring_begin + "Unknown activity item.";
             			populate_parent = false;
             			populate_item = false;
             		}	
-            		headerstring = "<table style=\"width:100%;\"><tr><td style=\"text-align:left;width:94%;\">" + headerstring + "<img id=\"google_favicon_" + item_id + "\" src=\"\" style=\"vertical-align:middle\"> <a class=\"newtab\" id=\"pseudo_link_" + item_id + "\" href=\"#\"></a></td><td style=\"text-align:right;width:6%;\"><a href=\"#\" id=\"notification_hide_link_" + item_id + "\" style=\"text-align:right\">hide</a></td></tr></table>";
+            		var headerstring = "";
+            		headerstring = headerstring + "<table style=\"width:100%;\">";
+            		headerstring = headerstring + "	<tr>";
+            		headerstring = headerstring + "		<td style=\"text-align:left;width:94%;\">";
+            		headerstring = headerstring + "			" + headerstring_begin + "<img id=\"google_favicon_" + item_id + "\" src=\"\" style=\"vertical-align:middle\"> ";
+            		headerstring = headerstring + "			<a class=\"newtab\" id=\"pseudo_link_" + item_id + "\" href=\"#\"></a>";
+            		headerstring = headerstring + " 		- " + item_jo.time_ago;
+            		headerstring = headerstring + "		</td>";
+            		headerstring = headerstring + "		<td style=\"text-align:right;width:6%;\">";
+            		headerstring = headerstring + "			<a href=\"#\" id=\"notification_hide_link_" + item_id + "\" style=\"text-align:right\">hide</a>";
+            		headerstring = headerstring + "		</td>";
+            		headerstring = headerstring + "	</tr>";
+            		headerstring = headerstring + "</table>";
             		$("#header_div_" + item_id).html(headerstring);//OK
             		$("#header_div_" + item_id).show();
         			$("#google_favicon_" + item_id).attr("src","http://www.google.com/s2/favicons?domain=" + item_jo.pseudo_url);
