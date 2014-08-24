@@ -171,7 +171,8 @@ function getProfile(target_screenname)
                 	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal;vertical-align:top\">Entry 1:</td><td style=\"text-align:left\" id=\"entry_1_td\"></td></tr>";
                 	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal\">Entry 2:</td><td style=\"text-align:left\" id=\"entry_2_td\"></td></tr>";
                 	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal\">Entry 3:</td><td style=\"text-align:left\" id=\"entry_3_td\"></td></tr>";
-                	main_div_string = main_div_string + "						<tr><td style=\"text-align:center;font-style:italic;color:red\" colspan=2>Winners will be notified VIA WORDS, not email, so don't uninstall.</td></tr>";
+                	main_div_string = main_div_string + "						<tr><td style=\"text-align:right;font-weight:normal;font-weight:bold\">Next iPad:</td><td style=\"text-align:left\" id=\"progress_to_next_giveaway_td\"></td></tr>";
+                	main_div_string = main_div_string + "						<tr><td style=\"text-align:center;font-style:italic;font-weight:bold\" colspan=2>** Winners will be notified VIA WORDS, not email, so don't uninstall. **</td></tr>";
                 }
             	main_div_string = main_div_string + "					</table>";
             	main_div_string = main_div_string + "				</td>";
@@ -534,6 +535,35 @@ function getProfile(target_screenname)
                 		}
                 	}
                 	
+                	$.ajax({
+        				type: 'GET',
+        				url: endpoint,
+        				data: {
+        					method: "getProgressToNextGiveaway"
+        				},
+        				dataType: 'json',
+        				async: true,
+        				success: function (data, status) 
+        				{
+        					if(data.response_status === "error")
+        					{
+        						$("#progress_to_next_giveaway_td").text(data.message);
+        					}	
+        					else if(data.response_status === "success")
+        					{
+        						$("#progress_to_next_giveaway_td").html(data.num_eligible_users + " / " + data.target + " eligible users = <span style=\"font-weight:bold\">" + (Math.round(data.num_eligible_users/data.target * 1000)/10) + "%</span>");
+        					}	
+        					else
+        					{
+        						alert("response_status neither error nor success");
+        					}	
+        				},
+        				error: function (XMLHttpRequest, textStatus, errorThrown) 
+        				{
+        					console.log(textStatus, errorThrown);
+        				}	
+        			});
+                	
             		var tstr = "";
             		if(typeof target_user_jo.provisional_email !== "undefined" && target_user_jo.provisional_email !== null)
         			{
@@ -581,13 +611,12 @@ function getProfile(target_screenname)
                 					}	
                 					else
                 					{
-                						alert("response_status neither error nor success");
+                						//alert("response_status neither error nor success");
                 					}	
                 				},
                 				error: function (XMLHttpRequest, textStatus, errorThrown) 
                 				{
                 					console.log(textStatus, errorThrown);
-                					alert("ajax error");
                 				}	
                 			});
             			});

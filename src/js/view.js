@@ -432,9 +432,10 @@ function displayLogstatAsLoggedIn() {
 
 function writeFooterMessage() {
 	var footerstr = "";
+	var populate_progress_span = false;
 	if(typeof user_jo === "undefined" || user_jo === null)
 	{
-		footerstr = footerstr + "<a id=\"reg_reminder_link\" href=\"#\" style=\"color:#baff00\">Register</a> to be eligible for the next <span style=\"color:#ffde00\">giveaway</span>! Don't miss out!";
+		footerstr = footerstr + "Progress to next iPad giveaway: <span id=\"progress_to_next_giveaway_span\"></span> -- <a id=\"reg_reminder_link\" href=\"#\" style=\"color:#baff00\">Register</a> to be eligible.";
 		$("#footer_div").html(footerstr);
 		$("#reg_reminder_link").click(function (event) { event.preventDefault();
 			var currenttabid;
@@ -446,6 +447,7 @@ function writeFooterMessage() {
 				chrome.tabs.create({url: chrome.extension.getURL('receiver.html') + "?login_type=words"});
 			});
 		});
+		populate_progress_span = true;
 	}	
 	else
 	{
@@ -466,23 +468,26 @@ function writeFooterMessage() {
 			}	
 			else if(user_jo.shared_to_facebook === false && user_jo.shared_to_twitter === false)
 			{
-				footerstr = footerstr + "You have 1 prize entry. Earn 2 more by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a> and ";
+				footerstr = footerstr + "Progress to next iPad giveaway: <span id=\"progress_to_next_giveaway_span\"></span><br>You have 1 entry. Earn 2 more by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a> and ";
 				footerstr = footerstr + "<a style=\"color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>.";
 				$("#footer_div").html(footerstr);
 				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=https%3A%2F%2Fwww.facebook.com%2F%3Fw4cvalue%3Dac3f2ad6cb54a26b1");
 				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F", "twitter");
+				populate_progress_span = true;
 			}	
 			else if(user_jo.shared_to_facebook === true && user_jo.shared_to_twitter === false)
 			{
-				footerstr = footerstr + "You have 2 prize entries. Earn another by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>.";
+				footerstr = footerstr + "Progress to next iPad giveaway: <span id=\"progress_to_next_giveaway_span\"></span><br>You have 2 entries. Earn another by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>.";
 				$("#footer_div").html(footerstr);
 				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F");
+				populate_progress_span = true;
 			}	
 			else if(user_jo.shared_to_facebook === false && user_jo.shared_to_twitter === true)
 			{
-				footerstr = footerstr + "You have 2 prize entries. Earn another by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>.";
+				footerstr = footerstr + "Progress to next iPad giveaway: <span id=\"progress_to_next_giveaway_span\"></span><br>You have 2 entries. Earn another by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>.";
 				$("#footer_div").html(footerstr);
 				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=https%3A%2F%2Fwww.facebook.com%2F%3Fw4cvalue%3Dac3f2ad6cb54a26b1");
+				populate_progress_span = true;
 			}	
 			else // do the usual stuff
 			{
@@ -592,6 +597,38 @@ function writeFooterMessage() {
 		{
 			// do nothing
 		}	
+	}	
+	
+	if(populate_progress_span === true)
+	{
+		$.ajax({
+			type: 'GET',
+			url: endpoint,
+			data: {
+				method: "getProgressToNextGiveaway"
+			},
+			dataType: 'json',
+			async: true,
+			success: function (data, status) 
+			{
+				if(data.response_status === "error")
+				{
+					$("#progress_to_next_giveaway_span").text(data.message);
+				}	
+				else if(data.response_status === "success")
+				{
+					$("#progress_to_next_giveaway_span").html(data.num_eligible_users + " / " + data.target + " = <span style=\"font-weight:bold\">" + (Math.round(data.num_eligible_users/data.target * 1000)/10) + "%</span>");
+				}	
+				else
+				{
+					alert("response_status neither error nor success");
+				}	
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) 
+			{
+				console.log(textStatus, errorThrown);
+			}	
+		});
 	}	
 }
 
