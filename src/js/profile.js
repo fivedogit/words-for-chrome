@@ -517,10 +517,7 @@ function getProfile(target_screenname)
                 		else
                 		{	
                 			$("#entry_2_td").html("<a href=\"#\" id=\"s2f_link\">Shared to Facebook?</a> <span style=\"color:red\">No</span>");
-                    		$("#s2f_link").click(function(event) { event.preventDefault();
-                    			noteSocialShare("facebook");
-                    		});
-                    		noteImpressionAndCreateHandler("facebookshare", "profile", "s2f_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%2C%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2Faction_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D");
+                    		noteImpressionAndCreateHandler("facebookshare", "profile", "s2f_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=https%3A%2F%2Fwww.facebook.com%2F%3Fw4cvalue%3Dac3f2ad6cb54a26b1");
                     	}
                 	}
                 	
@@ -533,9 +530,6 @@ function getProfile(target_screenname)
                 		else
                 		{
                 			$("#entry_3_td").html("<a href=\"#\" id=\"s2t_link\">Shared to Twitter?</a> <span style=\"color:red\">No</span>");
-                    		$("#s2t_link").click(function(event) { event.preventDefault();
-                    			noteSocialShare("twitter");
-                    		});
                     		noteImpressionAndCreateHandler("twittershare", "profile", "s2t_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F");
                 		}
                 	}

@@ -469,32 +469,20 @@ function writeFooterMessage() {
 				footerstr = footerstr + "You have 1 prize entry. Earn 2 more by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a> and ";
 				footerstr = footerstr + "<a style=\"color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>.";
 				$("#footer_div").html(footerstr);
-				$("#share_to_facebook_link").click(function(event) { 
-        			noteSocialShare("facebook");
-        		});
-				$("#share_to_twitter_link").click(function(event) { event.preventDefault();
-        			noteSocialShare("twitter");
-        		});
-				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%2C%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2Faction_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D");
-				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F");
+				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=https%3A%2F%2Fwww.facebook.com%2F%3Fw4cvalue%3Dac3f2ad6cb54a26b1");
+				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F", "twitter");
 			}	
 			else if(user_jo.shared_to_facebook === true && user_jo.shared_to_twitter === false)
 			{
 				footerstr = footerstr + "You have 2 prize entries. Earn another by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_twitter_link\" >Twitter</a>.";
 				$("#footer_div").html(footerstr);
-				$("#share_to_twitter_link").click(function(event) { event.preventDefault();
-        			noteSocialShare("twitter");
-        		});
 				noteImpressionAndCreateHandler("twittershare", "footer", "share_to_twitter_link", "https://twitter.com/intent/tweet?text=.%40words4chrome%20is%20giving%20away%20iPads%20to%20spur%20user%20growth.%20All%20you%20have%20to%20do%20is%20sign%20up%20and%20comment!%20http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F");
 			}	
 			else if(user_jo.shared_to_facebook === false && user_jo.shared_to_twitter === true)
 			{
 				footerstr = footerstr + "You have 2 prize entries. Earn another by sharing to <a style=\"color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>.";
 				$("#footer_div").html(footerstr);
-				$("#share_to_facebook_link").click(function(event) { event.preventDefault();
-        			noteSocialShare("facebook");
-        		});
-				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%2C%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2Faction_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D");
+				noteImpressionAndCreateHandler("facebookshare", "footer", "share_to_facebook_link", "https://www.facebook.com/dialog/share_open_graph?app_id=271212039709142&display=page&action_type=og.likes&action_properties=%7B%22object%22%3A%22http%3A%2F%2Fwww.words4chrome.com%2F2014%2Fipad_giveaway%2F%22%7D&redirect_uri=https%3A%2F%2Fwww.facebook.com%2F%3Fw4cvalue%3Dac3f2ad6cb54a26b1");
 			}	
 			else // do the usual stuff
 			{
@@ -507,12 +495,12 @@ function writeFooterMessage() {
 				}	
 				else if(randomint === 1)
 				{
-					footerstr = footerstr + "I want to hear your feedback on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
+					footerstr = footerstr + "Follow WORDS on <a href=\"#\" id=\"follow_on_facebook_link\" style=\"color:#baff00\">Facebook</a> and <a href=\"#\" id=\"follow_on_twitter_link\" style=\"color:#baff00\">Twitter</a>!";
 					$("#footer_div").html(footerstr);
 					noteImpressionAndCreateHandler("facebook_apppage", "footer", "follow_on_facebook_link", "https://www.facebook.com/words4chrome");
 					noteImpressionAndCreateHandler("twitter_mainacct", "footer", "follow_on_twitter_link", "http://www.twitter.com/words4chrome");
 				}
-				else if(randomint === 2)
+				/*else if(randomint === 2)
 				{
 					footerstr = footerstr + "Spread the WORDS! ";
 					footerstr = footerstr + "<a style=\"margin-left:6px;color:#baff00\" href=\"#\" id=\"share_to_facebook_link\" >Facebook</a>";
@@ -542,7 +530,7 @@ function writeFooterMessage() {
 					noteImpressionAndCreateHandler("coinbase20", "footer", "coinbase_20_link", "https://coinbase.com/checkouts/1e317adfab144ec7378c6a8abda14895");
 					noteImpressionAndCreateHandler("coinbase50", "footer", "coinbase_50_link", "https://coinbase.com/checkouts/8c894218504788240c6b75acaf200529");
 					noteImpressionAndCreateHandler("coinbase100", "footer", "coinbase_100_link", "https://coinbase.com/checkouts/d1affa653c0a756e53a50c18d6ae274a");
-				}
+				}*/
 				else if(randomint === 4)
 				{
 					footerstr = footerstr + "Remember: <span style=\"color:#ffde00\">Appropriate downvoting</span> is necessary for maintaining quality discussions. Do your part!";

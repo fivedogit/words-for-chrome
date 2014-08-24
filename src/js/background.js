@@ -147,6 +147,20 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, updatingtab) {
 					currentHostname = getStandardizedHostname(currentURL);
 					drawTTUButton("   ", "   "); // clear out what's there now
 					doButtonGen();
+					
+					// can only note a social share if the user is eligible for giveaways
+					if(typeof user_jo !== "undefined" && user_jo !== null && user_jo.email_is_confirmed && user_jo.num_comments_authored > 0)
+					{
+						if(user_jo.shared_to_twitter === false && currentURL.indexOf("https://twitter.com/intent/tweet/complete") === 0 && currentURL.indexOf("words4chrome") !== -1  && currentURL.indexOf("ipad_giveaway") !== -1)
+						{
+							noteSocialShare("twitter");
+						}
+						else if(user_jo.shared_to_facebook === false && currentURL.indexOf("https://www.facebook.com") === 0 && currentURL.indexOf("ac3f2ad6cb54a26b1") != -1)
+						{
+							noteSocialShare("facebook");
+						}
+					}	
+				
 				}
 			}	
 			else
@@ -486,6 +500,53 @@ function getUser(retrieve_asynchronously)
 	}
 }
 
+function noteSocialShare(which) //booleans or strings
+{
+	 var screenname = docCookies.getItem("screenname");
+	 var this_access_token = docCookies.getItem("this_access_token");
+	 // assume this is going to work so we get an immediate user update.
+	 if(which === "twitter")
+		 user_jo.shared_to_twitter = true;
+	 else if(which === "facebook")
+		 user_jo.shared_to_facebook = true;
+	 else
+		 return; 
+	 // then reset to false below if it doesn't
+	 $.ajax({
+		type: 'GET',
+		url: endpoint,
+		data: {
+			method: "noteSocialShare",
+			screenname: screenname,
+			this_access_token: this_access_token,
+			which: which
+		},
+		dataType: 'json',
+		async: false, // this has to complete before the next tab is loaded, otherwise the user may not get credit
+		success: function (data, status) {
+			if(typeof data.response_status !== "undefined" && data.response_status !== null && data.response_status === "success")
+			{
+				// we've already set the correct value to true above.
+			}	
+			else // in any other case, reset to false
+			{
+				 if(which === "twitter")
+					 user_jo.shared_to_twitter = false;
+				 else if(which === "facebook")
+					 user_jo.shared_to_facebook = false;
+			}
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			//reset which to false
+			if(which === "twitter")
+				user_jo.shared_to_twitter = false;
+			else if(which === "facebook")
+				user_jo.shared_to_facebook = false;
+			console.log(textStatus, errorThrown);
+		} 
+	 }); 
+}
+
 // FIRSTRUN 
 
 chrome.runtime.onInstalled.addListener(function(details){
@@ -496,3 +557,5 @@ chrome.runtime.onInstalled.addListener(function(details){
       //  alert("Updated from " + details.previousVersion + " to " + thisVersion + "!");
     }
 });
+
+

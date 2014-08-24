@@ -511,7 +511,7 @@ function createFocusEventForTextarea(id, message_element)
 
 
 
-function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url)
+function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url) // promotional_social_share can be "facebook" or "twitter"
 {	
 	//alert("noting impression");
 	var id = null;
@@ -574,41 +574,8 @@ function noteImpressionAndCreateHandler(target, source_category, dom_id, inc_url
  {
 	 //alert("creating handler with id=" + id + " and dom_id=" + dom_id + " and inc_url=" + inc_url);
 	 $("#" + dom_id).click( function (event) { event.preventDefault();
-	 			 if(chrome.tabs)
-	 				 chrome.tabs.create({url:inc_url});
-	 			 else
-	 				 window.location = inc_url;
-				 noteConversion(id);
-			 });
- }
- 
- function noteSocialShare(which) //booleans or strings
- {
- 	$.ajax({
- 		type: 'GET',
- 		url: endpoint,
- 		data: {
- 			method: "noteSocialShare",
- 			screenname: screenname,
-			this_access_token: this_access_token,
- 			which: which
- 		},
- 		dataType: 'json',
- 		async: false, // this has to complete before the next tab is loaded, otherwise the user may not get credit
- 		success: function (data, status) {
- 			if(data.response_status === "error")
- 			{
- 				// fail silently
- 			}
- 			else if(data.response_status === "success")
- 			{
- 				// succeed silently 
- 			}	
- 		},
- 		error: function (XMLHttpRequest, textStatus, errorThrown) {
- 			console.log(textStatus, errorThrown);
- 			// fail silently
- 		} 
- 	}); 
+	 	noteConversion(id);
+	 	chrome.tabs.create({url:inc_url});
+	 });
  }
  
