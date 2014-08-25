@@ -22,7 +22,7 @@ function resetTabTooltip()
  		bs = bs + "<tr>";
  			bs = bs + "<td style=\"text-align:left;padding:8px 8px 5px 8px\">"; // small words logo td
  			bs = bs + "		<table style=\"width:auto\"><tr><td style=\"text-align:center\"><a href=\"#\" id=\"words_logo_link\"><img src=\"" + chrome.extension.getURL("images/words_logo_125x24.png") + "\"></img></a></td></tr>";
- 			bs = bs + "		<tr><td style=\"text-align:center;line-height:10px\" id=\"tagline_td\">Smarter, safer web comments</td></tr></table>";
+ 			bs = bs + "		<tr><td style=\"text-align:center;line-height:10px\" id=\"tagline_td\">Comments without the crazies</td></tr></table>";
  			//bs = bs + "		<a href=\"#\" id=\"words_logo_link\"><img src=\"" + chrome.extension.getURL("images/words_logo_125x24.png") + "\"></img></a>";
  			bs = bs + "</td>";
  			bs = bs + "<td id=\"logstat_td\" style=\"padding:8px 8px 5px 8px\"></td>";

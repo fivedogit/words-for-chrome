@@ -1,9 +1,9 @@
 {
     "name": "WORDS",
     "short_name": "WORDS",
-    "version": "0.207",
+    "version": "0.208",
     "manifest_version": 2,
-    "description": "Smarter, safer web comments",
+    "description": "Comments without the crazies",
     "icons": {
         "16": "images/words_logo4_16.png",
         "48": "images/words_logo4_48.png",
