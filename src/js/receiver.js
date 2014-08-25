@@ -1030,6 +1030,7 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 						$("#message_div").show();
 						docCookies.setItem("screenname", data.screenname, 31536e3);
 						docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
+						bg.getUser(false);
 						doReallyFinished();
 					}
 				},
