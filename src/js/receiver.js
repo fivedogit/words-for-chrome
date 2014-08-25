@@ -177,12 +177,12 @@ else
 	{
 		if(login_type === "google")
 		{
-			displayMessage("Logging in with Google. A popup window like this may appear. (Don't worry. It's safe.)", "black");
+			displayMessage("Logging in with Google. A popup window like this may appear.", "black");
 			var tstr = "";
 			tstr=tstr+"<table style=\"margin-right:auto;margin-left:auto;\">";
 			tstr=tstr+"	<tr>";
-			tstr=tstr+"		<td style=\"width:220px;\"><img style=\"border:1px solid black\" src=\"images/google_popup.jpg\"></td>";
-			tstr=tstr+"		<td style=\"vertical-align:middle;text-align:center;padding-left:25px\">";
+			tstr=tstr+"		<td style=\"width:220px;padding:20px\"><img style=\"border:1px solid black\" src=\"images/google_popup.jpg\"></td>";
+			tstr=tstr+"		<td style=\"vertical-align:middle;text-align:center;padding:20px\">";
 			tstr=tstr+"			<a href=\"#\" id=\"confirm_google_popup_link\">Ok. I got it. >></a>";
 			tstr=tstr+"			<br><br>";
 			tstr=tstr+"			Or, login with: <img style=\"vertical-align:middle\" id=\"facebook_login_img\" src=\"" + chrome.extension.getURL("images/facebook_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_black_24x24.png") + "\"> ";
@@ -266,13 +266,13 @@ else
 		}
 		else if(login_type === "facebook")
 		{
-			displayMessage("Logging in with Facebook. A popup window like this may appear. (Don't worry. It's safe.)", "black");
+			displayMessage("Logging in with Facebook. A popup window like this may appear.", "black");
 			$("#content_div").html("<table style=\"margin-right:auto;margin-left:auto;\"><tr><td><img style=\"border:1px solid black\" src=\"images/fb_popup.jpg\"></td><td style=\"vertical-align:middle;text-align:center;padding-left:10px\"><a href=\"#\" id=\"confirm_facebook_popup_link\">Ok. I got it. >></a></td></tr></table>");
 			var tstr = "";
 			tstr=tstr+"<table style=\"margin-right:auto;margin-left:auto;\">";
 			tstr=tstr+"	<tr>";
-			tstr=tstr+"		<td style=\"width:220px;\"><img style=\"border:1px solid black\" src=\"images/fb_popup.jpg\"></td>";
-			tstr=tstr+"		<td style=\"vertical-align:middle;text-align:center;padding-left:25px;padding-right:15px\">";
+			tstr=tstr+"		<td style=\"width:220px;padding:20px\"><img style=\"border:1px solid black\" src=\"images/fb_popup.jpg\"></td>";
+			tstr=tstr+"		<td style=\"vertical-align:middle;text-align:center;padding:20px\">";
 			tstr=tstr+"			<a href=\"#\" id=\"confirm_facebook_popup_link\">Ok. I got it. >></a>";
 			tstr=tstr+"			<br><br>";
 			tstr=tstr+"			Or, login with: <img style=\"vertical-align:middle\" id=\"google_login_img\" src=\"" + chrome.extension.getURL("images/google_button_24x24.png") + "\"> <img style=\"vertical-align:middle\" id=\"words_login_img\" src=\"" + chrome.extension.getURL("images/words_button_black_24x24.png") + "\"> ";
@@ -376,6 +376,7 @@ else
 			dataType: 'json',
 			async: true,
 			success: function (data, status) {
+				$("#content_div").html(""); 
 				if(data.response_status === "error")
 				{
 					displayMessage(data.message, "red");
@@ -383,8 +384,7 @@ else
 					{
 						var msg = "";
 						msg = msg + "<div style=\"margin-right:auto;margin-left:auto;width:360px;padding:15px;font-style:italic\">If you're having trouble or want to switch Facebook accounts, <b>try restarting your browser</b> and logging back in.<br><br><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>";
-						$("#registration_form_td").html(msg);//OK
-						$("#registration_form_td").show();
+						$("#content_div").html(msg);//OK
 						$("#close_this_tab_link").click( function (event) { event.preventDefault();
 							chrome.tabs.getSelected(null, function(tab) { 
 								var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
@@ -398,8 +398,7 @@ else
 					{
 						var msg = "";
 						msg = msg + "<div style=\"margin-right:auto;margin-left:auto;width:360px;padding:15px;font-style:italic\">If you're having trouble or want to switch Google accounts, <b>try restarting your browser</b> and logging back in.<br><br><a href=\"#\" id=\"close_this_tab_link\">Close this tab</a></div>";
-						$("#registration_form_td").html(msg);//OK
-						$("#registration_form_td").show();
+						$("#content_div").html(msg);//OK
 						$("#close_this_tab_link").click( function (event) { event.preventDefault();
 							chrome.tabs.getSelected(null, function(tab) { 
 								var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
@@ -437,7 +436,11 @@ else
 						//alert("receiver: fb login success, showing no registration, going to doFinished()");
 						docCookies.setItem("screenname", data.screenname, 31536e3);
 						docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-			    		doFinished(false, data.facebook_access_token);
+						$("#content_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
+						setTimeout(function(){
+							doFinished(data.facebook_access_token, data.screenname, data.this_access_token);
+						}, 1000);
+			    		
 					}	
 					if(data.show_registration === "true" && data.login_type === "google")
 					{
@@ -449,11 +452,15 @@ else
 						//alert("receiver: g+ login success, showing no registration, going to doFinished()");
 						docCookies.setItem("screenname", data.screenname, 31536e3);
 						docCookies.setItem("this_access_token", data.this_access_token, 31536e3);
-			    		doFinished(false, data.google_access_token);
+						$("#content_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
+						setTimeout(function(){
+							doFinished(data.google_access_token, data.screenname, data.this_access_token);
+						}, 1000);
 					}	
 				}	
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				$("#content_div").html("");
 				console.log(textStatus, errorThrown);
 				displayMessage("Unknown login error. Please try again.", "red");
 			} 
@@ -1056,9 +1063,8 @@ function displayNewRegistration(show_login, picture, login_type, email, social_a
 		
 }
 
-function doFinished(from_registration, social_access_token)
+function doFinished(social_access_token, screenname, this_access_token)
 {
-	//alert("receiver: doFinished from_reg=" + from_registration);
 	// we've gotten the login return, now we need to get the user before we can safely say, 
 	displayMessage("Identify verified. Loading WORDS user info... ", "black");
 	$("#content_div").html("<img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\">");
@@ -1068,20 +1074,20 @@ function doFinished(from_registration, social_access_token)
 		url: bg.endpoint, 
 		data: {
             method: "getUserSelf",
-            screenname: docCookies.getItem("screenname"),							
-            this_access_token: docCookies.getItem("this_access_token")	
+            screenname: screenname,						
+            this_access_token: this_access_token
         },
         dataType: 'json', 
         async: true, 
         timeout: 20000,
         success: function (data, status) {
-        	var existing_pic = data.user_jo.picture;
+        	$("#content_div").html("");
         	if (data.response_status === "error") 
         	{
-        		displayMessage(data.message, "red");
+        		displayMessage("doFinished(): " + data.message, "red");
         		if(data.error_code && data.error_code === "0000")
         		{
-        			docCookies.removeItem("email"); 
+        			docCookies.removeItem("screenname"); 
         			docCookies.removeItem("this_access_token");
         			bg.user_jo = null;
         		}
@@ -1089,158 +1095,159 @@ function doFinished(from_registration, social_access_token)
         	else if (data.response_status === "success") 
         	{	
         		//alert("receiver: getUserSelf success");
-        		if(data.user_jo) { 	bg.user_jo = data.user_jo; }
+        		var existing_pic = "";
+        		if(data.user_jo) 
+        		{ 	
+        			bg.user_jo = data.user_jo; 
+        			if(typeof data.user_jo.picture !== "undefined" && data.user_jo.picture !== null)
+        				existing_pic = data.user_jo.picture;
+        		}
         		
-        		if(from_registration === false) // don't ask them if they've just come from registration
-        		{	
-        			//alert("receiver: asking about ");
-        			var message = "";
-            		message = message + "<div style=\"width:360px;padding:15px\">";
-            		message = message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:30px\">";
-            		message = message + "		You are now logged in.";
-            		message = message + "	</div>";
-            		message = message + "	<div id=\"image_choice_progress_div\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>";
-            		message = message + "	<div id=\"image_choice_div\" style=\"display:none\">";
-            		message = message + " 		Use your " + capitalized_login_type  + " image as your WORDS profile pic?";
-            		message = message + "		<table style=\"padding-top:0px;margin-right:auto;margin-left:auto\">";
-            		message = message + "			<tr>";
-            		message = message + "				<td style=\"text-align:center;padding-right:10px\">";
-            		message = message + "					<table style=\"padding-top:10px;margin-right:auto;margin-left:auto\">";
-            		message = message + "						<tr>";
-            		message = message + "							<td style=\"text-align:center\">";
-            		message = message + "								" + capitalized_login_type + " picture";
-            		message = message + "							</td>";
-            		message = message + "						</tr>";
-            		message = message + "						<tr>";
-            		message = message + "							<td style=\"text-align:center\">";
-            		message = message + "								<img id=\"social_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
-            		message = message + "							</td>";
-            		message = message + "						</tr>";
-            		message = message + "						<tr>";
-            		message = message + "							<td style=\"text-align:center\">";
-            		message = message + "								<a href=\"#\" id=\"yes_link\">Yes</a>";
-            		message = message + "							</td>";
-            		message = message + "						</tr>";
-            		message = message + "					</table>";
-            		message = message + "				</td>";
-            		message = message + "				<td style=\"text-align:center\">";
-            		message = message + "					<table style=\"padding-top:10px;padding-left:10px;margin-right:auto;margin-left:auto\">";
-            		message = message + "						<tr>";
-            		message = message + "							<td style=\"text-align:center\">";
-            		message = message + "								Your current picture";
-            		message = message + "							</td>";
-            		message = message + "						</tr>";
-            		message = message + "						<tr>";
-            		message = message + "							<td style=\"text-align:center\">";
-            		message = message + "								<img id=\"existing_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
-            		message = message + "							</td>";
-            		message = message + "						</tr>";
-            		message = message + "						<tr>";
-            		message = message + "							<td style=\"text-align:center\">";
-            		message = message + "								<a href=\"#\" id=\"no_link\">No, use current</a>";
-            		message = message + "							</td>";
-            		message = message + "						</tr>";
-            		message = message + "					</table>";
-            		message = message + "				</td>";
-            		message = message + "			</tr>";
-            		message = message + "			<tr>";
-            		message = message + "				<td colspan=2 style=\"text-align:center;padding-top:20px;font-style:italic;font-size:11px\">";
-            		message = message + " 					If these are the same, simply <a href=\"#\" id=\"close_this_tab_link\">close this tab</a>. If you've recently changed your profile pic, it may take time to update here.";
-            		message = message + "				</td>";
-            		message = message + "			</tr>";
-            		message = message + "		</table>";
-            		message = message + "	</div>";
-            		message = message + "</div>";
-            		$("#message_div").html(message);
-            		
-            		$("#close_this_tab_link").click( function (event) { event.preventDefault();
-            		chrome.tabs.getSelected(null, function(tab) { 
-            			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
-            			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
-            			docCookies.removeItem("last_tab_id");
-            			chrome.tabs.remove(tab.id);
-            			});
-            		});
-            		
-            		var social_pic = null;
-            		$.ajax({
+        		//alert("receiver: asking about ");
+    			var message = "";
+        		message = message + "<div style=\"width:360px;padding:15px\">";
+        		message = message + "	<div style=\"font-weight:bold;font-size:14px;padding-bottom:30px\">";
+        		message = message + "		You are now logged in.";
+        		message = message + "	</div>";
+        		message = message + "	<div id=\"image_choice_progress_div\"><img src=\"" + chrome.extension.getURL("images/ajaxSnake.gif") + "\" style=\"width:16px;height16px;border:0px\"></div>";
+        		message = message + "	<div id=\"image_choice_div\" style=\"display:none\">";
+        		message = message + " 		Use your " + capitalized_login_type  + " image as your WORDS profile pic?";
+        		message = message + "		<table style=\"padding-top:0px;margin-right:auto;margin-left:auto\">";
+        		message = message + "			<tr>";
+        		message = message + "				<td style=\"text-align:center;padding-right:10px\">";
+        		message = message + "					<table style=\"padding-top:10px;margin-right:auto;margin-left:auto\">";
+        		message = message + "						<tr>";
+        		message = message + "							<td style=\"text-align:center\">";
+        		message = message + "								" + capitalized_login_type + " picture";
+        		message = message + "							</td>";
+        		message = message + "						</tr>";
+        		message = message + "						<tr>";
+        		message = message + "							<td style=\"text-align:center\">";
+        		message = message + "								<img id=\"social_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
+        		message = message + "							</td>";
+        		message = message + "						</tr>";
+        		message = message + "						<tr>";
+        		message = message + "							<td style=\"text-align:center\">";
+        		message = message + "								<a href=\"#\" id=\"yes_link\">Yes</a>";
+        		message = message + "							</td>";
+        		message = message + "						</tr>";
+        		message = message + "					</table>";
+        		message = message + "				</td>";
+        		message = message + "				<td style=\"text-align:center\">";
+        		message = message + "					<table style=\"padding-top:10px;padding-left:10px;margin-right:auto;margin-left:auto\">";
+        		message = message + "						<tr>";
+        		message = message + "							<td style=\"text-align:center\">";
+        		message = message + "								Your current picture";
+        		message = message + "							</td>";
+        		message = message + "						</tr>";
+        		message = message + "						<tr>";
+        		message = message + "							<td style=\"text-align:center\">";
+        		message = message + "								<img id=\"existing_img\" src=\"images/48avatar_ghosted.png\" style=\"width:48px;height:48px\">";
+        		message = message + "							</td>";
+        		message = message + "						</tr>";
+        		message = message + "						<tr>";
+        		message = message + "							<td style=\"text-align:center\">";
+        		message = message + "								<a href=\"#\" id=\"no_link\">No, use current</a>";
+        		message = message + "							</td>";
+        		message = message + "						</tr>";
+        		message = message + "					</table>";
+        		message = message + "				</td>";
+        		message = message + "			</tr>";
+        		message = message + "			<tr>";
+        		message = message + "				<td colspan=2 style=\"text-align:center;padding-top:20px;font-style:italic;font-size:11px\">";
+        		message = message + " 					If these are the same, simply <a href=\"#\" id=\"close_this_tab_link\">close this tab</a>. If you've recently changed your profile pic, it may take time to update here.";
+        		message = message + "				</td>";
+        		message = message + "			</tr>";
+        		message = message + "		</table>";
+        		message = message + "	</div>";
+        		message = message + "</div>";
+        		$("#message_div").html(message);
+        			
+        		$("#close_this_tab_link").click( function (event) { event.preventDefault();
+        		chrome.tabs.getSelected(null, function(tab) { 
+        			var last_tab_id_int = docCookies.getItem("last_tab_id") * 1;
+        			chrome.tabs.update(last_tab_id_int,{"active":true}, function(tab) {});
+        			docCookies.removeItem("last_tab_id");
+        			chrome.tabs.remove(tab.id);
+        			});
+        		});
+        		
+        		var social_pic = null;
+        		$.ajax({
+        			type: 'GET',
+        			url: bg.endpoint,
+        			data: {
+        				method: "getSocialPicture",
+        				social_access_token: social_access_token,
+        				login_type: login_type
+        			},
+        			dataType: 'json',
+        			async: true,
+        			success: function (data, status) {
+        				
+        				if(data.response_status === "error")
+        				{
+        					// should never ever ever happen as we've JUST gotten the token info to get to this point.
+        					return "error";
+        				}
+        				else if(data.response_status === "success")
+        				{
+        					social_pic = data.picture;
+        					if(social_pic === existing_pic)
+        						doReallyFinished();
+        					else
+        					{
+        						$("#image_choice_div").show();
+        						$("#image_choice_progress_div").hide();
+        						$("#social_img").attr("src", social_pic);
+        						$("#existing_img").attr("src", existing_pic);
+        					}
+        					
+        				}	
+        			},
+        			error: function (XMLHttpRequest, textStatus, errorThrown) {
+        				console.log(textStatus, errorThrown);
+        				displayMessage("Couldn't retrieve picture. Network connection? Please try again later.", "red");
+        				return error;
+        			} 
+        		});  
+        		
+        		$("#yes_link").click( function (event) { event.preventDefault();
+        			$.ajax({
             			type: 'GET',
             			url: bg.endpoint,
             			data: {
-            				method: "getSocialPicture",
-            				social_access_token: social_access_token,
-            				login_type: login_type
+            				method: "savePicture",
+            				screenname: docCookies.getItem("screenname"),							
+            				this_access_token: docCookies.getItem("this_access_token"),	
+            				picture: social_pic
             			},
             			dataType: 'json',
             			async: true,
             			success: function (data, status) {
-            				
-            				if(data.response_status === "error")
-            				{
-            					// should never ever ever happen as we've JUST gotten the token info to get to this point.
-            					return "error";
-            				}
-            				else if(data.response_status === "success")
-            				{
-            					social_pic = data.picture;
-            					if(social_pic === existing_pic)
-            						doReallyFinished();
-            					else
-            					{
-            						$("#image_choice_div").show();
-            						$("#image_choice_progress_div").hide();
-            						$("#social_img").attr("src", social_pic);
-            						$("#existing_img").attr("src", existing_pic);
-            					}
-            					
-            				}	
+            				bg.user_jo.picture = social_pic;
             			},
             			error: function (XMLHttpRequest, textStatus, errorThrown) {
             				console.log(textStatus, errorThrown);
-            				displayMessage("Couldn't retrieve picture. Network connection? Please try again later.", "red");
-            				return error;
             			} 
             		});  
-            		
-            		$("#yes_link").click( function (event) { event.preventDefault();
-            			$.ajax({
-                			type: 'GET',
-                			url: bg.endpoint,
-                			data: {
-                				method: "savePicture",
-                				screenname: docCookies.getItem("screenname"),							
-                				this_access_token: docCookies.getItem("this_access_token"),	
-                				picture: social_pic
-                			},
-                			dataType: 'json',
-                			async: true,
-                			success: function (data, status) {
-                				bg.user_jo.picture = social_pic;
-                			},
-                			error: function (XMLHttpRequest, textStatus, errorThrown) {
-                				console.log(textStatus, errorThrown);
-                			} 
-                		});  
-            			doReallyFinished();
-            		});
-            		$("#no_link").click( 	function (event) { event.preventDefault();
-            			doReallyFinished();
-            		});
-        		}
-        		else // this person is coming from registration where they just chose their image. Don't ask them twice in a row.
-        		{
         			doReallyFinished();
-        		}
+        		});
+        		$("#no_link").click( 	function (event) { event.preventDefault();
+        			doReallyFinished();
+        		});	
+            	
         	}
         	else
         	{
         		console.log("getUserSelf response not success or error. Should never happen. Deleting cookies to allow user to start over from scratch, just in case.");
-        		docCookies.removeItem("email"); 
+        		docCookies.removeItem("screenname"); 
         		docCookies.removeItem("this_access_token");
         		bg.user_jo = null;
         	}
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
+        	$("#content_div").html("");
         	if(errorThrown != null && errorThrown === "timeout")
         	{
         		displayMessage("Timeout retrieving WORDS user info.", "red");
